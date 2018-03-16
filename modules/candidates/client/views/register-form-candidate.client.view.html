@@ -1,0 +1,84 @@
+<section>
+  <div class="page-header">
+    <h1>REGISTER</h1>
+  </div>
+
+  <div class="col-md-12">
+    <form name="vm.form.candidateForm" class="form-horizontal" ng-submit="vm.register(vm.form.candidateForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="lastName">Last</label>
+          <input name="name" type="text" ng-model="vm.candidate.lastName" id="lastName" class="form-control" placeholder="LastName" required>
+          <div ng-messages="vm.form.candidateForm.lastName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Last name is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="firstName">First</label>
+          <input name="firstName" type="text" ng-model="vm.candidate.firstName" id="firstName" class="form-control" placeholder="FirstName" required>
+          <div ng-messages="vm.form.candidateForm.firstName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">First name is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="email">Email</label>
+          <input name="email" type="text" ng-model="vm.candidate.email" id="email" class="form-control" placeholder="email" required>
+          <div ng-messages="vm.form.candidateForm.email.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Email is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="sms">SMS</label>
+          <input name="sms" type="text" ng-model="vm.candidate.sms" id="lastName" class="form-control" placeholder="sms" required>
+          <div ng-messages="vm.form.candidateForm.sms.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">SMS is required.</p>
+          </div>
+        </div>
+
+        <div class="col-xs-offset-1 col-xs-10 col-md-offset-3 col-md-4">
+          <form class="signin form-horizontal">
+            <fieldset>
+              <div class="form-group text-center">
+                <img ng-src="{{vm.resumeURL}}" class="img-thumbnail user-profile-picture">
+              </div>
+              <div class="text-center form-group" ng-hide="vm.uploader.queue.length">
+                <span class="btn btn-default btn-file">
+                    Select Image <input type="file" nv-file-select uploader="vm.uploader">
+                </span>
+              </div>
+              <div class="text-center form-group" ng-show="vm.uploader.queue.length">
+                <button class="btn btn-primary" ng-click="vm.uploadResume();">Upload</button>
+                <button class="btn btn-default" ng-click="vm.cancelUpload();">Cancel</button>
+              </div>
+              <div ng-show="success" class="text-center text-success">
+                <strong>Resume Picture Changed Successfully</strong>
+              </div>
+              <div ng-show="error" class="text-center text-danger">
+                <strong ng-bind="error"></strong>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+
+
+
+
+
+        <div class="form-group" ng-show="!vm.candidate._id">
+          <button type="submit" class="btn btn-default">Register</button>
+        </div>
+
+        <div class="form-group" ng-show="vm.candidate._id">
+          <button type="button" class="btn btn-default" ng-click="vm.checkin()">Check in</button>
+        </div>
+
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

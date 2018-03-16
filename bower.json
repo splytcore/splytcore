@@ -1,6 +1,6 @@
 {
-  "name": "meanjs",
-  "description": "Fullstack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
+  "name": "hr",
+  "description": "human resource api",
   "homepage": "http://meanjs.org/",
   "license": "MIT",
   "dependencies": {

@@ -52,13 +52,6 @@ var UserSchema = new Schema({
     default: '',
     validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
   },
-  username: {
-    type: String,
-    unique: 'Username already exists',
-    required: 'Please fill in a username',
-    lowercase: true,
-    trim: true
-  },
   password: {
     type: String,
     default: ''
@@ -70,12 +63,6 @@ var UserSchema = new Schema({
     type: String,
     default: 'modules/users/client/img/profile/default.png'
   },
-  provider: {
-    type: String,
-    required: 'Provider is required'
-  },
-  providerData: {},
-  additionalProvidersData: {},
   roles: {
     type: [{
       type: String,
@@ -84,6 +71,11 @@ var UserSchema = new Schema({
     default: ['user'],
     required: 'Please provide at least one role'
   },
+  department: {
+    type: String,
+    enum: ['DEVELOPMENT', 'ADMINISTRATION'],
+    default: 'ADMINISTRATION'
+  },  
   updated: {
     type: Date
   },

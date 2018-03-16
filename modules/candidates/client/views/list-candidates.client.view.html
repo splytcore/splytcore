@@ -1,0 +1,24 @@
+<section>
+  <div class="page-header">
+    <h1>Candidates</h1>
+  </div>
+
+<div class="list-group">
+  <h4 class="list-group-item-heading">Filters</h4>  
+    <div class="list-group-item">department: <input type="text" class="form-control" name="department" ng-model="vm.department">  </div>
+    <div class="list-group-item">status: <input type="text" class="form-control" name="department" ng-model="vm.status">  </div>
+    <div class="list-group-item">stage: <input type="text" class="form-control" name="department" ng-model="vm.stage">  </div>
+    <div class="list-group-item"><button type="button" class="btn-default" ng-click="vm.applyFilters()">Apply</div>
+</div>
+
+  <div class="list-group">
+    <a ng-repeat="candidate in vm.candidates"
+       ui-sref="candidates.view({ candidateId: candidate._id })"
+       class="list-group-item">
+      <h4 class="list-group-item-heading"> {{ candidate }}</h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.candidates.$resolved && !vm.candidates.length">
+    No Candidates yet, why don't you <a ui-sref="candidates.create">create one</a>?
+  </div>
+</section>

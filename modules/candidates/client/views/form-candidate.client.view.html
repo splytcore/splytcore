@@ -1,0 +1,84 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.candidate._id ? 'Edit Candidate' : 'New Candidate'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.candidateForm" class="form-horizontal" ng-submit="vm.register(vm.form.candidateForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="lastName">Last</label>
+          <input name="name" type="text" ng-model="vm.candidate.lastName" id="lastName" class="form-control" placeholder="LastName" required>
+          <div ng-messages="vm.form.candidateForm.lastName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Last name is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="firstName">First</label>
+          <input name="firstName" type="text" ng-model="vm.candidate.firstName" id="firstName" class="form-control" placeholder="FirstName" required>
+          <div ng-messages="vm.form.candidateForm.firstName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">First name is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="email">Email</label>
+          <input name="email" type="text" ng-model="vm.candidate.email" id="email" class="form-control" placeholder="email" required>
+          <div ng-messages="vm.form.candidateForm.email.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Email is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="sms">SMS</label>
+          <input name="sms" type="text" ng-model="vm.candidate.sms" id="lastName" class="form-control" placeholder="sms" required>
+          <div ng-messages="vm.form.candidateForm.sms.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">SMS is required.</p>
+          </div>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="stage">stage</label>
+          <input name="stage" type="text" ng-model="vm.candidate.stage" id="stage" class="form-control" placeholder="stage" required>
+          <div ng-messages="vm.form.candidateForm.stage.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Stage is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="valuation">valuation</label>
+          <input name="valuation" type="text" ng-model="vm.candidate.valuation" id="valuation" class="form-control" placeholder="valuation" required>
+          <div ng-messages="vm.form.candidateForm.valuation.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Valuation is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="rating">rating</label>
+          <input name="rating" type="text" ng-model="vm.candidate.rating" id="status" class="form-control" placeholder="rating">
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="rating">note</label>
+          <input name="note" type="text" ng-model="vm.note" id="notes" class="form-control" placeholder="note">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">Notes</label><br/>
+          <span ng-repeat="note in vm.candidate.notes"> {{ note }}</span><br/>          
+        </div>
+
+        <div class="form-group">
+          <button ng-show="!vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.register()"> Register </button>          
+          <button ng-show="vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.update()"> Update</button>
+          <button ng-show="vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.checkin()">Check in</button>
+        </div>
+
+
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

@@ -18,7 +18,8 @@ var _ = require('lodash'),
   endOfLine = require('os').EOL,
   protractor = require('gulp-protractor').protractor,
   webdriver_update = require('gulp-protractor').webdriver_update,
-  webdriver_standalone = require('gulp-protractor').webdriver_standalone;
+  webdriver_standalone = require('gulp-protractor').webdriver_standalone,
+  uglify = require('gulp-uglify-es').default;
 
 // Set NODE_ENV to 'test'
 gulp.task('env:test', function () {
@@ -121,9 +122,7 @@ gulp.task('uglify', function () {
 
   return gulp.src(assets)
     .pipe(plugins.ngAnnotate())
-    .pipe(plugins.uglify({
-      mangle: false
-    }))
+    .pipe(uglify())
     .pipe(plugins.concat('application.min.js'))
     .pipe(gulp.dest('public/dist'));
 });

@@ -11,7 +11,8 @@
   "noarg": true, // Prohibit use of `arguments.caller` and `arguments.callee`.
   "undef": true, // Require all non-global variables be declared before they are used.
   "unused": false, // Warn unused variables.
-  "strict": true, // Require `use strict` pragma in every file.
+  "strict": true, // Require `use strict` pragma in every file.  
+  "asi": true, //no semicolon required at end of code
   "globals": { // Globals variables.
     "angular": true,
     "io": true,
