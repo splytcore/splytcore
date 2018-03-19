@@ -19,6 +19,7 @@ module.exports = function (io, socket) {
 
   //Can be called anywhere
   global.emitCheckin = function () {
+    console.log('emitting checking...')
     io.emit('checkinSocket', { message: 'new checkin' });    
   }
 

@@ -46,7 +46,7 @@
 
     // event listener for new checkins
     Socket.on('checkinSocket', function (message) {
-      console.log(message)
+      console.log('checkinSocket event handler')
       listCheckins() //refresh page
     });
 
