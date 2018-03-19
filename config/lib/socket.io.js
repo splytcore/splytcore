@@ -101,8 +101,7 @@ module.exports = function (app, db) {
   io.on('connection', function (socket) {
     config.files.server.sockets.forEach(function (socketConfiguration) {
       require(path.resolve(socketConfiguration))(io, socket);
-    });
+    });                
   });
-
   return server;
 };

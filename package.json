@@ -17,7 +17,7 @@
   "scripts": {
     "start": "gulp",
     "test": "gulp test",
-    "postinstall": "bower install --config.interactive=false"
+    "postinstall": "sudo bower install --config.interactive=false"
   },
   "dependencies": {
     "acl": "~0.4.4",

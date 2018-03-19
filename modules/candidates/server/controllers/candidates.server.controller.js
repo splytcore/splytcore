@@ -19,7 +19,6 @@ const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const multer = require('multer')
 
-
 /**
  * Create a Candidate
  */
@@ -150,6 +149,7 @@ exports.checkin = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     }      
+    global.emitCheckin() //emit to socket.io 
     res.status(200).send({
       message: 'Successfull Checked in!'      
     })    

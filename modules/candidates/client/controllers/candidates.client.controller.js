@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('CandidatesController', CandidatesController);
 
-  CandidatesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout'];
+  CandidatesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout', 'Socket'];
 
-  function CandidatesController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout) {
+  function CandidatesController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout, Socket) {
     
     var vm = this;
     vm.authentication = Authentication;
@@ -20,7 +20,7 @@
     vm.checkin = checkin      
     vm.register = register
     vm.uploadResume = uploadResume
-    vm.cancelUpload = cancelUpload
+    vm.cancelUpload = cancelUpload    
     vm.note = ''
 
     if ($state.params.candidateId) {
@@ -35,6 +35,23 @@
         })  
     }
     
+
+    // Make sure the Socket is connected
+    if (!Socket.socket) {
+      Socket.connect();
+    }
+
+    // Add an event listener to the 'chatMessage' event
+    Socket.on('checkinSocket', function (message) {
+      console.log(message)  //todo: update query
+    });
+
+    // Remove the event listener when the controller instance is destroyed
+    $scope.$on('$destroy', function () {
+      Socket.removeListener('checkinSocket');
+    });
+
+
     // Create file uploader instance
     vm.uploader = new FileUploader({
       url: 'api/candidates/uploadResume',
@@ -92,10 +109,11 @@
 
     // checkin
     function checkin() {
+      
 
       CandidatesService.checkin(vm.candidate.email)
         .success((res) => {
-          console.log(res)          
+          console.log(res)                              
         })
         .error((res) => {
           console.log('failure')
