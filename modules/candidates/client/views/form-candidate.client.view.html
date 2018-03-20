@@ -69,6 +69,12 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label" for="resume">Resume</label>
+            <img name="resume" id="resume" ng-src="{{vm.candidate.resumeURL}}" class="img-thumbnail">
+        <div>
+
+
+        <div class="form-group">
           <button ng-show="!vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.register()"> Register </button>          
           <button ng-show="vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.update()"> Update</button>
           <button ng-show="vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.checkin()">Check in</button>

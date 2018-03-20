@@ -21,7 +21,7 @@ module.exports = function(app) {
   app.route('/api/candidates')
     .get(candidates.list)    
 
-  app.route('/api/candidates/uploadResume')
+  app.route('/api/uploadResume')
     .post(candidates.uploadResume)    
 
   app.route('/api/enum/candidates/stages')
@@ -33,8 +33,8 @@ module.exports = function(app) {
   app.route('/api/candidates/:candidateId').all(candidatesPolicy.isAllowed)
     .get(candidates.read)
     .put(candidates.update)
-    .delete(candidates.delete);
+    .delete(candidates.delete);    
 
   // Finish by binding the Candidate middleware
-  app.param('candidateId', candidates.candidateByID);
+  app.param('candidateId', candidates.candidateByID);  
 };

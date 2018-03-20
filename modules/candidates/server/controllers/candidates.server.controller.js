@@ -212,6 +212,14 @@ exports.list = function(req, res) {
   let sort = req.query.sort ? req.query.sort : '-created'
   delete req.query.sort 
 
+  //default results per page
+  // let limit = req.query.limit ? parseInt(req.query.limit) : 20 
+  // delete req.query.limit
+  //skip results for pagination
+  // let skip = req.query.skip ? parseInt(req.query.skip) * limit  : 0
+  // delete req.query.skip
+
+
   console.log('post query')
   console.log(req.query)
   
@@ -285,24 +293,43 @@ exports.delete = function(req, res) {
  */
 exports.uploadResume = function (req, res) {
   
-  let upload = multer(config.uploads.resumeUpload).single('newResumePicture')
-  let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
+  let email = req.query.email
   
-  // Filtering to upload only images
-  upload.fileFilter = resumeUploadFileFilter;
-
-  upload(req, res, function (uploadError) {
-    if(uploadError) {
+  Candidate.findOne({ email: email }).exec(function (err, candidate) {
+    if (err) {
       return res.status(400).send({
-        message: 'Error occurred while uploading resume'
-      });
+        message: errorHandler.getErrorMessage(err)
+      })
+    } else if (!candidate) {
+      return res.status(400).send({
+        message: 'Candidate not found'
+      })      
     } else {
-      console.log(config.uploads.resumeUpload.dest + req.file.filename)
-      res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
-      // candidate.profileImageURL = config.uploads.resumeUpload.dest + req.file.filename;
+      let upload = multer(config.uploads.resumeUpload).single('newResumePicture')
+      let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
+      
+      // Filtering to upload only images
+      upload.fileFilter = resumeUploadFileFilter;
+
+      upload(req, res, function (uploadError) {
+        if(uploadError) {
+          return res.status(400).send({
+            message: 'Error occurred while uploading resume'
+          })
+        } else {
+          console.log(config.uploads.resumeUpload.dest + req.file.filename)
+          candidate.resumeURL = config.uploads.resumeUpload.dest + req.file.filename
+          candidate.save((err) => {
+            if(err) {
+              return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+            } else {
+              res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
+            }
+          })          
+        }
+      })
     }
   })
-
 }
 
 
@@ -327,5 +354,24 @@ exports.candidateByID = function(req, res, next, id) {
     }
     req.candidate = candidate;
     next();
-  });
-};
+  })
+}
+
+/**
+ * Candidate middleware
+ */
+exports.candidateByEmail = function(req, res, next, email) {
+  console.log('middlware emial: ' + email)
+  Candidate.findOne({ email: email }).exec(function (err, candidate) {
+    if (err) {
+      return next(err)
+    } else if (!candidate) {
+      return res.status(404).send({
+        message: 'No Candidate with that email has been found'
+      })
+    }
+    req.candidate = candidate
+    next()
+  })
+
+}

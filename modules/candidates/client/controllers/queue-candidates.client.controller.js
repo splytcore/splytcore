@@ -8,8 +8,7 @@
   CandidatesQueueController.$inject = ['CandidatesService', 'Socket', '$scope'];
 
   function CandidatesQueueController(CandidatesService, Socket, $scope) {
-    var vm = this
-    vm.findCandidate = findCandidate    
+    var vm = this    
     vm.listCheckins = listCheckins
 
     listCheckins()

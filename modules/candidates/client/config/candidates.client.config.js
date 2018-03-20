@@ -33,5 +33,10 @@
       state: 'candidates.checkin'
     });
 
+    Menus.addSubMenuItem('topbar', 'candidates', {
+      title: 'Checkin Queue',
+      state: 'candidates.checkinQueue'
+    });
+
   }
 }());

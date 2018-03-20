@@ -33,28 +33,14 @@
           console.log('failure')
           console.log(res)
         })  
+    } else {
+      vm.candidate = {}
     }
     
 
-    // Make sure the Socket is connected
-    // if (!Socket.socket) {
-    //   Socket.connect();
-    // }
-
-    // Add an event listener to the 'chatMessage' event
-    // Socket.on('checkinSocket', function (message) {
-    //   console.log(message)  //todo: update query
-    // });
-
-    // Remove the event listener when the controller instance is destroyed
-    // $scope.$on('$destroy', function () {
-    //   Socket.removeListener('checkinSocket');
-    // });
-
-
-    // Create file uploader instance
+    // Create file uploader instance    
     vm.uploader = new FileUploader({
-      url: 'api/candidates/uploadResume',
+      url: 'api/uploadResume?email=',
       alias: 'newResumePicture'
     });
 
@@ -67,6 +53,10 @@
       }
     })
 
+   vm.uploader.onBeforeUploadItem = function(item) {
+    item.url += vm.candidate.email
+   }
+
     // Called after the user selected a new picture file
     vm.uploader.onAfterAddingFile = function (fileItem) {
       if ($window.FileReader) {
@@ -76,6 +66,7 @@
         fileReader.onload = function (fileReaderEvent) {
           $timeout(function () {
             vm.resumeURL = fileReaderEvent.target.result;
+            console.log(vm.resumeURL)
           }, 0);
         };
       }
@@ -99,6 +90,7 @@
       CandidatesService.register(vm.candidate)
         .success((res) => {
           console.log(res)                    
+          uploadResume()
         })
         .error((res) => {
           console.log('failure')
@@ -156,10 +148,10 @@
     }
 
     // Change user profile picture
-    function uploadResume () {
+    function uploadResume () {      
       // Clear messages
       vm.success = vm.error = null;
-      // Start upload
+      // Start upload            
       vm.uploader.uploadAll();
     }
 
