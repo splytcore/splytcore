@@ -19,8 +19,13 @@
     vm.update = update;
     vm.checkin = checkin      
     vm.register = register
-    vm.uploadResume = uploadResume
-    vm.cancelUpload = cancelUpload    
+
+    vm.uploadImageResume = uploadImageResume
+    vm.cancelImageUpload = cancelImageUpload    
+
+    vm.uploadPdfResume = uploadPdfResume
+    vm.cancelPdfUpload = cancelPdfUpload    
+
     vm.note = ''
 
     if ($state.params.candidateId) {
@@ -39,13 +44,20 @@
     
 
     // Create file uploader instance    
-    vm.uploader = new FileUploader({
-      url: 'api/uploadResume?email=',
+    vm.imageUploader = new FileUploader({
+      url: 'api/uploadImageResume?email=',
       alias: 'newResumePicture'
     });
 
+    // Create file uploader instance    
+    vm.pdfUploader = new FileUploader({
+      url: 'api/uploadPdfResume?email=',
+      alias: 'newResumePdf'
+    });
+
+
     // Set file uploader image filter
-    vm.uploader.filters.push({
+    vm.imageUploader.filters.push({
       name: 'imageFilter',
       fn: function (item, options) {
         var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
@@ -53,12 +65,27 @@
       }
     })
 
-   vm.uploader.onBeforeUploadItem = function(item) {
-    item.url += vm.candidate.email
-   }
+    // Set file uploader image filter
+    vm.pdfUploader.filters.push({
+      name: 'pdfFilter',
+      fn: function (item, options) {
+        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+        return '|pdf|'.indexOf(type) !== -1;
+      }
+    })
+
+
+    vm.imageUploader.onBeforeUploadItem = function(item) {
+      item.url += vm.candidate.email
+    }
+
+    vm.pdfUploader.onBeforeUploadItem = function(item) {
+      item.url += vm.candidate.email
+    }
+
 
     // Called after the user selected a new picture file
-    vm.uploader.onAfterAddingFile = function (fileItem) {
+    vm.imageUploader.onAfterAddingFile = function (fileItem) {
       if ($window.FileReader) {
         var fileReader = new FileReader();
         fileReader.readAsDataURL(fileItem._file);
@@ -67,6 +94,23 @@
           $timeout(function () {
             vm.resumeURL = fileReaderEvent.target.result;
             console.log(vm.resumeURL)
+          }, 0);
+        };
+      }
+    };
+
+
+    // Called after the user selected a new picture file
+    vm.pdfUploader.onAfterAddingFile = function (fileItem) {
+      if ($window.FileReader) {
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(fileItem._file);
+
+        fileReader.onload = function (fileReaderEvent) {
+          $timeout(function () {
+            console.log('pdf uploaded')
+            vm.resumePdfURL = fileReaderEvent.target.result;
+            console.log(vm.resumePdfURL)
           }, 0);
         };
       }
@@ -90,7 +134,11 @@
       CandidatesService.register(vm.candidate)
         .success((res) => {
           console.log(res)                    
-          uploadResume()
+          if (vm.candidate.registeredFrom.indexOf('WEB') > -1) {
+            uploadPdfResume()
+          } else {
+            uploadImageResume()  
+          }          
         })
         .error((res) => {
           console.log('failure')
@@ -129,35 +177,67 @@
 
 
     // Called after the user has successfully uploaded a new picture
-    vm.uploader.onSuccessItem = function (fileItem, response, status, headers) {
+    vm.imageUploader.onSuccessItem = function (fileItem, response, status, headers) {
       // Show success message
       vm.success = true;
 
       // Clear upload buttons
-      vm.cancelUpload();
+      vm.cancelPdfUpload();
+      console.log(response)
+    }
+
+    // Called after the user has successfully uploaded a new picture
+    vm.pdfUploader.onSuccessItem = function (fileItem, response, status, headers) {
+      // Show success message
+      vm.success = true;
+
+      // Clear upload buttons
+      vm.cancelPdfUpload();
       console.log(response)
     }
 
     // Called after the user has failed to uploaded a new picture
-    vm.uploader.onErrorItem = function (fileItem, response, status, headers) {
+    vm.imageUploader.onErrorItem = function (fileItem, response, status, headers) {
       // Clear upload buttons
-      vm.cancelUpload();
+      vm.cancelImageUpload();
 
       // Show error message
       vm.error = response.message;
     }
 
+    vm.pdfUploader.onErrorItem = function (fileItem, response, status, headers) {
+      // Clear upload buttons
+      vm.cancelPdfUpload();
+
+      // Show error message
+      vm.error = response.message;
+    }
+
+
     // Change user profile picture
-    function uploadResume () {      
+    function uploadImageResume () {      
       // Clear messages
       vm.success = vm.error = null;
       // Start upload            
-      vm.uploader.uploadAll();
+      vm.imageUploader.uploadAll();
     }
 
+    function uploadPdfResume () {      
+      // Clear messages
+      vm.success = vm.error = null;
+      // Start upload            
+      vm.pdfUploader.uploadAll();
+    }
+
+
     // Cancel the upload process
-    function cancelUpload() {
-      vm.uploader.clearQueue();      
+    function cancelImageUpload() {
+      vm.imageUploader.clearQueue();      
+      // vm.resumeURL = vm.candidate.resumeURL
+    }
+
+    function cancelPdfUpload() {
+      vm.pdfUploader.clearQueue();      
       // vm.resumeURL = vm.candidate.resumeURL
     }
 

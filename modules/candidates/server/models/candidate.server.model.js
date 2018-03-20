@@ -44,7 +44,7 @@ const CandidateSchema = new Schema({
   },        
   stage: {
     type: String,
-    enum: ['REGISTERED', 'QUEUE', 'VALUATING', 'REVIEWED', 'OTHER', 'COMPLETED'],
+    enum: ['REGISTERED', 'QUEUE', 'INTERVIEWING', 'EVALUATION', 'VALUATED', 'OTHER', 'COMPLETED'],
     default: 'REGISTERED',
     required: 'Please fill in stage',
     trim: true
@@ -55,6 +55,9 @@ const CandidateSchema = new Schema({
     default: 'HR',
     required: 'Please choose department'    
   },
+  otherDepartment: {
+    type: String          
+  },  
   rating: {
     type: Number,
     default: 0
@@ -65,10 +68,19 @@ const CandidateSchema = new Schema({
   appointment: {
     type: Date
   },
-  resumeURL: {
+  resumeImageURL: {
     type: String,
     default: 'modules/candidates/client/img/resumes/default.png'
   },      
+  resumePdfURL: {
+    type: String,
+    default: 'modules/candidates/client/img/resumes/default.pdf'
+  },        
+  registeredFrom: {
+    type: String,
+    enum: ['WEB', 'MOBILE'],    
+    default: 'WEB'
+  },          
   notes: [{
     created: {
       type: Date,

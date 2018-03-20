@@ -6,3 +6,12 @@ module.exports.imageUploadFileFilter = function (req, file, cb) {
   }
   cb(null, true);
 };
+
+
+module.exports.pdfUploadFileFilter = function (req, file, cb) {
+  console.log('mimetype: ' + file.mimetype)
+  if (file.mimetype !== 'application/pdf') {
+    return cb(new Error('Only pdf files are allowed!'), false);
+  }
+  cb(null, true);
+};

@@ -200,6 +200,17 @@ exports.listEnumStatuses = function(req, res) {
 }
 
 /*
+* List enum department values
+*
+*/
+
+exports.listEnumDepartments = function(req, res) {      
+  let values = Candidate.schema.path('department').enumValues
+  res.jsonp(values)
+}
+
+
+/*
 * List candidates according to query
 * Params are all fields in Candidate model
 */
@@ -289,9 +300,9 @@ exports.delete = function(req, res) {
 };
 
 /**
- * Upload resume
+ * Upload resume image
  */
-exports.uploadResume = function (req, res) {
+exports.uploadImageResume = function (req, res) {
   
   let email = req.query.email
   
@@ -308,8 +319,8 @@ exports.uploadResume = function (req, res) {
       let upload = multer(config.uploads.resumeUpload).single('newResumePicture')
       let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
       
-      // Filtering to upload only images
-      upload.fileFilter = resumeUploadFileFilter;
+      // Filtering to upload only images      
+      upload.fileFilter = resumeUploadFileFilter
 
       upload(req, res, function (uploadError) {
         if(uploadError) {
@@ -319,6 +330,59 @@ exports.uploadResume = function (req, res) {
         } else {
           console.log(config.uploads.resumeUpload.dest + req.file.filename)
           candidate.resumeURL = config.uploads.resumeUpload.dest + req.file.filename
+          candidate.save((err) => {
+            if(err) {
+              return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+            } else {
+              res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
+            }
+          })          
+        }
+      })
+    }
+  })
+}
+
+/**
+ * Upload PDF resume
+ */
+exports.uploadPdfResume = function (req, res) {
+  
+  let email = req.query.email
+  
+  Candidate.findOne({ email: email }).exec(function (err, candidate) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } else if (!candidate) {
+      return res.status(400).send({
+        message: 'Candidate not found'
+      })      
+    } else {
+      let storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, config.uploads.resumeUpload.dest)
+        },
+        filename: function (req, file, cb) {
+          cb(null, Date.now() + '.pdf')
+        }
+      })      
+      let upload = multer({ storage: storage }).single('newResumePdf')
+      let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).pdfUploadFileFilter
+      
+      // Filtering to upload only pdf
+      console.log(resumeUploadFileFilter.toString())
+      upload.fileFilter = resumeUploadFileFilter;
+
+      upload(req, res, function (uploadError) {
+        if(uploadError) {
+          return res.status(400).send({
+            message: 'Error occurred while uploading resume'
+          })
+        } else {
+          console.log(config.uploads.resumeUpload.dest + req.file.filename)
+          candidate.resumePdfURL = config.uploads.resumeUpload.dest + req.file.filename
           candidate.save((err) => {
             if(err) {
               return res.status(400).send({ message: errorHandler.getErrorMessage(err) })

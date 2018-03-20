@@ -21,14 +21,20 @@ module.exports = function(app) {
   app.route('/api/candidates')
     .get(candidates.list)    
 
-  app.route('/api/uploadResume')
-    .post(candidates.uploadResume)    
+  app.route('/api/uploadImageResume')
+    .post(candidates.uploadImageResume)    
+
+  app.route('/api/uploadPdfResume')
+    .post(candidates.uploadPdfResume)    
 
   app.route('/api/enum/candidates/stages')
     .get(candidates.listEnumStages)    
 
   app.route('/api/enum/candidates/statuses')
     .get(candidates.listEnumStatuses)    
+
+  app.route('/api/enum/candidates/departments')
+    .get(candidates.listEnumDepartments)    
 
   app.route('/api/candidates/:candidateId').all(candidatesPolicy.isAllowed)
     .get(candidates.read)

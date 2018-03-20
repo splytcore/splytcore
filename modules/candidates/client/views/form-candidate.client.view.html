@@ -36,7 +36,6 @@
           </div>
         </div>
 
-
         <div class="form-group" show-errors>
           <label class="control-label" for="stage">stage</label>
           <input name="stage" type="text" ng-model="vm.candidate.stage" id="stage" class="form-control" placeholder="stage" required>
@@ -68,11 +67,22 @@
           <span ng-repeat="note in vm.candidate.notes"> {{ note }}</span><br/>          
         </div>
 
-        <div class="form-group">
-            <label class="control-label" for="resume">Resume</label>
-            <img name="resume" id="resume" ng-src="{{vm.candidate.resumeURL}}" class="img-thumbnail">
-        <div>
 
+        <div class="form-group">
+          <label class="control-label">Registered From</label><br/>
+          <input name="registeredFrom" type="text" ng-model="vm.candidate.registeredFrom" id="registeredFrom" class="form-control" placeholder="registeredFrom" required>          
+        </div>
+        
+        <div class="form-group" ng-show="vm.candidate.registeredFrom == 'MOBILE'">
+            <label class="control-label" for="resume">Image Resume</label>
+            <img name="resume" id="resume" ng-src="vm.candidate.resumeImageURL" class="img-thumbnail">
+        </div>
+
+
+        <div class="form-group" ng-show="vm.candidate.registeredFrom == 'WEB'">                 
+          <label class="control-label" for="pdf">PDF Resume</label>                                     
+          <embed class="img-thumbnail user-profile-picture" ng-src="{{ vm.candidate.resumePdfURL }}" width="500" height="375" type='application/pdf'>              
+        </div>
 
         <div class="form-group">
           <button ng-show="!vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.register()"> Register </button>          
