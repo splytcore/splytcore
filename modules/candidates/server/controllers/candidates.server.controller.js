@@ -306,8 +306,6 @@ exports.uploadImageResume = function (req, res) {
   
   let email = req.query.email
   
-  console.log('file exteions')
-  
   Candidate.findOne({ email: email }).exec(function (err, candidate) {
     if (err) {
       return res.status(400).send({
@@ -381,7 +379,6 @@ exports.uploadImageResume = function (req, res) {
  */
 exports.uploadDocResume = function (req, res) {
   
-  console.log('uploading document')
   let email = req.query.email
   
   Candidate.findOne({ email: email }).exec(function (err, candidate) {
@@ -410,7 +407,7 @@ exports.uploadDocResume = function (req, res) {
               break
             case 'application/msword':
               ext = '.doc'            
-              break
+              break                  
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
               ext = '.docx'            
               break
@@ -476,7 +473,7 @@ exports.candidateByID = function(req, res, next, id) {
  * Candidate middleware
  */
 exports.candidateByEmail = function(req, res, next, email) {
-  console.log('middlware emial: ' + email)
+  
   Candidate.findOne({ email: email }).exec(function (err, candidate) {
     if (err) {
       return next(err)
