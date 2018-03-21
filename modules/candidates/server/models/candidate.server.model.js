@@ -68,11 +68,13 @@ const CandidateSchema = new Schema({
   appointment: {
     type: Date
   },
+  //When candidates upload from tablet 
   resumeImageURL: {
     type: String,
     default: 'modules/candidates/client/img/resumes/default.png'
   },      
-  resumePdfURL: {
+  //When candidates upload from web site
+  resumeDocURL: {
     type: String,
     default: 'modules/candidates/client/img/resumes/default.pdf'
   },        

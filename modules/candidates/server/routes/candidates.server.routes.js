@@ -24,8 +24,8 @@ module.exports = function(app) {
   app.route('/api/uploadImageResume')
     .post(candidates.uploadImageResume)    
 
-  app.route('/api/uploadPdfResume')
-    .post(candidates.uploadPdfResume)    
+  app.route('/api/uploadDocResume')
+    .post(candidates.uploadDocResume)    
 
   app.route('/api/enum/candidates/stages')
     .get(candidates.listEnumStages)    
@@ -35,7 +35,7 @@ module.exports = function(app) {
 
   app.route('/api/enum/candidates/departments')
     .get(candidates.listEnumDepartments)    
-
+    
   app.route('/api/candidates/:candidateId').all(candidatesPolicy.isAllowed)
     .get(candidates.read)
     .put(candidates.update)

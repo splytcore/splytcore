@@ -306,6 +306,8 @@ exports.uploadImageResume = function (req, res) {
   
   let email = req.query.email
   
+  console.log('file exteions')
+  
   Candidate.findOne({ email: email }).exec(function (err, candidate) {
     if (err) {
       return res.status(400).send({
@@ -316,12 +318,43 @@ exports.uploadImageResume = function (req, res) {
         message: 'Candidate not found'
       })      
     } else {
-      let upload = multer(config.uploads.resumeUpload).single('newResumePicture')
+      let storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, config.uploads.resumeUpload.dest)
+        },
+        filename: function (req, file, cb) {
+          console.log('file')
+          console.log(file)
+          let ext = ''                    
+          switch(file.mimetype) {
+            case 'image/jpeg':
+              ext = '.jpg'
+              break
+            case 'image/jpg':
+              ext = '.jpg'
+              break;              
+            case 'image/png':
+              ext = '.png'            
+              break
+            case 'image/gif':
+              ext = '.gif'            
+              break
+            case 'image/bmp':
+              ext = '.bmp'            
+              break              
+            default:
+              ext = '.jpg'                          
+          }          
+          cb(null, Date.now() + ext)
+        }
+      })  
+
+      let upload = multer({ storage: storage }).single('newResumePicture')
       let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
       
+
       // Filtering to upload only images      
       upload.fileFilter = resumeUploadFileFilter
-
       upload(req, res, function (uploadError) {
         if(uploadError) {
           return res.status(400).send({
@@ -329,7 +362,7 @@ exports.uploadImageResume = function (req, res) {
           })
         } else {
           console.log(config.uploads.resumeUpload.dest + req.file.filename)
-          candidate.resumeURL = config.uploads.resumeUpload.dest + req.file.filename
+          candidate.resumeImageURL = config.uploads.resumeUpload.dest + req.file.filename
           candidate.save((err) => {
             if(err) {
               return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
@@ -344,10 +377,11 @@ exports.uploadImageResume = function (req, res) {
 }
 
 /**
- * Upload PDF resume
+ * Upload Document resume
  */
-exports.uploadPdfResume = function (req, res) {
+exports.uploadDocResume = function (req, res) {
   
+  console.log('uploading document')
   let email = req.query.email
   
   Candidate.findOne({ email: email }).exec(function (err, candidate) {
@@ -365,14 +399,31 @@ exports.uploadPdfResume = function (req, res) {
           cb(null, config.uploads.resumeUpload.dest)
         },
         filename: function (req, file, cb) {
-          cb(null, Date.now() + '.pdf')
+          console.log('file extension: ' + file.mimetype)
+          let ext = ''                    
+          switch(file.mimetype) {
+            case 'application/pdf':
+              ext = '.pdf'
+              break
+            case 'text/plain':
+              ext = '.txt'
+              break
+            case 'application/msword':
+              ext = '.doc'            
+              break
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+              ext = '.docx'            
+              break
+            default:
+              ext = '.pdf'                          
+          }                    
+          cb(null, Date.now() + ext)
         }
       })      
-      let upload = multer({ storage: storage }).single('newResumePdf')
-      let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).pdfUploadFileFilter
+      let upload = multer({ storage: storage }).single('newResumeDoc')
+      let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).docUploadFileFilter
       
-      // Filtering to upload only pdf
-      console.log(resumeUploadFileFilter.toString())
+      // Filtering to upload only docs specified type      
       upload.fileFilter = resumeUploadFileFilter;
 
       upload(req, res, function (uploadError) {
@@ -382,7 +433,7 @@ exports.uploadPdfResume = function (req, res) {
           })
         } else {
           console.log(config.uploads.resumeUpload.dest + req.file.filename)
-          candidate.resumePdfURL = config.uploads.resumeUpload.dest + req.file.filename
+          candidate.resumeDocURL = config.uploads.resumeUpload.dest + req.file.filename
           candidate.save((err) => {
             if(err) {
               return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
