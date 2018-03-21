@@ -3,6 +3,7 @@
 // Create the candidates socket configuration
 module.exports = function (io, socket) {
   
+  console.log('init candidates socket...')
   // Emit the status event when a new socket client is connected  
   io.emit('checkinSocket', {
     type: 'status',
@@ -29,8 +30,7 @@ module.exports = function (io, socket) {
     io.emit('checkinSocket', {
       type: 'status',
       text: 'disconnected',
-      created: Date.now(),
-      username: socket.request.user.username
+      created: Date.now()    
     })
   })
 };

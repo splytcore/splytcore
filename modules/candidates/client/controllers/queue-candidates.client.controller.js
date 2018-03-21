@@ -40,7 +40,10 @@
 
     // Make sure the Socket is connected
     if (!Socket.socket) {
+      console.log('connecting to socket')
       Socket.connect();
+    } else {
+      console.log('already connect to socket')
     }
 
     // event listener for new checkins

@@ -149,7 +149,10 @@ exports.checkin = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     }      
-    global.emitCheckin() //emit to socket.io 
+    //emit to socket.io if no one is connected skip        
+    
+    global.emitCheckin() //TODO: fix later
+
     res.status(200).send({
       message: 'Successfull Checked in!'      
     })    
@@ -261,8 +264,7 @@ exports.read = function(req, res) {
 /**
  * Update a Candidate
  */
-exports.update = function(req, res) {
-  console.log(req.body)
+exports.update = function(req, res) {  
   
   var candidate = req.candidate;
   candidate = _.extend(candidate, req.body.candidate)

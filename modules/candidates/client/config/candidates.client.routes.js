@@ -24,7 +24,7 @@
         }
       })
       .state('candidates.checkinQueue', {
-        url: '',
+        url: '/checkinQueue',
         templateUrl: 'modules/candidates/client/views/queue-candidates.client.view.html',
         controller: 'CandidatesQueueController',
         controllerAs: 'vm',
@@ -37,8 +37,7 @@
         templateUrl: 'modules/candidates/client/views/register-form-candidate.client.view.html',
         controller: 'CandidatesController',
         controllerAs: 'vm',
-        data: {
-          roles: ['user', 'admin'],
+        data: {          
           pageTitle: 'Candidates Register'
         }
       })
@@ -47,8 +46,7 @@
         templateUrl: 'modules/candidates/client/views/checkin-form-candidate.client.view.html',
         controller: 'CandidatesCheckinController',
         controllerAs: 'vm',
-        data: {
-          roles: ['user', 'admin'],
+        data: {          
           pageTitle: 'Candidates Checkin'
         }
       })      
@@ -57,8 +55,7 @@
         templateUrl: 'modules/candidates/client/views/form-candidate.client.view.html',
         controller: 'CandidatesController',
         controllerAs: 'vm',
-        data: {
-          roles: ['user', 'admin'],
+        data: {          
           pageTitle: 'Edit Candidate {{ candidateResolve.name }}'
         }
       })
