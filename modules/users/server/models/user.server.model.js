@@ -102,7 +102,7 @@ var UserSchema = new Schema({
  */
 UserSchema.pre('save', function (next) {
   if (this.password && this.isModified('password')) {
-    this.salt = crypto.randomBytes(16).toString('base64');
+    this.salt = crypto.randomBytes(16).toString('base64');    
     this.password = this.hashPassword(this.password);
   }
 
@@ -127,9 +127,9 @@ UserSchema.pre('validate', function (next) {
 /**
  * Create instance method for hashing a password
  */
-UserSchema.methods.hashPassword = function (password) {
-  if (this.salt && password) {
-    return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64).toString('base64');
+UserSchema.methods.hashPassword = function (password) {  
+  if (this.salt && password) {    
+    return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64, 'sha1').toString('base64');
   } else {
     return password;
   }
