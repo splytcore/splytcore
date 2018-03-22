@@ -149,8 +149,8 @@ exports.checkin = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     }      
-    //emit to socket.io if no one is connected skip            
-    global.emitCheckin ? global.emitCheckin(): null //TODO: fix later
+    // emit to socket.io if no one is connected skip                    
+    global.emitCheckin ? global.emitCheckin(): null // jshint ignore:line
 
     res.status(200).send({
       message: 'Successfull Checked in!'      
