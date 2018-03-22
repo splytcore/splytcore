@@ -17,7 +17,8 @@ var config = require('../config'),
   helmet = require('helmet'),
   flash = require('connect-flash'),
   consolidate = require('consolidate'),
-  path = require('path');
+  path = require('path'),
+  cors = require('cors');
 
 /**
  * Initialize local variables
@@ -88,6 +89,7 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
+  app.use(cors());  
 };
 
 /**
