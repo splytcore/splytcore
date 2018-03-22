@@ -26,6 +26,28 @@
     vm.uploadDocResume = uploadDocResume
     vm.cancelDocUpload = cancelDocUpload    
 
+    
+    CandidatesService.listEnumValues('department')
+      .success((res) => {
+        console.log(res)          
+        vm.departments = res
+      })
+      .error((res) => {
+        console.log('failure')
+        console.log(res)
+      })  
+    
+
+    CandidatesService.listEnumValues('position')
+      .success((res) => {
+        console.log(res)          
+        vm.positions = res
+      })
+      .error((res) => {
+        console.log('failure')
+        console.log(res)
+      })      
+
     vm.note = ''
 
     if ($state.params.candidateId) {
@@ -42,6 +64,16 @@
       vm.candidate = {}
     }
     
+    function promiseThis() {
+      var promise = new Promise(function(resolve , reject) {    
+         console.log('did this work?')
+         // do a thing, possibly async , then..  
+        resolve("stuff worked");  
+         
+        // reject(Error("It broke"));  
+      });  
+      return promise;        
+    }
 
     // Create file uploader instance    
     vm.imageUploader = new FileUploader({

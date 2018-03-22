@@ -47,6 +47,24 @@ exports.register = function(req, res) {
         next(err, candidate)
       })
     },
+    function sendSMS (candidate, next) {                        
+      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
+        let appt = candidate.appointment.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })
+        client.messages.create({
+          body: 'You have checked in at Blockchains.com! Your appointment is at '+ appt,
+          to: '+1' + candidate.sms,  // Text this number
+          from: config.twilio.from // From a valid Twilio number
+        })
+        .then((message) => {
+          next(null, candidate)
+        })
+        .catch((err) => {
+          next(err)
+        })
+      } else {
+        next(null, candidate)
+      }
+    },    
     function prepareEmail(candidate, done) {
       var httpTransport = 'http://'
       if (config.secure && config.secure.ssl === true) {

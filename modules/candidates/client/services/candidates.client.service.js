@@ -18,19 +18,15 @@
     vm.listCheckins = listCheckins    
     vm.listByFilters = listByFilters
 
-    vm.listEnumStages = listEnumStages
-    vm.listEnumStatuses = listEnumStatuses
+    vm.listEnumValues = listEnumValues
+
     vm.findCandidate = findCandidate
 
     vm.update = update
     vm.url = '/api/candidates/'
 
-    function listEnumStages () {      
-      return $http.get('/api/enum/candidates/stages')
-    }
-
-    function listEnumStatuses () {      
-      return $http.get('/api/enum/candidates/statuses')
+    function listEnumValues (field) {      
+      return $http.get('/api/enum/candidates/' + field)
     }
     
     function update (candidate, note) {      
