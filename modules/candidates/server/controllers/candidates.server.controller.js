@@ -201,7 +201,7 @@ exports.findByEmail = function(req, res) {
 exports.findCandidate = function(req, res) {
   
   //TODO: mininum length?  
-  let search = req.query.search
+  let search = req.params.search
 
   console.log(search)
   Candidate.find({ $or: [{ lastName: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { sms: search }] }, (err, candidates) => {    
@@ -244,13 +244,13 @@ exports.list = function(req, res) {
   let sort = req.query.sort ? req.query.sort : '-created'
   delete req.query.sort 
 
-  //default results per page
-  // let limit = req.query.limit ? parseInt(req.query.limit) : 20 
+  // TODO: pagination
+  // let limit = req.query.page ? parseInt(req.query.page) : 20   
   // delete req.query.limit
   //skip results for pagination
   // let skip = req.query.skip ? parseInt(req.query.skip) * limit  : 0
   // delete req.query.skip
-
+  let limit = req.query.page ? parseInt(req.query.page) : 20 
 
   console.log('post query')
   console.log(req.query)

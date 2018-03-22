@@ -4,6 +4,13 @@
   </div>
 
 <div class="list-group">
+  <h4 class="list-group-item-heading">Lookup by email, last name, telephone</h4>  
+  <div class="list-group-item"><input type="text" class="form-control" name="search" ng-model="vm.search">
+  </div>
+  <div class="list-group-item"><button type="button" class="btn-default" ng-click="vm.findCandidate()">Search</div>  
+</div>
+
+<div class="list-group">
   <h4 class="list-group-item-heading">Filters</h4>  
     <div class="list-group-item">department: <input type="text" class="form-control" name="department" ng-model="vm.department">  </div>
     <div class="list-group-item">status: <input type="text" class="form-control" name="department" ng-model="vm.status">  </div>

@@ -67,7 +67,7 @@
     }
 
     function findCandidate(query) {
-      return $http.get('/api/findCandidate?q=' + query)      
+      return $http.get('/api/findCandidate/' + query)      
     }
 
   }

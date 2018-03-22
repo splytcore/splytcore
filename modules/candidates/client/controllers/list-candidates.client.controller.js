@@ -11,6 +11,8 @@
     var vm = this
     vm.applyFilters = applyFilters
 
+    vm.findCandidate = findCandidate
+
     CandidatesService.list()
       .success((res) => {
         console.log(res)
@@ -37,6 +39,21 @@
           console.log(res)        
         })          
     }
+
+
+    function findCandidate() {
+      console.log(vm.filters)            
+      CandidatesService.findCandidate(vm.search)
+        .success((res) => {
+          console.log(res)
+          vm.candidates = res
+        })
+        .error((res) => {
+          console.log('failure')
+          console.log(res)        
+        })          
+    }
+
 
   }
 }());
