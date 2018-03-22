@@ -9,18 +9,13 @@
 
   function CandidatesCheckinController(CandidatesService, $state) {
     var vm = this
-    vm.findCandidate = findCandidate        
+    vm.findByEmail = findByEmail
 
-    function findCandidate() {
-      CandidatesService.findCandidate(vm.query)
+    function findByEmail() {
+      CandidatesService.findByEmail(vm.query)
         .success((res) => {          
-          vm.candidates = res          
-          console.log(vm.candidates.length)
-          if (vm.candidates.length > 0) {
-            $state.go('candidates.edit', { candidateId: vm.candidates[0]._id })
-          } else {
-            vm.error = 'User not found'
-          }
+          vm.candidate = res                              
+          $state.go('candidates.edit', { candidateId: vm.candidate._id })
         })
         .error((res) => {
           console.log('failure')

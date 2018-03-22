@@ -55,7 +55,7 @@
     }
 
     function findByEmail (email) {
-      return $http.get('/api/candidates?email='+email)      
+      return $http.get('/api/candidateByEmail/'+email)      
     }
 
     function listCheckins () {

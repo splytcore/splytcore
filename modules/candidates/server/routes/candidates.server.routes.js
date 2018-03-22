@@ -15,26 +15,29 @@ module.exports = function(app) {
   app.route('/api/register')
     .post(candidates.register)   
 
-  app.route('/api/findCandidate')
+  app.route('/api/candidateByEmail/:email')
+    .get(candidates.findByEmail)   
+
+  //find candidates by email, last name, sms
+  //i.e. /api/findCandidate?q=john@gmail.com
+  //i.e. /api/findCandidate?q=smith
+  //i.e. /api/findCandidate?q=81812345678
+  app.route('/api/findCandidate/:search')
     .get(candidates.findCandidate)   
 
   app.route('/api/candidates')
     .get(candidates.list)    
-
+  
+  //to upload resume from tablet
   app.route('/api/uploadImageResume')
     .post(candidates.uploadImageResume)    
 
+  //to upload resume from web
   app.route('/api/uploadDocResume')
     .post(candidates.uploadDocResume)    
 
-  app.route('/api/enum/candidates/stages')
-    .get(candidates.listEnumStages)    
-
-  app.route('/api/enum/candidates/statuses')
-    .get(candidates.listEnumStatuses)    
-
-  app.route('/api/enum/candidates/departments')
-    .get(candidates.listEnumDepartments)    
+  app.route('/api/enum/candidates/:field')
+    .get(candidates.listEnumValues)    
     
   app.route('/api/candidates/:candidateId').all(candidatesPolicy.isAllowed)
     .get(candidates.read)

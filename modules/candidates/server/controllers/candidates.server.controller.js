@@ -149,27 +149,62 @@ exports.checkin = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     }      
-    //emit to socket.io if no one is connected skip        
-    
-    global.emitCheckin() //TODO: fix later
+    //emit to socket.io if no one is connected skip            
+    global.emitCheckin ? global.emitCheckin(): null //TODO: fix later
 
     res.status(200).send({
       message: 'Successfull Checked in!'      
     })    
   })  
 }
-
-/**
- * find candidate with matching email, lastname, or sms
+/** 
+ * Find Candidate By Email
+ * @function
+ * @name findByEmail
+ * @param {object} req
+ * @param {object} res
+ * @desc find candidate by email
  * 
  */
+exports.findByEmail = function(req, res) {
+  
+  //TODO: mininum length?  
+  let email = req.params.email
+
+  console.log(email)
+  Candidate.findOne({ email: email }, (err, candidate) => {    
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    } else if (!candidate) {
+      return res.status(400).send({
+        message: 'User not found'
+      })      
+    }
+    res.jsonp(candidate)
+  })
+
+}
+
+
+/** 
+ * 
+ * @function
+ * @name findCandidate
+ * @param {object} req
+ * @param {object} res
+ * @desc find candidate email, last name, or sms
+ * 
+ */
+
 exports.findCandidate = function(req, res) {
   
   //TODO: mininum length?  
-  let q = req.query.q
+  let search = req.query.search
 
-  console.log(q)
-  Candidate.find({ $or: [{ lastName: new RegExp(q, 'i') }, { email: new RegExp(q, 'i') }, { sms: q }] }, (err, candidates) => {    
+  console.log(search)
+  Candidate.find({ $or: [{ lastName: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { sms: search }] }, (err, candidates) => {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -181,37 +216,20 @@ exports.findCandidate = function(req, res) {
 }
 
 /*
-* List enum stage values
-*
+* List enum values
+* @param field from the model i.e /api/candidatesEnum/department
+* @return list of values in array format
 */
 
-exports.listEnumStages = function(req, res) {  
-    
-  let values = Candidate.schema.path('stage').enumValues
+exports.listEnumValues = function(req, res) {  
+ 
+  let field = req.params.field.toLowerCase()
+  console.log(field)
+
+  let values = Candidate.schema.path(field).enumValues
   res.jsonp(values)
 
 }
-
-/*
-* List enum statuses values
-*
-*/
-
-exports.listEnumStatuses = function(req, res) {      
-  let values = Candidate.schema.path('status').enumValues
-  res.jsonp(values)
-}
-
-/*
-* List enum department values
-*
-*/
-
-exports.listEnumDepartments = function(req, res) {      
-  let values = Candidate.schema.path('department').enumValues
-  res.jsonp(values)
-}
-
 
 /*
 * List candidates according to query
