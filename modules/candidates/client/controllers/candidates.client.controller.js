@@ -63,18 +63,7 @@
     } else {
       vm.candidate = {}
     }
-    
-    function promiseThis() {
-      var promise = new Promise(function(resolve , reject) {    
-         console.log('did this work?')
-         // do a thing, possibly async , then..  
-        resolve("stuff worked");  
-         
-        // reject(Error("It broke"));  
-      });  
-      return promise;        
-    }
-
+  
     // Create file uploader instance    
     vm.imageUploader = new FileUploader({
       url: 'api/uploadImageResume/',
