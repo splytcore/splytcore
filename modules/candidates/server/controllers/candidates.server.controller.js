@@ -324,7 +324,7 @@ exports.delete = function(req, res) {
  */
 exports.uploadImageResume = function (req, res) {
   
-  let email = req.query.email
+  let email = req.params.email
   
   Candidate.findOne({ email: email }).exec(function (err, candidate) {
     if (err) {
@@ -399,7 +399,7 @@ exports.uploadImageResume = function (req, res) {
  */
 exports.uploadDocResume = function (req, res) {
   
-  let email = req.query.email
+  let email = req.params.email
   
   Candidate.findOne({ email: email }).exec(function (err, candidate) {
     if (err) {

@@ -29,13 +29,14 @@ module.exports = function(app) {
     .get(candidates.list)    
   
   //to upload resume from tablet
-  app.route('/api/uploadImageResume')
+  app.route('/api/uploadImageResume/:email')
     .post(candidates.uploadImageResume)    
 
   //to upload resume from web
-  app.route('/api/uploadDocResume')
+  app.route('/api/uploadDocResume/:email')
     .post(candidates.uploadDocResume)    
 
+  //returns list of enum values according to model field
   app.route('/api/enum/candidates/:field')
     .get(candidates.listEnumValues)    
     

@@ -45,13 +45,13 @@
 
     // Create file uploader instance    
     vm.imageUploader = new FileUploader({
-      url: 'api/uploadImageResume?email=',
+      url: 'api/uploadImageResume/',
       alias: 'newResumePicture'
     });
 
     // Create file uploader instance    
     vm.docUploader = new FileUploader({
-      url: 'api/uploadDocResume?email=',
+      url: 'api/uploadDocResume/',
       alias: 'newResumeDoc'
     });
 

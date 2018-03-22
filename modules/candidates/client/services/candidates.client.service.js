@@ -70,10 +70,5 @@
       return $http.get('/api/findCandidate?q=' + query)      
     }
 
-    function uploadResume(file) {
-      return $http.post('/api/candidates/uploadResume', file)      
-    }
-
-
   }
 }());
