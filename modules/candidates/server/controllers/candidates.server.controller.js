@@ -41,17 +41,23 @@ exports.register = function(req, res) {
       })
     },
     function createCandidate (next) {                        
-      let candidate = new Candidate(req.body)      
-      candidate.department = 'TEST'
+      let candidate = new Candidate(req.body)            
+      
+      //if registered from tablet check in
+      if (candidate.registeredFrom.indexOf('MOBILE') >  -1) {
+        candidate.stage = 'QUEUE'          
+        candidate.appointment = req.body.appointment ? parseInt(req.body.appointment) : (Date.now() + 3600000) // 1 hour
+      }      
+
       candidate.save((err) => {
         next(err, candidate)
       })
     },
-    function sendSMS (candidate, next) {                        
+    function checkinIfMobile(candidate, next) {                        
       if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
         let appt = candidate.appointment.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })
         client.messages.create({
-          body: 'You have checked in at Blockchains.com! Your appointment is at '+ appt,
+          body: 'You have registered and checked in at Blockchains.com! Your appointment with HR is at '+ appt,
           to: '+1' + candidate.sms,  // Text this number
           from: config.twilio.from // From a valid Twilio number
         })
@@ -65,34 +71,33 @@ exports.register = function(req, res) {
         next(null, candidate)
       }
     },    
-    function prepareEmail(candidate, done) {
-      var httpTransport = 'http://'
-      if (config.secure && config.secure.ssl === true) {
-        httpTransport = 'https://'
+    function emailOnlyForWebRegistration(candidate, next) {
+      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
+        next(null)
+      } else {
+        var httpTransport = 'http://'
+        if (config.secure && config.secure.ssl === true) {
+          httpTransport = 'https://'
+        }
+        res.render(path.resolve('modules/candidates/server/templates/register-email'), {
+          name: candidate.firstName,
+          appName: config.app.title,
+          url: httpTransport + req.headers.host
+        }, function (err, emailHTML) {              
+          var mailOptions = {
+            to: candidate.email,
+            from: config.mailer.from,
+            subject: 'Registration',
+            html: emailHTML
+          }
+          console.log('mailoptions')
+          console.log(mailOptions)
+          smtpTransport.sendMail(mailOptions, function (err) {
+            next(err)        
+          })
+        })
       }
-      res.render(path.resolve('modules/candidates/server/templates/register-email'), {
-        name: candidate.firstName,
-        appName: config.app.title,
-        url: httpTransport + req.headers.host
-      }, function (err, emailHTML) {
-        done(err, emailHTML, candidate);
-      })
-    },
-    // If valid email, send reset email using service
-    function (emailHTML, candidate, next) {
-      var mailOptions = {
-        to: candidate.email,
-        from: config.mailer.from,
-        subject: 'Registration',
-        html: emailHTML
-      }
-      console.log('mailoptions')
-      console.log(mailOptions)
-      smtpTransport.sendMail(mailOptions, function (err) {
-        next(err)        
-      })
-    }
-    //TODO: send confirmation code to application
+    }    
   ], (err) => {
     if (err) {
       console.log(err)
@@ -149,7 +154,7 @@ exports.checkin = function(req, res) {
     function sendSMS (candidate, next) {                                          
       let appt = candidate.appointment.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })
       client.messages.create({
-        body: 'You have checked in at Blockchains.com! Your appointment is at '+ appt,
+        body: 'You have checked in at Blockchains.com! Your appointment with HR is at '+ appt,
         to: '+1' + candidate.sms,  // Text this number
         from: config.twilio.from // From a valid Twilio number
       })
