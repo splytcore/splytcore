@@ -3,9 +3,10 @@
 /**
  * Module dependencies.
  */
-const mongoose = require('mongoose'),
-  Schema = mongoose.Schema
-
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const path = require('path')
+const config = require(path.resolve('./config/config'))
 /**
  * Candidate Schema
  */
@@ -37,26 +38,31 @@ const CandidateSchema = new Schema({
   },   
   valuation: {
     type: String,
-    enum: ['PENDING', 'YES', 'NO', 'MAYBE', 'UNDECIDED'],
+    enum: config.valuation,
     default: 'PENDING',
     required: 'Please fill in valuation',
     trim: true
   },        
   stage: {
     type: String,
-    enum: ['REGISTERED', 'QUEUE', 'INTERVIEWING', 'EVALUATION', 'VALUATED', 'OTHER', 'COMPLETED'],
+    enum: config.stage,
     default: 'REGISTERED',
     required: 'Please fill in stage',
     trim: true
   }, 
   department: {
     type: String,
-    enum: ['HR', 'DEV', 'ADMIN', 'EXEC', 'MGR', 'OTHER','ACCT', 'MKT', 'CUSTOMER_SUPPORT', 'SALES', 'IT_SUPPORT', 'LEGAL'],
+    enum: config.department,
     default: 'HR',
     required: 'Please choose department'    
   },
   otherDepartment: {
     type: String          
+  },  
+  position: {
+    enum: config.position,
+    type: String,
+    default: ''    
   },  
   rating: {
     type: Number,

@@ -42,6 +42,7 @@ exports.register = function(req, res) {
     },
     function createCandidate (next) {                        
       let candidate = new Candidate(req.body)      
+      candidate.department = 'TEST'
       candidate.save((err) => {
         next(err, candidate)
       })
@@ -222,7 +223,7 @@ exports.findCandidate = function(req, res) {
 */
 
 exports.listEnumValues = function(req, res) {  
- 
+
   let field = req.params.field.toLowerCase()
   console.log(field)
 
