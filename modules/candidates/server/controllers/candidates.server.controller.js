@@ -42,9 +42,9 @@ exports.register = function(req, res) {
     },
     function createCandidate (next) {                        
       let candidate = new Candidate(req.body)            
-      
+            
       //if registered from tablet check in
-      if (candidate.registeredFrom.indexOf('MOBILE') >  -1) {
+      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
         candidate.stage = 'QUEUE'          
         candidate.appointment = req.body.appointment ? parseInt(req.body.appointment) : (Date.now() + 3600000) // 1 hour
       }      
