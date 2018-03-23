@@ -17,7 +17,7 @@ const smtpTransport = nodemailer.createTransport(config.mailer.options)
 
 const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
-const multer = require('multer')
+const multer = require('multer') 
 
 /**
  * Create a Candidate
@@ -246,8 +246,8 @@ exports.findCandidate = function(req, res) {
 */
 
 exports.listEnumValues = function(req, res) {  
-
-  let field = req.params.field.toLowerCase()
+  
+  let field = req.params.field;
   console.log(field)
 
   let values = Candidate.schema.path(field).enumValues
@@ -325,6 +325,14 @@ exports.update = function(req, res) {
     }
   });
 };
+/**
+ * Validate Phone
+ */
+exports.validatePhone = function(req, res) {  
+  
+  res.jsonp(true)
+}
+
 
 /**
  * Delete an Candidate
@@ -404,7 +412,8 @@ exports.uploadImageResume = function (req, res) {
           })
         } else {
           console.log(config.uploads.resumeUpload.dest + req.file.filename)
-          candidate.resumeImageURL = config.uploads.resumeUpload.dest + req.file.filename
+          let resumeImageURL = config.uploads.resumeUpload.dest + req.file.filename
+          candidate.resumeImageURL.push(resumeImageURL)
           candidate.save((err) => {
             if(err) {
               return res.status(400).send({ message: errorHandler.getErrorMessage(err) })

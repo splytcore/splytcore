@@ -4,76 +4,26 @@
   // Candidates controller
   angular
     .module('candidates')
-    .controller('CandidatesController', CandidatesController);
+    .controller('UploadResumeController', UploadResumeController);
 
-  CandidatesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout'];
+  UploadResumeController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout'];
 
-  function CandidatesController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout) {
+  function UploadResumeController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout) {
     
     var vm = this;
     vm.authentication = Authentication;
 
     vm.error = null
-    vm.form = {}
-    vm.remove = remove
-    vm.update = update;
-    vm.checkin = checkin      
-    vm.register = register
-
+    vm.form = {}    
     vm.uploadImageResume = uploadImageResume
     vm.cancelImageUpload = cancelImageUpload    
 
     vm.uploadDocResume = uploadDocResume
-    vm.cancelDocUpload = cancelDocUpload    
+    vm.cancelDocUpload = cancelDocUpload        
+    vm.email = $state.params.email
+    vm.registeredFrom = $state.params.registeredFrom
 
-    
-    CandidatesService.listEnumValues('department')
-      .success((res) => {
-        console.log(res)          
-        vm.departments = res
-      })
-      .error((res) => {
-        console.log('failure')
-        console.log(res)
-      })  
-    
-
-    CandidatesService.listEnumValues('position')
-      .success((res) => {
-        console.log(res)          
-        vm.positions = res
-      })
-      .error((res) => {
-        console.log('failure')
-        console.log(res)
-      })      
-
-    CandidatesService.listEnumValues('registeredFrom')
-      .success((res) => {
-        console.log(res)          
-        vm.registeredFrom = res
-      })
-      .error((res) => {
-        console.log('failure')
-        console.log(res)
-      })      
-
-    vm.note = ''
-
-    if ($state.params.candidateId) {
-      CandidatesService.get($state.params.candidateId)
-        .success((res) => {
-          console.log(res)          
-          vm.candidate = res
-        })
-        .error((res) => {
-          console.log('failure')
-          console.log(res)
-        })  
-    } else {
-      vm.candidate = {}
-    }
-  
+    console.log($state.params)  
     // Create file uploader instance    
     vm.imageUploader = new FileUploader({
       url: 'api/uploadImageResume/',
@@ -111,11 +61,11 @@
 
 
     vm.imageUploader.onBeforeUploadItem = function(item) {
-      item.url += vm.candidate.email
+      item.url += vm.email
     }
 
     vm.docUploader.onBeforeUploadItem = function(item) {
-      item.url += vm.candidate.email
+      item.url += vm.email
     }
 
 
@@ -136,7 +86,7 @@
 
     // Called after the user selected a file
     vm.docUploader.onAfterAddingFile = function (fileItem) {
-      
+      console.log(fileItem.file.name)
       if ($window.FileReader) {
         var fileReader = new FileReader();
         fileReader.readAsDataURL(fileItem._file);        
@@ -150,73 +100,11 @@
     };
 
 
-    // Remove existing Candidate
-    function remove() {
-      if ($window.confirm('Are you sure you want to delete?')) {
-        vm.candidate.$remove($state.go('candidates.list'));
-      }
-    }
-
-    // register
-    function register(isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.candidateForm');
-        return false;
-      }
-
-      CandidatesService.register(vm.candidate)
-        .success((res) => {
-          if (vm.candidate.registeredFrom.indexOf('WEB') > -1) {
-            console.log('uploading document')            
-            // uploadDocResume()
-            $state.go('candidates.uploadResume', { email: vm.candidate.email, registeredFrom: vm.candidate.registeredFrom })
-          } else {
-            console.log('uploading image')            
-            $state.go('candidates.uploadResume', { email: vm.candidate.email, registeredFrom: vm.candidate.registeredFrom })
-            // uploadImageResume()  
-          }          
-        })
-        .error((res) => {
-          console.log('failure')
-          vm.error = res.message
-        })  
-
-    }
-
-    // checkin
-    function checkin() {
-      
-      CandidatesService.checkin(vm.candidate.email)
-        .success((res) => {
-          console.log(res)                              
-        })
-        .error((res) => {
-          console.log('failure')
-          vm.error = res.message
-        })  
-
-    }
-
-    function update() {
-
-      CandidatesService.update(vm.candidate, vm.note)
-        .success((res) => {
-          console.log(res)
-          vm.candidate = res
-        })
-        .error((res) => {
-          console.log('failure')
-          vm.error = res.message
-        })  
-
-    }
-
-
     // Called after the user has successfully uploaded a new picture
     vm.imageUploader.onSuccessItem = function (fileItem, response, status, headers) {
       // Show success message
       vm.success = true;
-
+      vm.filename = fileItem.file.name
       // Clear upload buttons
       vm.cancelImageUpload();
       console.log(response)
@@ -269,12 +157,12 @@
     // Cancel the upload process
     function cancelImageUpload() {
       vm.imageUploader.clearQueue();      
-      // vm.resumeURL = vm.candidate.resumeURL
+      vm.resumeImageURL = null
     }
 
     function cancelDocUpload() {
       vm.docUploader.clearQueue();      
-      // vm.resumeURL = vm.candidate.resumeURL
+      vm.resumeDocURL = null
     }
 
   }

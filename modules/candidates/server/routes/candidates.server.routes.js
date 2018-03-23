@@ -25,6 +25,9 @@ module.exports = function(app) {
   app.route('/api/findCandidate/:search')
     .get(candidates.findCandidate)   
 
+  app.route('/api/validatePhone/:phone')
+    .get(candidates.validatePhone)    
+
   app.route('/api/candidates')
     .get(candidates.list)    
   

@@ -35,7 +35,7 @@
       .state('candidates.register', {
         url: '/register',
         templateUrl: 'modules/candidates/client/views/register-form-candidate.client.view.html',
-        controller: 'CandidatesController',
+        controller: 'RegisterController',
         controllerAs: 'vm',
         data: {          
           pageTitle: 'Candidates Register'
@@ -58,7 +58,7 @@
         data: {          
           pageTitle: 'Edit Candidate {{ candidateResolve.name }}'
         }
-      })
+      })            
       .state('candidates.view', {
         url: '/:candidateId',
         templateUrl: 'modules/candidates/client/views/form-candidate.client.view.html',
@@ -67,7 +67,17 @@
         data: {
           pageTitle: 'Candidate {{ candidateResolve.name }}'
         }
-      });
+      })
+      .state('candidates.uploadResume', {
+        url: '/uploadResume/:email/:registeredFrom',
+        templateUrl: 'modules/candidates/client/views/uploadResume-form-candidate.client.view.html',
+        controller: 'UploadResumeController',
+        controllerAs: 'vm',
+        data: {          
+          pageTitle: 'Edit Candidate {{ candidateResolve.name }}'
+        }
+      })      
+
   }
 
   getCandidate.$inject = ['$stateParams', 'CandidatesService'];

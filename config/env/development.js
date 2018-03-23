@@ -2,12 +2,12 @@
 
 var defaultEnvConfig = require('./default');
 
-module.exports = {
+module.exports = {  
   db: {
-    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
+    uri: 'mongodb://35.162.114.40/comp-demo', // points to AWS DEV - MONGODB
     options: {
-      user: '',
-      pass: ''
+      user: 'user',
+      pass: 'bernsInc2016!'
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false

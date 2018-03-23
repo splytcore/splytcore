@@ -7,7 +7,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const path = require('path')
 const config = require(path.resolve('./config/config'))
+const validator = require('validator')
+
 /**
+
  * Candidate Schema
  */
 const CandidateSchema = new Schema({
@@ -75,10 +78,10 @@ const CandidateSchema = new Schema({
     type: Date
   },
   //When candidates upload from tablet 
-  resumeImageURL: {
+  resumeImageURL: [{
     type: String,
     default: 'modules/candidates/client/img/resumes/default.png'
-  },      
+  }],      
   //When candidates upload from web site
   resumeDocURL: {
     type: String,
@@ -107,6 +110,6 @@ const CandidateSchema = new Schema({
     type: Date,
     default: Date.now
   }
-});
+})
 
-mongoose.model('Candidate', CandidateSchema);
+mongoose.model('Candidate', CandidateSchema)
