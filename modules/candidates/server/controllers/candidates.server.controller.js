@@ -18,6 +18,9 @@ const smtpTransport = nodemailer.createTransport(config.mailer.options)
 const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const multer = require('multer') 
+const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
+
+    
 
 /**
  * Create a Candidate
@@ -330,7 +333,19 @@ exports.update = function(req, res) {
  */
 exports.validatePhone = function(req, res) {  
   
-  res.jsonp(true)
+  console.log(req.params.phone)
+  let phone = '+1' + req.params.phone
+
+  twilioClient.phoneNumbers(phone).fetch()
+    .then((number) => {        
+      console.log(number)
+      res.jsonp({ message: 'success' })
+    })
+    .catch((err) => {
+      console.log(err)    
+      return res.status(400).send({ message: 'invalid number' })    
+    })  
+  
 }
 
 
