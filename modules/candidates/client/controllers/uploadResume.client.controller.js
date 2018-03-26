@@ -23,6 +23,12 @@
     vm.email = $state.params.email
     vm.registeredFrom = $state.params.registeredFrom
 
+    vm.finish = finish;    
+
+    function finish() {
+      $state.go('candidates.registrationSuccess', { registeredFrom: $state.params.registeredFrom })
+    }
+
     console.log($state.params)  
     // Create file uploader instance    
     vm.imageUploader = new FileUploader({

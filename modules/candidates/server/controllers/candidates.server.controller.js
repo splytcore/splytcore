@@ -59,6 +59,7 @@ exports.register = function(req, res) {
     function checkinIfMobile(candidate, next) {                        
       if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
         let appt = candidate.appointment.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })
+        console.log('phone: ' + candidate.sms)
         client.messages.create({
           body: 'You have registered and checked in at Blockchains.com! Your appointment with HR is at '+ appt,
           to: '+1' + candidate.sms,  // Text this number
@@ -68,6 +69,8 @@ exports.register = function(req, res) {
           next(null, candidate)
         })
         .catch((err) => {
+          console.log('sms error')
+          console.log(err)
           next(err)
         })
       } else {
@@ -155,6 +158,7 @@ exports.checkin = function(req, res) {
       })
     },
     function sendSMS (candidate, next) {                                          
+      console.log('phone: ' + candidate.sms)
       let appt = candidate.appointment.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })
       client.messages.create({
         body: 'You have checked in at Blockchains.com! Your appointment with HR is at '+ appt,
@@ -388,8 +392,8 @@ exports.uploadImageResume = function (req, res) {
           cb(null, config.uploads.resumeUpload.dest)
         },
         filename: function (req, file, cb) {
-          console.log('file')
-          console.log(file)
+          // console.log('file')
+          // console.log(file)
           let ext = ''                    
           switch(file.mimetype) {
             case 'image/jpeg':

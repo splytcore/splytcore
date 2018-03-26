@@ -41,6 +41,12 @@
           pageTitle: 'Candidates Register'
         }
       })
+      .state('candidates.registrationSuccess', {
+        url: '/registrationSuccess/:registeredFrom',
+        templateUrl: 'modules/candidates/client/views/success-registration.client.view.html',
+        controller: 'RegistrationCompleteController',
+        controllerAs: 'vm'
+      })            
       .state('candidates.checkin', {
         url: '/checkin',
         templateUrl: 'modules/candidates/client/views/checkin-form-candidate.client.view.html',
