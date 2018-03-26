@@ -39,6 +39,7 @@ module.exports = function(app) {
   app.route('/api/uploadDocResume/:email')
     .post(candidates.uploadDocResume)    
 
+  //merges all images into a single pdf file
   app.route('/api/mergeImagesToPDF/:email')
     .get(candidates.mergeImagesToPDF)    
 

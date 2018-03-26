@@ -19,7 +19,7 @@ const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const multer = require('multer') 
 const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
-const PDFImagePack = require("pdf-image-pack")
+const PDFImagePack = require('pdf-image-pack')
 
     
 
@@ -421,7 +421,7 @@ exports.uploadImageResume = function (req, res) {
 }
 
 /**
- * Upload Document resume
+ * convert all images into 1 pdf file
  */
 exports.mergeImagesToPDF = function (req, res) {
 
