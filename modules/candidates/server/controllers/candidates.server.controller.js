@@ -19,6 +19,7 @@ const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const multer = require('multer') 
 const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
+const PDFImagePack = require("pdf-image-pack")
 
     
 
@@ -198,23 +199,9 @@ exports.checkin = function(req, res) {
  * 
  */
 exports.findByEmail = function(req, res) {
-  
-  //TODO: mininum length?  
-  let email = req.params.email
-
-  console.log(email)
-  Candidate.findOne({ email: email }, (err, candidate) => {    
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      })      
-    } else if (!candidate) {
-      return res.status(400).send({
-        message: 'User not found'
-      })      
-    }
-    res.jsonp(candidate)
-  })
+    
+  let candidate = req.candidate
+  res.jsonp(candidate)
 
 }
 
@@ -375,74 +362,83 @@ exports.delete = function(req, res) {
  */
 exports.uploadImageResume = function (req, res) {
   
-  let email = req.params.email
+  let candidate = req.candidate
   
-  Candidate.findOne({ email: email }).exec(function (err, candidate) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      })
-    } else if (!candidate) {
-      return res.status(400).send({
-        message: 'Candidate not found'
-      })      
-    } else {
-      let storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-          cb(null, config.uploads.resumeUpload.dest)
-        },
-        filename: function (req, file, cb) {
-          // console.log('file')
-          // console.log(file)
-          let ext = ''                    
-          switch(file.mimetype) {
-            case 'image/jpeg':
-              ext = '.jpg'
-              break
-            case 'image/jpg':
-              ext = '.jpg'
-              break;              
-            case 'image/png':
-              ext = '.png'            
-              break
-            case 'image/gif':
-              ext = '.gif'            
-              break
-            case 'image/bmp':
-              ext = '.bmp'            
-              break              
-            default:
-              ext = '.jpg'                          
-          }          
-          cb(null, Date.now() + ext)
-        }
-      })  
-
-      let upload = multer({ storage: storage }).single('newResumePicture')
-      let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
-      
-
-      // Filtering to upload only images      
-      upload.fileFilter = resumeUploadFileFilter
-      upload(req, res, function (uploadError) {
-        if(uploadError) {
-          return res.status(400).send({
-            message: 'Error occurred while uploading resume'
-          })
-        } else {
-          console.log(config.uploads.resumeUpload.dest + req.file.filename)
-          let resumeImageURL = config.uploads.resumeUpload.dest + req.file.filename
-          candidate.resumeImageURL.push(resumeImageURL)
-          candidate.save((err) => {
-            if(err) {
-              return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-            } else {
-              res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
-            }
-          })          
-        }
-      })
+  let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, config.uploads.resumeUpload.dest)
+    },
+    filename: function (req, file, cb) {
+      // console.log('file')
+      // console.log(file)
+      let ext = ''                    
+      switch(file.mimetype) {
+        case 'image/jpeg':
+          ext = '.jpg'
+          break
+        case 'image/jpg':
+          ext = '.jpg'
+          break;              
+        case 'image/png':
+          ext = '.png'            
+          break
+        case 'image/gif':
+          ext = '.gif'            
+          break
+        case 'image/bmp':
+          ext = '.bmp'            
+          break              
+        default:
+          ext = '.jpg'                          
+      }          
+      cb(null, Date.now() + ext)
     }
+  })  
+
+  let upload = multer({ storage: storage }).single('newResumePicture')
+  let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
+  
+  // Filtering to upload only images      
+  upload.fileFilter = resumeUploadFileFilter
+  upload(req, res, function (uploadError) {
+    if(uploadError) {
+      return res.status(400).send({
+        message: 'Error occurred while uploading resume'
+      })
+    } else {
+      console.log(config.uploads.resumeUpload.dest + req.file.filename)
+      let resumeImageURL = config.uploads.resumeUpload.dest + req.file.filename
+      candidate.resumeImageURL.push(resumeImageURL)
+      candidate.save((err) => {
+        if(err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+        } else {
+          res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
+        }
+      })          
+    }
+  })
+}
+
+/**
+ * Upload Document resume
+ */
+exports.mergeImagesToPDF = function (req, res) {
+
+  let candidate = req.candidate
+  // var imgs = [
+  //   "./fixture/basic/a.png",
+  //   "./fixture/basic/b.png",
+  // ]
+  let output = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
+  let slide = new PDFImagePack()
+
+  slide.output(candidate.resumeImageURL, output, function(err, doc){
+    console.log("finish output")
+    candidate.resumeDocURL = output
+    candidate.save((err) => {
+      res.send('success!')  
+    })    
   })
 }
 
@@ -451,71 +447,58 @@ exports.uploadImageResume = function (req, res) {
  */
 exports.uploadDocResume = function (req, res) {
   
-  let email = req.params.email
-  
-  Candidate.findOne({ email: email }).exec(function (err, candidate) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      })
-    } else if (!candidate) {
-      return res.status(400).send({
-        message: 'Candidate not found'
-      })      
-    } else {
-      let storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-          cb(null, config.uploads.resumeUpload.dest)
-        },
-        filename: function (req, file, cb) {
-          console.log('file extension: ' + file.mimetype)
-          let ext = ''                    
-          switch(file.mimetype) {
-            case 'application/pdf':
-              ext = '.pdf'
-              break
-            case 'text/plain':
-              ext = '.txt'
-              break
-            case 'application/msword':
-              ext = '.doc'            
-              break                  
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-              ext = '.docx'            
-              break
-            default:
-              ext = '.pdf'                          
-          }                    
-          cb(null, Date.now() + ext)
-        }
-      })      
-      let upload = multer({ storage: storage }).single('newResumeDoc')
-      let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).docUploadFileFilter
-      
-      // Filtering to upload only docs specified type      
-      upload.fileFilter = resumeUploadFileFilter;
+  let candidate = req.candidate
 
-      upload(req, res, function (uploadError) {
-        if(uploadError) {
-          return res.status(400).send({
-            message: 'Error occurred while uploading resume'
-          })
-        } else {
-          console.log(config.uploads.resumeUpload.dest + req.file.filename)
-          candidate.resumeDocURL = config.uploads.resumeUpload.dest + req.file.filename
-          candidate.save((err) => {
-            if(err) {
-              return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-            } else {
-              res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
-            }
-          })          
-        }
+  let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, config.uploads.resumeUpload.dest)
+    },
+    filename: function (req, file, cb) {
+      console.log('file extension: ' + file.mimetype)
+      let ext = ''                    
+      switch(file.mimetype) {
+        case 'application/pdf':
+          ext = '.pdf'
+          break
+        case 'text/plain':
+          ext = '.txt'
+          break
+        case 'application/msword':
+          ext = '.doc'            
+          break                  
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+          ext = '.docx'            
+          break
+        default:
+          ext = '.pdf'                          
+      }                    
+      cb(null, Date.now() + ext)
+    }
+  })      
+  let upload = multer({ storage: storage }).single('newResumeDoc')
+  let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).docUploadFileFilter
+  
+  // Filtering to upload only docs specified type      
+  upload.fileFilter = resumeUploadFileFilter;
+
+  upload(req, res, function (uploadError) {
+    if(uploadError) {
+      return res.status(400).send({
+        message: 'Error occurred while uploading resume'
       })
+    } else {
+      console.log(config.uploads.resumeUpload.dest + req.file.filename)
+      candidate.resumeDocURL = config.uploads.resumeUpload.dest + req.file.filename
+      candidate.save((err) => {
+        if(err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+        } else {
+          res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
+        }
+      })          
     }
   })
 }
-
 
 /**
  * Candidate middleware
@@ -545,7 +528,7 @@ exports.candidateByID = function(req, res, next, id) {
  * Candidate middleware
  */
 exports.candidateByEmail = function(req, res, next, email) {
-  
+  console.log(email)
   Candidate.findOne({ email: email }).exec(function (err, candidate) {
     if (err) {
       return next(err)

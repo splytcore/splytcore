@@ -56,7 +56,8 @@
     "swig": "^1.4.2",
     "validator": "^3.41.2",
     "twilio": "^3.10.0",
-    "cors": "^2.8.4"
+    "cors": "^2.8.4",
+    "pdf-image-pack": "^0.0.1"
   },
   "devDependencies": {
     "coveralls": "^2.11.4",

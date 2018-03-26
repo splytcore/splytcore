@@ -39,6 +39,9 @@ module.exports = function(app) {
   app.route('/api/uploadDocResume/:email')
     .post(candidates.uploadDocResume)    
 
+  app.route('/api/mergeImagesToPDF/:email')
+    .get(candidates.mergeImagesToPDF)    
+
   //returns list of enum values according to model field
   app.route('/api/enum/candidates/:field')
     .get(candidates.listEnumValues)    
@@ -50,4 +53,7 @@ module.exports = function(app) {
 
   // Finish by binding the Candidate middleware
   app.param('candidateId', candidates.candidateByID);  
+  // Finish by binding the Candidate middleware
+  app.param('email', candidates.candidateByEmail);  
+
 };
