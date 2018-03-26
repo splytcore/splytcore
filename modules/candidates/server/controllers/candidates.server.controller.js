@@ -361,9 +361,10 @@ exports.delete = function(req, res) {
  * Upload resume image
  */
 exports.uploadImageResume = function (req, res) {
-  
+
   let candidate = req.candidate
   
+  console.log('step 1')
   let storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, config.uploads.resumeUpload.dest)
@@ -390,32 +391,41 @@ exports.uploadImageResume = function (req, res) {
           break              
         default:
           ext = '.jpg'                          
-      }          
+      }                
       cb(null, Date.now() + ext)
     }
   })  
 
-  let upload = multer({ storage: storage }).single('newResumePicture')
+  let upload = multer({ storage: storage }).array('newResumeImage', 5)
+
   let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
-  
-  // Filtering to upload only images      
   upload.fileFilter = resumeUploadFileFilter
+
+  // // Filtering to upload only images      
   upload(req, res, function (uploadError) {
     if(uploadError) {
+      console.log(uploadError)
       return res.status(400).send({
         message: 'Error occurred while uploading resume'
       })
     } else {
-      console.log(config.uploads.resumeUpload.dest + req.file.filename)
-      let resumeImageURL = config.uploads.resumeUpload.dest + req.file.filename
-      candidate.resumeImageURL.push(resumeImageURL)
-      candidate.save((err) => {
+      async.each(req.files, (file, callback) => {  
+        console.log('filename: ' + config.uploads.resumeUpload.dest + file.filename)
+        let resumeImageURL = config.uploads.resumeUpload.dest + file.filename
+        candidate.resumeImageURL.push(resumeImageURL)        
+        callback()
+      }, function(err) {
         if(err) {
           return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-        } else {
-          res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
-        }
-      })          
+        }           
+        candidate.save((err) => {
+          if(err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+          } else {
+            res.jsonp(candidate)
+          }           
+        })                  
+      })
     }
   })
 }
@@ -433,8 +443,7 @@ exports.mergeImagesToPDF = function (req, res) {
   let output = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
   let slide = new PDFImagePack()
 
-  slide.output(candidate.resumeImageURL, output, function(err, doc){
-    console.log("finish output")
+  slide.output(candidate.resumeImageURL, output, function(err, doc){    
     candidate.resumeDocURL = output
     candidate.save((err) => {
       if(err) {
@@ -486,10 +495,12 @@ exports.uploadDocResume = function (req, res) {
 
   upload(req, res, function (uploadError) {
     if(uploadError) {
+      console.log(uploadError)
       return res.status(400).send({
         message: 'Error occurred while uploading resume'
       })
     } else {
+      console.log(req.file)
       console.log(config.uploads.resumeUpload.dest + req.file.filename)
       candidate.resumeDocURL = config.uploads.resumeUpload.dest + req.file.filename
       candidate.save((err) => {
