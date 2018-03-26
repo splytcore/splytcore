@@ -437,7 +437,10 @@ exports.mergeImagesToPDF = function (req, res) {
     console.log("finish output")
     candidate.resumeDocURL = output
     candidate.save((err) => {
-      res.send('success!')  
+      if(err) {
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+      }      
+      res.jsonp(candidate);
     })    
   })
 }
