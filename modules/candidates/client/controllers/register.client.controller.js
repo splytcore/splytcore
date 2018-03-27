@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('RegisterController', RegisterController);
 
-  RegisterController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout'];
+  RegisterController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout', '$http'];
 
-  function RegisterController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout) {
+  function RegisterController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout, $http) {
     
     var vm = this;
     vm.authentication = Authentication;
@@ -17,7 +17,7 @@
     vm.form = {}   
     
     vm.candidate = {}
-    vm.candidate.registeredFrom = 'MOBILE'
+    vm.candidate.registeredFrom = 'WEB'
     vm.registerURL = '/api/register/' + vm.candidate.registeredFrom
 
     console.log(vm.registerURL)
@@ -59,20 +59,42 @@
     }
   
     // register
-    function register(isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.candidateForm');
-        return false;
+    function register() {
+
+      let fd = new FormData();
+      if (vm.candidate.registeredFrom.indexOf('WEB') > -1) {
+        fd.append('newResumeDoc', vm.newResumeDoc)
+      } else {
+        angular.forEach(vm.newResumeImages, function (image) {
+          fd.append('newResumeImages', image);
+        })         
       }
 
-      CandidatesService.register(vm.candidate)
-        .success((res) => {          
-          alert('success!')
-        })
-        .error((res) => {
-          console.log('failure')
-          vm.error = res.message
-        })  
+      angular.forEach(vm.candidate, function (value, key) {
+        fd.append(key, value);
+      })      
+      
+      let url = '/api/register/' + vm.candidate.registeredFrom
+
+      $http.post(url, fd, {
+        transformRequest: angular.identity,
+        headers: {'Content-Type': undefined}
+      })      
+      .success((res) => {
+        alert('successfull')
+      })
+      .error((res) => {
+        vm.error = res.message
+      });
+
+      // CandidatesService.register(vm.candidate)
+      //   .success((res) => {          
+      //     alert('success!')
+      //   })
+      //   .error((res) => {
+      //     console.log('failure')
+      //     vm.error = res.message
+      //   })  
 
     }
 

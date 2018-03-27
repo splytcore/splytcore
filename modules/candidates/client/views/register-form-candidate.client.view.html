@@ -5,8 +5,9 @@
 
   <div class="col-md-12">
   
-    <form method="post" enctype="multipart/form-data" action="{{vm.registerURL}}" class="form-group">   
-
+    <form method="post" enctype="multipart/form-data" class="form-group"
+      ng-submit="vm.register(vm.form.candidateForm.$valid)">
+      
       <fieldset>
         <div class="form-group" show-errors>
           <label class="control-label" for="lastName">Last</label>
@@ -58,26 +59,38 @@
             ng-model="vm.candidate.registeredFrom" 
             ng-options="option for option in vm.registeredFrom track by option"
             ng-change="vm.registerURL = '/api/register/' + vm.candidate.registeredFrom"
-            ng-init="vm.candidate.registeredFrom = 'MOBILE'"
+            ng-init="vm.candidate.registeredFrom = 'WEB'"
             required>
           </select>
         </div>                
 
         <div clas="form-group" ng-show="vm.candidate.registeredFrom == 'WEB'">
           <label class="control-label" for="newResumeDoc">Select Resume doc,pdf,txt</label>
-          <input class="form-control" type="file" name="newResumeDoc"/>                              
+          <!-- <input class="form-control" type="file" vm.model="vm.newResumeDoc" name="newResumeDoc"/> -->
+          
+
+          <input type='file' file-model='vm.newResumeDoc'>
+        
         </div>
+
 
         <div clas="form-group" ng-show="vm.candidate.registeredFrom == 'MOBILE'">
           <label class="control-label" for="newResumeImages">Select jpg, img, gif</label>
-          <input class="form-control" type="file" name="newResumeImages"/>                              
-          <input class="form-control" type="file" name="newResumeImages"/>                              
+                                                  
 
+          <input class="form-control" type="file" file-model="vm.newResumeImages" multiple/>
+<!--           <input class="form-control" type="file" name="newResumeImages"/>                              
+          
+          <input class="form-control" type="file" name="newResumeImages"/>                              
+ -->
         </div>
     
         <br/>
         <div class="form-group">
-          <button type="submit" class="btn btn-default">Register</button>
+          <button type="button" class="btn btn-default" ng-click="vm.register()"> 
+            Register 
+          </button>          
+
         </div>
 
         <div ng-show="vm.error" class="text-danger">

@@ -483,6 +483,7 @@ exports.uploadDocResume = function (req, res, next) {
   
   upload(req, res, (uploadError) => {
     if(uploadError) {      
+      console.log(uploadError)
       return res.status(400).send({
         message: uploadError.toString()
       })

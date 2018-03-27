@@ -11,7 +11,7 @@
   function CandidatesService($http) {
     let vm = this
     vm.get = get    
-    vm.list = list
+    vm.list = list    
     vm.register = register
     vm.checkin = checkin
     vm.findByEmail = findByEmail
