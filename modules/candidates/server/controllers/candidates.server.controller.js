@@ -363,8 +363,7 @@ exports.delete = function(req, res) {
 exports.uploadImageResume = function (req, res) {
 
   let candidate = req.candidate
-  
-  console.log('step 1')
+
   let storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, config.uploads.resumeUpload.dest)
@@ -396,17 +395,14 @@ exports.uploadImageResume = function (req, res) {
     }
   })  
 
-  let upload = multer({ storage: storage }).array('newResumeImage', 5)
-
-  let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
-  upload.fileFilter = resumeUploadFileFilter
+  let fileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
+  let upload = multer({ storage: storage, fileFilter: fileFilter }).array('newResumeImage', 5)
 
   // // Filtering to upload only images      
   upload(req, res, function (uploadError) {
     if(uploadError) {
-      console.log(uploadError)
       return res.status(400).send({
-        message: 'Error occurred while uploading resume'
+        message: uploadError.toString()
       })
     } else {
       async.each(req.files, (file, callback) => {  
@@ -487,17 +483,14 @@ exports.uploadDocResume = function (req, res) {
       cb(null, Date.now() + ext)
     }
   })      
-  let upload = multer({ storage: storage }).single('newResumeDoc')
-  let resumeUploadFileFilter = require(path.resolve('./config/lib/multer')).docUploadFileFilter
-  
-  // Filtering to upload only docs specified type      
-  upload.fileFilter = resumeUploadFileFilter;
 
+  let fileFilter = require(path.resolve('./config/lib/multer')).docUploadFileFilter
+  let upload = multer({ storage: storage, fileFilter:  fileFilter }).single('newResumeDoc')                                                                            
+  
   upload(req, res, function (uploadError) {
-    if(uploadError) {
-      console.log(uploadError)
+    if(uploadError) {      
       return res.status(400).send({
-        message: 'Error occurred while uploading resume'
+        message: uploadError.toString()
       })
     } else {
       console.log(req.file)
