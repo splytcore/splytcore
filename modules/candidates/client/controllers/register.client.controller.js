@@ -14,7 +14,14 @@
     vm.authentication = Authentication;
 
     vm.error = null
-    vm.form = {}        
+    vm.form = {}   
+    
+    vm.candidate = {}
+    vm.candidate.registeredFrom = 'MOBILE'
+    vm.registerURL = '/api/register/' + vm.candidate.registeredFrom
+
+    console.log(vm.registerURL)
+
     vm.register = register
 
     CandidatesService.listEnumValues('position')
@@ -59,16 +66,8 @@
       }
 
       CandidatesService.register(vm.candidate)
-        .success((res) => {
-          if (vm.candidate.registeredFrom.indexOf('WEB') > -1) {
-            console.log('uploading document')            
-            // uploadDocResume()
-            $state.go('candidates.uploadResume', { email: vm.candidate.email, registeredFrom: vm.candidate.registeredFrom })
-          } else {
-            console.log('uploading image')            
-            $state.go('candidates.uploadResume', { email: vm.candidate.email, registeredFrom: vm.candidate.registeredFrom })
-            // uploadImageResume()  
-          }          
+        .success((res) => {          
+          alert('success!')
         })
         .error((res) => {
           console.log('failure')

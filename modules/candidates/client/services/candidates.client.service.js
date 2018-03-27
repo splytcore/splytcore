@@ -43,7 +43,7 @@
 
     function register (candidate) {      
       console.log(candidate)
-      return $http.post('/api/register', candidate)
+      return $http.post('/api/register/' + candidate.registeredFrom, candidate)
     }
 
     function checkin (email) {

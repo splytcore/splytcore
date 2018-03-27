@@ -27,7 +27,9 @@ const PDFImagePack = require('pdf-image-pack')
  * Create a Candidate
  */
 exports.register = function(req, res) {
-  
+    
+  console.log('time to register')
+
   async.waterfall([
     function isRegistered (next) {
       let email = req.body.email
@@ -344,25 +346,26 @@ exports.validatePhone = function(req, res) {
  * Delete an Candidate
  */
 exports.delete = function(req, res) {
-  var candidate = req.candidate;
+  var candidate = req.candidate
 
   candidate.remove(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
-      res.jsonp(candidate);
+      res.jsonp(candidate)
     }
-  });
-};
+  })
+}
+
 
 /**
  * Upload resume image
  */
-exports.uploadImageResume = function (req, res) {
+exports.uploadImageResume = function (req, res, next) {  
 
-  let candidate = req.candidate
+  console.log('upload images')
 
   let storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -396,31 +399,26 @@ exports.uploadImageResume = function (req, res) {
   })  
 
   let fileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
-  let upload = multer({ storage: storage, fileFilter: fileFilter }).array('newResumeImage', 5)
+  let upload = multer({ storage: storage, fileFilter: fileFilter }).array('newResumeImages', 5)
 
   // // Filtering to upload only images      
-  upload(req, res, function (uploadError) {
+  upload(req, res, (uploadError) => {
     if(uploadError) {
       return res.status(400).send({
         message: uploadError.toString()
       })
     } else {
+      let resumeImageURLS = []
       async.each(req.files, (file, callback) => {  
-        console.log('filename: ' + config.uploads.resumeUpload.dest + file.filename)
-        let resumeImageURL = config.uploads.resumeUpload.dest + file.filename
-        candidate.resumeImageURL.push(resumeImageURL)        
+        console.log('filename: ' + config.uploads.resumeUpload.dest + file.filename)        
+        resumeImageURLS.push(config.uploads.resumeUpload.dest + file.filename)        
         callback()
-      }, function(err) {
+      }, (err) => {
         if(err) {
           return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
         }           
-        candidate.save((err) => {
-          if(err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-          } else {
-            res.jsonp(candidate)
-          }           
-        })                  
+        req.body.resumeImageURLS = resumeImageURLS
+        next()
       })
     }
   })
@@ -429,9 +427,9 @@ exports.uploadImageResume = function (req, res) {
 /**
  * convert all images into 1 pdf file
  */
-exports.mergeImagesToPDF = function (req, res) {
+exports.mergeImagesToPDF = function (req, res, next) {
 
-  let candidate = req.candidate
+  console.log('merging and convert to single pdf')
   // var imgs = [
   //   "./fixture/basic/a.png",
   //   "./fixture/basic/b.png",
@@ -439,24 +437,20 @@ exports.mergeImagesToPDF = function (req, res) {
   let output = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
   let slide = new PDFImagePack()
 
-  slide.output(candidate.resumeImageURL, output, function(err, doc){    
-    candidate.resumeDocURL = output
-    candidate.save((err) => {
-      if(err) {
-        return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-      }      
-      res.jsonp(candidate);
-    })    
+  slide.output(req.body.resumeImageURLS, output, function(err, doc){    
+    req.body.resumeDocURL = output      
+    next()
   })
+
 }
+
 
 /**
  * Upload Document resume
  */
-exports.uploadDocResume = function (req, res) {
-  
-  let candidate = req.candidate
-
+exports.uploadDocResume = function (req, res, next) {
+    
+  console.log('upload doc')
   let storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, config.uploads.resumeUpload.dest)
@@ -487,24 +481,21 @@ exports.uploadDocResume = function (req, res) {
   let fileFilter = require(path.resolve('./config/lib/multer')).docUploadFileFilter
   let upload = multer({ storage: storage, fileFilter:  fileFilter }).single('newResumeDoc')                                                                            
   
-  upload(req, res, function (uploadError) {
+  upload(req, res, (uploadError) => {
     if(uploadError) {      
       return res.status(400).send({
         message: uploadError.toString()
       })
-    } else {
-      console.log(req.file)
-      console.log(config.uploads.resumeUpload.dest + req.file.filename)
-      candidate.resumeDocURL = config.uploads.resumeUpload.dest + req.file.filename
-      candidate.save((err) => {
-        if(err) {
-          return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-        } else {
-          res.send({ url: config.uploads.resumeUpload.dest + req.file.filename })
-        }
-      })          
+    } else {      
+      console.log(config.uploads.resumeUpload.dest + req.file.filename)      
+      req.body.resumeDocURL = config.uploads.resumeUpload.dest + req.file.filename
+      next(null)      
     }
   })
+}
+
+exports.test = function(req, res) {
+  res.send('success!!')
 }
 
 /**

@@ -17,8 +17,8 @@
     vm.form = {}    
     vm.email = $state.params.email
     
-    vm.uploadImageURL = '/api/uploadImageResume/'+ vm.email
-    vm.uploadDocURL = '/api/uploadDocResume/'+ vm.email
+    vm.uploadImageURL = '/api/register/MOBILE'
+    vm.uploadDocURL = '/api/register/WEB'
                      
     vm.registeredFrom = $state.params.registeredFrom
 

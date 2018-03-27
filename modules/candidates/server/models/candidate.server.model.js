@@ -78,7 +78,7 @@ const CandidateSchema = new Schema({
     type: Date
   },
   //When candidates upload from tablet 
-  resumeImageURL: [{
+  resumeImageURLS: [{
     type: String,
     default: 'modules/candidates/client/img/resumes/default.png'
   }],      

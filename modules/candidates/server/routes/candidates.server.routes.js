@@ -3,17 +3,20 @@
 /**
  * Module dependencies
  */
-var candidatesPolicy = require('../policies/candidates.server.policy'),
-  candidates = require('../controllers/candidates.server.controller');
+let candidatesPolicy = require('../policies/candidates.server.policy')
+let candidates = require('../controllers/candidates.server.controller')
 
 module.exports = function(app) {
   // Candidates Routes
   
   app.route('/api/checkin')
     .post(candidates.checkin) 
-
-  app.route('/api/register')
-    .post(candidates.register)   
+            
+  app.route('/api/register/MOBILE')
+    .post(candidates.uploadImageResume, candidates.mergeImagesToPDF, candidates.register)   
+             
+  app.route('/api/register/WEB')
+    .post(candidates.uploadDocResume, candidates.register)       
 
   app.route('/api/candidateByEmail/:email')
     .get(candidates.findByEmail)   
@@ -32,12 +35,12 @@ module.exports = function(app) {
     .get(candidates.list)    
   
   //to upload resume from tablet
-  app.route('/api/uploadImageResume/:email')
-    .post(candidates.uploadImageResume)    
+  // app.route('/api/uploadImageResume/:email')
+  //   .post(candidates.uploadImageResume)    
 
   //to upload resume from web
-  app.route('/api/uploadDocResume/:email')
-    .post(candidates.uploadDocResume)    
+  // app.route('/api/uploadDocResume/:email')
+  //   .post(candidates.uploadDocResume)    
 
   //merges all images into a single pdf file
   app.route('/api/mergeImagesToPDF/:email')
