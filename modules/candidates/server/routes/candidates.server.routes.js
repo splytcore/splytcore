@@ -34,18 +34,6 @@ module.exports = function(app) {
   app.route('/api/candidates')
     .get(candidates.list)    
   
-  //to upload resume from tablet
-  // app.route('/api/uploadImageResume/:email')
-  //   .post(candidates.uploadImageResume)    
-
-  //to upload resume from web
-  // app.route('/api/uploadDocResume/:email')
-  //   .post(candidates.uploadDocResume)    
-
-  //merges all images into a single pdf file
-  app.route('/api/mergeImagesToPDF/:email')
-    .get(candidates.mergeImagesToPDF)    
-
   //returns list of enum values according to model field
   app.route('/api/enum/candidates/:field')
     .get(candidates.listEnumValues)    
