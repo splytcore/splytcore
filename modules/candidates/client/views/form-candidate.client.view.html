@@ -113,13 +113,12 @@
           <input name="registeredFrom" type="text" ng-model="vm.candidate.registeredFrom" id="registeredFrom" class="form-control" placeholder="registeredFrom" required>          
         </div>
                 
-        <div class="form-group" 
-          ng-show="vm.candidate.registeredFrom == 'MOBILE'" 
-          ng-repeat="url in vm.candidate.resumeImageURL">          
-          <a target="_blank" href="{{ url }}"> Resume Image {{ $index + 1  }}</a> <br/>
+        <div class="form-group" ng-repeat="url in vm.candidate.resumeImageURLS">          
+          <label class="control-label" for="doc">Document Resume Images</label>                                     
+          <a target="_blank" href="{{ url }}"> Image {{ $index + 1  }}</a> <br/>
         </div>
 
-        <div class="form-group" ng-show="vm.candidate.registeredFrom == 'WEB'">                 
+        <div class="form-group">                 
           <label class="control-label" for="doc">Document Resume</label>                                     
           <a target="_blank" href="{{vm.candidate.resumeDocURL}}"> Open </a>          
         </div>
