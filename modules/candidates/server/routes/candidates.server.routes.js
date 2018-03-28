@@ -33,6 +33,10 @@ module.exports = function(app) {
 
   app.route('/api/candidates')
     .get(candidates.list)    
+
+  //returns list of enum all
+  app.route('/api/enum/candidates')
+    .get(candidates.listAllEnumValues)    
   
   //returns list of enum values according to model field
   app.route('/api/enum/candidates/:field')

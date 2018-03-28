@@ -24,25 +24,38 @@
 
     vm.register = register
 
-    CandidatesService.listEnumValues('position')
+    CandidatesService.listEnumValues('ALL')
       .success((res) => {
         console.log(res)          
-        vm.positions = res
+        vm.positions = res.positions
+        vm.departments = res.departments
+        vm.registeredFrom = res.registeredFrom
       })
       .error((res) => {
         console.log('failure')
         console.log(res)
       })      
 
-    CandidatesService.listEnumValues('registeredFrom')
-      .success((res) => {
-        console.log(res)          
-        vm.registeredFrom = res
-      })
-      .error((res) => {
-        console.log('failure')
-        console.log(res)
-      })      
+
+    // CandidatesService.listEnumValues('position')
+    //   .success((res) => {
+    //     console.log(res)          
+    //     vm.positions = res
+    //   })
+    //   .error((res) => {
+    //     console.log('failure')
+    //     console.log(res)
+    //   })      
+
+    // CandidatesService.listEnumValues('registeredFrom')
+    //   .success((res) => {
+    //     console.log(res)          
+    //     vm.registeredFrom = res
+    //   })
+    //   .error((res) => {
+    //     console.log('failure')
+    //     console.log(res)
+    //   })      
 
     if ($state.params.candidateId) {
       CandidatesService.get($state.params.candidateId)
@@ -78,7 +91,7 @@
 
       $http.post(url, fd, {
         transformRequest: angular.identity,
-        headers: {'Content-Type': undefined}
+        headers: { 'Content-Type': undefined }
       })      
       .success((res) => {
         alert('successfull')

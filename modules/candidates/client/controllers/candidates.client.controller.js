@@ -188,7 +188,8 @@
       
       CandidatesService.checkin(vm.candidate.email)
         .success((res) => {
-          console.log(res)                              
+          console.log(res) 
+          vm.success = res.message                             
         })
         .error((res) => {
           console.log('failure')

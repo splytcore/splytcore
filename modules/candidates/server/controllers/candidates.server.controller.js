@@ -252,6 +252,28 @@ exports.listEnumValues = function(req, res) {
 }
 
 /*
+* List all enum values
+* @return list  all values in array format
+*/
+exports.listAllEnumValues = function(req, res) {  
+  
+  let departments = Candidate.schema.path('department').enumValues
+  let registeredFrom = Candidate.schema.path('registeredFrom').enumValues
+  let stages = Candidate.schema.path('stage').enumValues
+  let positions = Candidate.schema.path('position').enumValues
+  let valuations = Candidate.schema.path('valuation').enumValues
+
+  res.jsonp({
+    departments: departments,
+    registeredFrom: registeredFrom,
+    stages: stages,
+    positions: positions,
+    valuations: valuations
+  })
+}
+
+
+/*
 * List candidates according to query
 * Params are all fields in Candidate model
 */
