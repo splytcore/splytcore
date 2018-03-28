@@ -16,7 +16,7 @@ app/tests/coverage/
 .idea/
 coverage/
 modules/candidates/client/resumes/*
-!modules/candidates/client/resumes/.gitkeep
+!modules/candidates/client/resumes/fakeresume.txt
 
 # MEAN.js app and assets
 # ======================
