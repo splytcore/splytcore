@@ -24,7 +24,7 @@
 
     vm.register = register
 
-    CandidatesService.listEnumValues('ALL')
+    CandidatesService.listAllEnumValues()
       .success((res) => {
         console.log(res)          
         vm.positions = res.positions

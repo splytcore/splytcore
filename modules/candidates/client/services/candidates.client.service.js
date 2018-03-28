@@ -12,13 +12,14 @@
     let vm = this
     vm.get = get    
     vm.list = list    
-    vm.register = register
+    // vm.register = register
     vm.checkin = checkin
     vm.findByEmail = findByEmail
     vm.listCheckins = listCheckins    
     vm.listByFilters = listByFilters
 
     vm.listEnumValues = listEnumValues
+    vm.listAllEnumValues = listAllEnumValues    
 
     vm.findCandidate = findCandidate
 
@@ -28,6 +29,11 @@
     function listEnumValues (field) {      
       return $http.get('/api/enum/candidates/' + field)
     }
+
+    function listAllEnumValues (field) {      
+      return $http.get('/api/enum/candidates/')
+    }
+
     
     function update (candidate, note) {      
       return $http.put(vm.url + candidate._id, { candidate: candidate, note: note })
@@ -41,10 +47,10 @@
       return $http.get(vm.url)
     }
 
-    function register (candidate) {      
-      console.log(candidate)
-      return $http.post('/api/register/' + candidate.registeredFrom, candidate)
-    }
+    // function register (candidate) {      
+    //   console.log(candidate)
+    //   return $http.post('/api/register/' + candidate.registeredFrom, candidate)
+    // }
 
     function checkin (email) {
       return $http.post('/api/checkin', { email: email })      

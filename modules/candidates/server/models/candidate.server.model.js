@@ -46,6 +46,10 @@ const CandidateSchema = new Schema({
     required: 'Please fill in valuation',
     trim: true
   },        
+  otherValuation: {    
+    type: String,
+    uppercase: true
+  },      
   stage: {
     type: String,
     enum: config.stage,
@@ -53,6 +57,10 @@ const CandidateSchema = new Schema({
     required: 'Please fill in stage',
     trim: true
   }, 
+  otherStage: {    
+    type: String,
+    uppercase: true
+  },      
   department: {
     type: String,
     enum: config.department,
@@ -60,13 +68,18 @@ const CandidateSchema = new Schema({
     required: 'Please choose department'    
   },
   otherDepartment: {
-    type: String          
+    type: String,
+    uppercase: true         
   },  
   position: {
     enum: config.position,
     type: String,
     default: ''    
   },  
+  otherPosition: {    
+    type: String,
+    uppercase: true
+  },    
   rating: {
     type: Number,
     default: 0
@@ -99,7 +112,7 @@ const CandidateSchema = new Schema({
     },
     note: {
       type: String,
-      default: ''
+      default: ''      
     },                
     user: {
       type: Schema.ObjectId,

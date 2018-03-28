@@ -26,37 +26,19 @@
     vm.uploadDocResume = uploadDocResume
     vm.cancelDocUpload = cancelDocUpload    
 
-    
-    CandidatesService.listEnumValues('department')
+    CandidatesService.listAllEnumValues()
       .success((res) => {
         console.log(res)          
-        vm.departments = res
+        vm.positions = res.positions
+        vm.departments = res.departments
+        vm.registeredFrom = res.registeredFrom
+        vm.stages = res.stages
+        vm.valuations = res.valuations
       })
       .error((res) => {
         console.log('failure')
         console.log(res)
-      })  
-    
-
-    CandidatesService.listEnumValues('position')
-      .success((res) => {
-        console.log(res)          
-        vm.positions = res
       })
-      .error((res) => {
-        console.log('failure')
-        console.log(res)
-      })      
-
-    CandidatesService.listEnumValues('registeredFrom')
-      .success((res) => {
-        console.log(res)          
-        vm.registeredFrom = res
-      })
-      .error((res) => {
-        console.log('failure')
-        console.log(res)
-      })      
 
     vm.note = ''
 
