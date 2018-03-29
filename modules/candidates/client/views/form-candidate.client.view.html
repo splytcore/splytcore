@@ -74,8 +74,10 @@
         <div class="form-group" show-errors>
           <label class="control-label" for="department">Departments</label>
           <select class="form-control" name="department" 
-            ng-model="vm.candidate.department"
-            ng-options="x for x in vm.departments">
+            ng-model="vm.candidate.department">
+
+            <option ng-repeat="x in vm.departments" {{x == vm.candidate.department ? 'selected' : '' }} value={{x}}> {{x}} </option>
+
           </select>
 
           <div ng-messages="vm.form.candidateForm.valuation.$error" role="alert">
