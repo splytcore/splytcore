@@ -421,7 +421,7 @@ exports.uploadImageResume = function (req, res, next) {
   })  
 
   let fileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter
-  let upload = multer({ storage: storage, fileFilter: fileFilter }).array('newResumeImages', 5)
+  let upload = multer({ storage: storage, fileFilter: fileFilter }).array('newResumeImages', 25)
 
   // // Filtering to upload only images      
   upload(req, res, (uploadError) => {
