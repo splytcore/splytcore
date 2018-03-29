@@ -60,7 +60,7 @@
           <label class="control-label" for="stage">stage</label>
 
           <select class="form-control" name="stage" ng-model="vm.candidate.stage"
-            ng-init="vm.candidate.stage = vm.candidate.stage"
+            ng-init="vm.candidate.stage = x"
             ng-options="x for x in vm.stages"></select>
 
           <div ng-messages="vm.form.candidateForm.stage.$error" role="alert">
@@ -73,7 +73,7 @@
 
           <select class="form-control" name="department" 
             ng-model="vm.candidate.department" 
-            ng-init="vm.candidate.department = vm.candidate.department"
+            ng-init="vm.candidate.department = x"
             ng-options="x for x in vm.departments">
           </select>
 
@@ -87,7 +87,7 @@
           <label class="control-label" for="valuation">valuation</label>
 
           <select class="form-control" name="valuation" ng-model="vm.candidate.valuation" 
-            ng-init="vm.candidate.valuation = vm.candidate.valuation"
+            ng-init="vm.candidate.valuation = x"
             ng-options="x for x in vm.valuations">
           </select>
 
