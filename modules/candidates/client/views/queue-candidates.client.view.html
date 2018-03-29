@@ -3,8 +3,8 @@
     <h1>CHECKIN QUEUE</h1>
     <a ng-repeat="candidate in vm.candidates"
        ui-sref="candidates.view({ candidateId: candidate._id })"
-       class="list-group-item">
-      <h4 class="list-group-item-heading"> {{ candidate }} </h4>
+       class="list-group-item">      
+      <h4 class="list-group-item-heading">{{ candidate.lastName }}, {{candidate.firstName }} <br/> {{ candidate.email }}</h4>
     </a>
   </div>
 </section>
