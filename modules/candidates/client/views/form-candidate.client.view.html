@@ -86,9 +86,8 @@
         <div class="form-group" show-errors>
           <label class="control-label" for="valuation">valuation</label>
 
-          <select class="form-control" name="valuation" ng-model="vm.candidate.valuation" 
-            ng-init="vm.candidate.valuation = x"
-            ng-options="x for x in vm.valuations">
+          <select class="form-control" name="valuation" ng-model="vm.candidate.valuation">                        
+            <option ng-repeat="x in vm.valuations" {{x == vm.candidate.valuation ? 'selected' : '' }} value={{x}}> {{x}} </option>
           </select>
 
 
