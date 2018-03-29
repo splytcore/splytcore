@@ -17,6 +17,7 @@ app/tests/coverage/
 coverage/
 modules/candidates/client/resumes/*
 !modules/candidates/client/resumes/fakeresume.txt
+package-lock.json
 
 # MEAN.js app and assets
 # ======================
