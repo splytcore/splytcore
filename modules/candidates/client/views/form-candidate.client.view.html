@@ -61,8 +61,9 @@
           <label class="control-label" for="stage">stage</label>
 
           <select class="form-control" name="stage" ng-model="vm.candidate.stage">
-           <option ng-repeat="x in vm.stages" {{x == vm.candidate.stage ? 'selected' : '' }} value={{x}}> {{x}} </option>                        
-
+           
+           <option ng-repeat="x in vm.stages" {{x == vm.candidate.stage ? 'selected' : '' }} 
+                  value={{x}}> {{x}} </option>                        
           </select>
 
           <div ng-messages="vm.form.candidateForm.stage.$error" role="alert">
@@ -73,8 +74,11 @@
         <div class="form-group" show-errors>
           <label class="control-label" for="department">Departments</label>
 
-          <select class="form-control" name="department" 
-            ng-model="vm.candidate.department">
+          {{ vm.candidate.department }}  =====>
+          {{ vm.departments}}
+
+          <select class="form-control" name="department" ng-model="vm.candidate.department">
+            
             <option ng-repeat="x in vm.departments" {{x == vm.candidate.department ? 'selected' : '' }} value={{x}}> {{x}} </option>
 
           </select>
