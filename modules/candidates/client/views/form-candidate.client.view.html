@@ -45,8 +45,10 @@
         <div class="form-group" show-errors>
           <label class="control-label" for="stage">position</label>
 
-          <select class="form-control" name="position" ng-model="vm.candidate.position"            
-            ng-options="x1 for x1 in vm.positions">            
+          <select class="form-control" name="position" ng-model="vm.candidate.position">            
+           
+           <option ng-repeat="x in vm.positions" {{x == vm.candidate.position ? 'selected' : '' }} value={{x}}> {{x}} </option>
+
           </select>
 
           <div ng-messages="vm.form.candidateForm.position.$error" role="alert">
@@ -58,9 +60,10 @@
         <div class="form-group" show-errors>
           <label class="control-label" for="stage">stage</label>
 
-          <select class="form-control" name="stage" ng-model="vm.candidate.stage"
-            
-            ng-options="x2 for x2 in vm.stages"></select>
+          <select class="form-control" name="stage" ng-model="vm.candidate.stage">
+           <option ng-repeat="x in vm.stages" {{x == vm.candidate.stage ? 'selected' : '' }} value={{x}}> {{x}} </option>                        
+
+          </select>
 
           <div ng-messages="vm.form.candidateForm.stage.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Stage is required.</p>
@@ -71,8 +74,9 @@
           <label class="control-label" for="department">Departments</label>
 
           <select class="form-control" name="department" 
-            ng-model="vm.candidate.department"             
-            ng-options="x3 for x3 in vm.departments">
+            ng-model="vm.candidate.department">
+            <option ng-repeat="x in vm.departments" {{x == vm.candidate.department ? 'selected' : '' }} value={{x}}> {{x}} </option>
+
           </select>
 
           <div ng-messages="vm.form.candidateForm.valuation.$error" role="alert">
