@@ -92,6 +92,10 @@
           </button>          
 
         </div>
+        
+        <div ng-show="vm.success" class="text-success">
+          <strong ng-bind="vm.success"></strong>
+        </div>
 
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>

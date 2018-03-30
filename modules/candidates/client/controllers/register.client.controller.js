@@ -93,8 +93,8 @@
         transformRequest: angular.identity,
         headers: { 'Content-Type': undefined }
       })      
-      .success((res) => {
-        alert('successfull')
+      .success((res) => {        
+        vm.success = res.message 
       })
       .error((res) => {
         vm.error = res.message

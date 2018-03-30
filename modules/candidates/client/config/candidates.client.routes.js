@@ -41,12 +41,6 @@
           pageTitle: 'Candidates Register'
         }
       })
-      .state('candidates.registrationSuccess', {
-        url: '/registrationSuccess/:registeredFrom',
-        templateUrl: 'modules/candidates/client/views/success-registration.client.view.html',
-        controller: 'RegistrationCompleteController',
-        controllerAs: 'vm'
-      })            
       .state('candidates.checkin', {
         url: '/checkin',
         templateUrl: 'modules/candidates/client/views/checkin-form-candidate.client.view.html',
@@ -74,16 +68,6 @@
           pageTitle: 'Candidate {{ candidateResolve.name }}'
         }
       })
-      .state('candidates.uploadResume', {
-        url: '/uploadResume/:email/:registeredFrom',
-        templateUrl: 'modules/candidates/client/views/uploadResume-form-candidate.client.view.html',
-        controller: 'UploadResumeController',
-        controllerAs: 'vm',
-        data: {          
-          pageTitle: 'Edit Candidate {{ candidateResolve.name }}'
-        }
-      })      
-
   }
 
   getCandidate.$inject = ['$stateParams', 'CandidatesService'];
