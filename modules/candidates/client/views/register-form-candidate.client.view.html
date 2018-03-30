@@ -59,7 +59,7 @@
             ng-model="vm.candidate.registeredFrom" 
             ng-options="option for option in vm.registeredFrom track by option"
             ng-change="vm.registerURL = '/api/register/' + vm.candidate.registeredFrom"
-            ng-init="vm.candidate.registeredFrom = 'WEB'"
+            ng-init="vm.candidate.registeredFrom = 'MOBILE'"
             required>
           </select>
         </div>                
