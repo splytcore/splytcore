@@ -18,7 +18,7 @@
     vm.remove = remove
     vm.update = update       
     vm.checkin = checkin
-    
+
 
     CandidatesService.listAllEnumValues()
       .success((res) => {
@@ -52,8 +52,17 @@
 
     // Remove existing Candidate
     function remove() {
-      if ($window.confirm('Are you sure you want to delete?')) {
-        vm.candidate.$remove($state.go('candidates.list'));
+      if ($window.confirm('Are you sure you want to delete?')) {        
+        CandidatesService.remove(vm.candidate._id)
+          .success((res) => {
+            console.log(res) 
+            vm.success = res.message                 
+            $state.go('candidates.list')
+          })
+          .error((res) => {
+            console.log('failure')
+            vm.error = res.message
+          })        
       }
     }
 

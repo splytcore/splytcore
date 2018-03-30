@@ -11,6 +11,7 @@
   function CandidatesService($http) {
     let vm = this
     vm.get = get    
+    vm.remove = remove
     vm.list = list    
     // vm.register = register
     vm.checkin = checkin
@@ -25,6 +26,11 @@
 
     vm.update = update
     vm.url = '/api/candidates/'
+
+    function remove (candidateId) {      
+      return $http.delete('/api/candidates/' + candidateId)
+    }
+
 
     function listEnumValues (field) {      
       return $http.get('/api/enum/candidates/' + field)
