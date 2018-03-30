@@ -21,7 +21,14 @@ const multer = require('multer')
 const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
 const PDFImagePack = require('pdf-image-pack')
 
-    
+const fs = require('fs')
+const AWS = require('aws-sdk')
+const multerS3 = require('multer-s3')
+
+console.log(config.S3)
+
+const s3 = new AWS.S3(config.S3)
+
 
 /**
  * Create a Candidate
@@ -459,6 +466,10 @@ exports.mergeImagesToPDF = function (req, res, next) {
   let output = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
   let slide = new PDFImagePack()
 
+  console.log('image urls')
+  console.log(req.body.resumeImageURLS)
+  console.log('destination: ' + output)
+
   slide.output(req.body.resumeImageURLS, output, function(err, doc){    
     req.body.resumeDocURL = output      
     next()
@@ -517,9 +528,116 @@ exports.uploadDocResume = function (req, res, next) {
   })
 }
 
-exports.test = function(req, res) {
-  res.send('success!!')
+//Upload images to S3
+exports.uploadImagesToS3 = function(req, res, next) {
+  
+  let upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: 'blockchainscdn',
+      metadata: function (req, file, cb) {        
+        cb(null, { fieldName: file.fieldname });
+      },
+      key: function (req, file, cb) {
+        console.log('file extension: ' + file.mimetype)
+        let ext = ''           
+        switch(file.mimetype) {
+          case 'image/jpeg':
+            ext = '.jpg'
+            break
+          case 'image/jpg':
+            ext = '.jpg'
+            break;              
+          case 'image/png':
+            ext = '.png'            
+            break
+          case 'image/gif':
+            ext = '.gif'            
+            break
+          case 'image/bmp':
+            ext = '.bmp'            
+            break              
+          default:
+            ext = '.jpg'                          
+        }                
+        cb(null, 'uploads/' + Date.now().toString() + ext)
+      }
+    })
+  }).array('newResumeImages', 25)  
+
+  upload(req, res, (uploadError) => {
+    if(uploadError) {
+      return res.status(400).send({
+        message: uploadError.toString()
+      })
+    } else {
+      let resumeImageURLS = []
+      async.each(req.files, (file, callback) => {  
+        console.log(file)
+        console.log('location: ' + file.location)        
+        resumeImageURLS.push(file.location)        
+        callback()
+      }, (err) => {
+        if(err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+        }           
+        req.body.resumeImageURLS = resumeImageURLS
+        next()
+      })
+    }
+  })
+
 }
+
+//Upload document to S3
+exports.uploadDocToS3 = function(req, res, next) {
+
+  let upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: 'blockchainscdn',
+      metadata: function (req, file, cb) {        
+        cb(null, { fieldName: file.fieldname });
+      },
+      key: function (req, file, cb) {
+        console.log('file extension: ' + file.mimetype)
+        let ext = ''        
+        switch(file.mimetype) {
+          case 'application/pdf':
+            ext = '.pdf'
+            break
+          case 'text/plain':
+            ext = '.txt'
+            break
+          case 'application/msword':
+            ext = '.doc'            
+            break                  
+          case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            ext = '.docx'            
+            break
+          default:
+            ext = '.pdf'                          
+        }                
+        cb(null, 'uploads/' + Date.now().toString() + ext)
+      }
+    })
+  }).single('newResumeDoc', 10)      
+
+  upload(req, res, (uploadError) => {
+    if(uploadError) {
+      return res.status(400).send({
+        message: uploadError.toString()
+      })
+    } else {            
+      console.log(req.file.location)
+      req.body.resumeDocURL = req.file.location
+      next()
+    }
+  })
+}
+
+
+
 
 /**
  * Candidate middleware

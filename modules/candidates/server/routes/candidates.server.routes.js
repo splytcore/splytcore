@@ -15,11 +15,11 @@ module.exports = function(app) {
             
   //@desc register from our tablet
   app.route('/api/register/MOBILE')
-    .post(candidates.uploadImageResume, candidates.mergeImagesToPDF, candidates.register)   
+    .post(candidates.uploadImagesToS3, candidates.mergeImagesToPDF, candidates.register)   
              
   //@desc register from our web site
   app.route('/api/register/WEB')
-    .post(candidates.uploadDocResume, candidates.register)       
+    .post(candidates.uploadDocToS3, candidates.register)       
 
   //@desc find candidates by email
   app.route('/api/candidateByEmail/:email')
