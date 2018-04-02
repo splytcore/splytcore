@@ -486,8 +486,15 @@ exports.uploadPDFtoS3 = function(req, res, next) {
         cb(err, data)          
       })
     },
-    function uploadPDF (pdfFile, cb) {                       
-      let params = { Bucket: 'blockchainscdn', Key: 'uploads/resumes/' + Date.now() + '.pdf', Body:pdfFile }
+    function uploadPDF (pdfFile, cb) {  
+      let maxAge = 3600 * 24 * 365                 
+      let params = { 
+        Bucket: 'blockchainscdn', 
+        Key: 'uploads/resumes/' + Date.now() + '.pdf',
+        ContentType: 'application/pdf',
+        CacheControl: `max-age=${maxAge}`,
+        Body: pdfFile 
+      }
       s3.upload(params, function(err, data) {
         console.log(data)
         cb(err, data.Location)            
@@ -498,8 +505,10 @@ exports.uploadPDFtoS3 = function(req, res, next) {
       console.log(err)
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
     } 
-    console.log('S3 URL: ' + S3URL)             
-    req.body.resumeDocURL = S3URL     
+    let CDN_URL = S3URL.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
+    console.log('S3 URL: ' + S3URL)
+    console.log('CDN URL: ' + CDN_URL)
+    req.body.resumeDocURL = CDN_URL     
     next()
   })     
 
