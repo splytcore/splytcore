@@ -27,6 +27,10 @@ module.exports = function(app) {
   app.route('/api/candidateByEmail/:email')
     .get(candidates.findByEmail)   
 
+  //@desc send completed registration SMS to a gven @email 
+  app.route('/api/sendRegisteredText')
+    .post(candidates.sendRegisteredText)
+
   //@desc find candidates by email, last name, sms
   //i.e. /api/findCandidate?q=john@gmail.com
   //i.e. /api/findCandidate?q=smith
