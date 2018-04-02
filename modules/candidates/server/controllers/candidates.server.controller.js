@@ -470,18 +470,23 @@ exports.uploadResumeImages = function (req, res, next) {
  */
 exports.mergeImagesToPDF = function (req, res, next) {
 
-  console.log('merging and convert to single pdf')
-  let outputPath = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
-  let slide = new PDFImagePack()
+  if (req.body.resumeImageURLS.length > 0) {
+    
+    console.log('merging and convert to single pdf')
+    let outputPath = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
+    let slide = new PDFImagePack()
 
-  console.log('image urls: ')
-  console.log(req.body.resumeImageURLS) //TODO: change to path variablenames
-  console.log('destination: ' + outputPath)
+    console.log('image urls: ')
+    console.log(req.body.resumeImageURLS)
+    console.log('destination: ' + outputPath)
 
-  slide.output(req.body.resumeImageURLS, outputPath, function(err, doc){    
-    req.body.pdfPath = outputPath      
+    slide.output(req.body.resumeImageURLS, outputPath, function(err, doc){    
+      req.body.pdfPath = outputPath      
+      next()
+    })
+  } else {
     next()
-  })
+  }
 
 }
 
@@ -489,31 +494,35 @@ exports.mergeImagesToPDF = function (req, res, next) {
 //Upload images to S3
 exports.uploadPDFtoS3 = function(req, res, next) {
   
-  async.waterfall([
-    function readPDF (cb) {  
-      let pdfPath = req.body.pdfPath
-      console.log('path: ' + pdfPath)      
-      console.log(pdfPath)      
-      fs.readFile(pdfPath, function(err,data) {
-        cb(err, data)          
-      })
-    },
-    function uploadPDF (pdfFile, cb) {                       
-      let params = { Bucket: 'blockchainscdn', Key: 'uploads/resumes/' + Date.now() + '.pdf', Body:pdfFile }
-      s3.upload(params, function(err, data) {
-        console.log(data)
-        cb(err, data.Location)            
-      })      
-    }
-  ], (err, S3URL) => {
-    if (err) {
-      console.log(err)
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-    } 
-    console.log('S3 URL: ' + S3URL)             
-    req.body.resumeDocURL = S3URL     
+  if (req.body.resumeImageURLS.length > 0) {
+    async.waterfall([
+      function readPDF (cb) {  
+        let pdfPath = req.body.pdfPath
+        console.log('path: ' + pdfPath)      
+        console.log(pdfPath)      
+        fs.readFile(pdfPath, function(err,data) {
+          cb(err, data)          
+        })
+      },
+      function uploadPDF (pdfFile, cb) {                       
+        let params = { Bucket: 'blockchainscdn', Key: 'uploads/resumes/' + Date.now() + '.pdf', Body:pdfFile }
+        s3.upload(params, function(err, data) {
+          console.log(data)
+          cb(err, data.Location)            
+        })      
+      }
+    ], (err, S3URL) => {
+      if (err) {
+        console.log(err)
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+      } 
+      console.log('S3 URL: ' + S3URL)             
+      req.body.resumeDocURL = S3URL     
+      next()
+    })     
+  } else {
     next()
-  })     
+  }
 
 }
 
@@ -568,22 +577,27 @@ exports.uploadDocToS3 = function(req, res, next) {
  * @desc Delete working files from local server
  */
 exports.deleteWorkingFiles = function(req, res, next) {
- 
-  let filesPath = req.body.resumeImageURLS
-  filesPath.push(req.body.pdfPath)
-  console.log('delete temp files..')
-  console.log(filesPath)
+   
+  if (req.body.resumeImageURLS.length > 0) {
+  
+    let filesPath = req.body.resumeImageURLS
+    filesPath.push(req.body.pdfPath)
+    console.log('delete temp files..')
+    console.log(filesPath)
 
-  async.each(filesPath, (file, callback) => {  
-    fs.unlink(file, function(err){                    
-      callback(err)
+    async.each(filesPath, (file, callback) => {  
+      fs.unlink(file, function(err){                    
+        callback(err)
+      })
+    }, (err) => {
+      if(err) {
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+      }             
+      next()
     })
-  }, (err) => {
-    if(err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-    }             
-    next()
-  })
+  } else {
+    next()    
+  }
 
 }
 
