@@ -106,35 +106,23 @@ exports.register = function(req, res) {
  * Send a SMS message confirming successful registration to a candidate (given a valid @email)
  */
 exports.sendRegisteredText = function(req, res) {
-  Candidate.findOne({ email: req.body.email }, (err, candidate) => { 
-    if(err) {
-      return res.status(400).send({
-        message: err
-      })
-    }
-    if(candidate) {
-      client.messages.create({
-        body: 'Blockchains: Thank you for checking in. We will text you soon with further instructions.',
-        to: '+1' + candidate.sms,  // Text this number
-        from: config.twilio.from // From a valid Twilio number
-      })
-      .then((message) => {
-        return res.send({
-          message: `Successfully sent SMS to ${candidate.sms} `
-        })
-      })
-      .catch((err2) => {
-        console.log('sms error')
-        console.log(err2)
-        return res.status(400).send({
-          message: err2
-        })
-      })
-    } else {
-      return res.status(400).send({
-        message: 'User not found!'
-      })
-    }
+  let candidate = req.candidate
+  client.messages.create({
+    body: 'Blockchains: Thank you for checking in. We will text you soon with further instructions.',
+    to: '+1' + candidate.sms,  // Text this number
+    from: config.twilio.from // From a valid Twilio number
+  })
+  .then((message) => {
+    return res.send({
+      message: `Successfully sent SMS to ${candidate.sms} `
+    })
+  })
+  .catch((err) => {
+    console.log('sms error')
+    console.log(err)
+    return res.status(400).send({
+      message: err
+    })
   })
 }
 
@@ -491,10 +479,11 @@ exports.mergeImagesToPDF = function (req, res, next) {
 }
 
 
-//Upload images to S3
+//@desc Upload merged pdf to S3
 exports.uploadPDFtoS3 = function(req, res, next) {
   
   if (req.body.resumeImageURLS.length > 0) {
+
     async.waterfall([
       function readPDF (cb) {  
         let pdfPath = req.body.pdfPath
@@ -504,8 +493,15 @@ exports.uploadPDFtoS3 = function(req, res, next) {
           cb(err, data)          
         })
       },
-      function uploadPDF (pdfFile, cb) {                       
-        let params = { Bucket: 'blockchainscdn', Key: 'uploads/resumes/' + Date.now() + '.pdf', Body:pdfFile }
+      function uploadPDF (pdfFile, cb) {  
+        let maxAge = 3600 * 24 * 365                 
+        let params = { 
+          Bucket: 'blockchainscdn', 
+          Key: 'uploads/resumes/' + Date.now() + '.pdf',
+          ContentType: 'application/pdf',
+          CacheControl: `max-age=${maxAge}`,
+          Body: pdfFile 
+        }
         s3.upload(params, function(err, data) {
           console.log(data)
           cb(err, data.Location)            
@@ -516,23 +512,28 @@ exports.uploadPDFtoS3 = function(req, res, next) {
         console.log(err)
         return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
       } 
-      console.log('S3 URL: ' + S3URL)             
-      req.body.resumeDocURL = S3URL     
+      let CDN_URL = S3URL.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
+      console.log('S3 URL: ' + S3URL)
+      console.log('CDN URL: ' + CDN_URL)
+      req.body.resumeDocURL = CDN_URL     
       next()
-    })     
+    })
   } else {
     next()
   }
-
 }
 
 //Upload document to S3
 exports.uploadDocToS3 = function(req, res, next) {
 
+  let maxAge = 3600 * 24 * 365                 
+
   let upload = multer({
     storage: multerS3({
       s3: s3,
-      bucket: 'blockchainscdn',
+      bucket: 'blockchainscdn',      
+      contentType: multerS3.AUTO_CONTENT_TYPE,      
+      cacheControl: `max-age=${maxAge}`,
       metadata: function (req, file, cb) {        
         cb(null, { fieldName: file.fieldname });
       },
@@ -567,7 +568,7 @@ exports.uploadDocToS3 = function(req, res, next) {
       })
     } else {            
       console.log(req.file.location)
-      req.body.resumeDocURL = req.file.location
+      req.body.resumeDocURL = req.file.location.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
       next()
     }
   })
