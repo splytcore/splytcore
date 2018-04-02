@@ -21,7 +21,11 @@ const multer = require('multer')
 const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
 const PDFImagePack = require('pdf-image-pack')
 
-    
+const fs = require('fs')
+const AWS = require('aws-sdk')
+const multerS3 = require('multer-s3')
+
+const s3 = new AWS.S3(config.S3)
 
 /**
  * Create a Candidate
@@ -275,7 +279,6 @@ exports.listAllEnumValues = function(req, res) {
   })
 }
 
-
 /*
 * List candidates according to query
 * Params are all fields in Candidate model
@@ -386,9 +389,10 @@ exports.delete = function(req, res) {
 
 
 /**
- * Upload resume image
+ * @desc Upload resume images to our server first. Then merge to a single PDF. Then upload to S3 bucket
+ * 
  */
-exports.uploadImageResume = function (req, res, next) {  
+exports.uploadResumeImages = function (req, res, next) {  
 
   console.log('upload images')
 
@@ -450,79 +454,127 @@ exports.uploadImageResume = function (req, res, next) {
 }
 
 /**
- * convert all images into 1 pdf file
+ * @desc Convert all images into 1 pdf file
  */
 exports.mergeImagesToPDF = function (req, res, next) {
 
   console.log('merging and convert to single pdf')
-  // var imgs = [
-  //   "./fixture/basic/a.png",
-  //   "./fixture/basic/b.png",
-  // ]
-  let output = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
+  let outputPath = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
   let slide = new PDFImagePack()
 
-  slide.output(req.body.resumeImageURLS, output, function(err, doc){    
-    req.body.resumeDocURL = output      
+  console.log('image urls: ')
+  console.log(req.body.resumeImageURLS) //TODO: change to path variablenames
+  console.log('destination: ' + outputPath)
+
+  slide.output(req.body.resumeImageURLS, outputPath, function(err, doc){    
+    req.body.pdfPath = outputPath      
     next()
   })
 
 }
 
 
-/**
- * Upload Document resume
- */
-exports.uploadDocResume = function (req, res, next) {
-    
-  console.log('upload doc')
-  let storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, config.uploads.resumeUpload.dest)
-    },
-    filename: function (req, file, cb) {
-      console.log('file extension: ' + file.mimetype)
-      let ext = ''                    
-      switch(file.mimetype) {
-        case 'application/pdf':
-          ext = '.pdf'
-          break
-        case 'text/plain':
-          ext = '.txt'
-          break
-        case 'application/msword':
-          ext = '.doc'            
-          break                  
-        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-          ext = '.docx'            
-          break
-        default:
-          ext = '.pdf'                          
-      }                    
-      cb(null, Date.now() + ext)
-    }
-  })      
-
-  let fileFilter = require(path.resolve('./config/lib/multer')).docUploadFileFilter
-  let upload = multer({ storage: storage, fileFilter:  fileFilter }).single('newResumeDoc')                                                                            
+//Upload images to S3
+exports.uploadPDFtoS3 = function(req, res, next) {
   
+  async.waterfall([
+    function readPDF (cb) {  
+      let pdfPath = req.body.pdfPath
+      console.log('path: ' + pdfPath)      
+      console.log(pdfPath)      
+      fs.readFile(pdfPath, function(err,data) {
+        cb(err, data)          
+      })
+    },
+    function uploadPDF (pdfFile, cb) {                       
+      let params = { Bucket: 'blockchainscdn', Key: 'uploads/resumes/' + Date.now() + '.pdf', Body:pdfFile }
+      s3.upload(params, function(err, data) {
+        console.log(data)
+        cb(err, data.Location)            
+      })      
+    }
+  ], (err, S3URL) => {
+    if (err) {
+      console.log(err)
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+    } 
+    console.log('S3 URL: ' + S3URL)             
+    req.body.resumeDocURL = S3URL     
+    next()
+  })     
+
+}
+
+//Upload document to S3
+exports.uploadDocToS3 = function(req, res, next) {
+
+  let upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: 'blockchainscdn',
+      metadata: function (req, file, cb) {        
+        cb(null, { fieldName: file.fieldname });
+      },
+      key: function (req, file, cb) {
+        console.log('file extension: ' + file.mimetype)
+        let ext = ''        
+        switch(file.mimetype) {
+          case 'application/pdf':
+            ext = '.pdf'
+            break
+          case 'text/plain':
+            ext = '.txt'
+            break
+          case 'application/msword':
+            ext = '.doc'            
+            break                  
+          case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            ext = '.docx'            
+            break
+          default:
+            ext = '.pdf'                          
+        }                
+        cb(null, 'uploads/resumes/' + Date.now().toString() + ext)
+      }
+    })
+  }).single('newResumeDoc', 10)      
+
   upload(req, res, (uploadError) => {
-    if(uploadError) {      
-      console.log(uploadError)
+    if(uploadError) {
       return res.status(400).send({
         message: uploadError.toString()
       })
-    } else {      
-      console.log(config.uploads.resumeUpload.dest + req.file.filename)      
-      req.body.resumeDocURL = config.uploads.resumeUpload.dest + req.file.filename
-      next(null)      
+    } else {            
+      console.log(req.file.location)
+      req.body.resumeDocURL = req.file.location
+      next()
     }
   })
 }
 
-exports.test = function(req, res) {
-  res.send('success!!')
+/**
+ * @desc Delete working files from local server
+ */
+exports.deleteWorkingFiles = function(req, res, next) {
+ 
+  let filesPath = req.body.resumeImageURLS
+  filesPath.push(req.body.pdfPath)
+  console.log('delete temp files..')
+  console.log(filesPath)
+
+  async.each(filesPath, (file, callback) => {  
+    fs.unlink(file, function(err){                    
+      callback(err)
+    })
+  }, (err) => {
+    if(err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+    }             
+    next()
+  })
+
 }
+
 
 /**
  * Candidate middleware
