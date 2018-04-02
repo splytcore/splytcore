@@ -162,7 +162,7 @@ exports.checkin = function(req, res) {
       candidate.checkin = Date.now()
       candidate.appointment = req.body.appointment ? parseInt(req.body.appointment) : (Date.now() + 3600000) // 1 hour
       candidate.stage = 'QUEUE'      
-      candidate.department = 'HR'      ``
+      candidate.department = 'HR'
       candidate.save((err) => {
         next(err, candidate)
       })
@@ -388,6 +388,7 @@ exports.uploadResumeImages = function (req, res, next) {
     filename: function (req, file, cb) {
       // console.log('file')
       // console.log(file)
+      console.log('mimetype: ' + file.mimetype)
       let ext = ''                    
       switch(file.mimetype) {
         case 'image/jpeg':

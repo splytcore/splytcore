@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports.imageUploadFileFilter = function (req, file, cb) {
-  if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/gif' && file.mimetype !== 'image/bmp') {
-    return cb(new Error('Only image files are allowed!'), false);
+  if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/jpeg') {
+    return cb(new Error('Only png, jpg, jpeg files are allowed!'), false);
   }
   cb(null, true)
 }
