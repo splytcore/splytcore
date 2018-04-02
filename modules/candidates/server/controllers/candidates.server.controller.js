@@ -447,11 +447,13 @@ exports.mergeImagesToPDF = function (req, res, next) {
     
     console.log('merging and convert to single pdf')
     let outputPath = config.uploads.resumeUpload.dest + Date.now() + '.pdf'
-    let slide = new PDFImagePack()
+    
+    let params = { layout: 'portrait', size: 'letter' }
+    let slide = new PDFImagePack(params)
 
     console.log('image urls: ')
     console.log(req.body.resumeImageURLS)
-    console.log('destination: ' + outputPath)
+    console.log('destination: ' + outputPath)    
 
     slide.output(req.body.resumeImageURLS, outputPath, function(err, doc){    
       req.body.pdfPath = outputPath      
