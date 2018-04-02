@@ -162,24 +162,9 @@ exports.checkin = function(req, res) {
       candidate.checkin = Date.now()
       candidate.appointment = req.body.appointment ? parseInt(req.body.appointment) : (Date.now() + 3600000) // 1 hour
       candidate.stage = 'QUEUE'      
-      candidate.department = 'HR'      
+      candidate.department = 'HR'      ``
       candidate.save((err) => {
         next(err, candidate)
-      })
-    },
-    function sendSMS (candidate, next) {                                          
-      console.log('phone: ' + candidate.sms)
-      let appt = candidate.appointment.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })
-      client.messages.create({
-        body: 'You have checked in at Blockchains.com! Your appointment with HR is at '+ appt,
-        to: '+1' + candidate.sms,  // Text this number
-        from: config.twilio.from // From a valid Twilio number
-      })
-      .then((message) => {
-        next(null)
-      })
-      .catch((err) => {
-        next(err)
       })
     }
     //TODO: send sms to applicant
