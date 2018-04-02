@@ -102,35 +102,23 @@ exports.register = function(req, res) {
  * Send a SMS message confirming successful registration to a candidate (given a valid @email)
  */
 exports.sendRegisteredText = function(req, res) {
-  Candidate.findOne({ email: req.body.email }, (err, candidate) => { 
-    if(err) {
-      return res.status(400).send({
-        message: err
-      })
-    }
-    if(candidate) {
-      client.messages.create({
-        body: 'Blockchains: Thank you for checking in. We will text you soon with further instructions.',
-        to: '+1' + candidate.sms,  // Text this number
-        from: config.twilio.from // From a valid Twilio number
-      })
-      .then((message) => {
-        return res.send({
-          message: `Successfully sent SMS to ${candidate.sms} `
-        })
-      })
-      .catch((err2) => {
-        console.log('sms error')
-        console.log(err2)
-        return res.status(400).send({
-          message: err2
-        })
-      })
-    } else {
-      return res.status(400).send({
-        message: 'User not found!'
-      })
-    }
+  let candidate = req.candidate
+  client.messages.create({
+    body: 'Blockchains: Thank you for checking in. We will text you soon with further instructions.',
+    to: '+1' + candidate.sms,  // Text this number
+    from: config.twilio.from // From a valid Twilio number
+  })
+  .then((message) => {
+    return res.send({
+      message: `Successfully sent SMS to ${candidate.sms} `
+    })
+  })
+  .catch((err) => {
+    console.log('sms error')
+    console.log(err)
+    return res.status(400).send({
+      message: err
+    })
   })
 }
 
