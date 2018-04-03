@@ -61,7 +61,7 @@ module.exports = function(app) {
   //@desc for specific candidate
   app.route('/api/candidates/:candidateId').all(candidatesPolicy.isAllowed)
     .get(candidates.read)
-    .put(candidates.update)
+    .put(candidates.performAction, candidates.update)
     .delete(candidates.delete);    
 
   // Finish by binding the Candidate middleware

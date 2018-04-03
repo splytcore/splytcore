@@ -7,6 +7,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
 const Candidate = mongoose.model('Candidate')  
+const History = mongoose.model('History')  
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 
@@ -317,23 +318,82 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {  
   
-  var candidate = req.candidate;
-  candidate = _.extend(candidate, req.body.candidate)
-    
-  if (req.body.note && req.body.note.length > 0) {    
-    candidate.notes.push({ note: req.body.note, user: req.user })
-  }
-
+  let candidate = req.candidate  
+  candidate = _.extend(candidate, req.body)  
   candidate.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
-      res.jsonp(candidate);
+      res.jsonp(candidate)
     }
-  });
-};
+  })
+}
+
+/**
+ * @desc perform action
+ */
+
+exports.performAction = function(req, res, next) {  
+
+  let oldCandidate = req.candidate
+  
+  let updatedCandidate = req.body  
+  
+  //async
+  if (oldCandidate.stage !== updatedCandidate.stage) {
+    stageChanged(req, res)
+  }
+
+  if (oldCandidate.valuation !== updatedCandidate.valuation) {
+    valuationChanged(req, res) 
+  }
+
+  if (oldCandidate.department !== updatedCandidate.department) {
+    departmentChanged(req, res)
+  }
+
+  if (oldCandidate.position !== updatedCandidate.position) {
+    positionChanged(req, res)
+  }
+
+  next()
+}
+  
+function stageChanged(req, res) {    
+  console.log('stage changed')
+  saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
+
+}
+
+function valuationChanged(req, res) {    
+  console.log('valuation changed')
+}
+
+function departmentChanged(req, res) {    
+  console.log('department changed')
+}
+
+function positionChanged(req, res) {    
+  console.log('position changed')
+}
+
+function saveHistory(candidate, action, user, from, to) {    
+  
+  let history = new History()
+  history.candidate = candidate
+  history.action = action
+  history.user = user
+  history.from = from
+  history.to = to
+  history.save((err) => {
+    console.log('action saved to history')
+  })  
+
+}
+
+
 /**
  * Validate Phone
  */

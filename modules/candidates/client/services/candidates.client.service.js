@@ -39,10 +39,9 @@
     function listAllEnumValues (field) {      
       return $http.get('/api/enum/candidates/')
     }
-
     
-    function update (candidate, note) {      
-      return $http.put(vm.url + candidate._id, { candidate: candidate, note: note })
+    function update (candidate) {      
+      return $http.put(vm.url + candidate._id, candidate)
     }
 
     function get (candidateId) {      
