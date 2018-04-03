@@ -5,7 +5,7 @@
     .module('candidates')
     .controller('CandidatesQueueController', CandidatesQueueController);
 
-  CandidatesQueueController.$inject = ['CandidatesService', 'Socket', '$scope'];
+  CandidatesQueueController.$inject = ['CandidatesService', 'Socket', '$scope']
 
   function CandidatesQueueController(CandidatesService, Socket, $scope) {
     var vm = this    
@@ -51,14 +51,14 @@
       console.log(candidate)      
       console.log('checkinChannel event handler')
       listCheckins() //refresh page
-    });
+    })
 
     // Remove the event listener when the controller instance is destroyed
     $scope.$on('$destroy', function () {
       Socket.removeListener('checkinChannel')
       Socket.removeListener('lockedChannel')
       Socket.removeListener('unlockedChannel')
-    });
+    })
 
       // socket listener for candidate      
     Socket.on('lockedChannel', function (candidate) {
@@ -68,8 +68,7 @@
           c.lockedBy = candidate.lockedBy
         }
       })
-    });
-
+    })
 
     // socket listener for candidate      
     Socket.on('unlockedChannel', function (candidate) {
