@@ -4,7 +4,9 @@
     <a ng-repeat="candidate in vm.candidates"
        ui-sref="candidates.view({ candidateId: candidate._id })"
        class="list-group-item">      
-      <h4 class="list-group-item-heading">{{ candidate.lastName }}, {{candidate.firstName }} <br/> {{ candidate.email }}</h4>
+      <h4 class="list-group-item-heading">{{ candidate.lastName }}, {{candidate.firstName }} <br/> {{ candidate.email }}
+      <strong class="pull-right" ng-show="candidate.lockedBy"> Locked by {{ candidate.lockedBy.displayName }}</strong>
+      </h4>
     </a>
   </div>
 </section>

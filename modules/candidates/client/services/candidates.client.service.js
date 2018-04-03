@@ -23,6 +23,7 @@
     vm.listAllEnumValues = listAllEnumValues    
 
     vm.findCandidate = findCandidate
+    vm.unlock = unlock
 
     vm.update = update
     vm.url = '/api/candidates/'
@@ -76,6 +77,10 @@
 
     function findCandidate(query) {
       return $http.get('/api/findCandidate/' + query)      
+    }
+
+    function unlock(candidateId) {
+      return $http.get('/api/candidates/' + candidateId + '/unlock')      
     }
 
   }

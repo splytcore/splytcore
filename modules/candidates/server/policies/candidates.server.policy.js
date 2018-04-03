@@ -27,7 +27,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/candidates',
       permissions: ['get', 'post']
     }, {
-      resources: '/api/candidates/:candidateId',
+      resources: ['/api/candidates/:candidateId', '/api/candidates/:candidateId/unlock'],
       permissions: ['get', 'put', 'delete']
     }]
   }, {

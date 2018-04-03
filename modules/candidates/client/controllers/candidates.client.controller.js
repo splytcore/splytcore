@@ -18,8 +18,8 @@
     vm.remove = remove
     vm.update = update       
     vm.checkin = checkin
-
-
+    vm.unlock = unlock
+    
     CandidatesService.listAllEnumValues()
       .success((res) => {
         console.log(res)          
@@ -40,7 +40,7 @@
       CandidatesService.get($state.params.candidateId)
         .success((res) => {
           console.log(res)          
-          vm.candidate = res
+          vm.candidate = res          
         })
         .error((res) => {
           console.log('failure')
@@ -94,6 +94,20 @@
         })  
 
     }
+
+    function unlock() {
+      CandidatesService.unlock(vm.candidate._id)
+        .success((res) => {
+          console.log(res) 
+          vm.success = res.message                         
+        })
+        .error((res) => {
+          console.log('failure')
+          vm.error = res.message
+        })
+    }
+
+
 
   }
 }());

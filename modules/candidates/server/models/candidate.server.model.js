@@ -124,7 +124,12 @@ const CandidateSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  lockedBy: {
+    type: Schema.ObjectId,
+    ref: 'User'
   }
+
 })
 
 mongoose.model('Candidate', CandidateSchema)

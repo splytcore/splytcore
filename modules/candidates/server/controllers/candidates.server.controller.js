@@ -168,7 +168,7 @@ exports.checkin = function(req, res) {
       })
     }
     //TODO: send sms to applicant
-  ], (err) => {
+  ], (err, candidate) => {
     if (err) {
       console.log(err)      
       return res.status(400).send({
@@ -176,7 +176,7 @@ exports.checkin = function(req, res) {
       })
     }      
     // emit to socket.io if no one is connected skip                    
-    global.emitCheckin ? global.emitCheckin(): null // jshint ignore:line
+    global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
 
     res.status(200).send({
       message: 'Successfull Checked in!'      
@@ -198,6 +198,51 @@ exports.findByEmail = function(req, res) {
   res.jsonp(candidate)
 
 }
+
+
+exports.lockCandidate = function(req, res, next) {
+    
+  let candidate = req.candidate
+  
+  //if staff signed in  
+  if (req.user && !candidate.lockedBy) {
+    candidate.lockedBy = req.user
+    candidate.save((err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })      
+      }                     
+      global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
+    })    
+  } 
+
+  next()
+}
+
+exports.unlockCandidate = function(req, res) {
+    
+  let candidate = req.candidate
+  
+  //if staff signed in      
+  console.log(candidate.lockedBy._id)
+  console.log(req.user._id)
+  if (req.user && candidate.lockedBy._id.toString() === req.user._id.toString()) {
+    candidate.lockedBy = null
+    candidate.save((err) => {      
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })      
+      }                           
+      global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+      res.jsonp({ message: 'you have unlocked this candidate' })    
+    })    
+  } else {
+    res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
+  }
+}
+
 
 
 /** 
@@ -288,7 +333,7 @@ exports.list = function(req, res) {
   console.log('post query')
   console.log(req.query)
   
-  Candidate.find(req.query).sort(sort).exec(function(err, candidates) {    
+  Candidate.find(req.query).sort(sort).populate('lockedBy', 'displayName').exec(function(err, candidates) {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -602,7 +647,7 @@ exports.candidateByID = function(req, res, next, id) {
     });
   }
 
-  Candidate.findById(id).populate('user', 'displayName').exec(function (err, candidate) {
+  Candidate.findById(id).populate('lockedBy', 'displayName').exec(function (err, candidate) {
     if (err) {
       return next(err);
     } else if (!candidate) {
