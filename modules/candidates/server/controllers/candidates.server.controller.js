@@ -57,7 +57,7 @@ exports.register = function(req, res) {
       //if registered from tablet check in
       if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
         candidate.stage = 'QUEUE'          
-        candidate.appointment = req.body.appointment ? parseInt(req.body.appointment) : (Date.now() + 3600000) // 1 hour
+        candidate.checkin = Date.now()
       }      
 
       candidate.save((err) => {
@@ -160,8 +160,7 @@ exports.checkin = function(req, res) {
       }          
     },    
     function schedule (candidate, next) {                                          
-      candidate.checkin = Date.now()
-      candidate.appointment = req.body.appointment ? parseInt(req.body.appointment) : (Date.now() + 3600000) // 1 hour
+      candidate.checkin = Date.now()      
       candidate.stage = 'QUEUE'      
       candidate.department = 'HR'
       candidate.save((err) => {
@@ -407,9 +406,43 @@ exports.performAction = function(req, res, next) {
 }
   
 function stageChanged(req, res) {    
-  console.log('stage changed')
-  saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
+  console.log('stage changed')  
 
+  if (req.body.stage.indexOf('PASS') > -1){
+    client.messages.create({
+      body: 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!',
+      to: '+1' + req.candidate.sms,  // Text this number
+      from: config.twilio.from // From a valid Twilio number
+    })
+    .then((message) => {      
+      console.log('message for successful passing: ' + message)
+    })
+    .catch((err) => {
+      console.log('sms error')
+      console.log(err)
+    })
+
+  }
+
+
+  if (req.body.stage.indexOf('INTERVIEW') > -1) {
+    req.body.appointment = Date.now() + 3600000 // 1 hour        
+    let appt = (new Date(req.body.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+    let message = `WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${appt}`
+    client.messages.create({
+      body: message,
+      to: '+1' + req.candidate.sms,  // Text this number
+      from: config.twilio.from // From a valid Twilio number
+    })
+    .then((message) => {      
+      console.log('message for successful passing: ' + message)
+    })
+    .catch((err) => {
+      console.log('sms error')
+      console.log(err)
+    })
+  }
+  saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
 }
 
 function valuationChanged(req, res) {    
