@@ -199,49 +199,60 @@ exports.findByEmail = function(req, res) {
 
 }
 
-
 exports.lockCandidate = function(req, res, next) {
-    
   let candidate = req.candidate
-  
-  //if staff signed in  
-  if (req.user && !candidate.lockedBy) {
-    candidate.lockedBy = req.user
-    candidate.save((err) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })      
-      }                     
-      global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
-    })    
-  } 
-
-  next()
+  global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
 }
+
+// exports.lockCandidate = function(req, res, next) {
+    
+//   let candidate = req.candidate
+  
+//   //if staff signed in  
+//   if (req.user && !candidate.lockedBy) {
+//     candidate.lockedBy = req.user
+//     candidate.save((err) => {
+//       if (err) {
+//         return res.status(400).send({
+//           message: errorHandler.getErrorMessage(err)
+//         })      
+//       }                     
+//       global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
+//     })    
+//   } 
+
+//   next()
+// }
 
 exports.unlockCandidate = function(req, res) {
-    
   let candidate = req.candidate
-  
-  //if staff signed in      
-  console.log(candidate.lockedBy._id)
-  console.log(req.user._id)
-  if (req.user && candidate.lockedBy._id.toString() === req.user._id.toString()) {
-    candidate.lockedBy = null
-    candidate.save((err) => {      
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })      
-      }                           
-      global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
-      res.jsonp({ message: 'you have unlocked this candidate' })    
-    })    
-  } else {
-    res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
-  }
+  global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+  res.jsonp({ message: 'you have unlocked this candidate' })    
+
 }
+
+// exports.unlockCandidate = function(req, res) {
+    
+//   let candidate = req.candidate
+  
+//   //if staff signed in      
+//   console.log(candidate.lockedBy._id)
+//   console.log(req.user._id)
+//   if (req.user && candidate.lockedBy._id.toString() === req.user._id.toString()) {
+//     candidate.lockedBy = null
+//     candidate.save((err) => {      
+//       if (err) {
+//         return res.status(400).send({
+//           message: errorHandler.getErrorMessage(err)
+//         })      
+//       }                           
+//       global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+//       res.jsonp({ message: 'you have unlocked this candidate' })    
+//     })    
+//   } else {
+//     res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
+//   }
+// }
 
 
 
@@ -442,7 +453,7 @@ function stageChanged(req, res) {
       console.log(err)
     })
   }
-  saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
+  // saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
 }
 
 function valuationChanged(req, res) {    

@@ -59,16 +59,16 @@ module.exports = function(app) {
     .get(candidates.listEnumValues)    
     
   //@desc for specific candidate
-  app.route('/api/candidates/:candidateId').all(candidatesPolicy.isAllowed)
+  app.route('/api/candidates/:candidateId')
     .get(candidates.read)
     .put(candidates.performAction, candidates.update)
     .delete(candidates.delete);    
 
-  app.route('/api/candidates/:candidateId/lock').all(candidatesPolicy.isAllowed)
+  app.route('/api/candidates/:candidateId/lock')
     .get(candidates.lockCandidate, candidates.read)
 
 
-  app.route('/api/candidates/:candidateId/unlock').all(candidatesPolicy.isAllowed)
+  app.route('/api/candidates/:candidateId/unlock')
     .get(candidates.unlockCandidate)
 
   // Finish by binding the Candidate middleware
