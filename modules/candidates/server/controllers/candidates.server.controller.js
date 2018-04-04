@@ -199,62 +199,65 @@ exports.findByEmail = function(req, res) {
   res.jsonp(candidate)
 
 }
-
-exports.lockCandidate = function(req, res, next) {
-  let candidate = req.candidate
-  global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
-  next()
-}
-
+//Remove after user sign up is implemented for ios app
 // exports.lockCandidate = function(req, res, next) {
-    
 //   let candidate = req.candidate
-  
-//   //if staff signed in  
-//   if (req.user && !candidate.lockedBy) {
-//     candidate.lockedBy = req.user
-//     candidate.save((err) => {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         })      
-//       }                     
-//       global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
-//     })    
-//   } 
-
+//   global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
 //   next()
 // }
 
-exports.unlockCandidate = function(req, res) {
+//Use after user sign up is implemented for ios app
+exports.lockCandidate = function(req, res, next) {
+    
   let candidate = req.candidate
-  global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
-  res.jsonp({ message: 'you have unlocked this candidate' })    
+  
+  //if staff signed in  
+  if (req.user && !candidate.lockedBy) {
+    candidate.lockedBy = req.user
+    candidate.save((err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })      
+      }                     
+      global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
+    })    
+  } 
 
+  next()
 }
 
+//Remove after user sign up is implemented for ios app
 // exports.unlockCandidate = function(req, res) {
-    
 //   let candidate = req.candidate
-  
-//   //if staff signed in      
-//   console.log(candidate.lockedBy._id)
-//   console.log(req.user._id)
-//   if (req.user && candidate.lockedBy._id.toString() === req.user._id.toString()) {
-//     candidate.lockedBy = null
-//     candidate.save((err) => {      
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         })      
-//       }                           
-//       global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
-//       res.jsonp({ message: 'you have unlocked this candidate' })    
-//     })    
-//   } else {
-//     res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
-//   }
+//   global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+//   res.jsonp({ message: 'you have unlocked this candidate' })    
+
 // }
+
+//Use after user sign up is implemented for ios app
+exports.unlockCandidate = function(req, res) {
+    
+  let candidate = req.candidate
+  
+  //if staff signed in      
+  console.log(candidate.lockedBy._id)
+  console.log(req.user._id)
+  if (req.user && candidate.lockedBy._id.toString() === req.user._id.toString()) {
+    candidate.lockedBy = null
+    candidate.save((err) => {      
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })      
+      }                           
+      global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+      res.jsonp({ message: 'you have unlocked this candidate' })    
+    })    
+  } else {
+    res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
+  }
+}
 
 
 
@@ -429,6 +432,7 @@ function stageChanged(req, res) {
     })
     .then((message) => {      
       console.log('message for successful passing: ' + message)
+      global.emitRejectCandidate ? global.emitRejectCandidate(req.candidate) : null  // jshint ignore:line
     })
     .catch((err) => {
       console.log('sms error')
@@ -441,13 +445,14 @@ function stageChanged(req, res) {
   if (req.body.stage.indexOf('INTERVIEW') > -1) {
     req.body.appointment = Date.now() + 3600000 // 1 hour        
     let appt = (new Date(req.body.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
-    let message = `WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${appt}`
+    let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${appt}`
     client.messages.create({
       body: message,
       to: '+1' + req.candidate.sms,  // Text this number
       from: config.twilio.from // From a valid Twilio number
     })
     .then((message) => {      
+      global.emitInterviewCandidate ? global.emitInterviewCandidate(req.candidate) : null  // jshint ignore:line
       console.log('message for successful passing: ' + message)
     })
     .catch((err) => {
@@ -455,7 +460,7 @@ function stageChanged(req, res) {
       console.log(err)
     })
   }
-  // saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
+  saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
 }
 
 function valuationChanged(req, res) {    
@@ -635,7 +640,7 @@ exports.uploadPDFtoS3 = function(req, res, next) {
       function uploadPDF (pdfFile, cb) {  
         let maxAge = 3600 * 24 * 365                 
         let params = { 
-          Bucket: 'blockchainscdn', 
+          Bucket: 'blockchainscdn',
           Key: 'uploads/resumes/' + Date.now() + '.pdf',
           ContentType: 'application/pdf',
           CacheControl: `max-age=${maxAge}`,

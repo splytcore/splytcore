@@ -6,21 +6,25 @@ module.exports = function (io, socket) {
   console.log('init candidates socket...')
 
   //Can be called from anywhere
-  global.emitCheckin = function (candidate) {
-    console.log('emitting checking...')
+  global.emitCheckin = function (candidate) {    
     io.emit('checkinChannel', candidate)    
   }
   
-  global.emitLockCandidate = function (candidate) {    
-    console.log('locked')
+  global.emitLockCandidate = function (candidate) {        
     io.emit('lockedChannel', candidate) 
   }
   
-  global.emitUnlockCandidate = function (candidate) {    
-    console.log('unlocked')
+  global.emitUnlockCandidate = function (candidate) {        
     io.emit('unlockedChannel', candidate) 
   }
 
+  global.emitRejectCandidate = function (candidate) {        
+    io.emit('rejectChannel', candidate) 
+  }
+
+  global.emitInterviewCandidate = function (candidate) {        
+    io.emit('interviewChannel', candidate) 
+  }
 
   // Emit the status event when a socket client is disconnected
   socket.on('disconnect', function () {
