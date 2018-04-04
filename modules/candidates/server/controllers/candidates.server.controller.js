@@ -202,6 +202,7 @@ exports.findByEmail = function(req, res) {
 exports.lockCandidate = function(req, res, next) {
   let candidate = req.candidate
   global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
+  next()
 }
 
 // exports.lockCandidate = function(req, res, next) {
@@ -419,7 +420,7 @@ exports.performAction = function(req, res, next) {
 function stageChanged(req, res) {    
   console.log('stage changed')  
 
-  if (req.body.stage.indexOf('PASS') > -1){
+  if (req.body.stage.indexOf('REJECT') > -1){
     client.messages.create({
       body: 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!',
       to: '+1' + req.candidate.sms,  // Text this number
