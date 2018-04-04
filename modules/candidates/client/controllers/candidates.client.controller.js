@@ -37,7 +37,7 @@
     vm.note = ''
 
     if ($state.params.candidateId) {
-      CandidatesService.get($state.params.candidateId)
+      CandidatesService.lock($state.params.candidateId)
         .success((res) => {
           console.log(res)          
           vm.candidate = res          

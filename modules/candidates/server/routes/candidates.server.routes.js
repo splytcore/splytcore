@@ -60,9 +60,13 @@ module.exports = function(app) {
     
   //@desc for specific candidate
   app.route('/api/candidates/:candidateId').all(candidatesPolicy.isAllowed)
-    .get(candidates.lockCandidate, candidates.read)
+    .get(candidates.read)
     .put(candidates.update)
     .delete(candidates.delete);    
+
+  app.route('/api/candidates/:candidateId/lock').all(candidatesPolicy.isAllowed)
+    .get(candidates.lockCandidate, candidates.read)
+
 
   app.route('/api/candidates/:candidateId/unlock').all(candidatesPolicy.isAllowed)
     .get(candidates.unlockCandidate)

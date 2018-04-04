@@ -10,7 +10,7 @@
 
   function CandidatesService($http) {
     let vm = this
-    vm.get = get    
+    vm.get = get        
     vm.remove = remove
     vm.list = list    
     // vm.register = register
@@ -24,6 +24,7 @@
 
     vm.findCandidate = findCandidate
     vm.unlock = unlock
+    vm.lock = lock
 
     vm.update = update
     vm.url = '/api/candidates/'
@@ -77,6 +78,10 @@
 
     function findCandidate(query) {
       return $http.get('/api/findCandidate/' + query)      
+    }
+
+    function lock(candidateId) {
+      return $http.get('/api/candidates/' + candidateId + '/lock')      
     }
 
     function unlock(candidateId) {
