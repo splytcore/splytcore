@@ -64,8 +64,9 @@ exports.register = function(req, res) {
         next(err, candidate)
       })
     },    
-    function emailOnlyForWebRegistration(candidate, next) {
+    function checkinForMobileOrWebRegistration(candidate, next) {
       if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
+        global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
         next(null)
       } else {
         var httpTransport = 'http://'
