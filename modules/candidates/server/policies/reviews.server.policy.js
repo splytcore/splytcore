@@ -9,49 +9,44 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke Candidates Permissions
+ * Invoke Reviews Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/candidates',
+      resources: '/api/reviews',
       permissions: '*'
     }, {
-      resources: '/api/candidates/:candidateId',
+      resources: '/api/reviews/:reviewId',
       permissions: '*'
     }]
   }, {
     roles: ['user'],
     allows: [{
-      resources: '/api/candidates',
+      resources: '/api/reviews',
       permissions: ['get', 'post']
     }, {
-      resources: ['/api/candidates/:candidateId', '/api/candidates/:candidateId/unlock', '/api/candidates/:candidateId/lock'],
-      permissions: ['get', 'put', 'delete']
+      resources: ['/api/reviews/:reviewId', '/api/candidates/:candidateId/review'],
+      permissions: ['get', 'put', 'delete','post']
     }]
   }, {
     roles: ['guest'],
     allows: [{
-      resources: '/api/candidates',
+      resources: '/api/reviews',
       permissions: ['get']
     }, {
-      resources: '/api/candidates/:candidateId',
+      resources: '/api/reviews/:reviewId',
       permissions: ['get']
     }]
   }]);
 };
 
 /**
- * Check If Candidates Policy Allows
+ * Check If Reviews Policy Allows
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-
-  // If an Candidate is being processed and the current user created it then allow any manipulation
-  if (req.candidate && req.user && req.candidate.user && req.candidate.user.id === req.user.id) {
-    return next();
-  }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

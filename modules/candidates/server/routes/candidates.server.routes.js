@@ -64,6 +64,13 @@ module.exports = function(app) {
     .put(candidates.performAction, candidates.update)
     .delete(candidates.delete);    
 
+  app.route('/api/candidates/:candidateId/lock').all(candidatesPolicy.isAllowed)
+    .get(candidates.lockCandidate, candidates.read)
+
+
+  app.route('/api/candidates/:candidateId/unlock').all(candidatesPolicy.isAllowed)
+    .get(candidates.unlockCandidate)
+
   // Finish by binding the Candidate middleware
   app.param('candidateId', candidates.candidateByID);  
   // Finish by binding the Candidate middleware

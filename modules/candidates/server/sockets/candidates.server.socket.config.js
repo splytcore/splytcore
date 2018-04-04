@@ -4,34 +4,27 @@
 module.exports = function (io, socket) {
   
   console.log('init candidates socket...')
-  // Emit the status event when a new socket client is connected  
-  io.emit('checkinSocket', {
-    type: 'status',
-    text: 'Is now connected',
-    created: Date.now()
-  });
 
-  // Send a event to all connected sockets
-  socket.on('checkinSocket', function (message) {
-    console.log('emitting to everybody')
-    // Emit the 'candidateMessage' event
-    io.emit('checkinSocket', { message: 'new checkin' });
-  });
-
-  //Can be called anywhere
-  global.emitCheckin = function () {
+  //Can be called from anywhere
+  global.emitCheckin = function (candidate) {
     console.log('emitting checking...')
-    io.emit('checkinSocket', { message: 'new checkin' });    
+    io.emit('checkinChannel', candidate)    
+  }
+  
+  global.emitLockCandidate = function (candidate) {    
+    console.log('locked')
+    io.emit('lockedChannel', candidate) 
+  }
+  
+  global.emitUnlockCandidate = function (candidate) {    
+    console.log('unlocked')
+    io.emit('unlockedChannel', candidate) 
   }
 
 
   // Emit the status event when a socket client is disconnected
   socket.on('disconnect', function () {
-    io.emit('checkinSocket', {
-      type: 'status',
-      text: 'disconnected',
-      created: Date.now()    
-    })
+    console.log('socket disconnected')
   })
 };
 
