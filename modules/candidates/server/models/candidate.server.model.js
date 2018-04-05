@@ -93,14 +93,12 @@ const CandidateSchema = new Schema({
   //Temporary images that gets uploaded to local server that gets merge to single pdf
   //These get deleted after that single pdf gets upload to S3 bucket
   resumeImageURLS: [{
-    type: String,
-    default: 'modules/candidates/client/img/resumes/default.png'
+    type: String    
   }],      
   //When candidates upload from web site
   //S3 url
   resumeDocURL: {
-    type: String,
-    default: 'modules/candidates/client/img/resumes/default.pdf'
+    type: String    
   },        
   registeredFrom: {
     type: String,
