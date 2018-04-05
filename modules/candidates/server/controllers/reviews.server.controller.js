@@ -23,6 +23,19 @@ const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.
 
 
 exports.create = function(req, res) {
+  
+  let review = new Review(req.body)
+  review.reviewer = req.user;
+  review.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } else {
+      res.jsonp(review)
+    }
+  })
+
 }
 
 exports.read = function(req, res) {
