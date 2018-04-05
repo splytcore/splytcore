@@ -7,6 +7,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
 const Candidate = mongoose.model('Candidate')  
+const History = mongoose.model('History')  
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 
@@ -56,7 +57,7 @@ exports.register = function(req, res) {
       //if registered from tablet check in
       if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
         candidate.stage = 'QUEUE'          
-        candidate.appointment = req.body.appointment ? parseInt(req.body.appointment) : (Date.now() + 3600000) // 1 hour
+        candidate.checkin = Date.now()
       }      
 
       candidate.save((err) => {
@@ -159,8 +160,7 @@ exports.checkin = function(req, res) {
       }          
     },    
     function schedule (candidate, next) {                                          
-      candidate.checkin = Date.now()
-      candidate.appointment = req.body.appointment ? parseInt(req.body.appointment) : (Date.now() + 3600000) // 1 hour
+      candidate.checkin = Date.now()      
       candidate.stage = 'QUEUE'      
       candidate.department = 'HR'
       candidate.save((err) => {
@@ -199,49 +199,61 @@ exports.findByEmail = function(req, res) {
 
 }
 
-
 exports.lockCandidate = function(req, res, next) {
-    
   let candidate = req.candidate
-  
-  //if staff signed in  
-  if (req.user && !candidate.lockedBy) {
-    candidate.lockedBy = req.user
-    candidate.save((err) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })      
-      }                     
-      global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
-    })    
-  } 
-
+  global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
   next()
 }
 
-exports.unlockCandidate = function(req, res) {
+// exports.lockCandidate = function(req, res, next) {
     
-  let candidate = req.candidate
+//   let candidate = req.candidate
   
-  //if staff signed in      
-  console.log(candidate.lockedBy._id)
-  console.log(req.user._id)
-  if (req.user && candidate.lockedBy._id.toString() === req.user._id.toString()) {
-    candidate.lockedBy = null
-    candidate.save((err) => {      
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })      
-      }                           
-      global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
-      res.jsonp({ message: 'you have unlocked this candidate' })    
-    })    
-  } else {
-    res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
-  }
+//   //if staff signed in  
+//   if (req.user && !candidate.lockedBy) {
+//     candidate.lockedBy = req.user
+//     candidate.save((err) => {
+//       if (err) {
+//         return res.status(400).send({
+//           message: errorHandler.getErrorMessage(err)
+//         })      
+//       }                     
+//       global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
+//     })    
+//   } 
+
+//   next()
+// }
+
+exports.unlockCandidate = function(req, res) {
+  let candidate = req.candidate
+  global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+  res.jsonp({ message: 'you have unlocked this candidate' })    
+
 }
+
+// exports.unlockCandidate = function(req, res) {
+    
+//   let candidate = req.candidate
+  
+//   //if staff signed in      
+//   console.log(candidate.lockedBy._id)
+//   console.log(req.user._id)
+//   if (req.user && candidate.lockedBy._id.toString() === req.user._id.toString()) {
+//     candidate.lockedBy = null
+//     candidate.save((err) => {      
+//       if (err) {
+//         return res.status(400).send({
+//           message: errorHandler.getErrorMessage(err)
+//         })      
+//       }                           
+//       global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+//       res.jsonp({ message: 'you have unlocked this candidate' })    
+//     })    
+//   } else {
+//     res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
+//   }
+// }
 
 
 
@@ -362,23 +374,116 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {  
   
-  var candidate = req.candidate;
-  candidate = _.extend(candidate, req.body.candidate)
-    
-  if (req.body.note && req.body.note.length > 0) {    
-    candidate.notes.push({ note: req.body.note, user: req.user })
-  }
-
+  let candidate = req.candidate  
+  candidate = _.extend(candidate, req.body)  
   candidate.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
-      res.jsonp(candidate);
+      res.jsonp(candidate)
     }
-  });
-};
+  })
+}
+
+/**
+ * @desc perform action
+ */
+
+exports.performAction = function(req, res, next) {  
+
+  let oldCandidate = req.candidate
+  
+  let updatedCandidate = req.body  
+  
+  //async
+  if (oldCandidate.stage !== updatedCandidate.stage) {
+    stageChanged(req, res)
+  }
+
+  if (oldCandidate.valuation !== updatedCandidate.valuation) {
+    valuationChanged(req, res) 
+  }
+
+  if (oldCandidate.department !== updatedCandidate.department) {
+    departmentChanged(req, res)
+  }
+
+  if (oldCandidate.position !== updatedCandidate.position) {
+    positionChanged(req, res)
+  }
+
+  next()
+}
+  
+function stageChanged(req, res) {    
+  console.log('stage changed')  
+
+  if (req.body.stage.indexOf('REJECT') > -1){
+    client.messages.create({
+      body: 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!',
+      to: '+1' + req.candidate.sms,  // Text this number
+      from: config.twilio.from // From a valid Twilio number
+    })
+    .then((message) => {      
+      console.log('message for successful passing: ' + message)
+    })
+    .catch((err) => {
+      console.log('sms error')
+      console.log(err)
+    })
+
+  }
+
+
+  if (req.body.stage.indexOf('INTERVIEW') > -1) {
+    req.body.appointment = Date.now() + 3600000 // 1 hour        
+    let appt = (new Date(req.body.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+    let message = `WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${appt}`
+    client.messages.create({
+      body: message,
+      to: '+1' + req.candidate.sms,  // Text this number
+      from: config.twilio.from // From a valid Twilio number
+    })
+    .then((message) => {      
+      console.log('message for successful passing: ' + message)
+    })
+    .catch((err) => {
+      console.log('sms error')
+      console.log(err)
+    })
+  }
+  // saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
+}
+
+function valuationChanged(req, res) {    
+  console.log('valuation changed')
+}
+
+function departmentChanged(req, res) {    
+  console.log('department changed')
+}
+
+function positionChanged(req, res) {    
+  console.log('position changed')
+}
+
+function saveHistory(candidate, action, user, from, to) {    
+  
+  let history = new History()
+  history.candidate = candidate
+  history.action = action
+  history.user = user
+  history.from = from
+  history.to = to
+  history.save((err) => {
+    console.log('action saved to history')
+  })  
+
+}
+
+
 /**
  * Validate Phone
  */

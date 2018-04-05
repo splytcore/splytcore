@@ -83,7 +83,11 @@
 
     function update() {
 
-      CandidatesService.update(vm.candidate, vm.note)
+      if (vm.note.length > 0) {
+        vm.candidate.notes.push({ note: vm.note, user: vm.authentication.user._id })  
+      }      
+
+      CandidatesService.update(vm.candidate)
         .success((res) => {
           console.log(res)
           vm.candidate = res
