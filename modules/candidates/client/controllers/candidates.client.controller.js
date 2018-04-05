@@ -52,7 +52,7 @@
     }
 
     function reviewPage() {
-      $state.go('reviews.view', {candidateId: vm.candidate._id})
+      $state.go('reviews.view', { candidateId: vm.candidate._id })
     }
     // Remove existing Candidate
     function remove() {

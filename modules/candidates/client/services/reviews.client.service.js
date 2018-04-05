@@ -26,7 +26,7 @@
     }
 
     function get (candidateId) {      
-      return $http.get(vm.url + candidateId +  '/review')
+      return $http.get(vm.url + candidateId + '/review')
     }
 
     function create(candidateId, review) {
