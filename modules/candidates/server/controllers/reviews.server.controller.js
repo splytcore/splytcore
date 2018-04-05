@@ -97,7 +97,6 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })      
     }         
-    console.log(reviews)
     res.jsonp(reviews)        
   })
 }
