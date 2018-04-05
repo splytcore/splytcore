@@ -60,6 +60,7 @@ const ReviewSchema = new Schema({
 
 //TODO: update score formula
 ReviewSchema.post('init', (review) => {  
+  console.log('calculating score for...' + review.candidate.lastName)    
   review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4    
 })
 

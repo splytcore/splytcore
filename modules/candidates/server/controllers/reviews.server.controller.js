@@ -91,12 +91,13 @@ exports.update = function(req, res) {
 
 exports.list = function(req, res) {
   
-  Review.find().populate('reviewer', 'displayName').exec(function (err, reviews) {
+  Review.find().populate('reviewer', 'displayName').populate('candidate', 'lastName firstName').exec(function (err, reviews) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })      
     }         
+    console.log(reviews)
     res.jsonp(reviews)        
   })
 }
@@ -106,7 +107,7 @@ exports.byCandidate = function(req, res, next) {
 
   let candidate = req.candidate
 
-  Review.findOne({ candidate: candidate }).populate('reviewer', 'displayName').exec(function (err, review) {
+  Review.findOne({ candidate: candidate }).populate('candidate', 'lastName firstName').populate('reviewer', 'displayName').exec(function (err, review) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
