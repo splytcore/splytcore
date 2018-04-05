@@ -38,6 +38,9 @@ const ReviewSchema = new Schema({
     default: 0,
     required: 'Please fill skills'
   },
+  score: {
+    type: Number
+  },  
   education: {
     type: String,
     enum: ['NONE', 'HIGH_SCHOOL', 'SOME_COLLEGE', 'ASSOCIATE_DEGREE', 'BACHELORS_DEGREE', 'MASTERS_DEGREE'],
@@ -53,6 +56,11 @@ const ReviewSchema = new Schema({
     ref: 'User'
   }
 
+})
+
+//TODO: update score formula
+ReviewSchema.post('init', (review) => {  
+  review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4    
 })
 
 mongoose.model('Review', ReviewSchema)

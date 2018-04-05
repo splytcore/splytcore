@@ -7,7 +7,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
 const Candidate = mongoose.model('Candidate')  
-const Reviews = mongoose.model('Review')  
+const Review = mongoose.model('Review')  
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 
@@ -25,7 +25,8 @@ const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.
 exports.create = function(req, res) {
   
   let review = new Review(req.body)
-  review.reviewer = req.user;
+  review.candidate = req.candidate
+  review.reviewer = req.user
   review.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -39,22 +40,80 @@ exports.create = function(req, res) {
 }
 
 exports.read = function(req, res) {
+  let review = req.review ? req.review.toJSON() : {}
+  res.jsonp(review)
 }
 
 exports.findByCandidateId = function(req, res) {
+
 }
 
 exports.delete = function(req, res) {
+  let review = req.review
+
+  review.remove(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(review);
+    }
+  })
 }
 
 exports.list = function(req, res) {
+  
+  Review.find().sort('-created').populate('reviewer', 'displayName').exec(function (err, reviews) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } else {
+      res.jsonp(reviews)
+    }
+  })
 }
 
 exports.update = function(req, res) {
+  let review = req.review
+  review = _.extend(review, req.body)
+  review.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } else {
+      res.jsonp(review)
+    }
+  })
 }
 
+exports.list = function(req, res) {
+  
+  Review.find().populate('reviewer', 'displayName').exec(function (err, reviews) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    }         
+    res.jsonp(reviews)        
+  })
+}
 
 //middleware
-exports.byID = function(req, res) {
+exports.byCandidate = function(req, res, next) {
+
+  let candidate = req.candidate
+
+  Review.findOne({ candidate: candidate }).populate('reviewer', 'displayName').exec(function (err, review) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    }         
+    req.review = review
+    next()
+  })
 }
 

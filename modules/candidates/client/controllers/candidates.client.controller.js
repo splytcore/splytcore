@@ -19,6 +19,7 @@
     vm.update = update       
     vm.checkin = checkin
     vm.unlock = unlock
+    vm.reviewPage = reviewPage
     
     CandidatesService.listAllEnumValues()
       .success((res) => {
@@ -50,6 +51,9 @@
       vm.candidate = {}
     }
 
+    function reviewPage() {
+      $state.go('reviews.view', {candidateId: vm.candidate._id})
+    }
     // Remove existing Candidate
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {        

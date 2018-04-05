@@ -132,6 +132,11 @@
           <button ng-show="!vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.register()"> Register </button>          
           <button ng-show="vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.update()"> Update</button>
           <button ng-show="vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.checkin()">Check in</button>
+
+
+          <button ng-show="vm.candidate._id" type="button" class="btn btn-default" ng-click="vm.reviewPage()">Review</button>
+
+
           <button ng-show="vm.authentication.user._id" type="button" class="btn btn-default" ng-click="vm.remove()">Delete</button>
           </div>
         </div>
