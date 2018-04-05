@@ -759,7 +759,7 @@ exports.candidateByID = function(req, res, next, id) {
     });
   }
 
-  Candidate.findById(id).populate('lockedBy', 'displayName').exec(function (err, candidate) {
+  Candidate.findById(id).populate('lockedBy', 'displayName').populate('notes.user', 'displayName').exec(function (err, candidate) {
     if (err) {
       return next(err);
     } else if (!candidate) {
