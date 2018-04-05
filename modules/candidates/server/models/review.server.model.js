@@ -16,7 +16,9 @@ const validator = require('validator')
 const ReviewSchema = new Schema({
   candidate: {
     type: Schema.ObjectId,
-    ref: 'Candidate'
+    ref: 'Candidate',
+    required: true,
+    unique: true
   },
   experience: {
     type: Number,

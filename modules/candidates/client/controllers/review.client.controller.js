@@ -65,7 +65,7 @@
       ReviewsService.update($state.params.candidateId, vm.review)
         .success((res) => {
           console.log(res)
-          vm.review = res
+          vm.success = res.message
         })
         .error((res) => {
           console.log('failure')

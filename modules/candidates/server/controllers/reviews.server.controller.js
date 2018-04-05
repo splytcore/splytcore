@@ -33,7 +33,7 @@ exports.create = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     } else {
-      res.jsonp(review)
+      res.jsonp({ message: 'success' })
     }
   })
 
@@ -42,10 +42,6 @@ exports.create = function(req, res) {
 exports.read = function(req, res) {
   let review = req.review ? req.review.toJSON() : {}
   res.jsonp(review)
-}
-
-exports.findByCandidateId = function(req, res) {
-
 }
 
 exports.delete = function(req, res) {
@@ -57,7 +53,7 @@ exports.delete = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(review);
+      res.jsonp({ message: 'success' });
     }
   })
 }
@@ -84,7 +80,7 @@ exports.update = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     } else {
-      res.jsonp(review)
+      res.jsonp({ message: 'success' })
     }
   })
 }
