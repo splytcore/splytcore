@@ -238,21 +238,25 @@ exports.lockCandidate = function(req, res, next) {
 //Use after user sign up is implemented for ios app
 exports.unlockCandidate = function(req, res) {  
   
-  //if staff signed in      
-  if (req.user && req.candidate.lockedBy._id.toString() === req.user._id.toString()) {
-    req.candidate.lockedBy = null
-    let candidate = req.candidate
-    candidate.save((err) => {      
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })      
-      }                           
-      global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
-      res.jsonp({ message: 'you have unlocked this candidate' })    
-    })    
+  //if staff signed in
+  if (req.user && req.candidate.lockedBy) {
+    if (req.candidate.lockedBy._id.toString() === req.user._id.toString()) {
+      req.candidate.lockedBy = null
+      let candidate = req.candidate
+      candidate.save((err) => {      
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          })      
+        }                           
+        global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+        res.jsonp({ message: 'you have unlocked this candidate' })    
+      })    
+    } else {
+      res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
+    }
   } else {
-    res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
+    res.jsonp({ message: 'This candidate is not locked by anyone' })        
   }
 }
 
