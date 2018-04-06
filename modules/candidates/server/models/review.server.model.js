@@ -23,21 +23,29 @@ const ReviewSchema = new Schema({
   experience: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,
     required: 'Please fill first experience'
   },
   communication: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,    
     required: 'Please fill first communication'
   },
   cultureFit: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,    
     required: 'Please fill culture'
   },
   skills: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,    
     required: 'Please fill skills'
   },
   score: {
