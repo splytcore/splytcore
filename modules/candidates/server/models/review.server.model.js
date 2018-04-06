@@ -16,7 +16,9 @@ const validator = require('validator')
 const ReviewSchema = new Schema({
   candidate: {
     type: Schema.ObjectId,
-    ref: 'Candidate'
+    ref: 'Candidate',
+    required: true,
+    unique: true
   },
   experience: {
     type: Number,
@@ -38,6 +40,9 @@ const ReviewSchema = new Schema({
     default: 0,
     required: 'Please fill skills'
   },
+  score: {
+    type: Number
+  },  
   education: {
     type: String,
     enum: ['NONE', 'HIGH_SCHOOL', 'SOME_COLLEGE', 'ASSOCIATE_DEGREE', 'BACHELORS_DEGREE', 'MASTERS_DEGREE'],
@@ -52,6 +57,14 @@ const ReviewSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   }
+
+})
+
+//TODO: update score formula
+ReviewSchema.post('init', (review) => {  
+    
+  // console.log('calculating score for...' + review.candidate)    
+  review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4    
 
 })
 

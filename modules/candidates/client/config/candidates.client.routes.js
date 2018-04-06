@@ -23,6 +23,15 @@
           pageTitle: 'Candidates List'
         }
       })
+      .state('candidates.reviews', {
+        url: '/reviews',
+        templateUrl: 'modules/candidates/client/views/list-reviews.client.view.html',
+        controller: 'ReviewsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Reviews List'
+        }
+      })      
       .state('candidates.checkinQueue', {
         url: '/checkinQueue',
         templateUrl: 'modules/candidates/client/views/queue-candidates.client.view.html',
