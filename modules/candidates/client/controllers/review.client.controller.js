@@ -62,7 +62,7 @@
 
     function update() {
 
-      ReviewsService.update($state.params.candidateId, vm.review)
+      ReviewsService.update(vm.review)
         .success((res) => {
           console.log(res)
           vm.success = res.message

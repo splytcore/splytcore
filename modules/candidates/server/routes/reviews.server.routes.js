@@ -11,7 +11,7 @@ module.exports = function(app) {
   app.route('/api/reviews').all(reviewsPolicy.isAllowed)    
     .get(reviews.list)
 
-  app.route('/api/candidates/:candidateId/review').all(reviewsPolicy.isAllowed)
+  app.route('/api/reviews/:candidateId').all(reviewsPolicy.isAllowed)
     .post(reviews.create)
     .get(reviews.byCandidate, reviews.read)
     .put(reviews.byCandidate, reviews.update)

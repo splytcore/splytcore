@@ -60,7 +60,7 @@ exports.delete = function(req, res) {
 
 exports.list = function(req, res) {
   
-  Review.find().sort('-created').populate('reviewer', 'displayName').exec(function (err, reviews) {
+  Review.find().sort('-created').populate('reviewer', 'displayName').populate('candidate', 'email lastName firstName').exec(function (err, reviews) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -87,7 +87,7 @@ exports.update = function(req, res) {
 
 exports.list = function(req, res) {
   
-  Review.find().populate('reviewer', 'displayName').populate('candidate', 'lastName firstName').exec(function (err, reviews) {
+  Review.find().populate('reviewer', 'displayName').populate('candidate', 'lastName firstName email').exec(function (err, reviews) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -102,7 +102,7 @@ exports.byCandidate = function(req, res, next) {
 
   let candidate = req.candidate
 
-  Review.findOne({ candidate: candidate }).populate('candidate', 'lastName firstName').populate('reviewer', 'displayName').exec(function (err, review) {
+  Review.findOne({ candidate: candidate }).populate('candidate', 'lastName firstName email').populate('reviewer', 'displayName').exec(function (err, review) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -113,3 +113,28 @@ exports.byCandidate = function(req, res, next) {
   })
 }
 
+
+
+/**
+ * Candidate middleware
+ */
+exports.byID = function(req, res, next, id) {
+  
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'Review is invalid'
+    });
+  }
+
+  Review.findById(id).populate('reviewer', 'displayName').populate('candidate', 'email firstName lastName').exec(function (err, review) {
+    if (err) {
+      return next(err);
+    } else if (!review) {
+      return res.status(404).send({
+        message: 'No Review with that identifier has been found'
+      });
+    }
+    req.review = review;
+    next();
+  })
+}

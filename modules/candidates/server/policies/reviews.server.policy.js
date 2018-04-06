@@ -18,7 +18,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews',
       permissions: '*'
     }, {
-      resources: '/api/reviews/:reviewId',
+      resources: '/api/reviews/:candidateId',
       permissions: '*'
     }]
   }, {
@@ -27,7 +27,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews',
       permissions: ['get']
     }, {
-      resources: ['/api/candidates/:candidateId/review'],
+      resources: ['/api/reviews/:candidateId'],
       permissions: ['get', 'put', 'delete','post']
     }]
   }, {
@@ -36,7 +36,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews',
       permissions: ['get']
     }, {
-      resources: '/api/candidates/:candidateId/review',
+      resources: '/api/reviews/:candidateId',
       permissions: ['get']
     }]
   }]);

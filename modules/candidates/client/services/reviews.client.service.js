@@ -14,23 +14,28 @@
     vm.remove = remove
     vm.create = create
     vm.update = update
+    vm.list = list
 
-    vm.url = '/api/candidates/' 
+    vm.url = '/api/reviews/' 
 
     function remove (candidateId) {      
-      return $http.delete(vm.url + candidateId + '/review')
+      return $http.delete(vm.url + candidateId)
     }
 
-    function update (candidateId, review) {      
-      return $http.put(vm.url + candidateId + '/review', review)
+    function update (review) {      
+      return $http.put(vm.url + review.candidate._id, review)
     }
 
     function get (candidateId) {      
-      return $http.get(vm.url + candidateId + '/review')
+      return $http.get(vm.url + candidateId)
+    }
+
+    function list () {      
+      return $http.get(vm.url)
     }
 
     function create(candidateId, review) {
-      return $http.post(vm.url + candidateId + '/review', review)      
+      return $http.post(vm.url + candidateId, review)      
     }
 
   }

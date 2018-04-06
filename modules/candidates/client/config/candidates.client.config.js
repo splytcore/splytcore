@@ -22,6 +22,11 @@
       state: 'candidates.list'
     });
 
+    Menus.addSubMenuItem('topbar', 'candidates', {
+      title: 'List Reviews',
+      state: 'candidates.reviews'
+    });
+
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'candidates', {
       title: 'Register',
