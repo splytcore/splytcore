@@ -26,6 +26,10 @@ module.exports = function (io, socket) {
     io.emit('interviewChannel', candidate) 
   }
 
+  global.emitValuatedCandidate = function (candidate) {        
+    io.emit('valuatedChannel', candidate) 
+  }
+
   // Emit the status event when a socket client is disconnected
   socket.on('disconnect', function () {
     console.log('socket disconnected')

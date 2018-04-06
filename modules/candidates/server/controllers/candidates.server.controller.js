@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const async = require('async')
 const Candidate = mongoose.model('Candidate')  
 const History = mongoose.model('History')  
+const Review = mongoose.model('Review')  
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 
@@ -369,7 +370,7 @@ exports.read = function(req, res) {
 
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  candidate.isCurrentUserOwner = req.user && candidate.user && candidate.user._id.toString() === req.user._id.toString();
+  // console.log(candidate)
 
   res.jsonp(candidate);
 };
@@ -379,7 +380,7 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {  
   
-  let candidate = req.candidate  
+  let candidate = req.candidate              
   candidate = _.extend(candidate, req.body)  
   candidate.save(function(err) {
     if (err) {
@@ -403,65 +404,116 @@ exports.performAction = function(req, res, next) {
   let updatedCandidate = req.body  
   
   //async
-  if (oldCandidate.stage !== updatedCandidate.stage) {
-    stageChanged(req, res)
-  }
-
-  if (oldCandidate.valuation !== updatedCandidate.valuation) {
-    valuationChanged(req, res) 
-  }
-
-  if (oldCandidate.department !== updatedCandidate.department) {
-    departmentChanged(req, res)
-  }
-
-  if (oldCandidate.position !== updatedCandidate.position) {
-    positionChanged(req, res)
-  }
-
-  next()
+  async.parallel([
+    function state(cb) {
+      if (oldCandidate.stage !== updatedCandidate.stage) {        
+        stageChanged(req, res)
+          .then((success) => {
+            cb()
+          })
+          .catch((err) => {
+            console.log(err)
+            cb(err)
+          })
+      } else {
+        cb()
+      }
+    },
+    function valuation(cb) {
+      if (oldCandidate.valuation !== updatedCandidate.valuation) {
+        valuationChanged(req, res, (err)=> {
+          cb(err)
+        })
+      } else {
+        cb()
+      }
+    },
+    function dept(cb) {
+      if (oldCandidate.department !== updatedCandidate.department) {
+        departmentChanged(req, res, (err) => {
+          cb(err)
+        })
+      } else {
+        cb()        
+      }
+    }        
+  ], (err) => {
+    if (err) {
+      console.log(err)      
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }   
+    next()
+  })
 }
   
 function stageChanged(req, res) {    
   console.log('stage changed')  
-
-  if (req.body.stage.indexOf('REJECT') > -1){
-    client.messages.create({
-      body: 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!',
-      to: '+1' + req.candidate.sms,  // Text this number
-      from: config.twilio.from // From a valid Twilio number
-    })
-    .then((message) => {      
-      console.log('message for successful passing: ' + message)
-      global.emitRejectCandidate ? global.emitRejectCandidate(req.candidate) : null  // jshint ignore:line
-    })
-    .catch((err) => {
-      console.log('sms error')
-      console.log(err)
-    })
-
-  }
-
-
-  if (req.body.stage.indexOf('INTERVIEW') > -1) {
-    req.body.appointment = Date.now() + 3600000 // 1 hour        
-    let appt = (new Date(req.body.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
-    let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${appt}`
-    client.messages.create({
-      body: message,
-      to: '+1' + req.candidate.sms,  // Text this number
-      from: config.twilio.from // From a valid Twilio number
-    })
-    .then((message) => {      
-      global.emitInterviewCandidate ? global.emitInterviewCandidate(req.candidate) : null  // jshint ignore:line
-      console.log('message for successful passing: ' + message)
-    })
-    .catch((err) => {
-      console.log('sms error')
-      console.log(err)
-    })
-  }
   saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
+
+  
+  return new Promise((resolve, reject) => {
+    switch (req.body.stage) {
+      case 'REJECT':
+        client.messages.create({
+          body: 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!',
+          to: '+1' + req.candidate.sms,  // Text this number
+          from: config.twilio.from // From a valid Twilio number
+        })
+        .then((message) => {      
+          console.log('message for successful passing: ' + message)
+          global.emitRejectCandidate ? global.emitRejectCandidate(req.candidate) : null  // jshint ignore:line
+          resolve()
+        })
+        .catch((err) => {
+          console.log('sms error')
+          console.log(err)
+          reject()
+        })
+        break
+      case 'INTERVIEW':
+        req.body.appointment = Date.now() + 3600000 // 1 hour        
+        let appt = (new Date(req.body.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${appt}`
+        client.messages.create({
+          body: message,
+          to: '+1' + req.candidate.sms,  // Text this number
+          from: config.twilio.from // From a valid Twilio number
+        })
+        .then((message) => {      
+          global.emitInterviewCandidate ? global.emitInterviewCandidate(req.candidate) : null  // jshint ignore:line
+          console.log('message for successful passing: ' + message)
+          resolve()
+        })
+        .catch((err) => {
+          console.log('sms error')
+          console.log(err)
+          reject()
+        })
+        break    
+      case 'VALUATED':           
+        console.log('status changed to valuated')
+        Review.findOne({ candidate: req.candidate }).exec(function (err, review) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            })      
+          }         
+          global.emitValuatedCandidate ? global.emitValuatedCandidate(req.candidate) : null  // jshint ignore:line              
+          //after being evaluation set the result
+          Review.evaluate(review, (valuation) => {
+            console.log('eval: ' + valuation)
+            req.body.valuation = valuation
+            resolve()
+          })            
+        })
+        break
+      default: 
+        resolve()
+    }  
+  })
+  
 }
 
 function valuationChanged(req, res) {    
@@ -767,9 +819,13 @@ exports.candidateByID = function(req, res, next, id) {
         message: 'No Candidate with that identifier has been found'
       });
     }
-    req.candidate = candidate;
+    // candidate.reviewSummary.score = 0
+    // candidate.reviewSummary.reviewer= 'wtif man'
+    req.candidate = candidate    
     next();
   })
+
+
 }
 
 /**

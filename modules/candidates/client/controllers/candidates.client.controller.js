@@ -95,6 +95,7 @@
         .success((res) => {
           console.log(res)
           vm.candidate = res
+          vm.success = 'successful updated'
         })
         .error((res) => {
           console.log('failure')

@@ -76,4 +76,23 @@ ReviewSchema.post('init', (review) => {
 
 })
 
+ReviewSchema.statics.evaluate = function (review, next) {
+  
+
+  let score = review ? (review.experience + review.communication + review.skills + review.cultureFit)/4 : 0
+  
+  let val = ''
+  if (score > 4) {
+    val = 'YES'
+  } else if (score > 3) {
+    val = 'MAYBE'
+  } else if (score > 2) {
+    val = 'UNDECIDED'
+  } else {
+    val = 'NO'    
+  } 
+
+  next(val)
+}
+
 mongoose.model('Review', ReviewSchema)
