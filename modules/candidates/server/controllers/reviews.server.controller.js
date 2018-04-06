@@ -58,19 +58,6 @@ exports.delete = function(req, res) {
   })
 }
 
-exports.list = function(req, res) {
-  
-  Review.find().sort('-created').populate('reviewer', 'displayName').populate('candidate', 'email lastName firstName').exec(function (err, reviews) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      })
-    } else {
-      res.jsonp(reviews)
-    }
-  })
-}
-
 exports.update = function(req, res) {
   let review = req.review
   review = _.extend(review, req.body)
