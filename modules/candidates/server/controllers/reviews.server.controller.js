@@ -72,9 +72,13 @@ exports.update = function(req, res) {
   })
 }
 
-exports.list = function(req, res) {
+exports.list = function(req, res) {  
   
-  Review.find().populate('reviewer', 'displayName').populate('candidate', 'lastName firstName email').exec(function (err, reviews) {
+  let sort = req.query.sort ? req.query.sort : '-score'  
+  delete req.query.sort 
+  console.log(req.query)
+
+  Review.find(req.query).populate('reviewer', 'displayName').sort(sort).populate('candidate', 'lastName firstName email').exec(function (err, reviews) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

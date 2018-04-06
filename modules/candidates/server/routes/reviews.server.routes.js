@@ -17,7 +17,4 @@ module.exports = function(app) {
     .put(reviews.byCandidate, reviews.update)
     .delete(reviews.byCandidate, reviews.delete)   
 
-  // Finish by binding middleware
-  // app.param('reviewId', reviews.byID)  
-
 }
