@@ -10,12 +10,11 @@
   function routeConfig($stateProvider) {
     $stateProvider
       .state('reviews', {
-        abstract: true,
-        url: '/reviews',
+        abstract: true,        
         template: '<ui-view/>'
       })
       .state('reviews.view', {
-        url: '/:candidateId',
+        url: '/candidate/:candidateId',
         templateUrl: 'modules/candidates/client/views/review-form-candidate.client.view.html',
         controller: 'ReviewController',
         controllerAs: 'vm',
