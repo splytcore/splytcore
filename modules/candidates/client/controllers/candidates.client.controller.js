@@ -19,6 +19,7 @@
     vm.update = update       
     vm.checkin = checkin
     vm.unlock = unlock
+    vm.lock = lock
     vm.reviewPage = reviewPage
     
     CandidatesService.listAllEnumValues()
@@ -38,7 +39,7 @@
     vm.note = ''
 
     if ($state.params.candidateId) {
-      CandidatesService.lock($state.params.candidateId)
+      CandidatesService.get($state.params.candidateId)
         .success((res) => {
           console.log(res)          
           vm.candidate = res          
@@ -106,6 +107,18 @@
 
     function unlock() {
       CandidatesService.unlock(vm.candidate._id)
+        .success((res) => {
+          console.log(res) 
+          vm.success = res.message                         
+        })
+        .error((res) => {
+          console.log('failure')
+          vm.error = res.message
+        })
+    }
+
+    function lock() {
+      CandidatesService.lock(vm.candidate._id)
         .success((res) => {
           console.log(res) 
           vm.success = res.message                         

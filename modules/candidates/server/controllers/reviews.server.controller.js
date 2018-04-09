@@ -78,7 +78,7 @@ exports.list = function(req, res) {
   delete req.query.sort 
   console.log(req.query)
 
-  Review.find(req.query).populate('reviewer', 'displayName').sort(sort).populate('candidate', 'lastName firstName email').exec(function (err, reviews) {
+  Review.find(req.query).populate('reviewer', 'displayName').sort(sort).populate('candidate').exec(function (err, reviews) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -93,7 +93,7 @@ exports.byCandidate = function(req, res, next) {
 
   let candidate = req.candidate
 
-  Review.findOne({ candidate: candidate }).populate('candidate', 'lastName firstName email').populate('reviewer', 'displayName').exec(function (err, review) {
+  Review.findOne({ candidate: candidate }).populate('candidate').populate('reviewer', 'displayName').exec(function (err, review) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -117,7 +117,7 @@ exports.byID = function(req, res, next, id) {
     });
   }
 
-  Review.findById(id).populate('reviewer', 'displayName').populate('candidate', 'email firstName lastName').exec(function (err, review) {
+  Review.findById(id).populate('reviewer', 'displayName').populate('candidate').exec(function (err, review) {
     if (err) {
       return next(err);
     } else if (!review) {

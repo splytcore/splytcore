@@ -5,6 +5,9 @@
  */
 const path = require('path')
 const mongoose = require('mongoose')
+
+mongoose.Promise = require('bluebird')
+
 const async = require('async')
 const Candidate = mongoose.model('Candidate')  
 const History = mongoose.model('History')  
@@ -208,24 +211,58 @@ exports.findByEmail = function(req, res) {
 // }
 
 //Use after user sign up is implemented for ios app
-exports.lockCandidate = function(req, res, next) {
-    
-  //if staff signed in  
-  if (req.user && !req.candidate.lockedBy) {
-    req.candidate.lockedBy = req.user
-    let candidate = req.candidate
-    
-    candidate.save((err) => {
-      if (err) {
+exports.lockCandidate = function(req, res) {  
+  
+  console.log('locking candidate...')
+  async.waterfall([
+    function alreadyLocked(cb) {
+      if (req.candidate.lockedBy) {
         return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })      
-      }                     
-      global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
-    })    
-  } 
+          message: 'Sorry, Already Locke!'
+        })  
+      } else {
+        cb()
+      }
+    },
+    function oneLockLimit(cb) {
 
-  next()
+      Candidate.findOne({ lockedBy: req.user }).exec()
+        .then((candidate) => {
+          if (candidate) {
+            return res.status(400).send({
+              message: 'Sorry, you can only lock one candidate at a time'
+            })  
+          } else {                    
+            cb()
+          }                  
+        })        
+        .catch((err) => {
+          console.log(err)
+          cb(err)
+        })
+    },
+    function lockCandidate(cb) {
+      req.candidate.lockedBy = req.user
+      let candidate = req.candidate      
+      candidate.save()
+        .then(() => {          
+          cb(null, candidate)
+        })
+        .catch((err) => {
+          cb(err)
+        })      
+    }
+  ], (err, candidate) => {
+    if (err) {
+      console.log(err)      
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }      
+    // emit to socket.io if no one is connected skip                    
+    global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
+    res.jsonp(candidate)        
+  })  
 }
 
 //Remove after user sign up is implemented for ios app
@@ -239,25 +276,28 @@ exports.lockCandidate = function(req, res, next) {
 //Use after user sign up is implemented for ios app
 exports.unlockCandidate = function(req, res) {  
   
+  let candidate = req.candidate
   //if staff signed in
-  if (req.user && req.candidate.lockedBy) {
-    if (req.candidate.lockedBy._id.toString() === req.user._id.toString()) {
-      req.candidate.lockedBy = null
-      let candidate = req.candidate
-      candidate.save((err) => {      
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          })      
-        }                           
+  if (!candidate.lockedBy) {
+    return res.status(400).send({
+      message: 'Candidate is not locked'
+    })      
+  }
+
+  if (candidate.lockedBy._id.toString() === req.user._id.toString()) {
+    candidate.lockedBy = null    
+    candidate.save()
+      .then(() => {
         global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
-        res.jsonp({ message: 'you have unlocked this candidate' })    
-      })    
-    } else {
-      res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
-    }
+        res.jsonp({ message: 'you have unlocked this candidate' })          
+      })
+      .catch((err) => {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })      
+      })
   } else {
-    res.jsonp({ message: 'This candidate is not locked by anyone' })        
+    res.status(400).send({ message: 'You cannot unlock this candidate because someone else has it locked' })    
   }
 }
 
@@ -388,6 +428,7 @@ exports.update = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     } else {
+      console.log(candidate.appointment)
       res.jsonp(candidate)
     }
   })
@@ -421,18 +462,28 @@ exports.performAction = function(req, res, next) {
     },
     function valuation(cb) {
       if (oldCandidate.valuation !== updatedCandidate.valuation) {
-        valuationChanged(req, res, (err)=> {
-          cb(err)
-        })
+        valuationChanged(req, res)
+          .then((success) => {
+            cb()
+          })
+          .catch((err) => {
+            console.log(err)
+            cb(err)
+          })        
       } else {
         cb()
       }
     },
     function dept(cb) {
       if (oldCandidate.department !== updatedCandidate.department) {
-        departmentChanged(req, res, (err) => {
-          cb(err)
-        })
+        departmentChanged(req, res)
+          .then((success) => {
+            cb()
+          })
+          .catch((err) => {
+            console.log(err)
+            cb(err)
+          })        
       } else {
         cb()        
       }
@@ -450,20 +501,22 @@ exports.performAction = function(req, res, next) {
   
 function stageChanged(req, res) {    
   console.log('stage changed')  
-  saveHistory(req.candidate, 'CHANGED_STATE', req.user, req.body.stage)
-
   
+  let candidate = req.candidate
+  
+  saveHistory(candidate, 'CHANGED_STATE', req.user, req.body.stage)
+
   return new Promise((resolve, reject) => {
     switch (req.body.stage) {
       case 'REJECT':
         client.messages.create({
           body: 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!',
-          to: '+1' + req.candidate.sms,  // Text this number
+          to: '+1' + candidate.sms,  // Text this number
           from: config.twilio.from // From a valid Twilio number
         })
         .then((message) => {      
           console.log('message for successful passing: ' + message)
-          global.emitRejectCandidate ? global.emitRejectCandidate(req.candidate) : null  // jshint ignore:line
+          global.emitRejectCandidate ? global.emitRejectCandidate(candidate) : null  // jshint ignore:line
           resolve()
         })
         .catch((err) => {
@@ -473,16 +526,18 @@ function stageChanged(req, res) {
         })
         break
       case 'INTERVIEW':
-        req.body.appointment = Date.now() + 3600000 // 1 hour        
-        let appt = (new Date(req.body.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
-        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${appt}`
+        let appt = Date.now() + 3600000 // 1 hour        
+        let apptString = (new Date(appt)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${apptString}`
         client.messages.create({
           body: message,
-          to: '+1' + req.candidate.sms,  // Text this number
+          to: '+1' + candidate.sms,  // Text this number
           from: config.twilio.from // From a valid Twilio number
         })
         .then((message) => {      
-          global.emitInterviewCandidate ? global.emitInterviewCandidate(req.candidate) : null  // jshint ignore:line
+          candidate.appointment = appt
+          req.body.appointment = appt //update with appointment          
+          global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
           console.log('message for successful passing: ' + message)
           resolve()
         })
@@ -494,13 +549,13 @@ function stageChanged(req, res) {
         break    
       case 'VALUATED':           
         console.log('status changed to valuated')
-        Review.findOne({ candidate: req.candidate }).exec(function (err, review) {
+        Review.findOne({ candidate: candidate }).exec(function (err, review) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
             })      
           }         
-          global.emitValuatedCandidate ? global.emitValuatedCandidate(req.candidate) : null  // jshint ignore:line              
+          global.emitValuatedCandidate ? global.emitValuatedCandidate(candidate) : null  // jshint ignore:line              
           //after being evaluation set the result
           Review.evaluate(review, (valuation) => {
             console.log('eval: ' + valuation)
@@ -518,14 +573,36 @@ function stageChanged(req, res) {
 
 function valuationChanged(req, res) {    
   console.log('valuation changed')
+
+  let candiate = req.candidate
+  
+  return new Promise((resolve, reject) => {
+    resolve()
+  })
+
+  
 }
 
 function departmentChanged(req, res) {    
   console.log('department changed')
+  
+  let candiate = req.candidate
+
+  return new Promise((resolve, reject) => {
+    resolve()
+  })
+
 }
 
 function positionChanged(req, res) {    
+  
   console.log('position changed')
+
+  let candiate = req.candidate
+  return new Promise((resolve, reject) => {
+    resolve()
+  })
+
 }
 
 function saveHistory(candidate, action, user, from, to) {    
