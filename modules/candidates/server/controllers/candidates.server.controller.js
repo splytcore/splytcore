@@ -5,6 +5,9 @@
  */
 const path = require('path')
 const mongoose = require('mongoose')
+
+mongoose.Promise = require('bluebird')
+
 const async = require('async')
 const Candidate = mongoose.model('Candidate')  
 const History = mongoose.model('History')  
@@ -208,42 +211,47 @@ exports.findByEmail = function(req, res) {
 // }
 
 //Use after user sign up is implemented for ios app
-exports.lockCandidate = function(req, res, next) {  
+exports.lockCandidate = function(req, res) {  
+  
   console.log('locking candidate...')
   async.waterfall([
     function alreadyLocked(cb) {
       if (req.candidate.lockedBy) {
-        console.log('already locked')
-        next()
+        return res.status(400).send({
+          message: 'Sorry, Already Locke!'
+        })  
       } else {
         cb()
       }
     },
     function oneLockLimit(cb) {
-      Candidate.findOne({ lockedBy: req.user }).exec((err, candidate) => {
-        if (err) {
+
+      Candidate.findOne({ lockedBy: req.user }).exec()
+        .then((candidate) => {
+          if (candidate) {
+            return res.status(400).send({
+              message: 'Sorry, you can only lock one candidate at a time'
+            })  
+          } else {                    
+            cb()
+          }                  
+        })        
+        .catch((err) => {
+          console.log(err)
           cb(err)
-        } else if (candidate) {
-          console.log('Sorry, you can only lock one candidate at a time')
-          next()            
-        } else {
-          cb()
-        }
-      })
+        })
     },
     function lockCandidate(cb) {
       req.candidate.lockedBy = req.user
       let candidate = req.candidate      
-      candidate.save((err) => {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          })      
-        }                     
-        global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
-        cb(null, candidate)
-      })    
-    },
+      candidate.save()
+        .then(() => {          
+          cb(null, candidate)
+        })
+        .catch((err) => {
+          cb(err)
+        })      
+    }
   ], (err, candidate) => {
     if (err) {
       console.log(err)      
@@ -252,8 +260,8 @@ exports.lockCandidate = function(req, res, next) {
       })
     }      
     // emit to socket.io if no one is connected skip                    
-    global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
-    next()
+    global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
+    res.jsonp({ message: 'you have locked this candidate' })        
   })  
 }
 
@@ -278,15 +286,16 @@ exports.unlockCandidate = function(req, res) {
 
   if (candidate.lockedBy._id.toString() === req.user._id.toString()) {
     candidate.lockedBy = null    
-    candidate.save((err) => {      
-      if (err) {
+    candidate.save()
+      .then(() => {
+        global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+        res.jsonp({ message: 'you have unlocked this candidate' })          
+      })
+      .catch((err) => {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         })      
-      }                           
-      global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
-      res.jsonp({ message: 'you have unlocked this candidate' })    
-    })    
+      })
   } else {
     res.status(400).send({ message: 'You cannot unlock this candidate because someone else has it locked' })    
   }

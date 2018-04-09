@@ -65,7 +65,7 @@ module.exports = function(app) {
     .delete(candidates.delete);    
 
   app.route('/api/candidates/:candidateId/lock').all(candidatesPolicy.isAllowed)
-    .get(candidates.lockCandidate, candidates.read)
+    .get(candidates.lockCandidate)
 
 
   app.route('/api/candidates/:candidateId/unlock').all(candidatesPolicy.isAllowed)
