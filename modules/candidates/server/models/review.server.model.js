@@ -23,21 +23,29 @@ const ReviewSchema = new Schema({
   experience: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,
     required: 'Please fill first experience'
   },
   communication: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,    
     required: 'Please fill first communication'
   },
   cultureFit: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,    
     required: 'Please fill culture'
   },
   skills: {
     type: Number,
     default: 0,
+    min: 0,
+    max: 5,    
     required: 'Please fill skills'
   },
   score: {
@@ -67,5 +75,24 @@ ReviewSchema.post('init', (review) => {
   review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4    
 
 })
+
+ReviewSchema.statics.evaluate = function (review, next) {
+  
+
+  let score = review ? (review.experience + review.communication + review.skills + review.cultureFit)/4 : 0
+  
+  let val = ''
+  if (score > 4) {
+    val = 'YES'
+  } else if (score > 3) {
+    val = 'MAYBE'
+  } else if (score > 2) {
+    val = 'UNDECIDED'
+  } else {
+    val = 'NO'    
+  } 
+
+  next(val)
+}
 
 mongoose.model('Review', ReviewSchema)

@@ -8,6 +8,9 @@ const Schema = mongoose.Schema
 const path = require('path')
 const config = require(path.resolve('./config/config'))
 const validator = require('validator')
+const _ = require('lodash')
+
+// const Review = mongoose.model('Review')  
 
 /**
 
@@ -38,7 +41,7 @@ const CandidateSchema = new Schema({
     default: '',
     required: 'Please fill in phone number',
     trim: true
-  },   
+  },     
   valuation: {
     type: String,
     enum: config.valuation,
@@ -80,10 +83,6 @@ const CandidateSchema = new Schema({
     type: String,
     uppercase: true
   },    
-  rating: {
-    type: Number,
-    default: 0
-  },  
   checkin: {
     type: Date    
   },
@@ -126,8 +125,29 @@ const CandidateSchema = new Schema({
   lockedBy: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  review: {
+    score: {
+      type: Number
+    },
+    reviewer: {
+      type: String      
+    }
   }
 
 })
+
+CandidateSchema.post('init', (candidate, next) => {    
+  let Review = mongoose.model('Review')    
+  Review.findOne({ candidate: candidate }).populate('reviewer', 'displayName').exec((err, review) => {    
+    if (review) {  
+      candidate.review.reviewer = review.reviewer.displayName
+      candidate.review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4  
+    }
+    next()
+  })
+  
+})
+
 
 mongoose.model('Candidate', CandidateSchema)
