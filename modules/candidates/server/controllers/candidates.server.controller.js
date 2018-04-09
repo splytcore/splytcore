@@ -261,7 +261,7 @@ exports.lockCandidate = function(req, res) {
     }      
     // emit to socket.io if no one is connected skip                    
     global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
-    res.jsonp({ message: 'you have locked this candidate' })        
+    res.jsonp(candidate)        
   })  
 }
 
