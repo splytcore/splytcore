@@ -208,24 +208,53 @@ exports.findByEmail = function(req, res) {
 // }
 
 //Use after user sign up is implemented for ios app
-exports.lockCandidate = function(req, res, next) {
-    
-  //if staff signed in  
-  if (req.user && !req.candidate.lockedBy) {
-    req.candidate.lockedBy = req.user
-    let candidate = req.candidate
-    
-    candidate.save((err) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })      
-      }                     
-      global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
-    })    
-  } 
-
-  next()
+exports.lockCandidate = function(req, res, next) {  
+  console.log('locking candidate...')
+  async.waterfall([
+    function alreadyLocked(cb) {
+      if (req.candidate.lockedBy) {
+        console.log('already locked')
+        next()
+      } else {
+        cb()
+      }
+    },
+    function oneLockLimit(cb) {
+      Candidate.findOne({ lockedBy: req.user }).exec((err, candidate) => {
+        if (err) {
+          cb(err)
+        } else if (candidate) {
+          console.log('Sorry, you can only lock one candidate at a time')
+          next()            
+        } else {
+          cb()
+        }
+      })
+    },
+    function lockCandidate(cb) {
+      req.candidate.lockedBy = req.user
+      let candidate = req.candidate      
+      candidate.save((err) => {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          })      
+        }                     
+        global.emitLockCandidate ? global.emitLockCandidate(candidate) : null  // jshint ignore:line
+        cb(null, candidate)
+      })    
+    },
+  ], (err, candidate) => {
+    if (err) {
+      console.log(err)      
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }      
+    // emit to socket.io if no one is connected skip                    
+    global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
+    next()
+  })  
 }
 
 //Remove after user sign up is implemented for ios app
@@ -239,25 +268,27 @@ exports.lockCandidate = function(req, res, next) {
 //Use after user sign up is implemented for ios app
 exports.unlockCandidate = function(req, res) {  
   
+  let candidate = req.candidate
   //if staff signed in
-  if (req.user && req.candidate.lockedBy) {
-    if (req.candidate.lockedBy._id.toString() === req.user._id.toString()) {
-      req.candidate.lockedBy = null
-      let candidate = req.candidate
-      candidate.save((err) => {      
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          })      
-        }                           
-        global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
-        res.jsonp({ message: 'you have unlocked this candidate' })    
-      })    
-    } else {
-      res.jsonp({ message: 'You cannot unlock this candidate because someone else has it locked' })    
-    }
+  if (!candidate.lockedBy) {
+    return res.status(400).send({
+      message: 'Candidate is not locked'
+    })      
+  }
+
+  if (candidate.lockedBy._id.toString() === req.user._id.toString()) {
+    candidate.lockedBy = null    
+    candidate.save((err) => {      
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })      
+      }                           
+      global.emitUnlockCandidate ? global.emitUnlockCandidate(candidate) : null  // jshint ignore:line
+      res.jsonp({ message: 'you have unlocked this candidate' })    
+    })    
   } else {
-    res.jsonp({ message: 'This candidate is not locked by anyone' })        
+    res.status(400).send({ message: 'You cannot unlock this candidate because someone else has it locked' })    
   }
 }
 

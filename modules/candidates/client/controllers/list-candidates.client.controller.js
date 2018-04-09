@@ -5,9 +5,9 @@
     .module('candidates')
     .controller('CandidatesListController', CandidatesListController);
 
-  CandidatesListController.$inject = ['CandidatesService'];
+  CandidatesListController.$inject = ['CandidatesService', 'Socket', '$scope'];
 
-  function CandidatesListController(CandidatesService) {
+  function CandidatesListController(CandidatesService, Socket, $scope) {
     var vm = this
     vm.applyFilters = applyFilters
 
@@ -53,6 +53,48 @@
           console.log(res)        
         })          
     }
+
+
+    // Make sure the Socket is connected
+    if (!Socket.socket) {
+      console.log('connecting to socket')
+      Socket.connect();
+    } else {
+      console.log('already connect to socket')
+    }
+
+    // event listener for new checkins
+    Socket.on('checkinChannel', function (candidate) {
+      console.log(candidate)      
+      console.log('checkinChannel event handler')      
+    })
+
+    // Remove the event listener when the controller instance is destroyed
+    $scope.$on('$destroy', function () {
+      Socket.removeListener('checkinChannel')
+      Socket.removeListener('lockedChannel')
+      Socket.removeListener('unlockedChannel')
+    })
+
+      // socket listener for candidate      
+    Socket.on('lockedChannel', function (candidate) {
+      vm.candidates.forEach((c) => {
+        if (c._id.toString() === candidate._id.toString()) {
+          console.log('display locked')
+          c.lockedBy = candidate.lockedBy
+        }
+      })
+    })
+
+    // socket listener for candidate      
+    Socket.on('unlockedChannel', function (candidate) {
+      vm.candidates.forEach((c) => {
+        if (c._id.toString() === candidate._id.toString()) {
+          console.log('display locked')
+          c.lockedBy = null
+        }        
+      })      
+    })
 
 
   }

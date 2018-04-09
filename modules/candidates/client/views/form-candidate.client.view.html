@@ -3,7 +3,8 @@
     <h1>{{vm.candidate._id ? 'Edit Candidate' : 'New Candidate'}}</h1>
   </div>
   <strong>Locked by {{ vm.candidate.lockedBy.displayName }} </strong>
-  <button type="button" class="btn btn-default" ng-click="vm.unlock()"> Unlock </button>          
+  <button ng-show="vm.candidate.lockedBy" type="button" class="btn btn-default" ng-click="vm.unlock()"> Unlock </button>          
+  <button ng-show="!vm.candidate.lockedBy" type="button" class="btn btn-default" ng-click="vm.unlock()"> Lock </button>          
 
   <div class="col-md-12">
     <form name="vm.form.candidateForm" class="form-horizontal" ng-submit="vm.register(vm.form.candidateForm.$valid)" novalidate>
