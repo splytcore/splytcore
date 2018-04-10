@@ -16,58 +16,62 @@ const config = require(path.resolve('./config/config'))
 //@desc creates new departments and positions that doesn't exists
 exports.initialize = function(req, res) {
   
-  let departments = config.departments
+  let departments = config.departments  
 
-  // async.waterfall([
-  //   function createDepartment(next){
-  //     async.each(departments, (department, callback) => {    
-  //       Department.findOneAndUpdate({name: 'd'})
-  //       callback()
-  //     }, (err) => {
-  //       next()
-  //     })
-  //   },
-  //   function createPosition(next){
-  //     async.each(department, (position, cb2) => {        
-  //       console.log(position)
-  //       cb2()
-  //     }, (err) => {
-  //       if(err) {
-  //         return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-  //       }             
-  //       console.log('finished with')    
-  //       callback()
-  //     })
+  async.forEachOf(departments, (rec, departmentName, callback) => {        
+    createDepartment(departmentName, rec.display)
+      .then((dept) => {
+        console.log(dept)
+        createPositions(dept, rec.positions)
+          .then(() => {
+            callback()
+          })
+          .catch((err)=> {
+            callback(err)
+          })
+      })
+      .catch((err) => {
+        callback(err)
+      })
+  }, (err) => {        
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.jsonp({ message: 'success' })    
+  })    
 
-  //     }
-  // ], (err) => {
-  //   if (err) {
-  //     console.log(err)
-  //     return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-  //   } 
-  // })    ]
-
-
-  async.each(departments, (key, department, callback) => {        
-    console.log(key)
-    async.each(department, (position, cb2) => {      
-      console.log(position)
-      cb2()
-    }, (err) => {
-      if(err) {
-        return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-      }             
-      console.log('finished with')    
-      callback()
-    })
-  }, (err) => {
-    if(err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-    }             
-    console.log('finished')
-    res.jsonp({ message: 'success' })
+}
+//@desc create if not exists
+function createDepartment(departmentName, display) {
+  return new Promise((resolve, reject) => {
+    Department.findOneAndUpdate({ name: departmentName.toUpperCase() }, { name: departmentName.toUpperCase(), display: display }, { upsert: true, new: true }).exec((err, dept) => {          
+      if (err) {
+        reject(err)
+      } else {      
+        console.log(dept)
+        resolve(dept)
+      }
+    })                
   })
+}
 
+//@desc create if not exists
+function createPositions(department, positions) {
+  return new Promise((resolve, reject) => {
+    async.each(positions, (position, callback) => {    
+      Position.findOneAndUpdate({ name: position.name.toUpperCase() }, { department: department, name: position.name.toUpperCase(), display: position.display }, { upsert: true }).exec((err, pos) => {                  
+        callback(err)
+      })                
+    }, (err) => {        
+      if (err) {
+        reject(err)
+      } else {
+        resolve()  
+      }      
+    })  
+  })
 }
 
 

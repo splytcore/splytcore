@@ -11,6 +11,7 @@ const validator = require('validator')
 const _ = require('lodash')
 
 // const Review = mongoose.model('Review')  
+const deepPopulate = require('mongoose-deep-populate')(mongoose)
 
 /**
 
@@ -60,19 +61,10 @@ const CandidateSchema = new Schema({
     required: 'Please fill in stage',
     trim: true
   }, 
-  otherStage: {    
-    type: String,
-    uppercase: true
-  },      
   position: {
-    enum: config.position,
-    type: String,
-    default: ''    
+    type: Schema.ObjectId,
+    ref: 'Position'
   },  
-  otherPosition: {    
-    type: String,
-    uppercase: true
-  },    
   checkin: {
     type: Date    
   },
@@ -139,5 +131,6 @@ CandidateSchema.post('init', (candidate, next) => {
   
 })
 
+CandidateSchema.plugin(deepPopulate)
 
 mongoose.model('Candidate', CandidateSchema)

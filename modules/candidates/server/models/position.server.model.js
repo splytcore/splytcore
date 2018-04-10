@@ -19,14 +19,13 @@ const PositionSchema = new Schema({
     uppercase: true,
     required: 'Please select name'    
   },
+  display: {
+    type: String    
+  },  
   department: {
     type: Schema.ObjectId,
     ref: 'Department',    
     required: 'Please select department'    
-  },  
-  created: {
-    type: Date,
-    default: Date.now
   }
 })
 

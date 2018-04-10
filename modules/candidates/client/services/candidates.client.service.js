@@ -28,11 +28,15 @@
 
     vm.update = update
     vm.url = '/api/candidates/'
+    vm.listPositions = listPositions
 
     function remove (candidateId) {      
       return $http.delete('/api/candidates/' + candidateId)
     }
 
+    function listPositions () {      
+      return $http.get('/api/positions')
+    }
 
     function listEnumValues (field) {      
       return $http.get('/api/enum/candidates/' + field)

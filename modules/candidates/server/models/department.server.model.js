@@ -19,9 +19,8 @@ const DepartmentSchema = new Schema({
     uppercase: true,
     required: 'Please select name'    
   },
-  created: {
-    type: Date,
-    default: Date.now
+  display: {
+    type: String    
   }
 })
 
