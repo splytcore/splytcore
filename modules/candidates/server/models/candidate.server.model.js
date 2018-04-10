@@ -64,16 +64,6 @@ const CandidateSchema = new Schema({
     type: String,
     uppercase: true
   },      
-  department: {
-    type: String,
-    enum: config.department,
-    default: 'HR',
-    required: 'Please choose department'    
-  },
-  otherDepartment: {
-    type: String,
-    uppercase: true         
-  },  
   position: {
     enum: config.position,
     type: String,

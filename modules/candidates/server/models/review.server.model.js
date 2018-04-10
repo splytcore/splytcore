@@ -11,7 +11,7 @@ const validator = require('validator')
 
 /**
 
- * Candidate Schema
+ * Review Schema
  */
 const ReviewSchema = new Schema({
   candidate: {
@@ -84,7 +84,7 @@ ReviewSchema.pre('save', function (next) {
   } 
 
   let Candidate = mongoose.model('Candidate')    
-  Candidate.findOneAndUpdate({ _id: this.candidate._id }, { 'valuation' : val },  { upsert:true }).exec((err) => {
+  Candidate.findOneAndUpdate({ _id: this.candidate._id }, { 'valuation' : val }, { upsert:true }).exec((err) => {
     next(err)
   })     
   
