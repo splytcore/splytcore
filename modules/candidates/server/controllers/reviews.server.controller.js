@@ -59,9 +59,10 @@ exports.delete = function(req, res) {
 }
 
 exports.update = function(req, res) {
+  
   let review = req.review
-  review = _.extend(review, req.body)
-  review.save(function (err) {
+  review = _.extend(review, req.body)  
+  review.save((err) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -72,18 +73,33 @@ exports.update = function(req, res) {
   })
 }
 
+function sortByScore (a, b) {
+
+  let comparison = 0
+  
+  if (a.score < b.score) {
+    comparison = 1
+  } else if (b.score > a.score) {
+    comparison = -1
+  }
+
+  return comparison * -1
+}
+
+
 exports.list = function(req, res) {  
   
-  let sort = req.query.sort ? req.query.sort : '-score'  
+  let sort = req.query.sort ? req.query.sort : 'score'  
   delete req.query.sort 
   console.log(req.query)
 
-  Review.find(req.query).populate('reviewer', 'displayName').sort(sort).populate('candidate').exec(function (err, reviews) {
+  Review.find(req.query).sort(sort).populate('reviewer', 'displayName').populate('candidate').exec(function (err, reviews) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })      
     }         
+    reviews.sort(sortByScore)
     res.jsonp(reviews)        
   })
 }

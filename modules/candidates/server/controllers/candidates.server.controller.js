@@ -548,21 +548,9 @@ function stageChanged(req, res) {
         })
         break    
       case 'VALUATED':           
-        console.log('status changed to valuated')
-        Review.findOne({ candidate: candidate }).exec(function (err, review) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            })      
-          }         
-          global.emitValuatedCandidate ? global.emitValuatedCandidate(candidate) : null  // jshint ignore:line              
-          //after being evaluation set the result
-          Review.evaluate(review, (valuation) => {
-            console.log('eval: ' + valuation)
-            req.body.valuation = valuation
-            resolve()
-          })            
-        })
+        console.log('status changed to valuated')        
+        global.emitValuatedCandidate ? global.emitValuatedCandidate(candidate) : null  // jshint ignore:line                        
+        resolve()        
         break
       default: 
         resolve()
