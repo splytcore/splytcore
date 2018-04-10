@@ -73,20 +73,6 @@ exports.update = function(req, res) {
   })
 }
 
-function sortByScore (a, b) {
-
-  let comparison = 0
-  
-  if (a.score < b.score) {
-    comparison = 1
-  } else if (b.score > a.score) {
-    comparison = -1
-  }
-
-  return comparison * -1
-}
-
-
 exports.list = function(req, res) {  
   
   let sort = req.query.sort ? req.query.sort : 'score'  
@@ -99,7 +85,6 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })      
     }         
-    reviews.sort(sortByScore)
     res.jsonp(reviews)        
   })
 }
