@@ -26,10 +26,19 @@
 
     CandidatesService.listAllEnumValues()
       .success((res) => {
-        console.log(res)          
-        vm.positions = res.positions
-        vm.departments = res.departments
+        console.log(res)                  
         vm.registeredFrom = res.registeredFrom
+      })
+      .error((res) => {
+        console.log('failure')
+        console.log(res)
+      })      
+
+    CandidatesService.listPositions()
+      .success((res) => {
+        console.log(res)      
+        console.log(res)    
+        vm.positions = res
       })
       .error((res) => {
         console.log('failure')

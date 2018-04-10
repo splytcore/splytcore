@@ -352,17 +352,13 @@ exports.listEnumValues = function(req, res) {
 */
 exports.listAllEnumValues = function(req, res) {  
   
-  let departments = Candidate.schema.path('department').enumValues
   let registeredFrom = Candidate.schema.path('registeredFrom').enumValues
   let stages = Candidate.schema.path('stage').enumValues
-  let positions = Candidate.schema.path('position').enumValues
   let valuations = Candidate.schema.path('valuation').enumValues
 
   res.jsonp({
-    departments: departments,
     registeredFrom: registeredFrom,
     stages: stages,
-    positions: positions,
     valuations: valuations
   })
 }
@@ -377,29 +373,107 @@ exports.list = function(req, res) {
   console.log('pre query')
   console.log(req.query)
 
-  let sort = req.query.sort ? req.query.sort : '-created'
-  delete req.query.sort 
-
-  // TODO: pagination
-  // let limit = req.query.page ? parseInt(req.query.page) : 20   
-  // delete req.query.limit
-  //skip results for pagination
-  // let skip = req.query.skip ? parseInt(req.query.skip) * limit  : 0
-  // delete req.query.skip
-  let limit = req.query.page ? parseInt(req.query.page) : 20 
-
   console.log('post query')
   console.log(req.query)
+
+  if (req.query.department) {
+    exports.listByDepartment(req, res)
+  } else {
+    let sort = req.query.sort ? req.query.sort : '-created'
+    delete req.query.sort     
+    Candidate.find(req.query).sort(sort)
+    .populate('lockedBy', 'displayName')
+    .populate('position')
+    .deepPopulate('position.department')
+    .exec(function(err, candidates) {    
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })
+      }             
+      if (sort.indexOf('-department') > -1) {        
+        console.log('sorring asc')
+        let sorted = candidates.sort(sortByDepartmentASC)
+        res.jsonp(sorted)
+      } else if (sort.indexOf('department') > -1) {        
+        console.log('sorring dsc')
+        let sorted = candidates.sort(sortByDepartmentDSC)
+        res.jsonp(sorted)        
+      } else {
+        res.jsonp(candidates)
+      }
+    })
+  }
+}
+
+function sortByDepartmentASC(a,b) {
+  let comparison = 0;
+  if (a.position.department.name > b.position.department.name) {
+    comparison = 1;
+  } else if (b.position.department.name > a.position.department.name) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+function sortByDepartmentDSC(a,b) {
+  let comparison = 0;
+  if (a.position.department.name < b.position.department.name) {
+    comparison = 1;
+  } else if (b.position.department.name < a.position.department.name) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+
+exports.listByDepartment = function(req, res) {
   
-  Candidate.find(req.query).sort(sort).populate('lockedBy', 'displayName').exec(function(err, candidates) {    
+  console.log('list by department')
+
+  let department = req.query.department
+  delete req.query.department         
+  let sort = req.query.sort ? req.query.sort : '-created'  
+  delete req.query.sort         
+
+  Candidate.find(req.query).sort(sort)
+  .populate('lockedBy', 'displayName')
+  .populate('position')
+  .deepPopulate('position.department')
+  .exec(function(err, candidates) {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    }       
-    res.jsonp(candidates)
+    }           
+    let filtered = candidates.filter((candidate) => {      
+      return candidate.position.department._id.toString() === department.toString()
+    })
+    res.jsonp(filtered)
   })
 }
+
+// exports.listByPosition = function(req, res) {
+  
+//   console.log('list by position')
+
+//   let positionId = req.query.position
+//   let sort = req.query.sort ? req.query.sort : '-created'  
+
+//   Candidate.find({ position: positionId }).sort(sort)
+//   .populate('lockedBy', 'displayName')
+//   .populate('position')
+//   .deepPopulate('position.department')
+//   .exec(function(err, candidates) {    
+//     if (err) {
+//       return res.status(400).send({
+//         message: errorHandler.getErrorMessage(err)
+//       })
+//     }           
+//     res.jsonp(candidates)
+//   })
+// }
+
 
 /**
  * Show the current Candidate
@@ -876,7 +950,12 @@ exports.candidateByID = function(req, res, next, id) {
     });
   }
 
-  Candidate.findById(id).populate('lockedBy', 'displayName').populate('notes.user', 'displayName').exec(function (err, candidate) {
+  Candidate.findById(id)
+  .populate('lockedBy', 'displayName')
+  .populate('notes.user', 'displayName')
+  .populate('position')  
+  .deepPopulate('position.department')
+  .exec(function (err, candidate) {
     if (err) {
       return next(err);
     } else if (!candidate) {
@@ -898,7 +977,11 @@ exports.candidateByID = function(req, res, next, id) {
  */
 exports.candidateByEmail = function(req, res, next, email) {
   console.log(email)
-  Candidate.findOne({ email: email }).exec(function (err, candidate) {
+  Candidate.findOne({ email: email })
+  .populate('notes.user', 'displayName')
+  .populate('position')
+  .deepPopulate('position.department')  
+  .exec(function (err, candidate) {
     if (err) {
       return next(err)
     } else if (!candidate) {

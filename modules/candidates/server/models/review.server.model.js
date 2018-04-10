@@ -11,7 +11,7 @@ const validator = require('validator')
 
 /**
 
- * Candidate Schema
+ * Review Schema
  */
 const ReviewSchema = new Schema({
   candidate: {
