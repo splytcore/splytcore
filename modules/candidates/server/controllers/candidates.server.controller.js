@@ -376,104 +376,22 @@ exports.list = function(req, res) {
   console.log('post query')
   console.log(req.query)
 
-  if (req.query.department) {
-    exports.listByDepartment(req, res)
-  } else {
-    let sort = req.query.sort ? req.query.sort : '-created'
-    delete req.query.sort     
-    Candidate.find(req.query).sort(sort)
-    .populate('lockedBy', 'displayName')
-    .populate('position')
-    .deepPopulate('position.department')
-    .exec(function(err, candidates) {    
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })
-      }             
-      if (sort.indexOf('-department') > -1) {        
-        console.log('sorring asc')
-        let sorted = candidates.sort(sortByDepartmentASC)
-        res.jsonp(sorted)
-      } else if (sort.indexOf('department') > -1) {        
-        console.log('sorring dsc')
-        let sorted = candidates.sort(sortByDepartmentDSC)
-        res.jsonp(sorted)        
-      } else {
-        res.jsonp(candidates)
-      }
-    })
-  }
-}
-
-function sortByDepartmentASC(a,b) {
-  let comparison = 0;
-  if (a.position.department.name > b.position.department.name) {
-    comparison = 1;
-  } else if (b.position.department.name > a.position.department.name) {
-    comparison = -1;
-  }
-  return comparison;
-}
-
-function sortByDepartmentDSC(a,b) {
-  let comparison = 0;
-  if (a.position.department.name < b.position.department.name) {
-    comparison = 1;
-  } else if (b.position.department.name < a.position.department.name) {
-    comparison = -1;
-  }
-  return comparison;
-}
-
-
-exports.listByDepartment = function(req, res) {
-  
-  console.log('list by department')
-
-  let department = req.query.department
-  delete req.query.department         
-  let sort = req.query.sort ? req.query.sort : '-created'  
-  delete req.query.sort         
-
+  let sort = req.query.sort ? req.query.sort : '-created'
+  delete req.query.sort     
   Candidate.find(req.query).sort(sort)
   .populate('lockedBy', 'displayName')
   .populate('position')
-  .deepPopulate('position.department')
+  .populate('department')  
   .exec(function(err, candidates) {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    }           
-    let filtered = candidates.filter((candidate) => {      
-      return candidate.position.department._id.toString() === department.toString()
-    })
-    res.jsonp(filtered)
+    }             
+    res.jsonp(candidates)      
   })
+
 }
-
-// exports.listByPosition = function(req, res) {
-  
-//   console.log('list by position')
-
-//   let positionId = req.query.position
-//   let sort = req.query.sort ? req.query.sort : '-created'  
-
-//   Candidate.find({ position: positionId }).sort(sort)
-//   .populate('lockedBy', 'displayName')
-//   .populate('position')
-//   .deepPopulate('position.department')
-//   .exec(function(err, candidates) {    
-//     if (err) {
-//       return res.status(400).send({
-//         message: errorHandler.getErrorMessage(err)
-//       })
-//     }           
-//     res.jsonp(candidates)
-//   })
-// }
-
 
 /**
  * Show the current Candidate
@@ -493,7 +411,7 @@ exports.read = function(req, res) {
  * Update a Candidate
  */
 exports.update = function(req, res) {  
-  
+
   let candidate = req.candidate              
   candidate = _.extend(candidate, req.body)  
   candidate.save(function(err) {
@@ -501,8 +419,7 @@ exports.update = function(req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    } else {
-      console.log(candidate.appointment)
+    } else {  
       res.jsonp(candidate)
     }
   })
@@ -547,21 +464,7 @@ exports.performAction = function(req, res, next) {
       } else {
         cb()
       }
-    },
-    function dept(cb) {
-      if (oldCandidate.department !== updatedCandidate.department) {
-        departmentChanged(req, res)
-          .then((success) => {
-            cb()
-          })
-          .catch((err) => {
-            console.log(err)
-            cb(err)
-          })        
-      } else {
-        cb()        
-      }
-    }        
+    }
   ], (err) => {
     if (err) {
       console.log(err)      
@@ -643,17 +546,6 @@ function valuationChanged(req, res) {
   })
 
   
-}
-
-function departmentChanged(req, res) {    
-  console.log('department changed')
-  
-  let candiate = req.candidate
-
-  return new Promise((resolve, reject) => {
-    resolve()
-  })
-
 }
 
 function positionChanged(req, res) {    
@@ -952,9 +844,9 @@ exports.candidateByID = function(req, res, next, id) {
 
   Candidate.findById(id)
   .populate('lockedBy', 'displayName')
-  .populate('notes.user', 'displayName')
-  .populate('position')  
-  .deepPopulate('position.department')
+  .populate('notes.user', 'displayName')  
+  .populate('department')
+  .populate('position')
   .exec(function (err, candidate) {
     if (err) {
       return next(err);
@@ -962,9 +854,7 @@ exports.candidateByID = function(req, res, next, id) {
       return res.status(404).send({
         message: 'No Candidate with that identifier has been found'
       });
-    }
-    // candidate.reviewSummary.score = 0
-    // candidate.reviewSummary.reviewer= 'wtif man'
+    }    
     req.candidate = candidate    
     next();
   })
@@ -978,9 +868,9 @@ exports.candidateByID = function(req, res, next, id) {
 exports.candidateByEmail = function(req, res, next, email) {
   console.log(email)
   Candidate.findOne({ email: email })
-  .populate('notes.user', 'displayName')
-  .populate('position')
-  .deepPopulate('position.department')  
+  .populate('notes.user', 'displayName')  
+  .populate('department')  
+  .populate('position')  
   .exec(function (err, candidate) {
     if (err) {
       return next(err)

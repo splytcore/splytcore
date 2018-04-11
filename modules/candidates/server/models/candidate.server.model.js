@@ -10,8 +10,6 @@ const config = require(path.resolve('./config/config'))
 const validator = require('validator')
 const _ = require('lodash')
 
-// const Review = mongoose.model('Review')  
-const deepPopulate = require('mongoose-deep-populate')(mongoose)
 
 /**
 
@@ -108,12 +106,28 @@ const CandidateSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  //transient fields. Do not update directly. Used for querying and calucations
   score: {    
-      type: Number
+    type: Number
   },
   reviewer: {
     type: String      
+  },
+  department: {
+    type: Schema.ObjectId,
+    ref: 'Department'
   }  
+  //End transient fields
+})
+
+CandidateSchema.pre('save', function (next) {
+  
+  //used for simplifed querying  
+  if (this.position && this.isModified('position')) {      
+    this.department = this.position.department
+  } 
+  
+  next()  
 
 })
 
@@ -128,7 +142,5 @@ const CandidateSchema = new Schema({
 //   })
   
 // })
-
-CandidateSchema.plugin(deepPopulate)
 
 mongoose.model('Candidate', CandidateSchema)
