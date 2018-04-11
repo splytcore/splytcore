@@ -96,6 +96,12 @@ exports.read = function(req, res) {
   res.jsonp(position)
 }
 
+exports.readDepartment = function(req, res) {
+  let position = req.position
+  res.jsonp(position.department)
+}
+
+
 exports.delete = function(req, res) {
   let position = req.position
 

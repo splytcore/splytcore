@@ -14,6 +14,9 @@ module.exports = function(app) {
     .get(positions.list)
     .post(positions.create)
 
+  app.route('/api/positions/:positionId/department')
+    .get(positions.readDepartment)
+
   app.route('/api/positions/:positionId')    
     .get(positions.read)
     .put(positions.update)

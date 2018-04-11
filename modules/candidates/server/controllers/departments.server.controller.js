@@ -7,6 +7,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
 const Department = mongoose.model('Department')  
+const Position = mongoose.model('Position')  
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 const config = require(path.resolve('./config/config'))
@@ -71,6 +72,20 @@ exports.list = function(req, res) {
       })      
     }             
     res.jsonp(departments)        
+  })
+}
+
+//@desc list all positions for givent departmentId
+exports.listPositions = function(req, res) {  
+
+  let dept = req.department
+  Position.find({ department: dept }).exec(function (err, positions) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    }             
+    res.jsonp(positions)        
   })
 }
 
