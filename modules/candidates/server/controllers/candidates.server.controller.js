@@ -12,6 +12,7 @@ const async = require('async')
 const Candidate = mongoose.model('Candidate')  
 const History = mongoose.model('History')  
 const Review = mongoose.model('Review')  
+const Position = mongoose.model('Position')  
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 
@@ -42,7 +43,8 @@ exports.register = function(req, res) {
   async.waterfall([
     function isRegistered (next) {
       let email = req.body.email
-      Candidate.findOne({ email: email }, (err, candidate) => {    
+      Candidate.findOne({ email: email })   
+      .exec((err, candidate) => {
         if (err) {
           next(err)
         } else if (candidate) {
@@ -62,16 +64,22 @@ exports.register = function(req, res) {
       if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
         candidate.stage = 'QUEUE'          
         candidate.checkin = Date.now()
-      }      
-
-      candidate.save((err) => {
-        next(err, candidate)
+      }                
+      //bind position since we only pass position id from front end  
+      Position.findById(candidate.position).exec((err, position) => {
+        if (err) {
+          return next(err)
+        }
+        candidate.position = position
+        candidate.save((err) => {
+          next(err, candidate)
+        })                                  
       })
     },    
     function checkinForMobileOrWebRegistration(candidate, next) {
-      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
+      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {        
         global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
-        next(null)
+        next(null)            
       } else {
         var httpTransport = 'http://'
         if (config.secure && config.secure.ssl === true) {
