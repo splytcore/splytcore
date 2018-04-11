@@ -143,7 +143,11 @@ exports.checkin = function(req, res) {
   async.waterfall([
     function isRegistered (next) {
       let email = req.body.email
-      Candidate.findOne({ email: email }, (err, candidate) => {    
+      Candidate.findOne({ email: email })
+      .populate('notes.user', 'displayName')  
+      .populate('department')  
+      .populate('position')  
+      .exec(function (err, candidate) {           
         if (err) {
           next(err)
         } else if (!candidate) {
@@ -226,7 +230,11 @@ exports.lockCandidate = function(req, res) {
     },
     function oneLockLimit(cb) {
 
-      Candidate.findOne({ lockedBy: req.user }).exec()
+      Candidate.findOne({ lockedBy: req.user })
+      .populate('notes.user', 'displayName')  
+      .populate('department')  
+      .populate('position')        
+      .exec()
         .then((candidate) => {
           if (candidate) {
             return res.status(400).send({
@@ -319,7 +327,11 @@ exports.findCandidate = function(req, res) {
   let search = req.params.search
 
   console.log(search)
-  Candidate.find({ $or: [{ lastName: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { sms: search }] }, (err, candidates) => {    
+  Candidate.find({ $or: [{ lastName: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { sms: search }] })
+  .populate('notes.user', 'displayName')  
+  .populate('department')  
+  .populate('position')    
+  .exec((err, candidates) => {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
