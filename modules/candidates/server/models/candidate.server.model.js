@@ -108,14 +108,12 @@ const CandidateSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
-  review: {
-    score: {
+  score: {    
       type: Number
-    },
-    reviewer: {
-      type: String      
-    }
-  }
+  },
+  reviewer: {
+    type: String      
+  }  
 
 })
 
