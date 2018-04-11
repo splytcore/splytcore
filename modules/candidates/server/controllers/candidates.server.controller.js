@@ -352,17 +352,13 @@ exports.listEnumValues = function(req, res) {
 */
 exports.listAllEnumValues = function(req, res) {  
   
-  let departments = Candidate.schema.path('department').enumValues
   let registeredFrom = Candidate.schema.path('registeredFrom').enumValues
   let stages = Candidate.schema.path('stage').enumValues
-  let positions = Candidate.schema.path('position').enumValues
   let valuations = Candidate.schema.path('valuation').enumValues
 
   res.jsonp({
-    departments: departments,
     registeredFrom: registeredFrom,
     stages: stages,
-    positions: positions,
     valuations: valuations
   })
 }
@@ -377,28 +373,25 @@ exports.list = function(req, res) {
   console.log('pre query')
   console.log(req.query)
 
-  let sort = req.query.sort ? req.query.sort : '-created'
-  delete req.query.sort 
-
-  // TODO: pagination
-  // let limit = req.query.page ? parseInt(req.query.page) : 20   
-  // delete req.query.limit
-  //skip results for pagination
-  // let skip = req.query.skip ? parseInt(req.query.skip) * limit  : 0
-  // delete req.query.skip
-  let limit = req.query.page ? parseInt(req.query.page) : 20 
-
   console.log('post query')
   console.log(req.query)
-  
-  Candidate.find(req.query).sort(sort).populate('lockedBy', 'displayName').exec(function(err, candidates) {    
+
+  let sort = req.query.sort ? req.query.sort : '-created'
+  delete req.query.sort     
+  Candidate.find(req.query).sort(sort)
+  .populate('lockedBy', 'displayName')
+  .populate('position')
+  .populate('department')  
+  .populate('notes.user', 'displayName')  
+  .exec(function(err, candidates) {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    }       
-    res.jsonp(candidates)
+    }             
+    res.jsonp(candidates)      
   })
+
 }
 
 /**
@@ -421,14 +414,13 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {  
   
   let candidate = req.candidate              
-  candidate = _.extend(candidate, req.body)  
+  candidate = _.extend(candidate, req.body)      
   candidate.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    } else {
-      console.log(candidate.appointment)
+    } else {  
       res.jsonp(candidate)
     }
   })
@@ -473,21 +465,7 @@ exports.performAction = function(req, res, next) {
       } else {
         cb()
       }
-    },
-    function dept(cb) {
-      if (oldCandidate.department !== updatedCandidate.department) {
-        departmentChanged(req, res)
-          .then((success) => {
-            cb()
-          })
-          .catch((err) => {
-            console.log(err)
-            cb(err)
-          })        
-      } else {
-        cb()        
-      }
-    }        
+    }
   ], (err) => {
     if (err) {
       console.log(err)      
@@ -548,21 +526,9 @@ function stageChanged(req, res) {
         })
         break    
       case 'VALUATED':           
-        console.log('status changed to valuated')
-        Review.findOne({ candidate: candidate }).exec(function (err, review) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            })      
-          }         
-          global.emitValuatedCandidate ? global.emitValuatedCandidate(candidate) : null  // jshint ignore:line              
-          //after being evaluation set the result
-          Review.evaluate(review, (valuation) => {
-            console.log('eval: ' + valuation)
-            req.body.valuation = valuation
-            resolve()
-          })            
-        })
+        console.log('status changed to valuated')        
+        global.emitValuatedCandidate ? global.emitValuatedCandidate(candidate) : null  // jshint ignore:line                        
+        resolve()        
         break
       default: 
         resolve()
@@ -581,17 +547,6 @@ function valuationChanged(req, res) {
   })
 
   
-}
-
-function departmentChanged(req, res) {    
-  console.log('department changed')
-  
-  let candiate = req.candidate
-
-  return new Promise((resolve, reject) => {
-    resolve()
-  })
-
 }
 
 function positionChanged(req, res) {    
@@ -841,8 +796,10 @@ exports.uploadDocToS3 = function(req, res, next) {
         message: uploadError.toString()
       })
     } else {            
-      console.log(req.file.location)
-      req.body.resumeDocURL = req.file.location.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
+      if (req.file) {
+        console.log(req.file.location)
+        req.body.resumeDocURL = req.file.location.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
+      }
       next()
     }
   })
@@ -888,16 +845,19 @@ exports.candidateByID = function(req, res, next, id) {
     });
   }
 
-  Candidate.findById(id).populate('lockedBy', 'displayName').populate('notes.user', 'displayName').exec(function (err, candidate) {
+  Candidate.findById(id)
+  .populate('lockedBy', 'displayName')
+  .populate('notes.user', 'displayName')  
+  .populate('department')
+  .populate('position')
+  .exec(function (err, candidate) {
     if (err) {
       return next(err);
     } else if (!candidate) {
       return res.status(404).send({
         message: 'No Candidate with that identifier has been found'
       });
-    }
-    // candidate.reviewSummary.score = 0
-    // candidate.reviewSummary.reviewer= 'wtif man'
+    }      
     req.candidate = candidate    
     next();
   })
@@ -910,14 +870,18 @@ exports.candidateByID = function(req, res, next, id) {
  */
 exports.candidateByEmail = function(req, res, next, email) {
   console.log(email)
-  Candidate.findOne({ email: email }).exec(function (err, candidate) {
+  Candidate.findOne({ email: email })
+  .populate('notes.user', 'displayName')  
+  .populate('department')  
+  .populate('position')  
+  .exec(function (err, candidate) {
     if (err) {
       return next(err)
     } else if (!candidate) {
       return res.status(404).send({
         message: 'No Candidate with that email has been found'
       })
-    }
+    }    
     req.candidate = candidate
     next()
   })

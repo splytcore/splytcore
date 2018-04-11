@@ -11,7 +11,7 @@ const validator = require('validator')
 
 /**
 
- * Candidate Schema
+ * Review Schema
  */
 const ReviewSchema = new Schema({
   candidate: {
@@ -68,31 +68,27 @@ const ReviewSchema = new Schema({
 
 })
 
-//TODO: update score formula
-ReviewSchema.post('init', (review) => {  
-    
-  // console.log('calculating score for...' + review.candidate)    
-  review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4    
 
-})
-
-ReviewSchema.statics.evaluate = function (review, next) {
+ReviewSchema.pre('save', function (next) {
   
-
-  let score = review ? (review.experience + review.communication + review.skills + review.cultureFit)/4 : 0
+  this.score = (this.experience + this.communication + this.skills + this.cultureFit)/4      
   
   let val = ''
-  if (score > 4) {
+  if (this.score > 4) {
     val = 'YES'
-  } else if (score > 3) {
+  } else if (this.score > 3) {
     val = 'MAYBE'
-  } else if (score > 2) {
+  } else if (this.score > 2) {
     val = 'UNDECIDED'
   } else {
     val = 'NO'    
   } 
 
-  next(val)
-}
+  let Candidate = mongoose.model('Candidate')    
+  Candidate.findOneAndUpdate({ _id: this.candidate._id }, { 'valuation' : val, 'reviewer': this.reviewer.displayName, 'score': this.score }, { upsert:true }).exec((err) => {
+    next(err)
+  })     
+
+})
 
 mongoose.model('Review', ReviewSchema)

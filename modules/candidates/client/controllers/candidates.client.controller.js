@@ -25,8 +25,6 @@
     CandidatesService.listAllEnumValues()
       .success((res) => {
         console.log(res)          
-        vm.positions = res.positions
-        vm.departments = res.departments
         vm.registeredFrom = res.registeredFrom
         vm.stages = res.stages
         vm.valuations = res.valuations
@@ -42,7 +40,7 @@
       CandidatesService.get($state.params.candidateId)
         .success((res) => {
           console.log(res)          
-          vm.candidate = res          
+          vm.candidate = res              
         })
         .error((res) => {
           console.log('failure')
@@ -51,6 +49,17 @@
     } else {
       vm.candidate = {}
     }
+
+    CandidatesService.listPositions()
+      .success((res) => {
+        console.log(res)          
+        vm.positions = res            
+      })
+      .error((res) => {
+        console.log('failure')
+        console.log(res)
+      })  
+
 
     function reviewPage() {
       $state.go('reviews.view', { candidateId: vm.candidate._id })
@@ -83,7 +92,6 @@
           console.log('failure')
           vm.error = res.message
         })  
-
     }
 
     function update() {
