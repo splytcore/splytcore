@@ -76,20 +76,10 @@
           </div>
         </div>
 
-        <div class="form-group" show-errors>
-          <label class="control-label" for="department">Departments</label>
-          <select class="form-control" name="department" 
-            ng-model="vm.candidate.department">
-
-            <option ng-repeat="x in vm.departments" {{x == vm.candidate.department ? 'selected' : '' }} value={{x}}> {{x}} </option>
-
-          </select>
-
-          <div ng-messages="vm.form.candidateForm.valuation.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Valuation is required.</p>
-          </div>
+        <div class="form-group">
+          <label class="control-label" for="rating">score</label>
+          <input name="score" type="text" ng-model="vm.candidate.score" class="form-control" placeholder="score" disabled>
         </div>
-
 
         <div class="form-group" show-errors>
           <label class="control-label" for="valuation">valuation</label>
