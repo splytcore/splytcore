@@ -795,8 +795,10 @@ exports.uploadDocToS3 = function(req, res, next) {
         message: uploadError.toString()
       })
     } else {            
-      console.log(req.file.location)
-      req.body.resumeDocURL = req.file.location.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
+      if (req.file) {
+        console.log(req.file.location)
+        req.body.resumeDocURL = req.file.location.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
+      }
       next()
     }
   })
