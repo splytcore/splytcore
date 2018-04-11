@@ -382,6 +382,7 @@ exports.list = function(req, res) {
   .populate('lockedBy', 'displayName')
   .populate('position')
   .populate('department')  
+  .populate('notes.user', 'displayName')  
   .exec(function(err, candidates) {    
     if (err) {
       return res.status(400).send({
