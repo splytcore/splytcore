@@ -68,6 +68,7 @@ const ReviewSchema = new Schema({
 
 })
 
+
 ReviewSchema.pre('save', function (next) {
   
   this.score = (this.experience + this.communication + this.skills + this.cultureFit)/4      
@@ -84,10 +85,10 @@ ReviewSchema.pre('save', function (next) {
   } 
 
   let Candidate = mongoose.model('Candidate')    
-  Candidate.findOneAndUpdate({ _id: this.candidate._id }, { 'valuation' : val }, { upsert:true }).exec((err) => {
+  Candidate.findOneAndUpdate({ _id: this.candidate._id }, { 'valuation' : val, 'reviewer': this.reviewer.displayName, 'score': score }, { upsert:true }).exec((err) => {
     next(err)
   })     
-  
+
 })
 
 mongoose.model('Review', ReviewSchema)

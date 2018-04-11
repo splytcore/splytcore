@@ -119,17 +119,17 @@ const CandidateSchema = new Schema({
 
 })
 
-CandidateSchema.post('init', (candidate, next) => {    
-  let Review = mongoose.model('Review')    
-  Review.findOne({ candidate: candidate }).populate('reviewer', 'displayName').exec((err, review) => {    
-    if (review) {  
-      candidate.review.reviewer = review.reviewer.displayName
-      candidate.review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4  
-    }
-    next()
-  })
+// CandidateSchema.post('init', (candidate, next) => {    
+//   let Review = mongoose.model('Review')    
+//   Review.findOne({ candidate: candidate }).populate('reviewer', 'displayName').exec((err, review) => {    
+//     if (review) {  
+//       candidate.review.reviewer = review.reviewer.displayName
+//       candidate.review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4  
+//     }
+//     next()
+//   })
   
-})
+// })
 
 CandidateSchema.plugin(deepPopulate)
 
