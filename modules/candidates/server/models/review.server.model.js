@@ -85,7 +85,7 @@ ReviewSchema.pre('save', function (next) {
   } 
 
   let Candidate = mongoose.model('Candidate')    
-  Candidate.findOneAndUpdate({ _id: this.candidate._id }, { 'valuation' : val, 'reviewer': this.reviewer.displayName, 'score': score }, { upsert:true }).exec((err) => {
+  Candidate.findOneAndUpdate({ _id: this.candidate._id }, { 'valuation' : val, 'reviewer': this.reviewer.displayName, 'score': this.score }, { upsert:true }).exec((err) => {
     next(err)
   })     
 
