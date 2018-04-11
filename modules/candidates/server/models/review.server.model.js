@@ -69,16 +69,15 @@ const ReviewSchema = new Schema({
 })
 
 
-ReviewSchema.pre('save', function (next) {
+ReviewSchema.pre('save', function (next) {  
   
-  this.score = (this.experience + this.communication + this.skills + this.cultureFit)/4      
-  
+  this.score = Math.round((this.experience + this.skills + this.communication +this.cultureFit) / 4 * 2) / 2
   let val = ''
-  if (this.score > 4) {
+  if (this.score > 3.5) {
     val = 'YES'
   } else if (this.score > 3) {
     val = 'MAYBE'
-  } else if (this.score > 2) {
+  } else if (this.score > 2.5) {
     val = 'UNDECIDED'
   } else {
     val = 'NO'    
