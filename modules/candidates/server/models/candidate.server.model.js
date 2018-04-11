@@ -121,13 +121,17 @@ const CandidateSchema = new Schema({
 })
 
 CandidateSchema.pre('save', function (next) {
-  
-  //used for simplifed querying  
+
+  //used for simplifed querying without using additional library just to query by department
   if (this.position && this.isModified('position')) {      
-    this.department = this.position.department
-  } 
-  
-  next()  
+    let Position = mongoose.model('Position')                                                                
+    Position.findById(this.position).populate('department').exec((err, position) => {      
+      this.department = position.department
+      next(err)
+    })        
+  } else {
+    next()      
+  }
 
 })
 

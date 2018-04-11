@@ -50,10 +50,10 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="stage">position</label>
-
-          <select class="form-control" name="position" ng-model="vm.candidate.position._id">            
+          {{ vm.candidate.position}}
+          <select class="form-control" name="position" ng-model="vm.candidate.position">            
            
-           <option ng-repeat="x in vm.positions" {{x._id == vm.candidate.position._id ? 'selected' : '' }} value={{x._id}}> {{x.display}} </option>
+           <option ng-repeat="x in vm.positions" {{x._id == vm.candidate.position._id ? 'selected' : '' }} value={{x._id}}> {{x.name}} </option>
 
           </select>
 

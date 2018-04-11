@@ -411,9 +411,9 @@ exports.read = function(req, res) {
  * Update a Candidate
  */
 exports.update = function(req, res) {  
-
+  
   let candidate = req.candidate              
-  candidate = _.extend(candidate, req.body)  
+  candidate = _.extend(candidate, req.body)      
   candidate.save(function(err) {
     if (err) {
       return res.status(400).send({
@@ -854,7 +854,7 @@ exports.candidateByID = function(req, res, next, id) {
       return res.status(404).send({
         message: 'No Candidate with that identifier has been found'
       });
-    }    
+    }      
     req.candidate = candidate    
     next();
   })
@@ -878,7 +878,7 @@ exports.candidateByEmail = function(req, res, next, email) {
       return res.status(404).send({
         message: 'No Candidate with that email has been found'
       })
-    }
+    }    
     req.candidate = candidate
     next()
   })
