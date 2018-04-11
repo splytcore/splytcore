@@ -167,11 +167,10 @@ exports.checkin = function(req, res) {
       } else {
         next(null, candidate)  
       }          
-    },    
+    },        
     function schedule (candidate, next) {                                          
       candidate.checkin = Date.now()      
-      candidate.stage = 'QUEUE'      
-      candidate.department = 'HR'
+      candidate.stage = 'QUEUE'            
       candidate.save((err) => {
         next(err, candidate)
       })
@@ -183,7 +182,8 @@ exports.checkin = function(req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    }      
+    }   
+    console.log('about to check in')   
     // emit to socket.io if no one is connected skip                    
     global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
 
@@ -494,7 +494,7 @@ function stageChanged(req, res) {
   
   let candidate = req.candidate
   
-  saveHistory(candidate, 'CHANGED_STATE', req.user, req.body.stage)
+  saveHistory(candidate, 'CHANGED_STAGE', req.user, req.body.stage)
 
   return new Promise((resolve, reject) => {
     switch (req.body.stage) {
