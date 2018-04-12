@@ -5,9 +5,9 @@
     .module('candidates')
     .controller('CandidatesListController', CandidatesListController);
 
-  CandidatesListController.$inject = ['CandidatesService', 'Socket', '$scope'];
+  CandidatesListController.$inject = ['CandidatesService', 'PositionsService', 'DepartmentsService', 'Socket', '$scope'];
 
-  function CandidatesListController(CandidatesService, Socket, $scope) {
+  function CandidatesListController(CandidatesService, PositionsService, DepartmentsService, Socket, $scope) {
     var vm = this
     vm.applyFilters = applyFilters
 
@@ -35,7 +35,7 @@
         console.log(res)
       })
 
-    CandidatesService.listDepartments()
+    DepartmentsService.list()
       .success((res) => {
         console.log(res)          
         vm.departments = res
@@ -45,7 +45,7 @@
         console.log(res)
       })
 
-    CandidatesService.listPositions()
+    PositionsService.list()
       .success((res) => {
         console.log(res)          
         vm.positions = res

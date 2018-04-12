@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('RegisterController', RegisterController);
 
-  RegisterController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout', '$http'];
+  RegisterController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'PositionsService', 'FileUploader', '$timeout', '$http'];
 
-  function RegisterController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout, $http) {
+  function RegisterController ($scope, $state, $window, Authentication, CandidatesService, PositionsService, FileUploader, $timeout, $http) {
     
     var vm = this;
     vm.authentication = Authentication;
@@ -34,7 +34,7 @@
         console.log(res)
       })      
 
-    CandidatesService.listPositions()
+    PositionsService.list()
       .success((res) => {
         console.log(res)      
         console.log(res)    

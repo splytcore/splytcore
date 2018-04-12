@@ -28,19 +28,9 @@
 
     vm.update = update
     vm.url = '/api/candidates/'
-    vm.listPositions = listPositions
-    vm.listDepartments = listDepartments
 
     function remove (candidateId) {      
       return $http.delete('/api/candidates/' + candidateId)
-    }
-
-    function listPositions () {      
-      return $http.get('/api/positions')
-    }
-
-    function listDepartments () {      
-      return $http.get('/api/departments')
     }
 
     function listEnumValues (field) {      

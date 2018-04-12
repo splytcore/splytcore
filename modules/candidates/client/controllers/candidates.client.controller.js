@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('CandidatesController', CandidatesController);
 
-  CandidatesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout'];
+  CandidatesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'PositionsService', 'FileUploader', '$timeout'];
 
-  function CandidatesController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout) {
+  function CandidatesController ($scope, $state, $window, Authentication, CandidatesService, PositionsService, FileUploader, $timeout) {
     
     var vm = this;
     vm.authentication = Authentication;
@@ -50,7 +50,7 @@
       vm.candidate = {}
     }
 
-    CandidatesService.listPositions()
+    PositionsService.list()
       .success((res) => {
         console.log(res)          
         vm.positions = res            
