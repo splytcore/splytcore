@@ -61,7 +61,8 @@ const CandidateSchema = new Schema({
   }, 
   position: {
     type: Schema.ObjectId,
-    ref: 'Position'
+    ref: 'Position',
+    required: 'Please select position'
   },  
   checkin: {
     type: Date    

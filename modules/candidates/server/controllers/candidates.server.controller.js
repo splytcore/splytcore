@@ -51,7 +51,7 @@ exports.isRegistered = function(req, res, next) {
       })
     } else {
       console.log('new applicant')
-      next(null)
+      next()
     }
   })
 
@@ -71,9 +71,13 @@ exports.registerFromWeb = function(req, res) {
           return next(err)
         }
         candidate.position = position
-        candidate.save((err) => {
-          next(err, candidate)
-        })                                  
+        candidate.save()
+          .then((c) => {
+            next(null, c)
+          })
+          .catch((err) => {
+            next(err)
+          })        
       })
     },    
     function registrationConfirmation(candidate, next) {
@@ -100,8 +104,7 @@ exports.registerFromWeb = function(req, res) {
       })
     }    
   ], (err) => {
-    if (err) {
-      console.log(err)
+    if (err) {      
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
     }      
     res.status(200).send({
@@ -123,21 +126,20 @@ exports.registerFromMobile = function(req, res) {
   candidate.checkin = Date.now()
   //bind position since we only pass position id from front end  
   Position.findById(candidate.position).exec((err, position) => {
-    if (err) {
-      console.log(err)
+    if (err) {      
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-    }      
+    }       
     candidate.position = position
-    candidate.save((err) => {
-      if (err) {
-        console.log(err)
-        return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-      }            
-      global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
-      res.status(200).send({
-        message: 'Successfull Registered!'      
-      })                        
-    })                                  
+    candidate.save()
+      .then((c) => {
+        global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
+        res.status(200).send({
+          message: 'Successfull Registered!'      
+        })                                  
+      })
+      .catch((err2) => {
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err2) })
+      })    
   })
 
 }
