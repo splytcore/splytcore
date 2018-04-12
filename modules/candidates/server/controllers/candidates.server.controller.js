@@ -36,36 +36,36 @@ const s3 = new AWS.S3(config.S3)
 /**
  * Create a Candidate
  */
-exports.register = function(req, res) {
+
+exports.isRegistered = function(req, res, next) {
     
-  console.log('time to register')
+  console.log('isRegistered already?')
+
+  let email = req.body.email
+  Candidate.findOne({ email: email }).exec((err, candidate) => {
+    if (err) {
+      next(err)
+    } else if (candidate) {
+      return res.status(400).send({
+        message: 'You have already registered. Please checkin instead. Thank You!'
+      })
+    } else {
+      console.log('new applicant')
+      next(null)
+    }
+  })
+
+}
+
+exports.registerFromWeb = function(req, res) {
+    
+  console.log('registered from web')
 
   async.waterfall([
-    function isRegistered (next) {
-      let email = req.body.email
-      Candidate.findOne({ email: email })   
-      .exec((err, candidate) => {
-        if (err) {
-          next(err)
-        } else if (candidate) {
-          return res.status(400).send({
-            message: 'You have already registered. Please checkin instead. Thank You!'
-          })
-        } else {
-          console.log('new applicant')
-          next(null)
-        }
-      })
-    },
     function createCandidate (next) {                        
-      let candidate = new Candidate(req.body)            
-            
-      //if registered from tablet check in
-      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
-        candidate.stage = 'QUEUE'          
-        candidate.checkin = Date.now()
-      }                
-      //bind position since we only pass position id from front end  
+      let candidate = new Candidate(req.body)                        
+      candidate.stage = 'REGISTERED'             
+      //get whole position object         
       Position.findById(candidate.position).exec((err, position) => {
         if (err) {
           return next(err)
@@ -76,33 +76,28 @@ exports.register = function(req, res) {
         })                                  
       })
     },    
-    function checkinForMobileOrWebRegistration(candidate, next) {
-      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {        
-        global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
-        next(null)            
-      } else {
-        var httpTransport = 'http://'
-        if (config.secure && config.secure.ssl === true) {
-          httpTransport = 'https://'
-        }
-        res.render(path.resolve('modules/candidates/server/templates/register-email'), {
-          name: candidate.firstName,
-          appName: config.app.title,
-          url: httpTransport + req.headers.host
-        }, function (err, emailHTML) {              
-          var mailOptions = {
-            to: candidate.email,
-            from: config.mailer.from,
-            subject: 'Registration',
-            html: emailHTML
-          }
-          console.log('mailoptions')
-          console.log(mailOptions)
-          smtpTransport.sendMail(mailOptions, function (err) {
-            next(err)        
-          })
-        })
+    function registrationConfirmation(candidate, next) {
+      var httpTransport = 'http://'
+      if (config.secure && config.secure.ssl === true) {
+        httpTransport = 'https://'
       }
+      res.render(path.resolve('modules/candidates/server/templates/register-email'), {
+        name: candidate.firstName,
+        appName: config.app.title,
+        url: httpTransport + req.headers.host
+      }, function (err, emailHTML) {              
+        var mailOptions = {
+          to: candidate.email,
+          from: config.mailer.from,
+          subject: 'Registration',
+          html: emailHTML
+        }
+        console.log('mailoptions')
+        console.log(mailOptions)
+        smtpTransport.sendMail(mailOptions, function (err) {
+          next(err)        
+        })
+      })
     }    
   ], (err) => {
     if (err) {
@@ -115,6 +110,39 @@ exports.register = function(req, res) {
   })  
 
 }
+
+/**
+ * Create a Candidate
+ */
+exports.registerFromMobile = function(req, res) {
+    
+  console.log('register from mobile device')
+
+  let candidate = new Candidate(req.body)                        
+  candidate.stage = 'QUEUE'          
+  candidate.checkin = Date.now()
+  //bind position since we only pass position id from front end  
+  Position.findById(candidate.position).exec((err, position) => {
+    if (err) {
+      console.log(err)
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+    }      
+    candidate.position = position
+    candidate.save((err) => {
+      if (err) {
+        console.log(err)
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+      }            
+      global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
+      res.status(200).send({
+        message: 'Successfull Registered!'      
+      })                        
+    })                                  
+  })
+
+}
+
+
 
 /**
  * Send a SMS message confirming successful registration to a candidate (given a valid @email)
@@ -526,7 +554,7 @@ function stageChanged(req, res) {
       case 'INTERVIEW':
         let appt = Date.now() + 3600000 // 1 hour        
         let apptString = (new Date(appt)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
-        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${apptString}`
+        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department.display} department at ${apptString}`
         client.messages.create({
           body: message,
           to: '+1' + candidate.sms,  // Text this number

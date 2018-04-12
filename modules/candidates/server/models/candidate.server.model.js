@@ -122,6 +122,15 @@ const CandidateSchema = new Schema({
 
 CandidateSchema.pre('save', function (next) {
 
+  this.lastName = this.lastName.charAt(0).toUpperCase() + this.lastName.slice(1)
+  this.firstName = this.firstName.charAt(0).toUpperCase() + this.firstName.slice(1)
+  next()
+})
+
+
+CandidateSchema.pre('save', function (next) {
+
+
   //used for simplifed querying without using additional library just to query by department
   if (this.position && this.isModified('position')) {      
     let Position = mongoose.model('Position')                                                                
