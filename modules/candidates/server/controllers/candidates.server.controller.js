@@ -41,11 +41,13 @@ exports.isRegistered = function(req, res, next) {
     
   console.log('isRegistered already?')
 
-  let email = req.body.email
+  let email = req.body.email  
   Candidate.findOne({ email: email }).exec((err, candidate) => {
     if (err) {
+      console.log('err1 ' + err.toString())
       next(err)
     } else if (candidate) {
+      console.log('err2 candidate with thatm email exists: ' + email)
       return res.status(400).send({
         message: 'You have already registered. Please checkin instead. Thank You!'
       })
@@ -96,8 +98,8 @@ exports.registerFromWeb = function(req, res) {
           subject: 'Registration',
           html: emailHTML
         }
-        console.log('mailoptions')
-        console.log(mailOptions)
+        // console.log('mailoptions')
+        // console.log(mailOptions)
         smtpTransport.sendMail(mailOptions, function (err) {
           next(err)        
         })
@@ -131,7 +133,7 @@ exports.registerFromMobile = function(req, res) {
     }       
     candidate.position = position
     candidate.save()
-      .then((c) => {
+      .then((c) => {                
         global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
         res.status(200).send({
           message: 'Successfull Registered!'      
@@ -423,22 +425,44 @@ exports.list = function(req, res) {
   console.log('pre query')
   console.log(req.query)
 
+
+  //pagination and sort
+  let sort = req.query.sort ? req.query.sort : '-created'  
+  delete req.query.sort     
+
+  let page = req.query.page ? parseInt(req.query.page) : 1  
+  delete req.query.page     
+  
+  let limit = req.query.limit ? parseInt(req.query.limit) : 1000
+  delete req.query.limit     
+
+  let skip = page === 1 ? 0 : (page - 1) * limit
+
+  
+  console.log('page: ' + page)
+  console.log('limit: ' + limit)
+  console.log('skip: ' + skip)
+
+  //end pagination  
+
   console.log('post query')
   console.log(req.query)
 
-  let sort = req.query.sort ? req.query.sort : '-created'
-  delete req.query.sort     
-  Candidate.find(req.query).sort(sort)
+  Candidate.find(req.query)
+  .sort(sort)
   .populate('lockedBy', 'displayName')
   .populate('position')
   .populate('department')  
   .populate('notes.user', 'displayName')  
+  .skip(skip)  
+  .limit(limit)    
   .exec(function(err, candidates) {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
     }             
+    console.log('list length: ' + candidates.length)
     res.jsonp(candidates)      
   })
 

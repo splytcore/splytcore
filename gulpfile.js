@@ -16,9 +16,6 @@ var _ = require('lodash'),
   }),
   path = require('path'),
   endOfLine = require('os').EOL,
-  protractor = require('gulp-protractor').protractor,
-  webdriver_update = require('gulp-protractor').webdriver_update,
-  webdriver_standalone = require('gulp-protractor').webdriver_standalone,
   uglify = require('gulp-uglify-es').default;
 
 // Set NODE_ENV to 'test'
@@ -56,8 +53,6 @@ gulp.task('watch', function () {
   gulp.watch(defaultAssets.server.allJS, ['jshint']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.js, ['jshint']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed);
-  gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed);
-  gulp.watch(defaultAssets.client.less, ['less', 'csslint']).on('change', plugins.livereload.changed);
 
   if (process.env.NODE_ENV === 'production') {
     gulp.watch(defaultAssets.server.gulpConfig, ['templatecache', 'jshint']);
@@ -68,27 +63,15 @@ gulp.task('watch', function () {
   }
 });
 
-// CSS linting task
-gulp.task('csslint', function (done) {
-  return gulp.src(defaultAssets.client.css)
-    .pipe(plugins.csslint('.csslintrc'))
-    .pipe(plugins.csslint.reporter())
-    .pipe(plugins.csslint.reporter(function (file) {
-      if (!file.csslint.errorCount) {
-        done();
-      }
-    }));
-});
-
 // JS linting task
 gulp.task('jshint', function () {
   var assets = _.union(
     defaultAssets.server.gulpConfig,
     defaultAssets.server.allJS,
-    defaultAssets.client.js,
-    testAssets.tests.server,
-    testAssets.tests.client,
-    testAssets.tests.e2e
+    // defaultAssets.client.js,
+    testAssets.tests.server
+    // testAssets.tests.client,
+    // testAssets.tests.e2e
   );
 
   return gulp.src(assets)
@@ -102,10 +85,10 @@ gulp.task('eslint', function () {
   var assets = _.union(
     defaultAssets.server.gulpConfig,
     defaultAssets.server.allJS,
-    defaultAssets.client.js,
-    testAssets.tests.server,
-    testAssets.tests.client,
-    testAssets.tests.e2e
+    // defaultAssets.client.js,
+    testAssets.tests.server
+    // testAssets.tests.client,
+    // testAssets.tests.e2e
   );
 
   return gulp.src(assets)
@@ -175,6 +158,7 @@ gulp.task('templatecache', function () {
     .pipe(gulp.dest('build'));
 });
 
+
 // Mocha tests task
 gulp.task('mocha', function (done) {
   // Open mongoose connections
@@ -183,99 +167,66 @@ gulp.task('mocha', function (done) {
 
   // Connect mongoose
   mongoose.connect(function () {
-    mongoose.loadModels(()=> {
-      console.log('finished loading models...')
-      // Run the tests      
-      gulp.src(testAssets.tests.server)
-        .pipe(plugins.mocha({
-          reporter: 'spec',
-          timeout: 10000
-        }))
-        .on('error', function (err) {
-          // If an error occurs, save it
-          console.log('mocha error:')
-          console.log(err)
-          error = err;
-        })
-        .on('end', function () {
-          // When the tests are done, disconnect mongoose and pass the error state back to gulp
-          mongoose.disconnect(function () {
-            done(error);
-          });
+    mongoose.loadModels();
+    // Run the tests
+    gulp.src(testAssets.tests.server)
+      .pipe(plugins.mocha({
+        reporter: 'spec',
+        timeout: 100000000
+      }))
+      .on('error', function (err) {
+        // If an error occurs, save it
+        console.log(err)
+        error = err;
+      })
+      .on('end', function () {
+        // When the tests are done, disconnect mongoose and pass the error state back to gulp
+        mongoose.disconnect(function () {
+          done(error);
         });
-    
-    });
+      });
   });
 
 });
 
-// Drops the MongoDB database, used in e2e testing
+
+// Discoonnect the MongoDB database, used in testing
 gulp.task('dropdb', function (done) {
   // Use mongoose configuration
   var mongoose = require('./config/lib/mongoose.js');
-
+  
   mongoose.connect(function (db) {
-    // db.connection.db.dropDatabase(function (err) {
-    //   if(err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log('Successfully dropped db: ', db.connection.db.databaseName);
-    //   }
-    //   db.connection.db.close(done);
-    // });
+    db.connection.db.dropDatabase(function (err) {
+      if(err) {
+        console.log(err);
+      } else {
+        console.log('Successfully dropped db: ', db.connection.db.databaseName);
+      }
+      db.connection.db.close(done);
+    });
     db.connection.db.close(done)
   });
 });
 
-// Downloads the selenium webdriver
-gulp.task('webdriver_update', webdriver_update);
-
-// Start the standalone selenium server
-// NOTE: This is not needed if you reference the
-// seleniumServerJar in your protractor.conf.js
-gulp.task('webdriver_standalone', webdriver_standalone);
-
-// Protractor test runner task
-gulp.task('protractor', ['webdriver_update'], function () {
-  gulp.src([])
-    .pipe(protractor({
-      configFile: 'protractor.conf.js'
-    }))
-    .on('end', function() {
-      console.log('E2E Testing complete');
-      // exit with success.
-      process.exit(0);
-    })
-    .on('error', function(err) {
-      console.log('E2E Tests failed');
-      process.exit(1);
-    });
-});
-
-// Lint CSS and JavaScript files.
-gulp.task('lint', function (done) {
-  runSequence('less', 'sass', ['csslint', 'eslint', 'jshint'], done);
-});
-
 // Lint project files and minify them into two production files.
 gulp.task('build', function (done) {
-  runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
+  runSequence('env:dev', ['uglify'], done);
 });
 
 
 gulp.task('test', function (done) {
-  runSequence('env:test', 'lint', 'mocha', done);
+  runSequence('env:test', 'mocha', done);
 });
 
 
 // Run the project in development mode
 gulp.task('default', function (done) {
-  runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
 // Run the project in debug mode
 gulp.task('debug', function (done) {
-  runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
+  runSequence('env:dev', ['nodemon', 'watch'], done);
 });
 
 // Run the project in production mode

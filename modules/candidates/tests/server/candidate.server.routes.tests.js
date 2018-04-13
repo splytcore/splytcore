@@ -1,74 +1,89 @@
 'use strict'
 
 // let should = require('should')
-let request = require('supertest')
-let path = require('path')
-let mongoose = require('mongoose')
-let User = mongoose.model('User')
-let Candidate = mongoose.model('Candidate')
-let express = require(path.resolve('./config/lib/express'))
-
+const request = require('supertest')
+const path = require('path')
+const mongoose = require('mongoose')
+const Candidate = mongoose.model('Candidate')
+const Position = mongoose.model('Position')
+const express = require(path.resolve('./config/lib/express'))
+const random = require('random-name')
+const async = require('async')
+const should = require('should')
 /**
  * Globals
  */
-let app, agent, credentials, user, candidate
+let app, agent, credentials, user, candidate, positions
 
 /**
  * Company routes tests
  */
 describe('Candidate Load testing', () => {
+  
 
   before((done) => {
     // Get application
     app = express.init(mongoose)
     agent = request.agent(app)
-
-    done()
+    Position.find().exec()
+      .then((res) => {        
+        positions = res
+        done()    
+      })    
   })
 
-  beforeEach((done) => {
-    // Create user credentials
-    credentials = {
-      username: 'username',
-      password: 'M3@n.jsI$Aw3$0m3'
-    }
 
-    // Create a new user
-    user = new User({
-      firstName: 'Full',
-      lastName: 'Name',
-      displayName: 'Full Name',
-      email: 'test@test.com',      
-      password: credentials.password,
-      provider: 'local'
-    })
+  it('should be able to register x candidates from tablet', (done) => {    
+    
+    let times = 100000
+    let cnt = 0
+    let complete = false
+    
+    let registration = setInterval(function register() {
+      let email = Date.now() + '@fakemailfsdfds.com'
+      let candidate = { 
+        lastName: random.last(), 
+        firstName: random.first() , 
+        email: email,
+        sms: '2136180615',
+        position: positions[0],
+        registeredFrom: 'MOBILE'
+      }
 
-    // Save a user to the test db and create new Company
-    console.log('save user')
-    user.save(() => {
-      done()
-    })
+      agent
+        .post('/api/register/MOBILE')
+        .send(candidate)
+        .expect(200)
+        .end((err, res) => {
+          // Handle signin error        
+          console.log(err ? 'create candidate error: ' + err.toString() : '')               
+          cnt++
+          console.log('counter: ' + cnt)
+          if (cnt > times && !complete) {
+            complete = true
+            clearInterval(registration);
+            return done()
+          }
+        })          
+    } ,10); //1000 for every second
+
   })
 
-  // it('should be able to save a Candidate', (done) => {    
-  //   let candidate = { lastName: 'lee', firstName: 'bruce' }
-  //   agent
-  //     .post('/api/candidates')
-  //     .send(candidate)
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       // Handle signin error
-  //       if (err) {
-  //         return done(err)
-  //       }
-  //       done()
-  //     })
+
+  // afterEach((done) => {
+  //   User.remove().exec(() => {      
+  //     console.log('done!')
+  //     done()
+  //   })
   // })
 
-  afterEach((done) => {
-    User.remove().exec(() => {      
-      console.log('done!')
-      done()
-    })
+  after((done) => {
+    console.log('all done')
+    // User.remove().exec(() => {      
+    //   console.log('done!')
+    done()
+    // })
   })
+
+
 })
