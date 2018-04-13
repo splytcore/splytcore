@@ -24,7 +24,7 @@
     
     CandidatesService.listAllEnumValues()
       .success((res) => {
-        console.log(res)          
+
         vm.registeredFrom = res.registeredFrom
         vm.stages = res.stages
         vm.valuations = res.valuations
@@ -39,7 +39,6 @@
     if ($state.params.candidateId) {
       CandidatesService.get($state.params.candidateId)
         .success((res) => {
-          console.log(res)          
           vm.candidate = res              
         })
         .error((res) => {
@@ -52,7 +51,6 @@
 
     PositionsService.list()
       .success((res) => {
-        console.log(res)          
         vm.positions = res            
       })
       .error((res) => {
@@ -69,7 +67,6 @@
       if ($window.confirm('Are you sure you want to delete?')) {        
         CandidatesService.remove(vm.candidate._id)
           .success((res) => {
-            console.log(res) 
             vm.success = res.message                 
             $state.go('candidates.list')
           })
@@ -85,7 +82,6 @@
       
       CandidatesService.checkin(vm.candidate.email)
         .success((res) => {
-          console.log(res) 
           vm.success = res.message                             
         })
         .error((res) => {
@@ -102,7 +98,6 @@
 
       CandidatesService.update(vm.candidate)
         .success((res) => {
-          console.log(res)
           vm.candidate = res
           vm.success = 'successful updated'
         })
@@ -116,7 +111,6 @@
     function unlock() {
       CandidatesService.unlock(vm.candidate._id)
         .success((res) => {
-          console.log(res) 
           vm.success = res.message                         
         })
         .error((res) => {
@@ -128,7 +122,6 @@
     function lock() {
       CandidatesService.lock(vm.candidate._id)
         .success((res) => {
-          console.log(res) 
           vm.success = res.message                         
         })
         .error((res) => {

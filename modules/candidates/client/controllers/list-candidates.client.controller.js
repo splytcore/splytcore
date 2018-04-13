@@ -14,30 +14,25 @@
     vm.findCandidate = findCandidate
 
     CandidatesService.list()
-      .success((res) => {
-        console.log(res)
+      .success((res) => {        
         vm.candidates = res
       })
       .error((res) => {
-        console.log('failure')
         console.log(res)        
       })      
 
     CandidatesService.listAllEnumValues()
-      .success((res) => {
-        console.log(res)          
+      .success((res) => {        
         vm.registeredFrom = res.registeredFrom
         vm.stages = res.stages
         vm.valuations = res.valuations
       })
-      .error((res) => {
-        console.log('failure')
+      .error((res) => {      
         console.log(res)
       })
 
     DepartmentsService.list()
       .success((res) => {
-        console.log(res)          
         vm.departments = res
       })
       .error((res) => {
@@ -47,7 +42,6 @@
 
     PositionsService.list()
       .success((res) => {
-        console.log(res)          
         vm.positions = res
       })
       .error((res) => {
@@ -64,7 +58,7 @@
       console.log(vm.filters)            
       CandidatesService.listByFilters(vm.filters)
         .success((res) => {
-          console.log(res)
+          
           console.log('number of results: ' + res.length)
           vm.candidates = res
 
@@ -80,7 +74,6 @@
       console.log(vm.filters)            
       CandidatesService.findCandidate(vm.search)
         .success((res) => {
-          console.log(res)
           vm.candidates = res
         })
         .error((res) => {

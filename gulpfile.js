@@ -183,35 +183,30 @@ gulp.task('mocha', function (done) {
 
   // Connect mongoose
   mongoose.connect(function () {
-    mongoose.loadModels();
-    // Run the tests
-    gulp.src(testAssets.tests.server)
-      .pipe(plugins.mocha({
-        reporter: 'spec',
-        timeout: 10000
-      }))
-      .on('error', function (err) {
-        // If an error occurs, save it
-        error = err;
-      })
-      .on('end', function () {
-        // When the tests are done, disconnect mongoose and pass the error state back to gulp
-        mongoose.disconnect(function () {
-          done(error);
+    mongoose.loadModels(()=> {
+      console.log('finished loading models...')
+      // Run the tests      
+      gulp.src(testAssets.tests.server)
+        .pipe(plugins.mocha({
+          reporter: 'spec',
+          timeout: 10000
+        }))
+        .on('error', function (err) {
+          // If an error occurs, save it
+          console.log('mocha error:')
+          console.log(err)
+          error = err;
+        })
+        .on('end', function () {
+          // When the tests are done, disconnect mongoose and pass the error state back to gulp
+          mongoose.disconnect(function () {
+            done(error);
+          });
         });
-      });
+    
+    });
   });
 
-});
-
-// Karma test runner task
-gulp.task('karma', function (done) {
-  return gulp.src([])
-    .pipe(plugins.karma({
-      configFile: 'karma.conf.js',
-      action: 'run',
-      singleRun: true
-    }));
 });
 
 // Drops the MongoDB database, used in e2e testing
@@ -220,14 +215,15 @@ gulp.task('dropdb', function (done) {
   var mongoose = require('./config/lib/mongoose.js');
 
   mongoose.connect(function (db) {
-    db.connection.db.dropDatabase(function (err) {
-      if(err) {
-        console.log(err);
-      } else {
-        console.log('Successfully dropped db: ', db.connection.db.databaseName);
-      }
-      db.connection.db.close(done);
-    });
+    // db.connection.db.dropDatabase(function (err) {
+    //   if(err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log('Successfully dropped db: ', db.connection.db.databaseName);
+    //   }
+    //   db.connection.db.close(done);
+    // });
+    db.connection.db.close(done)
   });
 });
 
@@ -266,22 +262,11 @@ gulp.task('build', function (done) {
   runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
 });
 
-// Run the project tests
-gulp.task('test', function (done) {
-  runSequence('env:test', 'lint', 'mocha', 'karma', 'nodemon', 'protractor', done);
-});
 
-gulp.task('test:server', function (done) {
+gulp.task('test', function (done) {
   runSequence('env:test', 'lint', 'mocha', done);
 });
 
-gulp.task('test:client', function (done) {
-  runSequence('env:test', 'lint', 'karma', done);
-});
-
-gulp.task('test:e2e', function (done) {
-  runSequence('env:test', 'lint', 'dropdb', 'nodemon', 'protractor', done);
-});
 
 // Run the project in development mode
 gulp.task('default', function (done) {

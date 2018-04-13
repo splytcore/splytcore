@@ -13,7 +13,6 @@
 
     PositionsService.list()
       .success((res) => {
-        console.log(res)          
         vm.positions = res
       })
       .error((res) => {
