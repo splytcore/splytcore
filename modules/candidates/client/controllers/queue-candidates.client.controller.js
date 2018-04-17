@@ -14,8 +14,8 @@
     listCheckins()
 
     function listCheckins() { 
-      let page = $state.params.page
-      let limit = $state.params.limit
+      let page = $state.params.page ? $state.params.page : 1
+      let limit = $state.params.limit ? $state.params.limit : 10
       CandidatesService.listCheckins(page, limit)
         .success((res) => {
           console.log(res)
