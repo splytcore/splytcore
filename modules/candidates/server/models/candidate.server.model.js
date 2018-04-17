@@ -10,7 +10,6 @@ const config = require(path.resolve('./config/config'))
 const validator = require('validator')
 const _ = require('lodash')
 
-// const Review = mongoose.model('Review')  
 
 /**
 
@@ -60,29 +59,11 @@ const CandidateSchema = new Schema({
     required: 'Please fill in stage',
     trim: true
   }, 
-  otherStage: {    
-    type: String,
-    uppercase: true
-  },      
-  department: {
-    type: String,
-    enum: config.department,
-    default: 'HR',
-    required: 'Please choose department'    
-  },
-  otherDepartment: {
-    type: String,
-    uppercase: true         
-  },  
   position: {
-    enum: config.position,
-    type: String,
-    default: ''    
+    type: Schema.ObjectId,
+    ref: 'Position',
+    required: 'Please select position'
   },  
-  otherPosition: {    
-    type: String,
-    uppercase: true
-  },    
   checkin: {
     type: Date    
   },
@@ -126,28 +107,59 @@ const CandidateSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
-  review: {
-    score: {
-      type: Number
-    },
-    reviewer: {
-      type: String      
-    }
+  //transient fields. Do not update directly. Used for querying and calucations
+  score: {    
+    type: Number
+  },
+  reviewer: {
+    type: String      
+  },
+  department: {
+    type: Schema.ObjectId,
+    ref: 'Department'
+  }  
+  //End transient fields
+})
+
+CandidateSchema.pre('save', function (next) {
+
+  if (this.isModified('lastName')) {   
+    this.lastName = this.lastName.charAt(0).toUpperCase() + this.lastName.slice(1)  
+  }
+  if (this.isModified('firstName')) {     
+    this.firstName = this.firstName.charAt(0).toUpperCase() + this.firstName.slice(1)
+  }
+
+  next()
+})
+
+
+CandidateSchema.pre('save', function (next) {
+
+
+  //used for simplifed querying without using additional library just to query by department
+  if (this.position && this.isModified('position')) {      
+    let Position = mongoose.model('Position')                                                                
+    Position.findById(this.position).populate('department').exec((err, position) => {      
+      this.department = position.department
+      next(err)
+    })        
+  } else {
+    next()      
   }
 
 })
 
-CandidateSchema.post('init', (candidate, next) => {    
-  let Review = mongoose.model('Review')    
-  Review.findOne({ candidate: candidate }).populate('reviewer', 'displayName').exec((err, review) => {    
-    if (review) {  
-      candidate.review.reviewer = review.reviewer.displayName
-      candidate.review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4  
-    }
-    next()
-  })
+// CandidateSchema.post('init', (candidate, next) => {    
+//   let Review = mongoose.model('Review')    
+//   Review.findOne({ candidate: candidate }).populate('reviewer', 'displayName').exec((err, review) => {    
+//     if (review) {  
+//       candidate.review.reviewer = review.reviewer.displayName
+//       candidate.review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4  
+//     }
+//     next()
+//   })
   
-})
-
+// })
 
 mongoose.model('Candidate', CandidateSchema)

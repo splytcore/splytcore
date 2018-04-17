@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('CandidatesController', CandidatesController);
 
-  CandidatesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'FileUploader', '$timeout'];
+  CandidatesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CandidatesService', 'PositionsService', 'FileUploader', '$timeout'];
 
-  function CandidatesController ($scope, $state, $window, Authentication, CandidatesService, FileUploader, $timeout) {
+  function CandidatesController ($scope, $state, $window, Authentication, CandidatesService, PositionsService, FileUploader, $timeout) {
     
     var vm = this;
     vm.authentication = Authentication;
@@ -24,9 +24,7 @@
     
     CandidatesService.listAllEnumValues()
       .success((res) => {
-        console.log(res)          
-        vm.positions = res.positions
-        vm.departments = res.departments
+
         vm.registeredFrom = res.registeredFrom
         vm.stages = res.stages
         vm.valuations = res.valuations
@@ -41,8 +39,7 @@
     if ($state.params.candidateId) {
       CandidatesService.get($state.params.candidateId)
         .success((res) => {
-          console.log(res)          
-          vm.candidate = res          
+          vm.candidate = res              
         })
         .error((res) => {
           console.log('failure')
@@ -52,6 +49,16 @@
       vm.candidate = {}
     }
 
+    PositionsService.list()
+      .success((res) => {
+        vm.positions = res            
+      })
+      .error((res) => {
+        console.log('failure')
+        console.log(res)
+      })  
+
+
     function reviewPage() {
       $state.go('reviews.view', { candidateId: vm.candidate._id })
     }
@@ -60,7 +67,6 @@
       if ($window.confirm('Are you sure you want to delete?')) {        
         CandidatesService.remove(vm.candidate._id)
           .success((res) => {
-            console.log(res) 
             vm.success = res.message                 
             $state.go('candidates.list')
           })
@@ -76,14 +82,12 @@
       
       CandidatesService.checkin(vm.candidate.email)
         .success((res) => {
-          console.log(res) 
           vm.success = res.message                             
         })
         .error((res) => {
           console.log('failure')
           vm.error = res.message
         })  
-
     }
 
     function update() {
@@ -94,7 +98,6 @@
 
       CandidatesService.update(vm.candidate)
         .success((res) => {
-          console.log(res)
           vm.candidate = res
           vm.success = 'successful updated'
         })
@@ -108,7 +111,6 @@
     function unlock() {
       CandidatesService.unlock(vm.candidate._id)
         .success((res) => {
-          console.log(res) 
           vm.success = res.message                         
         })
         .error((res) => {
@@ -120,7 +122,6 @@
     function lock() {
       CandidatesService.lock(vm.candidate._id)
         .success((res) => {
-          console.log(res) 
           vm.success = res.message                         
         })
         .error((res) => {

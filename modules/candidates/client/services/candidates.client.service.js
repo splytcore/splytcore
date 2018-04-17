@@ -33,7 +33,6 @@
       return $http.delete('/api/candidates/' + candidateId)
     }
 
-
     function listEnumValues (field) {      
       return $http.get('/api/enum/candidates/' + field)
     }
@@ -67,8 +66,8 @@
       return $http.get('/api/candidateByEmail/'+email)      
     }
 
-    function listCheckins () {
-      return $http.get('/api/candidates?stage=QUEUE&sort=appointment')      
+    function listCheckins (page, limit) {
+      return $http.get('/api/candidates?stage=QUEUE&sort=appointment&page=' + page + '&limit=' + limit)      
     }
 
     function listByFilters(filters) {

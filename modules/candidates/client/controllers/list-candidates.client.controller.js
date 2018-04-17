@@ -5,34 +5,63 @@
     .module('candidates')
     .controller('CandidatesListController', CandidatesListController);
 
-  CandidatesListController.$inject = ['CandidatesService', 'Socket', '$scope'];
+  CandidatesListController.$inject = ['CandidatesService', 'PositionsService', 'DepartmentsService', 'Socket', '$scope'];
 
-  function CandidatesListController(CandidatesService, Socket, $scope) {
+  function CandidatesListController(CandidatesService, PositionsService, DepartmentsService, Socket, $scope) {
     var vm = this
     vm.applyFilters = applyFilters
 
     vm.findCandidate = findCandidate
 
     CandidatesService.list()
-      .success((res) => {
-        console.log(res)
+      .success((res) => {        
         vm.candidates = res
       })
       .error((res) => {
-        console.log('failure')
         console.log(res)        
       })      
 
+    CandidatesService.listAllEnumValues()
+      .success((res) => {        
+        vm.registeredFrom = res.registeredFrom
+        vm.stages = res.stages
+        vm.valuations = res.valuations
+      })
+      .error((res) => {      
+        console.log(res)
+      })
+
+    DepartmentsService.list()
+      .success((res) => {
+        vm.departments = res
+      })
+      .error((res) => {
+        console.log('failure')
+        console.log(res)
+      })
+
+    PositionsService.list()
+      .success((res) => {
+        vm.positions = res
+      })
+      .error((res) => {
+        console.log('failure')
+        console.log(res)
+      })
+
 
     function applyFilters() {
+      vm.filters += '?'
       vm.filters = vm.department ? ('department='+ vm.department) : ''
-      vm.filters += vm.status ? ('&status='+ vm.status) : ''
+      vm.filters += vm.position ? ('&position='+ vm.position) : ''
       vm.filters += vm.stage ? ('&stage='+ vm.stage) : ''
       console.log(vm.filters)            
       CandidatesService.listByFilters(vm.filters)
         .success((res) => {
-          console.log(res)
+          
+          console.log('number of results: ' + res.length)
           vm.candidates = res
+
         })
         .error((res) => {
           console.log('failure')
@@ -45,7 +74,6 @@
       console.log(vm.filters)            
       CandidatesService.findCandidate(vm.search)
         .success((res) => {
-          console.log(res)
           vm.candidates = res
         })
         .error((res) => {

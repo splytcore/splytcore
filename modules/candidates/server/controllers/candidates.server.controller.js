@@ -12,6 +12,7 @@ const async = require('async')
 const Candidate = mongoose.model('Candidate')  
 const History = mongoose.model('History')  
 const Review = mongoose.model('Review')  
+const Position = mongoose.model('Position')  
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 
@@ -35,70 +36,77 @@ const s3 = new AWS.S3(config.S3)
 /**
  * Create a Candidate
  */
-exports.register = function(req, res) {
+
+exports.isRegistered = function(req, res, next) {
     
-  console.log('time to register')
+  console.log('isRegistered already?')
+
+  let email = req.body.email  
+  Candidate.findOne({ email: email }).exec((err, candidate) => {
+    if (err) {
+      console.log('err1 ' + err.toString())
+      next(err)
+    } else if (candidate) {
+      console.log('err2 candidate with thatm email exists: ' + email)
+      return res.status(400).send({
+        message: 'You have already registered. Please checkin instead. Thank You!'
+      })
+    } else {
+      console.log('new applicant')
+      next()
+    }
+  })
+
+}
+
+exports.registerFromWeb = function(req, res) {
+    
+  console.log('registered from web')
 
   async.waterfall([
-    function isRegistered (next) {
-      let email = req.body.email
-      Candidate.findOne({ email: email }, (err, candidate) => {    
-        if (err) {
-          next(err)
-        } else if (candidate) {
-          return res.status(400).send({
-            message: 'You have already registered. Please checkin instead. Thank You!'
-          })
-        } else {
-          console.log('new applicant')
-          next(null)
-        }
-      })
-    },
     function createCandidate (next) {                        
-      let candidate = new Candidate(req.body)            
-            
-      //if registered from tablet check in
-      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
-        candidate.stage = 'QUEUE'          
-        candidate.checkin = Date.now()
-      }      
-
-      candidate.save((err) => {
-        next(err, candidate)
+      let candidate = new Candidate(req.body)                        
+      candidate.stage = 'REGISTERED'             
+      //get whole position object         
+      Position.findById(candidate.position).exec((err, position) => {
+        if (err) {
+          return next(err)
+        }
+        candidate.position = position
+        candidate.save()
+          .then((c) => {
+            next(null, c)
+          })
+          .catch((err) => {
+            next(err)
+          })        
       })
     },    
-    function checkinForMobileOrWebRegistration(candidate, next) {
-      if (candidate.registeredFrom.indexOf('MOBILE') > -1) {
-        global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
-        next(null)
-      } else {
-        var httpTransport = 'http://'
-        if (config.secure && config.secure.ssl === true) {
-          httpTransport = 'https://'
-        }
-        res.render(path.resolve('modules/candidates/server/templates/register-email'), {
-          name: candidate.firstName,
-          appName: config.app.title,
-          url: httpTransport + req.headers.host
-        }, function (err, emailHTML) {              
-          var mailOptions = {
-            to: candidate.email,
-            from: config.mailer.from,
-            subject: 'Registration',
-            html: emailHTML
-          }
-          console.log('mailoptions')
-          console.log(mailOptions)
-          smtpTransport.sendMail(mailOptions, function (err) {
-            next(err)        
-          })
-        })
+    function registrationConfirmation(candidate, next) {
+      var httpTransport = 'http://'
+      if (config.secure && config.secure.ssl === true) {
+        httpTransport = 'https://'
       }
+      res.render(path.resolve('modules/candidates/server/templates/register-email'), {
+        name: candidate.firstName,
+        appName: config.app.title,
+        url: httpTransport + req.headers.host
+      }, function (err, emailHTML) {              
+        var mailOptions = {
+          to: candidate.email,
+          from: config.mailer.from,
+          subject: 'Registration',
+          html: emailHTML
+        }
+        // console.log('mailoptions')
+        // console.log(mailOptions)
+        smtpTransport.sendMail(mailOptions, function (err) {
+          next(err)        
+        })
+      })
     }    
   ], (err) => {
-    if (err) {
-      console.log(err)
+    if (err) {      
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
     }      
     res.status(200).send({
@@ -107,6 +115,38 @@ exports.register = function(req, res) {
   })  
 
 }
+
+/**
+ * Create a Candidate
+ */
+exports.registerFromMobile = function(req, res) {
+    
+  console.log('register from mobile device')
+
+  let candidate = new Candidate(req.body)                        
+  candidate.stage = 'QUEUE'          
+  candidate.checkin = Date.now()
+  //bind position since we only pass position id from front end  
+  Position.findById(candidate.position).exec((err, position) => {
+    if (err) {      
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+    }       
+    candidate.position = position
+    candidate.save()
+      .then((c) => {                
+        global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
+        res.status(200).send({
+          message: 'Successfull Registered!'      
+        })                                  
+      })
+      .catch((err2) => {
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err2) })
+      })    
+  })
+
+}
+
+
 
 /**
  * Send a SMS message confirming successful registration to a candidate (given a valid @email)
@@ -143,7 +183,11 @@ exports.checkin = function(req, res) {
   async.waterfall([
     function isRegistered (next) {
       let email = req.body.email
-      Candidate.findOne({ email: email }, (err, candidate) => {    
+      Candidate.findOne({ email: email })
+      .populate('notes.user', 'displayName')  
+      .populate('department')  
+      .populate('position')  
+      .exec(function (err, candidate) {           
         if (err) {
           next(err)
         } else if (!candidate) {
@@ -163,11 +207,10 @@ exports.checkin = function(req, res) {
       } else {
         next(null, candidate)  
       }          
-    },    
+    },        
     function schedule (candidate, next) {                                          
       candidate.checkin = Date.now()      
-      candidate.stage = 'QUEUE'      
-      candidate.department = 'HR'
+      candidate.stage = 'QUEUE'            
       candidate.save((err) => {
         next(err, candidate)
       })
@@ -179,7 +222,8 @@ exports.checkin = function(req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    }      
+    }   
+    console.log('about to check in')   
     // emit to socket.io if no one is connected skip                    
     global.emitCheckin ? global.emitCheckin(candidate): null // jshint ignore:line
 
@@ -226,7 +270,11 @@ exports.lockCandidate = function(req, res) {
     },
     function oneLockLimit(cb) {
 
-      Candidate.findOne({ lockedBy: req.user }).exec()
+      Candidate.findOne({ lockedBy: req.user })
+      .populate('notes.user', 'displayName')  
+      .populate('department')  
+      .populate('position')        
+      .exec()
         .then((candidate) => {
           if (candidate) {
             return res.status(400).send({
@@ -319,7 +367,11 @@ exports.findCandidate = function(req, res) {
   let search = req.params.search
 
   console.log(search)
-  Candidate.find({ $or: [{ lastName: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { sms: search }] }, (err, candidates) => {    
+  Candidate.find({ $or: [{ lastName: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { sms: search }] })
+  .populate('notes.user', 'displayName')  
+  .populate('department')  
+  .populate('position')    
+  .exec((err, candidates) => {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -352,17 +404,13 @@ exports.listEnumValues = function(req, res) {
 */
 exports.listAllEnumValues = function(req, res) {  
   
-  let departments = Candidate.schema.path('department').enumValues
   let registeredFrom = Candidate.schema.path('registeredFrom').enumValues
   let stages = Candidate.schema.path('stage').enumValues
-  let positions = Candidate.schema.path('position').enumValues
   let valuations = Candidate.schema.path('valuation').enumValues
 
   res.jsonp({
-    departments: departments,
     registeredFrom: registeredFrom,
     stages: stages,
-    positions: positions,
     valuations: valuations
   })
 }
@@ -377,28 +425,47 @@ exports.list = function(req, res) {
   console.log('pre query')
   console.log(req.query)
 
-  let sort = req.query.sort ? req.query.sort : '-created'
-  delete req.query.sort 
 
-  // TODO: pagination
-  // let limit = req.query.page ? parseInt(req.query.page) : 20   
-  // delete req.query.limit
-  //skip results for pagination
-  // let skip = req.query.skip ? parseInt(req.query.skip) * limit  : 0
-  // delete req.query.skip
-  let limit = req.query.page ? parseInt(req.query.page) : 20 
+  //pagination and sort
+  let sort = req.query.sort ? req.query.sort : '-created'  
+  delete req.query.sort     
+
+  let page = req.query.page ? parseInt(req.query.page) : 1  
+  delete req.query.page     
+  
+  let limit = req.query.limit ? parseInt(req.query.limit) : 1000
+  delete req.query.limit     
+
+  let skip = page === 1 ? 0 : (page - 1) * limit
+
+  
+  console.log('page: ' + page)
+  console.log('limit: ' + limit)
+  console.log('skip: ' + skip)
+
+  //end pagination  
 
   console.log('post query')
   console.log(req.query)
-  
-  Candidate.find(req.query).sort(sort).populate('lockedBy', 'displayName').exec(function(err, candidates) {    
+
+  Candidate.find(req.query)
+  .sort(sort)
+  .populate('lockedBy', 'displayName')
+  .populate('position')
+  .populate('department')  
+  .populate('notes.user', 'displayName')  
+  .skip(skip)  
+  .limit(limit)    
+  .exec(function(err, candidates) {    
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    }       
-    res.jsonp(candidates)
+    }             
+    console.log('list length: ' + candidates.length)
+    res.jsonp(candidates)      
   })
+
 }
 
 /**
@@ -421,14 +488,13 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {  
   
   let candidate = req.candidate              
-  candidate = _.extend(candidate, req.body)  
+  candidate = _.extend(candidate, req.body)      
   candidate.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    } else {
-      console.log(candidate.appointment)
+    } else {  
       res.jsonp(candidate)
     }
   })
@@ -446,7 +512,7 @@ exports.performAction = function(req, res, next) {
   
   //async
   async.parallel([
-    function state(cb) {
+    function stageChanged(cb) {
       if (oldCandidate.stage !== updatedCandidate.stage) {        
         stageChanged(req, res)
           .then((success) => {
@@ -460,7 +526,7 @@ exports.performAction = function(req, res, next) {
         cb()
       }
     },
-    function valuation(cb) {
+    function valuationChanged(cb) {
       if (oldCandidate.valuation !== updatedCandidate.valuation) {
         valuationChanged(req, res)
           .then((success) => {
@@ -473,21 +539,7 @@ exports.performAction = function(req, res, next) {
       } else {
         cb()
       }
-    },
-    function dept(cb) {
-      if (oldCandidate.department !== updatedCandidate.department) {
-        departmentChanged(req, res)
-          .then((success) => {
-            cb()
-          })
-          .catch((err) => {
-            console.log(err)
-            cb(err)
-          })        
-      } else {
-        cb()        
-      }
-    }        
+    }
   ], (err) => {
     if (err) {
       console.log(err)      
@@ -504,7 +556,7 @@ function stageChanged(req, res) {
   
   let candidate = req.candidate
   
-  saveHistory(candidate, 'CHANGED_STATE', req.user, req.body.stage)
+  saveHistory(candidate, 'CHANGED_STAGE', req.user, req.body.stage)
 
   return new Promise((resolve, reject) => {
     switch (req.body.stage) {
@@ -528,7 +580,7 @@ function stageChanged(req, res) {
       case 'INTERVIEW':
         let appt = Date.now() + 3600000 // 1 hour        
         let apptString = (new Date(appt)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
-        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department} department at ${apptString}`
+        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department.display} department at ${apptString}`
         client.messages.create({
           body: message,
           to: '+1' + candidate.sms,  // Text this number
@@ -548,21 +600,9 @@ function stageChanged(req, res) {
         })
         break    
       case 'VALUATED':           
-        console.log('status changed to valuated')
-        Review.findOne({ candidate: candidate }).exec(function (err, review) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            })      
-          }         
-          global.emitValuatedCandidate ? global.emitValuatedCandidate(candidate) : null  // jshint ignore:line              
-          //after being evaluation set the result
-          Review.evaluate(review, (valuation) => {
-            console.log('eval: ' + valuation)
-            req.body.valuation = valuation
-            resolve()
-          })            
-        })
+        console.log('status changed to valuated')        
+        global.emitValuatedCandidate ? global.emitValuatedCandidate(candidate) : null  // jshint ignore:line                        
+        resolve()        
         break
       default: 
         resolve()
@@ -581,17 +621,6 @@ function valuationChanged(req, res) {
   })
 
   
-}
-
-function departmentChanged(req, res) {    
-  console.log('department changed')
-  
-  let candiate = req.candidate
-
-  return new Promise((resolve, reject) => {
-    resolve()
-  })
-
 }
 
 function positionChanged(req, res) {    
@@ -841,8 +870,10 @@ exports.uploadDocToS3 = function(req, res, next) {
         message: uploadError.toString()
       })
     } else {            
-      console.log(req.file.location)
-      req.body.resumeDocURL = req.file.location.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
+      if (req.file) {
+        console.log(req.file.location)
+        req.body.resumeDocURL = req.file.location.replace('blockchainscdn.s3.us-west-2.amazonaws.com', 'cdn.blockchains.com')             
+      }
       next()
     }
   })
@@ -888,16 +919,19 @@ exports.candidateByID = function(req, res, next, id) {
     });
   }
 
-  Candidate.findById(id).populate('lockedBy', 'displayName').populate('notes.user', 'displayName').exec(function (err, candidate) {
+  Candidate.findById(id)
+  .populate('lockedBy', 'displayName')
+  .populate('notes.user', 'displayName')  
+  .populate('department')
+  .populate('position')
+  .exec(function (err, candidate) {
     if (err) {
       return next(err);
     } else if (!candidate) {
       return res.status(404).send({
         message: 'No Candidate with that identifier has been found'
       });
-    }
-    // candidate.reviewSummary.score = 0
-    // candidate.reviewSummary.reviewer= 'wtif man'
+    }      
     req.candidate = candidate    
     next();
   })
@@ -910,14 +944,18 @@ exports.candidateByID = function(req, res, next, id) {
  */
 exports.candidateByEmail = function(req, res, next, email) {
   console.log(email)
-  Candidate.findOne({ email: email }).exec(function (err, candidate) {
+  Candidate.findOne({ email: email })
+  .populate('notes.user', 'displayName')  
+  .populate('department')  
+  .populate('position')  
+  .exec(function (err, candidate) {
     if (err) {
       return next(err)
     } else if (!candidate) {
       return res.status(404).send({
         message: 'No Candidate with that email has been found'
       })
-    }
+    }    
     req.candidate = candidate
     next()
   })

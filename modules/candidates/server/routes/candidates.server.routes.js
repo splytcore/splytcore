@@ -16,12 +16,12 @@ module.exports = function(app) {
   //@desc register from our tablet
   //upload images to server, merge into PDF, then upload to S3 bucket
   app.route('/api/register/MOBILE')    
-    .post(candidates.uploadResumeImages, candidates.mergeImagesToPDF, candidates.uploadPDFtoS3, candidates.deleteWorkingFiles, candidates.register)
+    .post(candidates.isRegistered, candidates.uploadResumeImages, candidates.mergeImagesToPDF, candidates.uploadPDFtoS3, candidates.deleteWorkingFiles, candidates.registerFromMobile)
              
   //@desc register from our web site.
   //uploads document to S3 bucket
   app.route('/api/register/WEB')
-    .post(candidates.uploadDocToS3, candidates.register)       
+    .post(candidates.isRegistered, candidates.uploadDocToS3, candidates.registerFromWeb)       
 
   //@desc find candidates by email
   app.route('/api/candidateByEmail/:email')

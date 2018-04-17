@@ -1,0 +1,17 @@
+<section>
+  <div class="page-header">
+    <h1>Positions</h1>
+  </div>
+
+  <div class="list-group">
+    <a ng-repeat="position in vm.positions"
+       ui-sref="positions.edit({ positionId: position._id })"
+       class="list-group-item">
+      <h4 class="list-group-item-heading">
+        {{ position }}
+      </h4>      
+    </a>
+  </div>
+
+  
+</section>

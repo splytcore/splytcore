@@ -1,0 +1,25 @@
+[1mdiff --git a/modules/candidates/server/models/review.server.model.js b/modules/candidates/server/models/review.server.model.js[m
+[1mindex 24c8e96..f5a79a1 100644[m
+[1m--- a/modules/candidates/server/models/review.server.model.js[m
+[1m+++ b/modules/candidates/server/models/review.server.model.js[m
+[36m@@ -69,16 +69,15 @@[m [mconst ReviewSchema = new Schema({[m
+ })[m
+ [m
+ [m
+[31m-ReviewSchema.pre('save', function (next) {[m
+[31m-  [m
+[31m-  this.score = (this.experience + this.communication + this.skills + this.cultureFit)/4      [m
+[32m+[m[32mReviewSchema.pre('save', function (next) {[m[41m  [m
+   [m
+[32m+[m[32m  this.score = Math.round((this.experience + this.skills + this.communication +this.cultureFit) / 4 * 2) / 2[m
+   let val = ''[m
+[31m-  if (this.score > 4) {[m
+[32m+[m[32m  if (this.score > 3.5) {[m
+     val = 'YES'[m
+   } else if (this.score > 3) {[m
+     val = 'MAYBE'[m
+[31m-  } else if (this.score > 2) {[m
+[32m+[m[32m  } else if (this.score > 2.5) {[m
+     val = 'UNDECIDED'[m
+   } else {[m
+     val = 'NO'    [m

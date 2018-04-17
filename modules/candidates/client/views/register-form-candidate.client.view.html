@@ -44,7 +44,7 @@
           <label class="control-label" for="position">Position</label>
           
           <select class="form-control" name="position" ng-model="vm.candidate.position">
-            <option ng-repeat="x in vm.positions" value="{{x}}">{{ x }}</option>
+            <option ng-repeat="x in vm.positions" value="{{x._id}}">{{ x.display }}</option>
           </select>
 
           <div ng-messages="vm.form.candidateForm.position.$error" role="alert">
