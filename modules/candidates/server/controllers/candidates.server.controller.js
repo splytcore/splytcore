@@ -512,7 +512,7 @@ exports.performAction = function(req, res, next) {
   
   //async
   async.parallel([
-    function state(cb) {
+    function stageChanged(cb) {
       if (oldCandidate.stage !== updatedCandidate.stage) {        
         stageChanged(req, res)
           .then((success) => {
@@ -526,7 +526,7 @@ exports.performAction = function(req, res, next) {
         cb()
       }
     },
-    function valuation(cb) {
+    function valuationChanged(cb) {
       if (oldCandidate.valuation !== updatedCandidate.valuation) {
         valuationChanged(req, res)
           .then((success) => {
