@@ -5,16 +5,18 @@
     .module('candidates')
     .controller('CandidatesQueueController', CandidatesQueueController);
 
-  CandidatesQueueController.$inject = ['CandidatesService', 'Socket', '$scope']
+  CandidatesQueueController.$inject = ['CandidatesService', 'Socket', '$scope', '$state']
 
-  function CandidatesQueueController(CandidatesService, Socket, $scope) {
+  function CandidatesQueueController(CandidatesService, Socket, $scope, $state) {
     var vm = this    
     vm.listCheckins = listCheckins
 
     listCheckins()
 
     function listCheckins() { 
-      CandidatesService.listCheckins()
+      let page = $state.params.page
+      let limit = $state.params.limit
+      CandidatesService.listCheckins(page, limit)
         .success((res) => {
           console.log(res)
           vm.candidates = res
