@@ -107,8 +107,41 @@ exports.list = function(req, res) {
 }
 
 
+exports.createAppointmentScheduleForAllDepartment = function(req, res) {
 
-exports.createAppointmentSchedule = function(req, res) {
+  console.log('create schedule for all...')  
+
+
+  async.waterfall([
+    function getAllDepartments(next) {
+      Department.find().exec((err, depts) => {
+        if (!depts) {          
+          return res.status(400).send({ message: 'No Departments found' })
+        }             
+        next(err, depts)
+      })
+    },
+    function createScheduleForEachDept(depts, next) {
+      async.each(depts, (dept, callback) => {            
+        createScheduleNow(dept, (err) => {
+          callback(err)
+        })
+      }, (err) => {
+        next(err)
+      })       
+    },
+  ], (err) => {
+    if (err) {
+      console.log(err)
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+    }     
+    res.jsonp({ message: 'success!' })        
+  })
+}
+
+
+
+exports.createAppointmentScheduleByDepartment = function(req, res) {
 
   console.log('create schedule...')  
 
@@ -140,8 +173,6 @@ exports.createAppointmentSchedule = function(req, res) {
 
 function createScheduleNow(dept, cb) {
 
-  // let interviewers = dept.interviewers
-  // let interviewLength = dept.interviewLength  
 
 
   //1 hr = 3 600,000
@@ -149,14 +180,21 @@ function createScheduleNow(dept, cb) {
   //1 minute = 60,000
   let minute = 60000
 
-  let interviewers = 1
-  let interviewLength = 15 * minute //convert to millisconds
+  let hoursInDay = 9
 
-  let totalMinutes = 9 * hour
+  // let interviewers = 1
+  // let interviewLength = 15 * minute //convert to millisconds
+
+  let interviewers = dept.interviewers
+  let interviewLength = dept.interviewLength * minute
+
+  let totalMinutes = hoursInDay * hour
   let interviewsPerHour = hour / (interviewers * interviewLength)
-  let interviewsPerDay = interviewsPerHour * 9
+  let interviewsPerDay = interviewsPerHour * hoursInDay
 
+  console.log('creating schedule for : ' + dept.display)
   console.log('blocksPerHour: ' + interviewsPerHour)
+  console.log('interviewsPerDay: ' + interviewsPerDay)
   //should be june x 2018 after testing
   let now = new Date()
   console.log('now: ' + now)
@@ -164,7 +202,9 @@ function createScheduleNow(dept, cb) {
   let startTimeMS = parseInt(now.setHours(8, 0, 0)) //start at 8am  
   console.log('start time MS: ' + startTimeMS)
   console.log('start time: ' + new Date(startTimeMS))
-  
+
+  interviewsPerDay = Math.ceil(interviewsPerDay)
+  console.log('round up: ' + interviewsPerDay)
 
   async.times(interviewsPerDay, (index, callback) => {    
     console.log('index:' + index)
@@ -182,22 +222,6 @@ function createScheduleNow(dept, cb) {
   })
 }
 
-// function getNextAvailableAppointment(candidate) {
-  
-//   return new Promise((resolve, reject) => {
-//     Appointment.findOne({ department: candidate.department }).sort('-time').exec()
-//       .then((appt) => {
-//         resolve(appt ? appt.time : null)
-//       })
-//       .catch((err) => {
-//         reject(err)
-//       })        
-//   })
-
-// }
-
-
-// }
 
 exports.read = function(req, res) {
 
