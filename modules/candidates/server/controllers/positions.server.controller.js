@@ -19,7 +19,7 @@ exports.initialize = function(req, res) {
   let departments = config.departments  
 
   async.forEachOf(departments, (rec, departmentName, callback) => {        
-    createDepartment(departmentName, rec.display)
+    createDepartment(departmentName, rec)
       .then((dept) => {
         console.log(dept)
         createPositions(dept, rec.positions)
@@ -44,9 +44,13 @@ exports.initialize = function(req, res) {
 
 }
 //@desc create if not exists
-function createDepartment(departmentName, display) {
+function createDepartment(departmentName, department) {
   return new Promise((resolve, reject) => {
-    Department.findOneAndUpdate({ name: departmentName.toUpperCase() }, { name: departmentName.toUpperCase(), display: display }, { upsert: true, new: true }).exec((err, dept) => {          
+    Department.findOneAndUpdate(
+    { name: departmentName.toUpperCase() }, 
+    { name: departmentName.toUpperCase(), display: department.display, interviewers: department.interviewers, interviewLength: department.interviewLength },
+    { upsert: true, new: true })
+    .exec((err, dept) => {          
       if (err) {
         reject(err)
       } else {      

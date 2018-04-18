@@ -67,6 +67,7 @@ const CandidateSchema = new Schema({
   checkin: {
     type: Date    
   },
+  //interview appointment
   appointment: {
     type: Date
   },

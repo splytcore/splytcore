@@ -6,6 +6,7 @@
 let departments = require('../controllers/departments.server.controller')
 
 module.exports = function(app) {  
+
   //@desc returns all departments
   app.route('/api/departments')
     .get(departments.list)

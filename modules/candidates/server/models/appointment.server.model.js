@@ -18,23 +18,13 @@ const AppointmentSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Candidate'
   },
-  time: {
+  department: {
+    type: Schema.ObjectId,
+    ref: 'Department'
+  },  
+  appointment: {
     type: Date,    
     required: true    
-  },  
-  department: {
-    type: String,
-    enum: config.department,
-    default: 'HR',    
-    trim: true
-  },    
-  interviewer: {
-    type: Schema.ObjectId,
-    ref: 'User'
-  },  
-  created: {
-    type: Date,
-    default: Date.now
   }
 })
 
