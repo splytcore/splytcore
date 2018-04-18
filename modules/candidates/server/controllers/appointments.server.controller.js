@@ -111,7 +111,6 @@ exports.createAppointmentScheduleForAllDepartment = function(req, res) {
 
   console.log('create schedule for all...')  
 
-
   async.waterfall([
     function getAllDepartments(next) {
       Department.find().exec((err, depts) => {
@@ -173,53 +172,48 @@ exports.createAppointmentScheduleByDepartment = function(req, res) {
 
 function createScheduleNow(dept, cb) {
 
-
-
-  //1 hr = 3 600,000
-  let hour = 3600000
-  //1 minute = 60,000
-  let minute = 60000
-
-  let hoursInDay = 9
-
-  // let interviewers = 1
-  // let interviewLength = 15 * minute //convert to millisconds
-
-  let interviewers = dept.interviewers
-  let interviewLength = dept.interviewLength * minute
-
-  let totalMinutes = hoursInDay * hour
-  let interviewsPerHour = hour / (interviewers * interviewLength)
-  let interviewsPerDay = interviewsPerHour * hoursInDay
-
   console.log('creating schedule for : ' + dept.display)
-  console.log('blocksPerHour: ' + interviewsPerHour)
-  console.log('interviewsPerDay: ' + interviewsPerDay)
-  //should be june x 2018 after testing
-  let now = new Date()
-  console.log('now: ' + now)
-  
-  let startTimeMS = parseInt(now.setHours(8, 0, 0)) //start at 8am  
-  console.log('start time MS: ' + startTimeMS)
-  console.log('start time: ' + new Date(startTimeMS))
+  console.log('number of interviewers: ' + dept.interviewers)
+  console.log('Interview length per interviewer: ' + dept.interviewLength)
 
-  interviewsPerDay = Math.ceil(interviewsPerDay)
-  console.log('round up: ' + interviewsPerDay)
-
-  async.times(interviewsPerDay, (index, callback) => {    
+  async.times(dept.interviewers, (index, callback) => {    
     console.log('index:' + index)
-    console.log('startTime MS:' + startTimeMS)
-    let appointment = new Appointment()
-    appointment.department = dept    
-    console.log('start time: ' + new Date(startTimeMS))
-    appointment.appointment = new Date(startTimeMS)    
-    startTimeMS += interviewLength
-    appointment.save((err) => {      
+    createSchedulePerUser(dept, (err, result) => {
       callback(err)
-    })            
+    })    
   }, (err) => {
     cb(err)
   })
+}
+
+function createSchedulePerUser(dept, done) {
+  
+  let now = new Date()
+  
+  let startTimeMS = parseInt(now.setHours(8, 0, 0)) //start at 8am
+  let endTimeMS = parseInt(now.setHours(17, 0, 0)) //end at 5pm
+
+  async.whilst(
+    function() { 
+      return startTimeMS < endTimeMS
+    },
+    function(callback) {
+      let appointment = new Appointment()
+      appointment.department = dept    
+      console.log('start time: ' + new Date(startTimeMS))
+      appointment.appointment = new Date(startTimeMS)          
+      appointment.save((err) => {      
+        startTimeMS += (dept.interviewLength * 60000)          
+        callback(err, startTimeMS)
+      })                              
+    },
+    function (err, n) {
+      console.log('finished')
+      console.log(n)
+      // 5 seconds have passed, n = 5
+      done(err,n)
+    }
+  )
 }
 
 
