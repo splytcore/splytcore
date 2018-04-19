@@ -9,12 +9,21 @@
     <label class="control-label" for="department">Department</label>
     <span class="form-control" ng-bind="vm.appointment.department.display" disabled> </span>
     
-    <label class="control-label" for="candidate">Candidate</label>
-    <span class="form-control" disabled> 
+    <label class="control-label" for="candidateName">Candidate</label>
+  
+    <span class="form-control" d> 
       {{vm.appointment.candidate ? vm.appointment.candidate.firstName + ' ' + vm.appointment.candidate.lastName : '' }} 
     </span>
     
-    <div ng-show="!vm.appointment.candidate">      
+    <div class="form-group">      
+      <input name="candidate" type="text" ng-model="vm.appointment.candidate._id" id="candidate" class="form-control" placeholder="candidate id">
+    </div>
+
+    <div ng-messages="vm.form.firstName.$error" role="alert">
+      <p class="help-block error-text" ng-message="required">First name is required.</p>  
+    </div>
+
+    <div ng-show="vm.appointment.candidate">      
       <button type="button" class="btn btn-default" ng-click="vm.update()">Set Appointment</button>
     </div>
 

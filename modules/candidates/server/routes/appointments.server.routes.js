@@ -24,21 +24,16 @@ module.exports = function(app) {
   app.route('/api/appointments/department/:department/closed')
     .get(appointments.listByClosedApptsAndDept)
 
-  //@desc this sets new appointment with reference to the candidate
-  //It removes candidate reference from old appt so it will be open to use
-  //remove :candidateId after change to type 'put'
-  app.route('/api/appointments/:appointmentId/:candidateId')    
-    .get(appointments.update) 
-
   app.route('/api/appointments')
     .get(appointments.list) 
 
-  app.route('/api/appointments/:appointmentId')
+  //@desc this sets new appointment with reference to the candidate
+  //It removes candidate reference from old appt so it will be open to use
+  //remove :candidateId after change to type 'put'
+  app.route('/api/appointments/:appointmentId')    
     .get(appointments.read)     
-
-  //@desc this does not delete the appointment. It remove reference to the candidate
-  // app.route('/api/appointments/:appointmentId')    
-  //   .delete(appointments.delete) 
+    .put(appointments.update) 
+    .delete(appointments.delete)  //cancels meeting and not reschedule
 
    app.param('appointmentId', appointments.byID);  
 

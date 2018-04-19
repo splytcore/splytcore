@@ -146,7 +146,7 @@ exports.listByClosedApptsAndDept = function(req, res) {
 exports.update = function(req, res) {
   
   let newAppt = req.appointment
-  let candidateId = req.candidate._id  
+  let candidateId = req.body.candidate
   
   //after update to type 'get' for route
   // let candidateId = req.body.candidate  
@@ -161,38 +161,43 @@ exports.update = function(req, res) {
         cb(null)
       }                
     },
-    function removeCandidateFromOldAppt(cb) {          
-      Appointment.findOne({ candidate: candidateId }).populate('candidate').populate('department').exec((err, appt) => {
-        if (appt) {
-          console.log(appt)
-          let candidate = appt.candidate          
+    function getCandidate(cb) {          
+      Candidate.findById(candidateId).populate('department').populate('positions').exec((err, candidate) => {
+        cb(err, candidate)
+      })
+    },    
+    function removeCandidateFromOldAppt(candidate, cb) {          
+      Appointment.findOne({ candidate: candidate }).populate('candidate').populate('department').exec((err, appt) => {
+        console.log('find existing appt:')        
+        console.log(appt)        
+        if (appt) {                    
           appt.candidate = null
           appt.save((err) => {
             cb(err, candidate)
           })
         } else {
-          cb(err)
+          cb(err, candidate)
         }
-
       })
     },
     function updateNewAppt(candidate, cb) {              
       newAppt.candidate = candidate
       newAppt.save((err) => {
-        cb(err)
+        cb(err, candidate)
       })  
     },    
     function sendApptSMS(candidate, cb) {            
+      console.log(candidate)
       let apptString = (new Date(newAppt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
       console.log(apptString)
-      let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department} department at ${apptString}`
+      let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
       client.messages.create({
         body: message,
         to: '+1' + candidate.sms,  // Text this number
         from: config.twilio.from // From a valid Twilio number
       })
       .then((message) => {          
-        candidate.appointment = appt.appointment //this is temp. only used for emiting correct appointment.
+        candidate.appointment = newAppt.appointment //this is temp. only used for emiting correct appointment.
         global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
         console.log('message for successful passing: ' + message)    
         cb()
@@ -212,6 +217,24 @@ exports.update = function(req, res) {
     }       
     res.jsonp({ message: 'success' })
   })
+}
+
+
+//@desc if candidate decides to cancel appointment and not reschedule
+exports.delete = function(req, res) {
+  
+  let appt = req.appointment  
+  appt.candidate = null
+  appt.save((err) => {
+    if (err) {
+      console.log(err)      
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }       
+    res.jsonp({ message: 'success' })
+  })
+
 }
 
 exports.createAppointmentScheduleForAllDepartment = function(req, res) {
