@@ -22,9 +22,9 @@
           pageTitle: 'Review Candidates'
         }
       })      
-      .state('appointments.view', {
+      .state('appointments.edit', {
         url: '/appointments/:appointmentId',
-        templateUrl: 'modules/candidates/client/views/appointment-form-candidate.client.view.html',
+        templateUrl: 'modules/candidates/client/views/form-appointment.client.view.html',
         controller: 'AppointmentsController',
         controllerAs: 'vm',
         data: {          

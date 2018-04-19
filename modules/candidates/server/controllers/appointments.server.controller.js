@@ -93,7 +93,8 @@ exports.list = function(req, res) {
   // let department = req.params.department
 
   let query = req.query 
-  console.log(query)
+  console.log('query: ' + req.query)
+  console.log(query)  
 
   Appointment.find(query).populate('department', 'display').populate('candidate','lastName firstName').sort('appointment').exec((err, appointments) => {
     if (err) {
@@ -106,6 +107,111 @@ exports.list = function(req, res) {
 
 }
 
+exports.listByOpenApptsAndDept = function(req, res) {
+        
+  // let department = req.params.department
+  console.log(req.params)
+  let departmentId = req.params.department 
+
+  Appointment.find({ department: departmentId, candidate: { $eq: null }}).populate('department', 'display').populate('candidate','lastName firstName').sort('appointment').exec((err, appointments) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    }             
+    res.jsonp(appointments)        
+  })      
+
+}
+
+exports.listByClosedApptsAndDept = function(req, res) {
+  
+  // let department = req.params.department
+  console.log(req.params)
+  let departmentId = req.params.department 
+
+  Appointment.find({ department: departmentId, candidate: { $ne: null }}).populate('department', 'display').populate('candidate','lastName firstName').sort('appointment').exec((err, appointments) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    }             
+    res.jsonp(appointments)        
+  })      
+
+}
+
+
+//@desc references new candidate
+exports.update = function(req, res) {
+  
+  let oldAppt = req.appointment
+  let candidate = oldAppt.candidate
+
+  let newApptId = req.params.newAppointmentId
+
+  async.waterfall([
+    function checkIfRequestApptIsTaken(cb) {      
+      Appointment.findById(newApptId).exec((err, appt) => {        
+        if (err) {          
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          })
+        }  
+        if (appt && appt.candidate) {
+          return res.status(400).send({
+            message: 'Sorry this appointment is already taken'
+          })          
+        } else {
+          cb(null, appt)
+        }                
+
+      })
+    },
+    function updateNewAppt(appt, cb) {              
+      appt.candidate = candidate
+      appt.save((err) => {
+        cb(err, appt)
+      })  
+    },    
+    function sendApptSMS(appt, cb) {      
+      console.log(appt)
+      let apptString = (new Date(appt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+      console.log(apptString)
+      let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
+      client.messages.create({
+        body: message,
+        to: '+1' + candidate.sms,  // Text this number
+        from: config.twilio.from // From a valid Twilio number
+      })
+      .then((message) => {          
+        candidate.appointment = appt.appointment //this is temp. only used for emiting correct appointment.
+        global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
+        console.log('message for successful passing: ' + message)    
+        cb()
+      })
+      .catch((err) => {
+        console.log('sms error')
+        console.log(err)
+        cb(err)
+      })    
+    },    
+    function removeCandidateFromOldAppt(cb) {      
+      oldAppt.candidate = null      
+      oldAppt.save((err) => {
+        cb(err)
+      })  
+    }
+  ], (err) => {
+    if (err) {
+      console.log(err)      
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }       
+    res.jsonp({ message: 'success' })
+  })
+}
 
 exports.createAppointmentScheduleForAllDepartment = function(req, res) {
 
@@ -192,6 +298,7 @@ function createSchedulePerUser(dept, done) {
   
   let startTimeMS = parseInt(now.setHours(8, 0, 0)) //start at 8am
   let endTimeMS = parseInt(now.setHours(17, 0, 0)) //end at 5pm
+  let minMS = 60000 //minute in milliseconds  
 
   async.whilst(
     function() { 
@@ -203,7 +310,7 @@ function createSchedulePerUser(dept, done) {
       console.log('start time: ' + new Date(startTimeMS))
       appointment.appointment = new Date(startTimeMS)          
       appointment.save((err) => {      
-        startTimeMS += (dept.interviewLength * 60000)          
+        startTimeMS += (dept.interviewLength * minMS)          
         callback(err, startTimeMS)
       })                              
     },
@@ -237,6 +344,7 @@ exports.byID = function(req, res, next, id) {
 
   Appointment.findById(id)
   .populate('candidate')
+   .populate('department')
   .exec(function (err, appointment) {
     if (err) {
       return next(err)

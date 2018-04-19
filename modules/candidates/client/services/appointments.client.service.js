@@ -15,6 +15,7 @@
     vm.create = create
     vm.update = update
     vm.list = list
+    vm.listByDepartment = listByDepartment
 
     vm.url = '/api/appointments/' 
 
@@ -33,6 +34,11 @@
     function list () {      
       return $http.get(vm.url)
     }
+
+    function listByDepartment (deptId) {            
+      return $http.get(vm.url + '?department=' + deptId)
+    }
+
 
     function create(json) {
       return $http.post(vm.url, json)      

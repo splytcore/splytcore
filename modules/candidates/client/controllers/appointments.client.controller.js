@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('AppointmentsController', AppointmentsController);
 
-  AppointmentsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AppointmentsService']
+  AppointmentsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AppointmentsService', 'CandidatesService']
 
-  function AppointmentsController ($scope, $state, $window, Authentication, Appointments) {
+  function AppointmentsController ($scope, $state, $window, Authentication, AppointmentsService, CandidatesService) {
     
     var vm = this
     vm.authentication = Authentication
@@ -26,14 +26,14 @@
         })
         .error((res) => {          
           console.log(res)
-        })  
+        })        
     } 
 
 
     // Remove existing Candidate
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {        
-        AppointmentssService.remove(vm.appointment._id)
+        AppointmentsService.remove(vm.appointment._id)
           .success((res) => {
             console.log(res) 
             vm.success = res.message                 
