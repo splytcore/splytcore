@@ -22,8 +22,7 @@ describe('User Model Unit Tests:', function () {
       firstName: 'Full',
       lastName: 'Name',
       displayName: 'Full Name',
-      email: 'test@test.com',
-      username: 'username',
+      email: 'test@test.com',   
       password: 'M3@n.jsI$Aw3$0m3',
       provider: 'local'
     };
@@ -33,8 +32,7 @@ describe('User Model Unit Tests:', function () {
       firstName: 'Different',
       lastName: 'User',
       displayName: 'Full Different Name',
-      email: 'test3@test.com',
-      username: 'different_username',
+      email: 'test3@test.com',      
       password: 'Different_Password1!',
       provider: 'local'
     };

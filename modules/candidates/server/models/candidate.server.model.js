@@ -61,7 +61,8 @@ const CandidateSchema = new Schema({
   }, 
   position: {
     type: Schema.ObjectId,
-    ref: 'Position'
+    ref: 'Position',
+    required: 'Please select position'
   },  
   checkin: {
     type: Date    
@@ -121,6 +122,20 @@ const CandidateSchema = new Schema({
 })
 
 CandidateSchema.pre('save', function (next) {
+
+  if (this.isModified('lastName')) {   
+    this.lastName = this.lastName.charAt(0).toUpperCase() + this.lastName.slice(1)  
+  }
+  if (this.isModified('firstName')) {     
+    this.firstName = this.firstName.charAt(0).toUpperCase() + this.firstName.slice(1)
+  }
+
+  next()
+})
+
+
+CandidateSchema.pre('save', function (next) {
+
 
   //used for simplifed querying without using additional library just to query by department
   if (this.position && this.isModified('position')) {      

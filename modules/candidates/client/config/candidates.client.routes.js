@@ -33,7 +33,7 @@
         }
       })      
       .state('candidates.checkinQueue', {
-        url: '/checkinQueue',
+        url: '/checkinQueue/:page/:limit',
         templateUrl: 'modules/candidates/client/views/queue-candidates.client.view.html',
         controller: 'CandidatesQueueController',
         controllerAs: 'vm',
