@@ -145,40 +145,47 @@ exports.listByClosedApptsAndDept = function(req, res) {
 //@desc references new candidate
 exports.update = function(req, res) {
   
-  let oldAppt = req.appointment
-  let candidate = oldAppt.candidate
-
-  let newApptId = req.params.newAppointmentId
+  let newAppt = req.appointment
+  let candidateId = req.candidate._id  
+  
+  //after update to type 'get' for route
+  // let candidateId = req.body.candidate  
 
   async.waterfall([
-    function checkIfRequestApptIsTaken(cb) {      
-      Appointment.findById(newApptId).exec((err, appt) => {        
-        if (err) {          
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+    function checkIfRequestApptIsTaken(cb) {            
+      if (newAppt.candidate) {
+        return res.status(400).send({
+          message: 'Sorry this appointment is already taken'
+        })          
+      } else {
+        cb(null)
+      }                
+    },
+    function removeCandidateFromOldAppt(cb) {          
+      Appointment.findOne({ candidate: candidateId }).populate('candidate').populate('department').exec((err, appt) => {
+        if (appt) {
+          console.log(appt)
+          let candidate = appt.candidate          
+          appt.candidate = null
+          appt.save((err) => {
+            cb(err, candidate)
           })
-        }  
-        if (appt && appt.candidate) {
-          return res.status(400).send({
-            message: 'Sorry this appointment is already taken'
-          })          
         } else {
-          cb(null, appt)
-        }                
+          cb(err)
+        }
 
       })
     },
-    function updateNewAppt(appt, cb) {              
-      appt.candidate = candidate
-      appt.save((err) => {
-        cb(err, appt)
+    function updateNewAppt(candidate, cb) {              
+      newAppt.candidate = candidate
+      newAppt.save((err) => {
+        cb(err)
       })  
     },    
-    function sendApptSMS(appt, cb) {      
-      console.log(appt)
-      let apptString = (new Date(appt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+    function sendApptSMS(candidate, cb) {            
+      let apptString = (new Date(newAppt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
       console.log(apptString)
-      let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
+      let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department} department at ${apptString}`
       client.messages.create({
         body: message,
         to: '+1' + candidate.sms,  // Text this number
@@ -195,12 +202,6 @@ exports.update = function(req, res) {
         console.log(err)
         cb(err)
       })    
-    },    
-    function removeCandidateFromOldAppt(cb) {      
-      oldAppt.candidate = null      
-      oldAppt.save((err) => {
-        cb(err)
-      })  
     }
   ], (err) => {
     if (err) {
@@ -344,7 +345,7 @@ exports.byID = function(req, res, next, id) {
 
   Appointment.findById(id)
   .populate('candidate')
-   .populate('department')
+  .populate('department')
   .exec(function (err, appointment) {
     if (err) {
       return next(err)
