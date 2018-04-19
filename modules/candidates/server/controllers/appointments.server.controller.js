@@ -147,9 +147,6 @@ exports.update = function(req, res) {
   
   let newAppt = req.appointment
   let candidateId = req.body.candidate
-  
-  //after update to type 'get' for route
-  // let candidateId = req.body.candidate  
 
   async.waterfall([
     function checkIfRequestApptIsTaken(cb) {            
@@ -168,8 +165,6 @@ exports.update = function(req, res) {
     },    
     function removeCandidateFromOldAppt(candidate, cb) {          
       Appointment.findOne({ candidate: candidate }).populate('candidate').populate('department').exec((err, appt) => {
-        console.log('find existing appt:')        
-        console.log(appt)        
         if (appt) {                    
           appt.candidate = null
           appt.save((err) => {
@@ -186,8 +181,7 @@ exports.update = function(req, res) {
         cb(err, candidate)
       })  
     },    
-    function sendApptSMS(candidate, cb) {            
-      console.log(candidate)
+    function sendApptSMS(candidate, cb) {                  
       let apptString = (new Date(newAppt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
       console.log(apptString)
       let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
