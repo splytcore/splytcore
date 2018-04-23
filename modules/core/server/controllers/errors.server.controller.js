@@ -22,13 +22,17 @@ var getUniqueErrorMessage = function (err) {
  */
 exports.getErrorMessage = function (err) {
   var message = '';
-
+  console.log(err.code)
   if (err.code) {
     switch (err.code) {
       case 11000:
       case 11001:
         message = getUniqueErrorMessage(err);
         break;
+      //custom
+      case 12001:
+        message = 'No open appointments for requested department';
+        break;        
       default:
         message = 'Something went wrong';
     }

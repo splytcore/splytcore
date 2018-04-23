@@ -535,8 +535,7 @@ exports.performAction = function(req, res, next) {
           .then((success) => {
             cb()
           })
-          .catch((err) => {
-            console.log(err)
+          .catch((err) => {            
             cb(err)
           })        
       } else {
@@ -545,7 +544,6 @@ exports.performAction = function(req, res, next) {
     }
   ], (err) => {
     if (err) {
-      console.log(err)      
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
@@ -583,13 +581,10 @@ function runStageChanged(req, res) {
       case 'INTERVIEW':
         appointments.setAppointment(candidate)
           .then((appt) => {
-            console.log('time returned: ' + appt.appointment)
-            req.body.appointment = appt.appointment //update with appointment          
+            console.log('time returned: ' + appt.appointment)            
             resolve()
           })
           .catch((err) => {
-            console.log('err')
-            console.log(err)
             reject(err)
           })
         break    

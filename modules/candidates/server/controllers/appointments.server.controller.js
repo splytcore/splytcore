@@ -32,17 +32,16 @@ exports.setAppointment = function(candidate) {
   return new Promise((resolve, reject) => {
     async.waterfall([
       function getNextAppointment(next) {        
-        getNextAppointmentFormula(candidate, (err, openAppt) => {
-          next(err, openAppt)
-        })  
+        Appointment.findOneAndUpdate({ department: candidate.department, candidate: { $eq :null }}, { candidate: candidate }, { new: true }).sort('appointment').exec((err, openAppt) => {
+          if (!openAppt) {
+            let error = new Error() 
+            error.code = 12001 //code pairs with no appointments found for deaprtment
+            reject(error) //error code for finding no avialable appoitment for department
+          } else {
+            next(err, openAppt)
+          }                       
+        })      
       },
-      function saveNextAppointment(openAppt, next) {        
-        //update appointment with candidate
-        openAppt.candidate = candidate                
-        openAppt.save((err) => {
-          next(err, openAppt)
-        })        
-      },      
       function sendSMSAppointment(appt, next) {  
         let apptString = (new Date(appt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
         console.log(apptString)
@@ -74,19 +73,6 @@ exports.setAppointment = function(candidate) {
   })
 }
 
-
-//TODO: formula
-function getNextAppointmentFormula(candidate, cb) {
-
-  console.log('next appoint for dept: ' + candidate.department.name)
-
-  Appointment.findOne({ department: candidate.department, candidate: { $eq :null }}).sort('appointment').exec((err, openAppt) => {
-    console.log('earliest open appt: ')
-    console.log(openAppt)    
-    cb(err, openAppt)
-  })      
-
-}
 
 exports.list = function(req, res) {
   
