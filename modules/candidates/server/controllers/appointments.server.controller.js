@@ -165,7 +165,7 @@ exports.update = function(req, res) {
     function sendApptSMS(candidate, cb) {                  
       let apptString = (new Date(newAppt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
       console.log(apptString)
-      let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
+      let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
       client.messages.create({
         body: message,
         to: '+1' + candidate.sms,  // Text this number
