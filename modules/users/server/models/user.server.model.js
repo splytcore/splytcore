@@ -8,7 +8,10 @@ var mongoose = require('mongoose'),
   crypto = require('crypto'),
   validator = require('validator'),
   generatePassword = require('generate-password'),
-  owasp = require('owasp-password-strength-test');
+  owasp = require('owasp-password-strength-test'),
+  path = require('path'),
+  config = require(path.resolve('./config/config'));
+
 
 /**
  * A Validation function for local strategy properties
@@ -78,8 +81,8 @@ var UserSchema = new Schema({
   },
   department: {
     type: String,
-    enum: ['DEVELOPMENT', 'ADMINISTRATION'],
-    default: 'ADMINISTRATION'
+    enum: config.valuation,
+    default: 'OTHER'
   },  
   updated: {
     type: Date

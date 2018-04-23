@@ -67,6 +67,7 @@ const CandidateSchema = new Schema({
   checkin: {
     type: Date    
   },
+  //transietn interview appointment. Do not update this field. Use Appointment Collection
   appointment: {
     type: Date
   },

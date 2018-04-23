@@ -1,0 +1,33 @@
+<section>
+
+  <div class="page-header">
+    <h1>Appointments</h1>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label" for="departments">departments</label>          
+    <select 
+    class="form-control" 
+    name="departments" 
+    ng-model="vm.department"
+    ng-options="x.name for x in vm.departments track by x._id"
+    ng-change="vm.listByDepartment()"
+    >                   
+    </select>
+  </div>
+
+
+  <div class="list-group">
+    <a ng-repeat="appt in vm.appointments"
+       ui-sref="appointments.edit({ appointmentId: appt._id })"
+       class="list-group-item">
+      <h4 class="list-group-item-heading" >
+        {{appt.candidate ? appt.candidate.lastName : 'OPEN'}}
+        <span ng-bind="appt.appointment | date: 'hh:mm MM/dd/yyyy'"> </span>
+        <span ng-bind="appt.department.display"> </span>
+      </h4>      
+    </a>
+  </div>
+
+  
+</section>

@@ -89,6 +89,26 @@ exports.listPositions = function(req, res) {
   })
 }
 
+//@desc do not use
+// exports.addInterviewConfig = function(req, res) {
+//   let departments = config.departments  
+  
+
+//   async.forEachOf(departments, (rec, departmentName, callback) => {            
+//     // console.log(departmentName.toUpperCase())    
+//     Department.findOneAndUpdate({ name: departmentName.toUpperCase() }, { interviewers: rec.interviewers, interviewLength: rec.interviewLength }, { upsert: true }).exec((err, dept) => {                  
+//       callback(err)
+//     })                
+//   }, (err) => {        
+//     if (err) {
+//       return res.status(400).send({
+//         message: errorHandler.getErrorMessage(err)
+//       })
+//     }
+//     res.jsonp({ message: 'success' })    
+//   })    
+
+// }
 
 /**
  * Candidate middleware

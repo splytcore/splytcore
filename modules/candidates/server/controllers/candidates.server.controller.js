@@ -13,6 +13,9 @@ const Candidate = mongoose.model('Candidate')
 const History = mongoose.model('History')  
 const Review = mongoose.model('Review')  
 const Position = mongoose.model('Position')  
+
+const appointments = require(path.resolve('./modules/candidates/server/controllers/appointments.server.controller'))
+
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 
@@ -514,7 +517,7 @@ exports.performAction = function(req, res, next) {
   async.parallel([
     function stageChanged(cb) {
       if (oldCandidate.stage !== updatedCandidate.stage) {        
-        stageChanged(req, res)
+        runStageChanged(req, res)
           .then((success) => {
             cb()
           })
@@ -528,7 +531,7 @@ exports.performAction = function(req, res, next) {
     },
     function valuationChanged(cb) {
       if (oldCandidate.valuation !== updatedCandidate.valuation) {
-        valuationChanged(req, res)
+        runValuationChanged(req, res)
           .then((success) => {
             cb()
           })
@@ -551,7 +554,7 @@ exports.performAction = function(req, res, next) {
   })
 }
   
-function stageChanged(req, res) {    
+function runStageChanged(req, res) {    
   console.log('stage changed')  
   
   let candidate = req.candidate
@@ -578,26 +581,17 @@ function stageChanged(req, res) {
         })
         break
       case 'INTERVIEW':
-        let appt = Date.now() + 3600000 // 1 hour        
-        let apptString = (new Date(appt)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
-        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${req.body.department.display} department at ${apptString}`
-        client.messages.create({
-          body: message,
-          to: '+1' + candidate.sms,  // Text this number
-          from: config.twilio.from // From a valid Twilio number
-        })
-        .then((message) => {      
-          candidate.appointment = appt
-          req.body.appointment = appt //update with appointment          
-          global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
-          console.log('message for successful passing: ' + message)
-          resolve()
-        })
-        .catch((err) => {
-          console.log('sms error')
-          console.log(err)
-          reject()
-        })
+        appointments.setAppointment(candidate)
+          .then((appt) => {
+            console.log('time returned: ' + appt.appointment)
+            req.body.appointment = appt.appointment //update with appointment          
+            resolve()
+          })
+          .catch((err) => {
+            console.log('err')
+            console.log(err)
+            reject(err)
+          })
         break    
       case 'VALUATED':           
         console.log('status changed to valuated')        
@@ -611,7 +605,7 @@ function stageChanged(req, res) {
   
 }
 
-function valuationChanged(req, res) {    
+function runValuationChanged(req, res) {    
   console.log('valuation changed')
 
   let candiate = req.candidate
@@ -621,17 +615,6 @@ function valuationChanged(req, res) {
   })
 
   
-}
-
-function positionChanged(req, res) {    
-  
-  console.log('position changed')
-
-  let candiate = req.candidate
-  return new Promise((resolve, reject) => {
-    resolve()
-  })
-
 }
 
 function saveHistory(candidate, action, user, from, to) {    

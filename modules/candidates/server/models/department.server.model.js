@@ -21,7 +21,17 @@ const DepartmentSchema = new Schema({
   },
   display: {
     type: String    
-  }
+  },
+  //numer of interviewers for this department
+  interviewers: {
+    type: Number,
+    default: 0
+  },
+  //how much time per interview in milliseconds
+  interviewLength: {
+    type: Number,
+    default: 15000
+  }  
 })
 
 
