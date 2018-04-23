@@ -23,8 +23,11 @@
       <p class="help-block error-text" ng-message="required">First name is required.</p>  
     </div>
 
-    <div ng-show="vm.appointment.candidate">      
-      <button type="button" class="btn btn-default" ng-click="vm.update()">Set Appointment</button>
+    <div>      
+      <button type="button" class="btn btn-default" ng-click="vm.update()">Set Appointment</button>    
+      <button type="button" class="btn btn-default" ng-click="vm.remove()">Clear Appointment</button>
+    </div>
+
     </div>
 
     <div ng-show="vm.success" class="text-success">
