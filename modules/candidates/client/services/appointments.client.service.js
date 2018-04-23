@@ -13,6 +13,7 @@
     vm.get = get        
     vm.remove = remove
     vm.create = create
+    vm.createSchedule = createSchedule
     vm.update = update
     vm.list = list
     vm.listByDepartment = listByDepartment
@@ -42,6 +43,10 @@
 
     function create(json) {
       return $http.post(vm.url, json)      
+    }
+
+    function createSchedule(deptId) {
+      return $http.get(vm.url + 'createSchedule/' + deptId)      
     }
 
   }

@@ -46,6 +46,7 @@
     "lodash": "^3.10.0",
     "method-override": "^2.3.3",
     "mocha": "~1.20.0",
+    "moment": "^2.22.1",
     "mongoose": "~4.2.3",
     "morgan": "^1.6.1",
     "multer": "^1.0.6",
@@ -95,6 +96,6 @@
     "run-sequence": "^1.1.1",
     "should": "^7.0.1",
     "supertest": "^1.0.1",
-    "random-name": "^0.1.2"    
+    "random-name": "^0.1.2"
   }
 }

@@ -21,6 +21,10 @@
       title: 'List',
       state: 'departments.list'
     })
+    Menus.addSubMenuItem('topbar', 'departments', {
+      title: 'Create',
+      state: 'departments.create'
+    })
 
   }
 }());

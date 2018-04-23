@@ -25,6 +25,9 @@ const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
 
+const moment = require('moment')
+moment.locale('pst');
+
 
 //@desc creates a schedule in x increments from now
 exports.setAppointment = function(candidate) {
@@ -43,7 +46,10 @@ exports.setAppointment = function(candidate) {
         })      
       },
       function sendSMSAppointment(appt, next) {  
-        let apptString = (new Date(appt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+ 
+        console.log('appt time in moment: ' + moment(appt.appointment)) 
+        let locale = moment(appt.appointment)
+        let apptString = (new Date(locale)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
         console.log(apptString)
         let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
         client.messages.create({
@@ -162,8 +168,10 @@ exports.update = function(req, res) {
         cb(err, candidate)
       })  
     },    
-    function sendApptSMS(candidate, cb) {                  
-      let apptString = (new Date(newAppt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+    function sendApptSMS(candidate, cb) {           
+      console.log('appt time in moment: ' + moment(newAppt.appointment))        
+      let locale = moment(newAppt.appointment)
+      let apptString = (new Date(locale)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
       console.log(apptString)
       let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
       client.messages.create({

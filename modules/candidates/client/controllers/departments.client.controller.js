@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('DepartmentsController', DepartmentsController);
 
-  DepartmentsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'PositionsService', 'DepartmentsService']
+  DepartmentsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'PositionsService', 'DepartmentsService', 'AppointmentsService']
 
-  function DepartmentsController ($scope, $state, $window, Authentication, PositionsService, DepartmentsService) {
+  function DepartmentsController ($scope, $state, $window, Authentication, PositionsService, DepartmentsService, AppointmentsService) {
     
     var vm = this
     vm.authentication = Authentication
@@ -18,6 +18,7 @@
     vm.remove = remove
     vm.update = update           
     vm.create = create
+    vm.createSchedule = createSchedule
 
     if ($state.params.departmentId) {
       DepartmentsService.get($state.params.departmentId)
@@ -47,8 +48,7 @@
     }
 
     // checkin
-    function create() {
-      console.log(vm.position)
+    function create() {      
       DepartmentsService.create(vm.department)
         .success((res) => {
           console.log(res) 
@@ -75,6 +75,18 @@
 
     }
 
+    function createSchedule() {
+
+      AppointmentsService.createSchedule(vm.department._id)
+        .success((res) => {
+          console.log(res)
+          vm.success = res.message
+        })
+        .error((res) => {
+          console.log('failure')
+          vm.error = res.message
+        })  
+    }
 
   }
 }());

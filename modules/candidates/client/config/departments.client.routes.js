@@ -23,6 +23,15 @@
           pageTitle: 'Positions List'
         }
       })      
+      .state('departments.create', {
+        url: '/create',
+        templateUrl: 'modules/candidates/client/views/form-department.client.view.html',
+        controller: 'DepartmentsController',
+        controllerAs: 'vm',
+        data: {          
+          pageTitle: 'Positions'
+        }
+      })      
       .state('departments.edit', {
         url: '/:departmentId/edit',
         templateUrl: 'modules/candidates/client/views/form-department.client.view.html',
