@@ -137,7 +137,6 @@ CandidateSchema.pre('save', function (next) {
 
 CandidateSchema.pre('save', function (next) {
 
-
   //used for simplifed querying without using additional library just to query by department
   if (this.position && this.isModified('position')) {      
     let Position = mongoose.model('Position')                                                                
@@ -151,16 +150,15 @@ CandidateSchema.pre('save', function (next) {
 
 })
 
-// CandidateSchema.post('init', (candidate, next) => {    
-//   let Review = mongoose.model('Review')    
-//   Review.findOne({ candidate: candidate }).populate('reviewer', 'displayName').exec((err, review) => {    
-//     if (review) {  
-//       candidate.review.reviewer = review.reviewer.displayName
-//       candidate.review.score = (review.experience + review.communication + review.skills + review.cultureFit)/4  
-//     }
-//     next()
-//   })
+//binds appointment time with appointment  object
+CandidateSchema.post('init', (candidate, next) => {    
+  console.log('feetchign appiontment for ' + candidate._id)
+  let Appointment = mongoose.model('Appointment')
+  Appointment.findOne({ candidate: candidate }).exec((err, appt) => {    
+    candidate.appointment = appt ? appt.appointment : null
+    next()
+  })
   
-// })
+})
 
 mongoose.model('Candidate', CandidateSchema)
