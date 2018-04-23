@@ -1,0 +1,17 @@
+<section>
+  <div class="page-header">
+    <h1>Departments</h1>
+  </div>
+
+  <div class="list-group">
+    <a ng-repeat="dept in vm.departments"
+       ui-sref="departments.edit({ departmentId: dept._id })"
+       class="list-group-item">
+      <h4 class="list-group-item-heading">
+        {{ dept }}
+      </h4>      
+    </a>
+  </div>
+
+  
+</section>
