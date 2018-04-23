@@ -46,7 +46,7 @@ exports.setAppointment = function(candidate) {
       function sendSMSAppointment(appt, next) {  
         let apptString = (new Date(appt.appointment)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
         console.log(apptString)
-        let message = `Blockahins: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
+        let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
         client.messages.create({
           body: message,
           to: '+1' + candidate.sms,  // Text this number
@@ -163,16 +163,11 @@ exports.update = function(req, res) {
         cb(err, candidate)
       })
     },    
-    function removeCandidateFromOldAppt(candidate, cb) {          
-      Appointment.findOne({ candidate: candidate }).populate('candidate').populate('department').exec((err, appt) => {
-        if (appt) {                    
-          appt.candidate = null
-          appt.save((err) => {
-            cb(err, candidate)
-          })
-        } else {
-          cb(err, candidate)
-        }
+    function removeCandidateFromOldAppt(candidate, cb) {                                                                         
+      Appointment.findOneAndUpdate({ candidate: candidate }, { candidate: null }).exec((err, appt) => {
+        console.log('removing ref from ')
+        console.log(appt)
+        cb(err, candidate)
       })
     },
     function updateNewAppt(candidate, cb) {              

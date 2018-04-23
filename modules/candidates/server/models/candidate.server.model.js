@@ -157,8 +157,7 @@ CandidateSchema.post('init', (candidate, next) => {
   Appointment.findOne({ candidate: candidate }).exec((err, appt) => {    
     candidate.appointment = appt ? appt.appointment : null
     next()
-  })
-  
+  })  
 })
 
 mongoose.model('Candidate', CandidateSchema)

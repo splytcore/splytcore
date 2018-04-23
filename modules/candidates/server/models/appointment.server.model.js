@@ -29,4 +29,19 @@ const AppointmentSchema = new Schema({
 })
 
 
+// AppointmentSchema.pre('save', function (next) {
+
+//   let Candidate = mongoose.model('Candidate')                                                                
+//   console.log('update candidate appointment')
+//   console.log(this.appointment)
+//   if (this.appointment)   {
+//     Candidate.findOneAndUpdate({ candidate: this.candidate }, { appointment: this.appointment }).exec((err, candidate) => {          
+//       next(err)
+//     })        
+//   } else {
+//     next()
+//   }
+
+// })
+
 mongoose.model('Appointment', AppointmentSchema)
