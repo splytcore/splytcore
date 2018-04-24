@@ -25,8 +25,7 @@ const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
 
-const moment = require('moment-timezone')
-
+const momenttz = require('moment-timezone')
 
 //@desc creates a schedule in x increments from now
 exports.setAppointment = function(candidate) {
@@ -46,7 +45,7 @@ exports.setAppointment = function(candidate) {
       },
       function sendSMSAppointment(appt, next) {  
          
-        let apptString = moment(appt.appointment).tz('America/Los_Angeles').format('h:ma z M/D/YY')
+        let apptString = momenttz(appt.appointment).tz('America/Los_Angeles').format('h:ma z M/D/YY')
         console.log(apptString)
         let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
         client.messages.create({
@@ -167,7 +166,7 @@ exports.update = function(req, res) {
     },    
     function sendApptSMS(candidate, cb) {           
       console.log('appt time in GMT : ' + newAppt.appointment)              
-      let apptString = moment(newAppt.appointment).tz('America/Los_Angeles').format('h:ma z M/D/YY')
+      let apptString = momenttz(newAppt.appointment).tz('America/Los_Angeles').format('h:ma z M/D/YY')
       console.log('appt time in PST: ' + apptString)
       let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
       client.messages.create({
@@ -257,7 +256,7 @@ exports.createAppointmentScheduleByDepartment = function(req, res) {
 
   async.waterfall([
     function findDepartment(next) {
-      Department.findOne({ name: department.toUpperCase() }).exec((err, dept) => {
+      Department.findById(department).exec((err, dept) => {
         if (!dept) {          
           return res.status(400).send({ message: 'Department not found' })
         }             
@@ -287,7 +286,7 @@ function createScheduleNow(dept, cb) {
 
   async.times(dept.interviewers, (index, callback) => {    
     console.log('index:' + index)
-    createSchedulePerUser(dept, (err, result) => {
+    createSchedulePerInterviewer(dept, (err, result) => {
       callback(err)
     })    
   }, (err) => {
@@ -295,12 +294,18 @@ function createScheduleNow(dept, cb) {
   })
 }
 
-function createSchedulePerUser(dept, done) {
+function createSchedulePerInterviewer(dept, done) {
   
-  let now = new Date()
+  // let now = new Date()
+  let june1start = new Date(2018, 5, 1, 8, 0)
+  let june1end = new Date(2018, 5, 1, 17, 0)
   
-  let startTimeMS = parseInt(now.setHours(8, 0, 0)) //start at 8am
-  let endTimeMS = parseInt(now.setHours(17, 0, 0)) //end at 5pm
+  let june2start = new Date(2018, 5, 2, 8, 0)
+  let june2end = new Date(2018, 5, 2, 17, 0)
+
+  let startTimeMS = parseInt(june1start.setHours(8, 0, 0)) //start at 8am
+  let endTimeMS = parseInt(june2end.setHours(17, 0, 0)) //end at 5pm next day
+
   let minMS = 60000 //minute in milliseconds  
 
   async.whilst(
