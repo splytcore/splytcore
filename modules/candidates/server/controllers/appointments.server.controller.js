@@ -25,8 +25,7 @@ const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
 
-const moment = require('moment')
-moment.locale('pst');
+const moment = require('moment-timezone')
 
 
 //@desc creates a schedule in x increments from now
@@ -170,8 +169,9 @@ exports.update = function(req, res) {
     },    
     function sendApptSMS(candidate, cb) {           
       console.log('appt time in moment: ' + moment(newAppt.appointment))        
-      let locale = moment(newAppt.appointment)
-      let apptString = (new Date(locale)).toLocaleTimeString("en-US/Pacific")                                                              
+      let locale = moment(newAppt.appointment).tz('America/Los_Angeles').format('h:ma z');  // 5am PDT
+
+      let apptString = locale
       console.log(apptString)
       let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
       client.messages.create({
