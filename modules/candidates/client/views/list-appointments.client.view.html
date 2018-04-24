@@ -23,7 +23,7 @@
        class="list-group-item">
       <h4 class="list-group-item-heading" >
         {{appt.candidate ? appt.candidate.lastName : 'OPEN'}}
-        <span ng-bind="appt.appointment | date: 'hh:mm a MM/dd/yyyy'"> </span>
+        <span ng-bind="appt.appointment | date: 'hh:mm:ss a MM/dd/yyyy'"> </span>
         <span ng-bind="appt.department.display"> </span>
       </h4>      
     </a>

@@ -155,10 +155,8 @@ CandidateSchema.pre('save', function (next) {
 CandidateSchema.post('init', (candidate, next) => {    
   console.log('feetchign appiontment for ' + candidate._id)
   let Appointment = mongoose.model('Appointment')
-  Appointment.findOne({ candidate: candidate }).populate('appointment').exec((err, appt) => {    
-    if (appt) {
-      candidate.appointment = appt
-    }    
+  Appointment.findOne({ candidate: candidate }).exec((err, appt) => {        
+    candidate.appointment = appt ? appt : null   
     next(err)
   })  
 })

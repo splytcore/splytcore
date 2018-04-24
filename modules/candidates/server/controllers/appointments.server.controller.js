@@ -297,14 +297,14 @@ function createScheduleNow(dept, cb) {
 function createSchedulePerInterviewer(dept, done) {
   
   // let now = new Date()
-  let june1start = new Date(2018, 5, 1, 8, 0)
-  let june1end = new Date(2018, 5, 1, 17, 0)
+  let june1start = new Date(2018, 5, 1, 8, 0, 0, 0)
+  let june1end =   new Date(2018, 5, 1, 17, 0, 0, 0)
   
-  let june2start = new Date(2018, 5, 2, 8, 0)
-  let june2end = new Date(2018, 5, 2, 17, 0)
+  let june2start = new Date(2018, 5, 2, 8, 0, 0, 0)
+  let june2end =   new Date(2018, 5, 2, 17, 0, 0, 0)
 
-  let startTimeMS = parseInt(june1start.setHours(8, 0, 0)) //start at 8am
-  let endTimeMS = parseInt(june2end.setHours(17, 0, 0)) //end at 5pm next day
+  let startTimeMS = june1start.getTime() //start at 8am
+  let endTimeMS =   june1end.getTime() //end at 5pm next day
 
   let minMS = 60000 //minute in milliseconds  
 

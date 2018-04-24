@@ -14,7 +14,8 @@
     vm.findCandidate = findCandidate
 
     CandidatesService.list()
-      .success((res) => {        
+      .success((res) => {  
+        console.log(res)      
         vm.candidates = res
       })
       .error((res) => {
