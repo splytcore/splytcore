@@ -317,7 +317,7 @@ function createSchedulePerInterviewer(dept, done) {
       if (startTimeMS > june1end.getTime() && startTimeMS < june2start.getTime() ) {
         startTimeMS += (dept.interviewLength * minMS)          
         callback(null, startTimeMS)          
-      //block lunch 12pm
+      //block lunch 12pm - 1pm
       } else if ((new Date(startTimeMS)).getHours() > 11 && (new Date(startTimeMS)).getHours() < 13) {
         startTimeMS += (dept.interviewLength * minMS)          
         callback(null, startTimeMS)          
