@@ -45,10 +45,8 @@ exports.setAppointment = function(candidate) {
         })      
       },
       function sendSMSAppointment(appt, next) {  
- 
-        console.log('appt time in moment: ' + moment(appt.appointment)) 
-        let locale = moment(appt.appointment)
-        let apptString = (new Date(locale)).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12 : true })
+         
+        let apptString = moment(appt.appointment).tz('America/Los_Angeles').format('h:ma z M/D/YY')
         console.log(apptString)
         let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
         client.messages.create({
@@ -168,11 +166,9 @@ exports.update = function(req, res) {
       })  
     },    
     function sendApptSMS(candidate, cb) {           
-      console.log('appt time in moment: ' + moment(newAppt.appointment))        
-      let locale = moment(newAppt.appointment).tz('America/Los_Angeles').format('h:ma z');  // 5am PDT
-
-      let apptString = locale
-      console.log(apptString)
+      console.log('appt time in GMT : ' + newAppt.appointment)              
+      let apptString = moment(newAppt.appointment).tz('America/Los_Angeles').format('h:ma z M/D/YY')
+      console.log('appt time in PST: ' + apptString)
       let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
       client.messages.create({
         body: message,
