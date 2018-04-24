@@ -297,14 +297,14 @@ function createScheduleNow(dept, cb) {
 function createSchedulePerInterviewer(dept, done) {
   
   // let now = new Date()
-  let june1start = new Date(2018, 5, 1, 8, 0, 0, 0)
-  let june1end =   new Date(2018, 5, 1, 17, 0, 0, 0)
+  let june1start = new Date(2018, 5, 1, 8, 0, 0, 0) //june 1 8am
+  let june1end =   new Date(2018, 5, 1, 17, 0, 0, 0) //june1 5pm
   
-  let june2start = new Date(2018, 5, 2, 8, 0, 0, 0)
-  let june2end =   new Date(2018, 5, 2, 17, 0, 0, 0)
+  let june2start = new Date(2018, 5, 2, 8, 0, 0, 0) //june2 8am
+  let june2end =   new Date(2018, 5, 2, 17, 0, 0, 0) //june2 5pm
 
   let startTimeMS = june1start.getTime() //start at 8am
-  let endTimeMS =   june1end.getTime() //end at 5pm next day
+  let endTimeMS =   june2end.getTime() //end at 5pm next day
 
   let minMS = 60000 //minute in milliseconds  
 
@@ -313,14 +313,24 @@ function createSchedulePerInterviewer(dept, done) {
       return startTimeMS < endTimeMS
     },
     function(callback) {
-      let appointment = new Appointment()
-      appointment.department = dept    
-      console.log('start time: ' + new Date(startTimeMS))
-      appointment.appointment = new Date(startTimeMS)          
-      appointment.save((err) => {      
+      //block appointments between june 1 5pm to june 2 8am
+      if (startTimeMS > june1end.getTime() && startTimeMS < june2start.getTime() ) {
         startTimeMS += (dept.interviewLength * minMS)          
-        callback(err, startTimeMS)
-      })                              
+        callback(null, startTimeMS)          
+      //block lunch 12pm
+      } else if ((new Date(startTimeMS)).getHours() > 11 && (new Date(startTimeMS)).getHours() < 13) {
+        startTimeMS += (dept.interviewLength * minMS)          
+        callback(null, startTimeMS)          
+      } else {
+        let appointment = new Appointment()
+        appointment.department = dept    
+        console.log('start time: ' + new Date(startTimeMS))
+        appointment.appointment = new Date(startTimeMS)          
+        appointment.save((err) => {      
+          startTimeMS += (dept.interviewLength * minMS)          
+          callback(err, startTimeMS)          
+        })    
+      }                          
     },
     function (err, n) {
       console.log('finished')
