@@ -69,7 +69,8 @@ const CandidateSchema = new Schema({
   },
   //transietn interview appointment. Do not update this field. Use Appointment Collection
   appointment: {
-    type: Date
+    type: Schema.ObjectId,
+    ref: 'Appointment'
   },
   //Temporary images that gets uploaded to local server that gets merge to single pdf
   //These get deleted after that single pdf gets upload to S3 bucket
@@ -154,8 +155,10 @@ CandidateSchema.pre('save', function (next) {
 CandidateSchema.post('init', (candidate, next) => {    
   console.log('feetchign appiontment for ' + candidate._id)
   let Appointment = mongoose.model('Appointment')
-  Appointment.findOne({ candidate: candidate }).exec((err, appt) => {    
-    candidate.appointment = appt ? appt.appointment : null
+  Appointment.findOne({ candidate: candidate }).populate('appointment').exec((err, appt) => {    
+    if (appt) {
+      candidate.appointment = appt
+    }    
     next(err)
   })  
 })
