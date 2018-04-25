@@ -23,6 +23,8 @@ module.exports = function (io, socket) {
   }
 
   global.emitInterviewCandidate = function (candidate) {        
+    console.log('emting interview candidate with object')
+    console.log(candidate)
     io.emit('interviewChannel', candidate) 
   }
 

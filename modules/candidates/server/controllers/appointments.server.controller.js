@@ -54,7 +54,7 @@ exports.setAppointment = function(candidate) {
           from: config.twilio.from // From a valid Twilio number
         })
         .then((message) => {          
-          candidate.appointment = appt.appointment //this is temp. only used for emiting correct appointment.
+          candidate.appointment = appt //this is temp. only used for emiting correct appointment.
           global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
           console.log('message for successful passing: ' + message)    
           next(null, appt)
@@ -188,7 +188,7 @@ exports.update = function(req, res) {
         from: config.twilio.from // From a valid Twilio number
       })
       .then((message) => {          
-        candidate.appointment = newAppt.appointment //this is temp. only used for emiting correct appointment.
+        candidate.appointment = newAppt //this is temp. only used for emiting correct appointment.
         global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
         console.log('message for successful passing: ' + message)    
         cb()
