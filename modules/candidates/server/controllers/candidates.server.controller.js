@@ -91,6 +91,8 @@ exports.registerFromWeb = function(req, res) {
         httpTransport = 'https://'
       }
       res.render(path.resolve('modules/candidates/server/templates/register-email'), {
+        title: 'Blockchains, LLC Job Fair',
+        content: 'You have successfully registered for the Blockchains, LLC Job Fair. <br/> Please check in when you get to the event.',
         name: candidate.firstName,
         appName: config.app.title,
         url: httpTransport + req.headers.host
