@@ -138,7 +138,9 @@ exports.update = function(req, res) {
 
 exports.list = function(req, res) {  
 
-  Position.find().populate('department').exec(function (err, positions) {
+  let query = req.query
+  
+  Position.find(query).populate('department').exec(function (err, positions) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
