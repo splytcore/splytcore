@@ -14,9 +14,7 @@ module.exports = function () {
     passwordField: 'password'
   },
   function (username, password, done) {
-    User.findOne({
-      email: username.toLowerCase()
-    }, function (err, user) {
+    User.findOne({ email: username.toLowerCase() }).populate('department').exec((err, user) => {
       if (err) {
         return done(err);
       }

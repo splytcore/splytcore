@@ -1,14 +1,24 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
+angular.module('users').controller('AuthenticationController', ['DepartmentsService', '$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
+  function (DepartmentsService, $scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
     // Get an eventual error defined in the URL query string:
     $scope.error = $location.search().err;
 
-    // If user is signed in then redirect back home
+    DepartmentsService.list()
+      .success((res) => {
+         console.log(res)
+        $scope.departments = res
+      })
+      .error((err) => {
+        console.log(err)
+      })    
+
+
+    // If user is signed in then redirect back home    
     if ($scope.authentication.user) {
       $location.path('/');
     }
