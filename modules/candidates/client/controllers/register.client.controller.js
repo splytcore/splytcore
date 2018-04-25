@@ -25,8 +25,7 @@
     vm.register = register
 
     CandidatesService.listAllEnumValues()
-      .success((res) => {
-        console.log(res)                  
+      .success((res) => {        
         vm.registeredFrom = res.registeredFrom
       })
       .error((res) => {
@@ -36,8 +35,6 @@
 
     PositionsService.list()
       .success((res) => {
-        console.log(res)      
-        console.log(res)    
         vm.positions = res
       })
       .error((res) => {
@@ -68,8 +65,7 @@
 
     if ($state.params.candidateId) {
       CandidatesService.get($state.params.candidateId)
-        .success((res) => {
-          console.log(res)          
+        .success((res) => {          
           vm.candidate = res
         })
         .error((res) => {

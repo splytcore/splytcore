@@ -3,11 +3,11 @@
 
   angular
     .module('candidates')
-    .controller('CandidatesQueueController', CandidatesQueueController);
+    .controller('QueuesListController', QueuesListController);
 
-  CandidatesQueueController.$inject = ['CandidatesService', 'Socket', '$scope', '$state']
+  QueuesListController.$inject = ['CandidatesService', 'Socket', '$scope', '$state']
 
-  function CandidatesQueueController(CandidatesService, Socket, $scope, $state) {
+  function QueuesListController(CandidatesService, Socket, $scope, $state) {
     var vm = this    
     vm.listCheckins = listCheckins
 

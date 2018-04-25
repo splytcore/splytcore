@@ -95,6 +95,19 @@ exports.list = function(req, res) {
 
 }
 
+exports.dropCollection = function(req, res, next) {
+  
+  Appointment.remove().exec((err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    }             
+    next()
+  })      
+
+}
+
 exports.listByOpenApptsAndDept = function(req, res) {
         
   // let department = req.params.department

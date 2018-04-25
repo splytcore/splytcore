@@ -25,7 +25,7 @@
       })      
       .state('positions.create', {
         url: '/create/',
-        templateUrl: 'modules/candidates/client/views/position-form.client.view.html',
+        templateUrl: 'modules/candidates/client/views/form-position.client.view.html',
         controller: 'PositionsController',
         controllerAs: 'vm',
         data: {          
@@ -34,7 +34,7 @@
       })      
       .state('positions.edit', {
         url: '/:positionId/edit',
-        templateUrl: 'modules/candidates/client/views/position-form.client.view.html',
+        templateUrl: 'modules/candidates/client/views/form-position.client.view.html',
         controller: 'PositionsController',
         controllerAs: 'vm',
         data: {          

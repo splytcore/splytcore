@@ -3,11 +3,11 @@
 
   angular
     .module('candidates')
-    .controller('CandidatesCheckinController', CandidatesCheckinController);
+    .controller('CheckinController', CheckinController);
 
-  CandidatesCheckinController.$inject = ['CandidatesService', '$state'];
+  CheckinController.$inject = ['CandidatesService', '$state'];
 
-  function CandidatesCheckinController(CandidatesService, $state) {
+  function CheckinController(CandidatesService, $state) {
     var vm = this
     vm.findByEmail = findByEmail
 

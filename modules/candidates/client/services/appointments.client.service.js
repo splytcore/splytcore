@@ -14,6 +14,7 @@
     vm.remove = remove
     vm.create = create
     vm.createSchedule = createSchedule
+    vm.createSchedulesForAllDepts = createSchedulesForAllDepts
     vm.update = update
     vm.list = list
     vm.listByDepartment = listByDepartment
@@ -47,6 +48,10 @@
 
     function createSchedule(deptId) {
       return $http.get(vm.url + 'createSchedule/' + deptId)      
+    }
+
+    function createSchedulesForAllDepts() {
+      return $http.get(vm.url + 'init')      
     }
 
   }

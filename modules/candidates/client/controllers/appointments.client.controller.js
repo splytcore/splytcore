@@ -18,6 +18,7 @@
     vm.remove = remove
     vm.update = update           
     vm.create = create
+    vm.createSchedulesForAllDepts = createSchedulesForAllDepts
 
     if ($state.params.appointmentId) {
       AppointmentsService.get($state.params.appointmentId)
@@ -73,6 +74,19 @@
 
     }
 
+    function createSchedulesForAllDepts() {
+      if ($window.confirm('Are you sure you want to delete existing appointments and generate new ones?')) {        
+        AppointmentsService.createSchedulesForAllDepts()
+          .success((res) => {
+            console.log(res)
+            vm.success = res.message
+          })
+          .error((res) => {
+            console.log('failure')
+            vm.error = res.message
+          })  
+      }
+    }
 
   }
 }());

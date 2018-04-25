@@ -15,7 +15,7 @@
       })
       .state('reviews.view', {
         url: '/candidate/:candidateId',
-        templateUrl: 'modules/candidates/client/views/review-form-candidate.client.view.html',
+        templateUrl: 'modules/candidates/client/views/form-review.client.view.html',
         controller: 'ReviewController',
         controllerAs: 'vm',
         data: {          

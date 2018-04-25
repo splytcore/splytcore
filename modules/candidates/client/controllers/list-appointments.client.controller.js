@@ -19,7 +19,6 @@
                        
     AppointmentsService.list()
       .success((res) => {
-        console.log(res)          
         vm.appointments = res          
       })
       .error((res) => {
@@ -28,8 +27,7 @@
       })  
 
     DepartmentsService.list()
-      .success((res) => {
-        console.log(res)          
+      .success((res) => {        
         vm.departments = res          
       })
       .error((res) => {
@@ -41,7 +39,6 @@
       console.log('department: ' + vm.department._id)      
       AppointmentsService.listByDepartment(vm.department._id)
         .success((res) => {
-          console.log(res)          
           vm.appointments = res          
         })
         .error((res) => {

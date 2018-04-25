@@ -34,8 +34,8 @@
       })      
       .state('candidates.checkinQueue', {
         url: '/checkinQueue/:page/:limit',
-        templateUrl: 'modules/candidates/client/views/queue-candidates.client.view.html',
-        controller: 'CandidatesQueueController',
+        templateUrl: 'modules/candidates/client/views/list-queues.client.view.html',
+        controller: 'QueuesListController',
         controllerAs: 'vm',
         data: {
           pageTitle: 'Checkin Queue'
@@ -43,7 +43,7 @@
       })      
       .state('candidates.register', {
         url: '/register',
-        templateUrl: 'modules/candidates/client/views/register-form-candidate.client.view.html',
+        templateUrl: 'modules/candidates/client/views/form-register.client.view.html',
         controller: 'RegisterController',
         controllerAs: 'vm',
         data: {          
@@ -52,8 +52,8 @@
       })
       .state('candidates.checkin', {
         url: '/checkin',
-        templateUrl: 'modules/candidates/client/views/checkin-form-candidate.client.view.html',
-        controller: 'CandidatesCheckinController',
+        templateUrl: 'modules/candidates/client/views/form-checkin.client.view.html',
+        controller: 'CheckinController',
         controllerAs: 'vm',
         data: {          
           pageTitle: 'Candidates Checkin'
@@ -68,15 +68,6 @@
           pageTitle: 'Edit Candidate {{ candidateResolve.name }}'
         }
       })            
-      .state('candidates.view', {
-        url: '/:candidateId',
-        templateUrl: 'modules/candidates/client/views/form-candidate.client.view.html',
-        controller: 'CandidatesController',
-        controllerAs: 'vm',
-        data: {
-          pageTitle: 'Candidate {{ candidateResolve.name }}'
-        }
-      })
   }
 
   getCandidate.$inject = ['$stateParams', 'CandidatesService'];

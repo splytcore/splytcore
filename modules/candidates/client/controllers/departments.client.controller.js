@@ -18,7 +18,6 @@
     vm.remove = remove
     vm.update = update           
     vm.create = create
-    vm.createSchedule = createSchedule
 
     if ($state.params.departmentId) {
       DepartmentsService.get($state.params.departmentId)
@@ -73,19 +72,6 @@
           vm.error = res.message
         })  
 
-    }
-
-    function createSchedule() {
-
-      AppointmentsService.createSchedule(vm.department._id)
-        .success((res) => {
-          console.log(res)
-          vm.success = res.message
-        })
-        .error((res) => {
-          console.log('failure')
-          vm.error = res.message
-        })  
     }
 
   }
