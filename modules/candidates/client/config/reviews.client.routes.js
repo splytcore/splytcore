@@ -13,7 +13,7 @@
         abstract: true,        
         template: '<ui-view/>'
       })
-      .state('reviews.view', {
+      .state('reviews.edit', {
         url: '/candidate/:candidateId',
         templateUrl: 'modules/candidates/client/views/form-review.client.view.html',
         controller: 'ReviewController',
