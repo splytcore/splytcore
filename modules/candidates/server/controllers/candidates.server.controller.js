@@ -562,6 +562,7 @@ function runStageChanged(req, res) {
   return new Promise((resolve, reject) => {
     switch (req.body.stage) {
       case 'REJECT':
+      case 'DEFER':        
         client.messages.create({
           body: 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!',
           to: '+1' + candidate.sms,  // Text this number
