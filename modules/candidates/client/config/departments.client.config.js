@@ -27,7 +27,8 @@
     })
     Menus.addSubMenuItem('topbar', 'departments', {
       title: 'Create Schedule',
-      state: 'departments.createSchedules'
+      state: 'departments.createSchedules',
+      roles: ['admin']
     })
 
   }

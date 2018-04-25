@@ -6,6 +6,6 @@ angular.module('users.admin').run(['Menus',
     Menus.addSubMenuItem('topbar', 'admin', {
       title: 'Manage Users',
       state: 'admin.users'
-    });
+    })
   }
 ]);

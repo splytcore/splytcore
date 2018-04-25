@@ -80,10 +80,9 @@ var UserSchema = new Schema({
     required: 'Please provide at least one role'
   },
   department: {
-    type: String,
-    enum: config.valuation,
-    default: 'OTHER'
-  },  
+    type: Schema.ObjectId,
+    ref: 'Department'
+  },
   updated: {
     type: Date
   },
