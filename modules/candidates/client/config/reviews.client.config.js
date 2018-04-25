@@ -10,23 +10,17 @@
   function menuConfig(Menus) {
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
-      title: 'Positions',
-      state: 'positions',
+      title: 'Reviews',
+      state: 'reviews',
       type: 'dropdown',
       roles: ['*']
-    });
+    })
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'positions', {
-      title: 'List Positions',
-      state: 'positions.list'
-    });
-
-    Menus.addSubMenuItem('topbar', 'positions', {
-      title: 'Create',
-      state: 'positions.create'
-    });
-
+    Menus.addSubMenuItem('topbar', 'reviews', {
+      title: 'List Reviews',
+      state: 'reviews.list',      
+    })
 
   }
 }());

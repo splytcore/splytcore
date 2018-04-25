@@ -11,17 +11,28 @@
     $stateProvider
       .state('reviews', {
         abstract: true,        
+        url: '/reviews',
         template: '<ui-view/>'
       })
-      .state('reviews.edit', {
-        url: '/candidate/:candidateId',
-        templateUrl: 'modules/candidates/client/views/form-review.client.view.html',
-        controller: 'ReviewController',
+      .state('reviews.list', {
+        url: '',
+        templateUrl: 'modules/candidates/client/views/list-reviews.client.view.html',
+        controller: 'ReviewsListController',
         controllerAs: 'vm',
         data: {          
           pageTitle: 'Review Candidates'
         }
       })
+      .state('reviews.edit', {
+        url: '/:candidateId/edit',
+        templateUrl: 'modules/candidates/client/views/form-review.client.view.html',
+        controller: 'ReviewsController',
+        controllerAs: 'vm',
+        data: {          
+          pageTitle: 'Review Candidates'
+        }
+      })
+
   }
 
 }());

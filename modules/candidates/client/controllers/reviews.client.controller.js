@@ -4,11 +4,11 @@
   // Candidates controller
   angular
     .module('candidates')
-    .controller('ReviewController', ReviewController);
+    .controller('ReviewsController', ReviewsController);
 
-  ReviewController.$inject = ['$scope', '$state', '$window', 'Authentication', 'ReviewsService'];
+  ReviewsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'ReviewsService'];
 
-  function ReviewController ($scope, $state, $window, Authentication, ReviewsService) {
+  function ReviewsController ($scope, $state, $window, Authentication, ReviewsService) {
     
     var vm = this;
     vm.authentication = Authentication;
