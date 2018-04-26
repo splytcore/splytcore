@@ -17,8 +17,7 @@
     vm.form = {}
 
     ReviewsService.list()
-      .success((res) => {
-        console.log(res)          
+      .success((res) => {        
         vm.reviews = res          
       })
       .error((res) => {
