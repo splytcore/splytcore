@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('DepartmentsController', DepartmentsController);
 
-  DepartmentsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'PositionsService', 'DepartmentsService', 'AppointmentsService']
+  DepartmentsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'PositionsService', 'DepartmentsService']
 
-  function DepartmentsController ($scope, $state, $window, Authentication, PositionsService, DepartmentsService, AppointmentsService) {
+  function DepartmentsController ($scope, $state, $window, Authentication, PositionsService, DepartmentsService) {
     
     var vm = this
     vm.authentication = Authentication
