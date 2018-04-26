@@ -20,7 +20,8 @@
         controller: 'ReviewsListController',
         controllerAs: 'vm',
         data: {          
-          pageTitle: 'Review Candidates'
+          pageTitle: 'Review Candidates',
+          roles: ['admin','user']
         }
       })
       .state('reviews.edit', {
@@ -29,7 +30,8 @@
         controller: 'ReviewsController',
         controllerAs: 'vm',
         data: {          
-          pageTitle: 'Review Candidates'
+          pageTitle: 'Review Candidates',
+          roles: ['admin','user']
         }
       })
 

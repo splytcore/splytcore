@@ -20,7 +20,7 @@
         controller: 'CandidatesListController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Candidates List'
+          pageTitle: 'Candidates List'          
         }
       })
       .state('candidates.reviews', {
@@ -29,6 +29,7 @@
         controller: 'ReviewsListController',
         controllerAs: 'vm',
         data: {
+          roles: ['admin','user'],
           pageTitle: 'Reviews List'
         }
       })      
@@ -37,7 +38,7 @@
         templateUrl: 'modules/candidates/client/views/list-queues.client.view.html',
         controller: 'QueuesListController',
         controllerAs: 'vm',
-        data: {
+        data: {          
           pageTitle: 'Checkin Queue'
         }
       })      
@@ -46,7 +47,7 @@
         templateUrl: 'modules/candidates/client/views/form-register.client.view.html',
         controller: 'RegisterController',
         controllerAs: 'vm',
-        data: {          
+        data: {                    
           pageTitle: 'Candidates Register'
         }
       })
@@ -65,6 +66,7 @@
         controller: 'CandidatesController',
         controllerAs: 'vm',
         data: {          
+          roles: ['admin','user'],
           pageTitle: 'Edit Candidate {{ candidateResolve.name }}'
         }
       })            

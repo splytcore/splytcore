@@ -27,6 +27,7 @@
         templateUrl: 'modules/candidates/client/views/form-appointment.client.view.html',
         controller: 'AppointmentsController',
         controllerAs: 'vm',
+        roles: ['user,admin'],
         data: {          
           pageTitle: 'Review Candidates'
         }

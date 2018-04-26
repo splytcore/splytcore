@@ -13,18 +13,20 @@
       title: 'Positions',
       state: 'positions',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['admin','user']
     });
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'positions', {
       title: 'List Positions',
-      state: 'positions.list'
+      state: 'positions.list',
+      roles: ['user','admin']
     });
 
     Menus.addSubMenuItem('topbar', 'positions', {
       title: 'Create',
-      state: 'positions.create'
+      state: 'positions.create',
+      roles: ['user', 'admin']
     });
 
 

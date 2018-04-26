@@ -35,7 +35,7 @@ module.exports = function(app) {
   //i.e. /api/findCandidate?q=john@gmail.com
   //i.e. /api/findCandidate?q=smith
   //i.e. /api/findCandidate?q=81812345678
-  app.route('/api/findCandidate/:search')
+  app.route('/api/findCandidate/:search').all(candidatesPolicy.isAllowed)
     .get(candidates.findCandidate)   
 
   //@desc validate phone through twilio validation
@@ -45,7 +45,7 @@ module.exports = function(app) {
   //@desc return all candidates 
   //you can append addition parameters to filter
   //i.e. ?stage=REGISTERED&registeredFrom=WEB
-  app.route('/api/candidates')
+  app.route('/api/candidates').all(candidatesPolicy.isAllowed)
     .get(candidates.list)    
 
   //@desc returns list of ALL enum values

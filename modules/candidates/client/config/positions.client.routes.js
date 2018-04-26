@@ -20,6 +20,7 @@
         controller: 'PositionsListController',
         controllerAs: 'vm',
         data: {
+          roles: ['user', 'admin'],
           pageTitle: 'Positions List'
         }
       })      
@@ -29,6 +30,7 @@
         controller: 'PositionsController',
         controllerAs: 'vm',
         data: {          
+          roles: ['user', 'admin'],
           pageTitle: 'Positions'
         }
       })      
@@ -38,7 +40,8 @@
         controller: 'PositionsController',
         controllerAs: 'vm',
         data: {          
-          pageTitle: 'Positions'
+          pageTitle: 'Positions',
+          roles: ['user', 'admin']
         }
       })
 

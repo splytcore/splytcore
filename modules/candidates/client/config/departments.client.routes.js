@@ -11,7 +11,10 @@
     $stateProvider
       .state('departments', {
         url: '/departments',
-        abstract: true,        
+        abstract: true,               
+        data: {
+          roles: ['user', 'admin']          
+        },
         template: '<ui-view/>'
       })
       .state('departments.list', {
@@ -20,6 +23,7 @@
         controller: 'DepartmentsListController',
         controllerAs: 'vm',
         data: {
+          roles: ['user', 'admin'],
           pageTitle: 'Positions List'
         }
       })      
@@ -29,6 +33,7 @@
         controller: 'DepartmentsController',
         controllerAs: 'vm',
         data: {          
+          roles: ['user', 'admin'],
           pageTitle: 'Positions'
         }
       })      
@@ -36,8 +41,9 @@
         url: '/:departmentId/edit',
         templateUrl: 'modules/candidates/client/views/form-department.client.view.html',
         controller: 'DepartmentsController',
-        controllerAs: 'vm',
+        controllerAs: 'vm',        
         data: {          
+          roles: ['admin', 'user'],
           pageTitle: 'Positions'
         }
       })
@@ -45,8 +51,9 @@
         url: '/manageAppointments',
         templateUrl: 'modules/candidates/client/views/form-manageAppointments.client.view.html',
         controller: 'AppointmentsController',
-        controllerAs: 'vm',
+        controllerAs: 'vm',        
         data: {          
+          roles: ['admin'],
           pageTitle: 'Positions'
         }
       })

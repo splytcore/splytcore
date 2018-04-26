@@ -3,8 +3,9 @@
 /**
  * Module dependencies
  */
-let reviewsPolicy = require('../policies/reviews.server.policy')
+
 let reviews = require('../controllers/reviews.server.controller')
+let reviewsPolicy = require('../policies/reviews.server.policy')
 
 module.exports = function(app) {  
 

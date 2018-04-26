@@ -13,13 +13,14 @@
       title: 'Reviews',
       state: 'reviews',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['admin','user']
     })
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'reviews', {
       title: 'List Reviews',
       state: 'reviews.list',      
+      roles: ['admin','user']
     })
 
   }

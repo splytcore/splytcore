@@ -13,17 +13,19 @@
       title: 'Departments',
       state: 'departments',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['admin', 'user']
     });
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'departments', {
       title: 'List',
-      state: 'departments.list'
+      state: 'departments.list',
+      roles: ['admin', 'user']
     })
     Menus.addSubMenuItem('topbar', 'departments', {
       title: 'Create',
-      state: 'departments.create'
+      state: 'departments.create',
+      roles: ['user', 'admin']
     })
     Menus.addSubMenuItem('topbar', 'departments', {
       title: 'Manage Appointments',

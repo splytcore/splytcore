@@ -13,16 +13,7 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['admin'],
-    allows: [{
-      resources: '/api/reviews',
-      permissions: '*'
-    }, {
-      resources: '/api/reviews/:candidateId',
-      permissions: '*'
-    }]
-  }, {
-    roles: ['user'],
+    roles: ['user', 'admin'],
     allows: [{
       resources: '/api/reviews',
       permissions: ['get']
@@ -30,17 +21,8 @@ exports.invokeRolesPolicies = function () {
       resources: ['/api/reviews/:candidateId'],
       permissions: ['get', 'put', 'delete','post']
     }]
-  }, {
-    roles: ['guest'],
-    allows: [{
-      resources: '/api/reviews',
-      permissions: ['get']
-    }, {
-      resources: '/api/reviews/:candidateId',
-      permissions: ['get']
-    }]
-  }]);
-};
+  }])
+}
 
 /**
  * Check If Reviews Policy Allows
