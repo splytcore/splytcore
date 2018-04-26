@@ -19,7 +19,8 @@
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'candidates', {
       title: 'List Candidates',
-      state: 'candidates.list'      
+      state: 'candidates.list',      
+      roles: ['admin', 'user']
     });
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'candidates', {
@@ -34,7 +35,8 @@
 
     Menus.addSubMenuItem('topbar', 'candidates', {
       title: 'Checkin Queue',
-      state: 'candidates.checkinQueue'
+      state: 'candidates.checkinQueue',
+      roles: ['admin', 'user']
     });
 
   }

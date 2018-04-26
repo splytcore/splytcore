@@ -20,6 +20,7 @@
         controller: 'CandidatesListController',
         controllerAs: 'vm',
         data: {
+          roles: ['admin', 'user'],
           pageTitle: 'Candidates List'          
         }
       })
