@@ -75,7 +75,7 @@ exports.update = function(req, res) {
 
 exports.list = function(req, res) {  
   
-  let sort = req.query.sort ? req.query.sort : 'score'  
+  let sort = req.query.sort ? req.query.sort : '-score'  
   delete req.query.sort 
   console.log(req.query)
 
