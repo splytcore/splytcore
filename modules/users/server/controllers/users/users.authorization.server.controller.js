@@ -25,7 +25,6 @@ exports.userByID = function (req, res, next, id) {
     } else if (!user) {
       return next(new Error('Failed to load User ' + id));
     }
-
     req.profile = user;
     next();
   });

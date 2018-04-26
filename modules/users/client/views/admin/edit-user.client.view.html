@@ -19,6 +19,7 @@
             <p class="help-block error-text" ng-message="required">Last name is required.</p>
           </div>
         </div>
+
         <div class="form-group" show-errors>
           <label class="control-label" for="roles">Roles</label>
           <div class="controls">
@@ -28,6 +29,16 @@
             </div>
           </div>
         </div>
+        {{user.department}}
+        <div class="form-group" show-errors>
+          <label class="control-label" for="roles">Department</label>
+          <select class="form-control" name="position" ng-model="user.department">            
+           <option ng-repeat="d in departments" value="{{d._id}}" ng-selected="d._id == user.department._id">
+              {{d.display}}            
+            </option>          
+          </select>          
+        </div>
+        
         <div class="form-group">
           <input type="submit" value="Update" class="btn btn-default">
         </div>
