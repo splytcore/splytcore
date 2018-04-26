@@ -41,9 +41,9 @@
           pageTitle: 'Positions'
         }
       })
-      .state('departments.createSchedules', {
-        url: '/createSchedules',
-        templateUrl: 'modules/candidates/client/views/form-createSchedules.client.view.html',
+      .state('departments.manageAppointments', {
+        url: '/manageAppointments',
+        templateUrl: 'modules/candidates/client/views/form-manageAppointments.client.view.html',
         controller: 'AppointmentsController',
         controllerAs: 'vm',
         data: {          

@@ -16,8 +16,7 @@ const validator = require('validator')
 const AppointmentSchema = new Schema({
   candidate: {
     type: Schema.ObjectId,
-    ref: 'Candidate',
-    unique: true
+    ref: 'Candidate'
   },
   department: {
     type: Schema.ObjectId,

@@ -1,0 +1,37 @@
+<section>
+  <div class="page-header">
+    <h1>Manage Department Appointment Schedules</h1>
+
+    <ul class="list-group">
+      <li class="list-group-item"> <h4>All Appointments</h4></li>
+      <li class="list-group-item">
+          <button type="button" class="btn btn-default" ng-click="vm.createSchedulesForAllDepts()">Generate All</button>
+          <button type="button" class="btn btn-default" ng-click="vm.deleteSchedulesForAllDepts()">Delete All</button>
+      </li>      
+    </ul>
+
+    <ul class="list-group">
+      <li class="list-group-item"><h4>Appointments for Department </h4></li>
+      <li class="list-group-item">
+        <label class="control-label" for="department">Select Department</label>
+        <select class="form-control" name="department" ng-options="x.display for x in vm.departments" ng-model="vm.department">                 
+        </select>
+      </li>
+
+      <li class="list-group-item">
+          <button type="button" class="btn btn-default" ng-click="vm.createScheduleByDept()">Generate Appointments For Dept</button>
+          <button type="button" class="btn btn-default" ng-click="vm.deleteScheduleByDept()">Delete Appointments For Dept</button>
+      </li>      
+    </ul>
+
+
+
+    <div ng-show="vm.success" class="text-success">
+      <strong ng-bind="vm.success"></strong>
+    </div>
+
+    <div ng-show="vm.error" class="text-danger">
+      <strong ng-bind="vm.error"></strong>
+    </div>
+  </div>
+</section>

@@ -13,8 +13,14 @@
     vm.get = get        
     vm.remove = remove
     vm.create = create
-    vm.createSchedule = createSchedule
+    
+    vm.createScheduleByDept = createScheduleByDept
     vm.createSchedulesForAllDepts = createSchedulesForAllDepts
+
+    vm.deleteScheduleByDept = deleteScheduleByDept
+    vm.deleteSchedulesForAllDepts = deleteSchedulesForAllDepts
+    
+    
     vm.update = update
     vm.list = list
     vm.listByDepartment = listByDepartment
@@ -46,13 +52,23 @@
       return $http.post(vm.url, json)      
     }
 
-    function createSchedule(deptId) {
-      return $http.get(vm.url + 'createSchedule/' + deptId)      
+    function createScheduleByDept(deptId) {
+      return $http.post(vm.url + 'manage/' + deptId)      
     }
 
     function createSchedulesForAllDepts() {
-      return $http.get(vm.url + 'init')      
+      return $http.post(vm.url + 'init')      
     }
+
+    
+    function deleteSchedulesForAllDepts() {
+      return $http.delete(vm.url + 'init')      
+    }
+
+    function deleteScheduleByDept(deptId) {
+      return $http.delete(vm.url + 'manage/' + deptId)      
+    }
+
 
   }
 }());

@@ -77,8 +77,6 @@ exports.setAppointment = function(candidate) {
 
 
 exports.list = function(req, res) {
-  
-  // let department = req.params.department
 
   let query = req.query 
   console.log('query: ' + req.query)
@@ -95,23 +93,40 @@ exports.list = function(req, res) {
 
 }
 
-exports.dropCollection = function(req, res, next) {
+
+//@desc drops Appointments collection
+exports.dropCollection = function(req, res) {
   
   Appointment.remove().exec((err) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })      
-    }             
-    next()
+    }                 
+    res.jsonp({ message: 'success!' })   
+  })      
+
+}
+
+//@desc removes all appointments by department
+exports.deleteAppointmentScheduleByDepartment = function(req, res) {
+
+  let department = req.department
+  console.log('department: ' + department)
+
+  Appointment.remove({ department: department }).exec((err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    }                 
+    res.jsonp({ message: 'success!' })   
   })      
 
 }
 
 exports.listByOpenApptsAndDept = function(req, res) {
         
-  // let department = req.params.department
-  console.log(req.params)
   let departmentId = req.params.department 
 
   Appointment.find({ department: departmentId, candidate: { $eq: null }}).populate('department', 'display').populate('candidate','lastName firstName').sort('appointment').exec((err, appointments) => {
@@ -127,8 +142,6 @@ exports.listByOpenApptsAndDept = function(req, res) {
 
 exports.listByClosedApptsAndDept = function(req, res) {
   
-  // let department = req.params.department
-  console.log(req.params)
   let departmentId = req.params.department 
 
   Appointment.find({ department: departmentId, candidate: { $ne: null }}).populate('department', 'display').populate('candidate','lastName firstName').sort('appointment').exec((err, appointments) => {
@@ -265,19 +278,12 @@ exports.createAppointmentScheduleByDepartment = function(req, res) {
 
   console.log('create schedule...')  
 
-  let department = req.params.department
+  let department = req.department
+  console.log('create schedule for deptId: ' + department)  
 
   async.waterfall([
-    function findDepartment(next) {
-      Department.findById(department).exec((err, dept) => {
-        if (!dept) {          
-          return res.status(400).send({ message: 'Department not found' })
-        }             
-        next(err, dept)
-      })
-    },
-    function createSchedule(dept, next) {
-      createScheduleNow(dept, (err) => {
+    function createSchedule(next) {
+      createScheduleNow(department, (err) => {
         next(err)
       })
     },
@@ -326,7 +332,7 @@ function createSchedulePerInterviewer(dept, done) {
       return startTimeMS < endTimeMS
     },
     function(callback) {
-      //block appointments between june 1 5pm to june 2 8am
+      //block appointments afterhours between june 1 5pm to june 2 8am
       if (startTimeMS > june1end.getTime() && startTimeMS < june2start.getTime() ) {
         startTimeMS += (dept.interviewLength * minMS)          
         callback(null, startTimeMS)          
@@ -339,6 +345,7 @@ function createSchedulePerInterviewer(dept, done) {
         appointment.department = dept    
         console.log('start time: ' + new Date(startTimeMS))
         appointment.appointment = new Date(startTimeMS)          
+        
         appointment.save((err) => {      
           startTimeMS += (dept.interviewLength * minMS)          
           callback(err, startTimeMS)          

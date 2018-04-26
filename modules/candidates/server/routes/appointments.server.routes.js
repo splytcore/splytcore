@@ -11,11 +11,13 @@ module.exports = function(app) {
   //setup after config departments are set
   //create schedule for all depts
   app.route('/api/appointments/init')
-    .get(appointments.dropCollection, appointments.createAppointmentScheduleForAllDepartment)
+    .post(appointments.createAppointmentScheduleForAllDepartment)
+    .delete(appointments.dropCollection)
   
-  //create schedule per dept  
-  app.route('/api/appointments/createSchedule/:department')
-    .get(appointments.createAppointmentScheduleByDepartment)
+  //create/delete schedule per dept  
+  app.route('/api/appointments/manage/:departmentId')
+    .post(appointments.createAppointmentScheduleByDepartment)
+    .delete(appointments.deleteAppointmentScheduleByDepartment)
   //end setup
 
   
