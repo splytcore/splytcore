@@ -38,9 +38,12 @@
     <a ng-repeat="candidate in vm.candidates"
        ui-sref="candidates.edit({ candidateId: candidate._id })"
        class="list-group-item">
-      <h4 class="list-group-item-heading">{{ candidate.lastName }}, {{candidate.firstName }} <br/> {{ candidate.email }} POSITION: {{candidate.position.display}} DEPARTMENT: {{candidate.department.display}}
+      <h4 class="list-group-item-heading">
+        {{ candidate.lastName }}, {{candidate.firstName }} </br>         
+        POSITION: {{candidate.position.display}} </br>
+        DEPARTMENT: {{candidate.department.display}}
       <strong class="pull-right" ng-show="candidate.lockedBy"> Locked by {{ candidate.lockedBy.displayName }} </strong>
-      <strong class="pull-right"> appointment: {{ candidate.appointment | date: 'hh:mm a MM/dd/yyyy' }} </strong>
+      <strong class="pull-right" ng-show="candidate.appointment"> {{ candidate.appointment.appointment | date: 'hh:mm a MM/dd/yyyy' }} </strong>
       </h4>
       
     </a>

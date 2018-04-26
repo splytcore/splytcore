@@ -22,9 +22,8 @@
        ui-sref="appointments.edit({ appointmentId: appt._id })"
        class="list-group-item">
       <h4 class="list-group-item-heading" >
-        {{appt.candidate ? appt.candidate.lastName : 'OPEN'}}
-        <span ng-bind="appt.appointment | date: 'hh:mm:ss a MM/dd/yyyy'"> </span>
-        <span ng-bind="appt.department.display"> </span>
+        {{appt.candidate ? appt.candidate.lastName + ',' + appt.candidate.firstName : 'OPEN'}}                
+        <span class="pull-right"> {{ appt.appointment | date: 'hh:mm:ss a MM/dd/yyyy'}}@{{ appt.department.display }}</span>        
       </h4>      
     </a>
   </div>

@@ -23,7 +23,8 @@
        ui-sref="positions.edit({ positionId: position._id })"
        class="list-group-item">
       <h4 class="list-group-item-heading">
-        {{ position }}
+        {{ position.display }}
+        <span class="pull-right"> {{position.department.display}} </span>
       </h4>      
     </a>
   </div>
