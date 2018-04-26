@@ -31,7 +31,7 @@
 
 
     function listByDept() {
-      console.log('departmetn: ' + vm.department)
+      // console.log('departmetn: ' + vm.department)
       PositionsService.listByDept(vm.department._id)
         .success((res) => {
           vm.positions = res

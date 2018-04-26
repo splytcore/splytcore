@@ -18,7 +18,7 @@
       let limit = $state.params.limit ? $state.params.limit : 10
       CandidatesService.listCheckins(page, limit)
         .success((res) => {
-          console.log(res)
+          // console.log(res)
           vm.candidates = res
         })
         .error((res) => {

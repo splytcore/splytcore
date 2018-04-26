@@ -43,7 +43,7 @@
       if ($window.confirm('Are you sure you want to delete?')) {        
         PositionsService.remove(vm.position._id)
           .success((res) => {
-            console.log(res) 
+            
             vm.success = res.message                 
             $state.go('candidates.list')
           })
@@ -59,7 +59,7 @@
       console.log(vm.position)
       PositionsService.create(vm.position)
         .success((res) => {
-          console.log(res) 
+          
           vm.success = res.message                             
         })
         .error((res) => {
@@ -73,7 +73,7 @@
 
       PositionsService.update(vm.position)
         .success((res) => {
-          console.log(res)
+          
           vm.success = res.message
         })
         .error((res) => {

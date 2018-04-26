@@ -35,7 +35,7 @@
       if ($window.confirm('Are you sure you want to delete?')) {        
         DepartmentsService.remove(vm.department._id)
           .success((res) => {
-            console.log(res) 
+            // console.log(res) 
             vm.success = res.message                 
             $state.go('departments.list')
           })
@@ -50,7 +50,7 @@
     function create() {      
       DepartmentsService.create(vm.department)
         .success((res) => {
-          console.log(res) 
+          // console.log(res) 
           vm.success = res.message                             
         })
         .error((res) => {
@@ -64,7 +64,7 @@
 
       DepartmentsService.update(vm.department)
         .success((res) => {
-          console.log(res)
+          // console.log(res)
           vm.success = res.message
         })
         .error((res) => {

@@ -20,8 +20,7 @@
     vm.create = create
 
     ReviewsService.get($state.params.candidateId)
-      .success((res) => {
-        console.log(res)          
+      .success((res) => {        
         vm.review = res          
       })
       .error((res) => {
@@ -33,8 +32,7 @@
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {        
         ReviewsService.remove(vm.candidate._id)
-          .success((res) => {
-            console.log(res) 
+          .success((res) => {            
             vm.success = res.message                 
             $state.go('candidates.list')
           })
@@ -49,8 +47,7 @@
     function create() {
       
       ReviewsService.create($state.params.candidateId, vm.review)
-        .success((res) => {
-          console.log(res) 
+        .success((res) => {          
           vm.success = res.message                             
         })
         .error((res) => {
@@ -64,7 +61,6 @@
 
       ReviewsService.update(vm.review)
         .success((res) => {
-          console.log(res)
           vm.success = res.message
         })
         .error((res) => {
