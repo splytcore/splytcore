@@ -25,6 +25,12 @@ exports.invokeRolesPolicies = function () {
                   ],
       permissions: ['get','post', 'put', 'delete']
     }]
+  }, {
+    roles: ['guest'],
+    allows: [{
+      resources: '/api/candidates/:candidateId', //I guess we have to allow guest to view candidate so they can check in
+      permissions: ['get']
+    }]    
   }])
 }
 

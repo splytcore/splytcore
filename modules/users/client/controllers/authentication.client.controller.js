@@ -8,15 +8,15 @@ angular.module('users').controller('AuthenticationController', ['DepartmentsServ
     // Get an eventual error defined in the URL query string:
     $scope.error = $location.search().err;
 
-    DepartmentsService.list()
-      .success((res) => {
-         console.log(res)
-        $scope.departments = res
-      })
-      .error((err) => {
-        console.log(err)
-      })    
-
+    if (!$scope.departments) {
+      DepartmentsService.list()
+        .success((res) => {       
+          $scope.departments = res
+        })
+        .error((err) => {
+          console.log(err)
+        })    
+    }
 
     // If user is signed in then redirect back home    
     if ($scope.authentication.user) {

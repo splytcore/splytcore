@@ -66,8 +66,7 @@
         templateUrl: 'modules/candidates/client/views/form-candidate.client.view.html',
         controller: 'CandidatesController',
         controllerAs: 'vm',
-        data: {          
-          roles: ['admin','user'],
+        data: {                    
           pageTitle: 'Edit Candidate {{ candidateResolve.name }}'
         }
       })            

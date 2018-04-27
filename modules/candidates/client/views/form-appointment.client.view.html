@@ -9,13 +9,13 @@
     <label class="control-label" for="department">Department</label>
     <span class="form-control" ng-bind="vm.appointment.department.display" disabled> </span>
     
-    <label class="control-label" for="candidateName">Candidate</label>
-  
-    <span class="form-control" d> 
+    <label class="control-label" for="candidateName">Candidate</label>  
+    <span class="form-control" disabled> 
       {{vm.appointment.candidate ? vm.appointment.candidate.firstName + ' ' + vm.appointment.candidate.lastName : '' }} 
     </span>
     
     <div class="form-group">      
+      <label class="control-label" for="candidate">Candidate Id</label>      
       <input name="candidate" type="text" ng-model="vm.appointment.candidate._id" id="candidate" class="form-control" placeholder="candidate id">
     </div>
 
