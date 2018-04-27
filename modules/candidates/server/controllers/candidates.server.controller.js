@@ -163,7 +163,7 @@ exports.sendRegisteredText = function(req, res) {
     to: '+1' + candidate.sms,  // Text this number
     from: config.twilio.from // From a valid Twilio number
   })
-  .then((message) => {
+  .then((result) => {
     return res.send({
       message: `Successfully sent SMS to ${candidate.sms} `
     })
@@ -570,8 +570,7 @@ function runStageChanged(req, res) {
           to: '+1' + candidate.sms,  // Text this number
           from: config.twilio.from // From a valid Twilio number
         })
-        .then((message) => {      
-          console.log('message for successful passing: ' + message)
+        .then((result) => {                
           global.emitRejectCandidate ? global.emitRejectCandidate(candidate) : null  // jshint ignore:line
           resolve()
         })

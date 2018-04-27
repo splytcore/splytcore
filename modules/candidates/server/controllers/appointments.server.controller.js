@@ -53,10 +53,9 @@ exports.setAppointment = function(candidate) {
           to: '+1' + candidate.sms,  // Text this number
           from: config.twilio.from // From a valid Twilio number
         })
-        .then((message) => {          
+        .then((result) => {          
           candidate.appointment = appt //this is temp. only used for emiting correct appointment.
-          global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
-          console.log('message for successful passing: ' + message)    
+          global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line          
           next(null, appt)
         })
         .catch((err) => {
@@ -195,15 +194,16 @@ exports.update = function(req, res) {
       let apptString = momenttz(newAppt.appointment).tz('America/Los_Angeles').format('h:mm a z M/D/YYYY')
       console.log('appt time in PST: ' + apptString)
       let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
+      console.log('sms:' + candidate.sms)
       client.messages.create({
         body: message,
         to: '+1' + candidate.sms,  // Text this number
         from: config.twilio.from // From a valid Twilio number
       })
-      .then((message) => {          
+      .then((result) => {          
         candidate.appointment = newAppt //this is temp. only used for emiting correct appointment.
         global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
-        console.log('message for successful passing: ' + message)    
+        // console.log(result)    
         cb()
       })
       .catch((err) => {

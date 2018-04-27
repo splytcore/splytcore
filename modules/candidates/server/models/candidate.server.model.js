@@ -9,7 +9,7 @@ const path = require('path')
 const config = require(path.resolve('./config/config'))
 const validator = require('validator')
 const _ = require('lodash')
-
+const Appointment = mongoose.model('Appointment')
 
 /**
 
@@ -154,7 +154,6 @@ CandidateSchema.pre('save', function (next) {
 //binds appointment time with appointment  object
 CandidateSchema.post('init', (candidate, next) => {    
   console.log('feetchign appiontment for ' + candidate._id)
-  let Appointment = mongoose.model('Appointment')
   Appointment.findOne({ candidate: candidate }).exec((err, appt) => {        
     candidate.appointment = appt ? appt : null   
     next(err)

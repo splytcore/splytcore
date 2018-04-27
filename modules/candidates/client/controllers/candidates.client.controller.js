@@ -21,6 +21,7 @@
     vm.unlock = unlock
     vm.lock = lock
     vm.reviewPage = reviewPage
+    vm.appointmentPage = appointmentPage
     
     CandidatesService.listAllEnumValues()
       .success((res) => {
@@ -57,6 +58,15 @@
         console.log('failure')
         console.log(res)
       })  
+
+
+    function appointmentPage() {      
+      if (vm.candidate.appointment) {
+        $state.go('appointments.edit', { appointmentId: vm.candidate.appointment._id })
+      } else {
+        alert('sorry no appointment found')
+      }
+    }
 
 
     function reviewPage() {

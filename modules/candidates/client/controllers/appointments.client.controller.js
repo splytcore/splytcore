@@ -51,7 +51,7 @@
           .success((res) => {
             // console.log(res) 
             vm.success = res.message                 
-            $state.go('appointments.list')
+            
           })
           .error((res) => {
             console.log('failure')
