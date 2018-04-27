@@ -12,35 +12,27 @@ const errorHandler = require(path.resolve('./modules/core/server/controllers/err
 const _ = require('lodash')
 
 const config = require(path.resolve('./config/config'))
-const nodemailer = require('nodemailer')
-const crypto = require('crypto')
-const smtpTransport = nodemailer.createTransport(config.mailer.options)
 
 const twilio = require('twilio')
 const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
 
 
-//TODO: common functions
-exports.sendSMS = function(msg, receiver) {  
 
+exports.sendSMS = function(sms, msg) {  
+  console.log('sms: ' + sms)
+  console.log('message: ' + msg)
+  
   return client.messages.create({
     body: msg,
-    to: '+1' + receiver,  // Text this number
+    to: '+1' + sms,  // Text this number
     from: config.twilio.from // From a valid Twilio number
-  })
-  .then((message) => {      
-    console.log('message successfull sent')    
-  })
-  .catch((err) => {
-    console.log('sms error')
-    console.log(err)
   })
 
 }
 
-exports.sendEmail = function(msg, title, receiever) {
-  
+exports.validatePhone = function(phone) {  
 
+  return twilioClient.phoneNumbers(phone).fetch()
 
 }

@@ -21,11 +21,9 @@ const nodemailer = require('nodemailer')
 const crypto = require('crypto')
 const smtpTransport = nodemailer.createTransport(config.mailer.options)
 
-const twilio = require('twilio')
-const client = new twilio(config.twilio.SID, config.twilio.authToken)
-const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
-
 const momenttz = require('moment-timezone')
+
+const commons = require(path.resolve('./modules/candidates/server/controllers/commons.server.controller'))
 
 //@desc creates a schedule in x increments from now
 exports.setAppointment = function(candidate) {
@@ -48,21 +46,18 @@ exports.setAppointment = function(candidate) {
         let apptString = momenttz(appt.appointment).tz('America/Los_Angeles').format('h:mm a z M/D/YYYY')
         console.log(apptString)
         let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
-        client.messages.create({
-          body: message,
-          to: '+1' + candidate.sms,  // Text this number
-          from: config.twilio.from // From a valid Twilio number
-        })
-        .then((result) => {          
-          candidate.appointment = appt //this is temp. only used for emiting correct appointment.
-          global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line          
-          next(null, appt)
-        })
-        .catch((err) => {
-          console.log('sms error')
-          console.log(err)
-          next(err)
-        })
+        
+        commons.sendSMS(candidate.sms, message)
+          .then((result) => {          
+            candidate.appointment = appt //this is temp. only used for emiting correct appointment.
+            global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line          
+            next(null, appt)
+          })
+          .catch((err) => {
+            console.log('sms error')
+            console.log(err)
+            next(err)
+          })
       }
     ], (err, appt) => {
       if (err) {
@@ -178,39 +173,34 @@ exports.update = function(req, res) {
     },    
     function removeCandidateFromOldAppt(candidate, cb) {                                                                         
       Appointment.findOneAndUpdate({ candidate: candidate }, { candidate: null }).exec((err, appt) => {
-        console.log('removing ref from ')
-        console.log(appt)
+        // console.log('removing ref from ')
+        // console.log(appt)
         cb(err, candidate)
       })
     },
     function updateNewAppt(candidate, cb) {              
       newAppt.candidate = candidate
       newAppt.save((err) => {
-        cb(err, candidate)
+        cb(err)
       })  
     },    
-    function sendApptSMS(candidate, cb) {           
+    function sendApptSMS(cb) {           
       console.log('appt time in GMT : ' + newAppt.appointment)              
       let apptString = momenttz(newAppt.appointment).tz('America/Los_Angeles').format('h:mm a z M/D/YYYY')
       console.log('appt time in PST: ' + apptString)
-      let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
-      console.log('sms:' + candidate.sms)
-      client.messages.create({
-        body: message,
-        to: '+1' + candidate.sms,  // Text this number
-        from: config.twilio.from // From a valid Twilio number
-      })
-      .then((result) => {          
-        candidate.appointment = newAppt //this is temp. only used for emiting correct appointment.
-        global.emitInterviewCandidate ? global.emitInterviewCandidate(candidate) : null  // jshint ignore:line
-        // console.log(result)    
-        cb()
-      })
-      .catch((err) => {
-        console.log('sms error')
-        console.log(err)
-        cb(err)
-      })    
+      let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${newAppt.candidate.department.display} department at ${apptString}`
+            
+      commons.sendSMS(newAppt.candidate.sms, message)
+        .then((result) => {
+          // candidate.appointment = newAppt //this is temp. only used for emiting correct appointment.
+          global.emitInterviewCandidate ? global.emitInterviewCandidate(newAppt.candidate) : null // jshint ignore:line
+          cb()
+        })
+        .catch((err) => {
+          // console.log('sms error')
+          // console.log(err)
+          cb(err)
+        })    
     }
   ], (err) => {
     if (err) {

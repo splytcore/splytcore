@@ -24,10 +24,7 @@ const nodemailer = require('nodemailer')
 const crypto = require('crypto')
 const smtpTransport = nodemailer.createTransport(config.mailer.options)
 
-const twilio = require('twilio')
-const client = new twilio(config.twilio.SID, config.twilio.authToken)
 const multer = require('multer') 
-const twilioClient = twilio(config.twilio.SID, config.twilio.authToken).lookups.v1
 const PDFImagePack = require('pdf-image-pack')
 
 const fs = require('fs')
@@ -35,6 +32,7 @@ const AWS = require('aws-sdk')
 const multerS3 = require('multer-s3')
 
 const s3 = new AWS.S3(config.S3)
+const commons = require(path.resolve('./modules/candidates/server/controllers/commons.server.controller'))
 
 /**
  * Create a Candidate
@@ -157,24 +155,22 @@ exports.registerFromMobile = function(req, res) {
  * Send a SMS message confirming successful registration to a candidate (given a valid @email)
  */
 exports.sendRegisteredText = function(req, res) {
+
   let candidate = req.candidate
-  client.messages.create({
-    body: 'Blockchains: Thank you for checking in. We will text you soon with further instructions.',
-    to: '+1' + candidate.sms,  // Text this number
-    from: config.twilio.from // From a valid Twilio number
-  })
-  .then((result) => {
-    return res.send({
-      message: `Successfully sent SMS to ${candidate.sms} `
+  let message = 'Blockchains: Thank you for checking in. We will text you soon with further instructions.'
+
+  commons.sendSMS(candidate.sms, message)
+    .then((result) => {
+      res.send({
+        message: `Successfully sent SMS to ${candidate.sms} `
+      })
     })
-  })
-  .catch((err) => {
-    console.log('sms error')
-    console.log(err)
-    return res.status(400).send({
-      message: err
+    .catch((err) => {
+      return res.status(400).send({
+        message: err
+      })
     })
-  })
+
 }
 
 /**
@@ -564,21 +560,18 @@ function runStageChanged(req, res) {
   return new Promise((resolve, reject) => {
     switch (req.body.stage) {
       case 'REJECT':
-      case 'DEFER':        
-        client.messages.create({
-          body: 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!',
-          to: '+1' + candidate.sms,  // Text this number
-          from: config.twilio.from // From a valid Twilio number
-        })
-        .then((result) => {                
-          global.emitRejectCandidate ? global.emitRejectCandidate(candidate) : null  // jshint ignore:line
-          resolve()
-        })
-        .catch((err) => {
-          console.log('sms error')
-          console.log(err)
-          reject()
-        })
+      case 'DEFER':                
+        let message = 'Blockchains: You do not have the skillz to pay the billz but you can enjoy the snacks and drinks you free loader!'
+        commons.sendSMS(candidate.sms, message)
+          .then((result) => {
+            global.emitRejectCandidate ? global.emitRejectCandidate(candidate) : null  // jshint ignore:line
+            resolve()
+          })
+          .catch((err) => {
+            console.log('sms error')
+            console.log(err)
+            reject(err)
+          })        
         break
       case 'INTERVIEW':
         appointments.setAppointment(candidate)
@@ -637,9 +630,8 @@ exports.validatePhone = function(req, res) {
   console.log(req.params.phone)
   let phone = '+1' + req.params.phone
 
-  twilioClient.phoneNumbers(phone).fetch()
+  commons.validatePhone(phone)
     .then((number) => {        
-      console.log(number)
       res.jsonp({ message: 'success' })
     })
     .catch((err) => {
