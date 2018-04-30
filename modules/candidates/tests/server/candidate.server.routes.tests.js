@@ -33,12 +33,12 @@ describe('Candidate Load testing', () => {
   })
 
 
-  it('should be able to register x candidates from tablet', (done) => {    
+  it('should be able to register 1000 candidates for position 1 from mobile', (done) => {    
     
-    let times = 100000
+    let times = 1000
     let cnt = 0
     let complete = false
-    
+
     let registration = setInterval(function register() {
       let email = Date.now() + '@fakemailfsdfds.com'
       let candidate = { 
@@ -46,10 +46,9 @@ describe('Candidate Load testing', () => {
         firstName: random.first() , 
         email: email,
         sms: '2136180615',
-        position: positions[0],
+        position: positions[1],
         registeredFrom: 'MOBILE'
       }
-
       agent
         .post('/api/register/MOBILE')
         .send(candidate)
@@ -65,10 +64,45 @@ describe('Candidate Load testing', () => {
             return done()
           }
         })          
-    } ,10); //1000 for every second
+    } ,100); //1000 for every second
 
   })
 
+
+  it('should be able to register 1000 candidates for position 2 from mobile device', (done) => {    
+    
+    let times = 1000
+    let cnt = 0
+    let complete = false
+
+    let registration = setInterval(function register() {
+      let email = Date.now() + '@fakemailfsdfds.com'
+      let candidate = { 
+        lastName: random.last(), 
+        firstName: random.first() , 
+        email: email,
+        sms: '2136180615',
+        position: positions[2],
+        registeredFrom: 'MOBILE'
+      }
+      agent
+        .post('/api/register/MOBILE')
+        .send(candidate)
+        .expect(200)
+        .end((err, res) => {
+          // Handle signin error        
+          console.log(err ? 'create candidate error: ' + err.toString() : '')               
+          cnt++
+          console.log('counter: ' + cnt)
+          if (cnt > times && !complete) {
+            complete = true
+            clearInterval(registration);
+            return done()
+          }
+        })          
+    } ,100); //1000 for every second
+
+  })
 
   // afterEach((done) => {
   //   User.remove().exec(() => {      
