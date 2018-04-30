@@ -153,7 +153,7 @@ CandidateSchema.pre('save', function (next) {
 
 //binds appointment time with appointment  object
 CandidateSchema.post('init', (candidate, next) => {    
-  console.log('feetchign appiontment for ' + candidate._id)
+  // console.log('feetchign appiontment for ' + candidate._id)
   Appointment.findOne({ candidate: candidate }).exec((err, appt) => {        
     candidate.appointment = appt ? appt : null   
     next(err)

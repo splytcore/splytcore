@@ -25,7 +25,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user'],
+    roles: ['user','admin'],
     allows: [{
       resources: ['/api/appointments', 
                   '/api/appointments/department/:department/open',
