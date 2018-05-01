@@ -70,7 +70,6 @@ describe('Candidate Load testing', () => {
 
     let times = 100
     let cnt = 0
-    let complete = false
 
     let list = setInterval(() => {
       request
@@ -81,8 +80,7 @@ describe('Candidate Load testing', () => {
           console.log(err ? 'list candidate error: ' + err.toString() : '')               
           cnt++
           console.log('counter: ' + cnt)
-          if (cnt > times && !complete) {
-            complete = true
+          if (cnt > times) {            
             clearInterval(list);
             return done()
           }

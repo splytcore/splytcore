@@ -1,13 +1,11 @@
 {
   "apps" : [{
-    "name"        : "CHECKIN",
+    "name"        : "checkin",
     "script"      : "gulp",
     "watch"       : false,
     // "env": {
-    //   "NODE_ENV": "dev"
+    //   "NODE_ENV": "production"
     // },
-    "args": [
-      "prod"
-    ]
+    "args": ["prod"]
   }]
 }
