@@ -17,8 +17,14 @@
   </div>
 
 
-
   <div class="list-group">
+
+    <div href="#" class="list-group-item active">
+      <h4 class="list-group-item-heading">POSITION
+        <p class="list-group-item-text pull-right">DEPARTMENT</p>
+      </h4>      
+    </div>
+
     <a ng-repeat="position in vm.positions"
        ui-sref="positions.edit({ positionId: position._id })"
        class="list-group-item">
