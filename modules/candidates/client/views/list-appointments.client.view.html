@@ -18,6 +18,12 @@
 
 
   <div class="list-group">
+    <div href="#" class="list-group-item active">
+      <h4 class="list-group-item-heading">NAME
+        <p class="list-group-item-text pull-right">APPOINTMENT</p>
+      </h4>      
+    </div>
+
     <a ng-repeat="appt in vm.appointments"
        ui-sref="appointments.edit({ appointmentId: appt._id })"
        class="list-group-item">
