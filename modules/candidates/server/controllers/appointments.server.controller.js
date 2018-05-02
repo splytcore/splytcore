@@ -232,25 +232,32 @@ exports.delete = function(req, res) {
 }
 
 //@desc cancel appt by candidates responding by SMS
+//Current Twilio has it set to scotts server
+//TODO: switch to instance gage set up
 exports.cancelBySMS = function(req, res) {
   
   console.log('cancel by SMS body:')
-  console.log(req.body)  
+  console.log(req.body)    
 
-  let sms = req.body.sms
+  let sms = req.body.From.replace('+1', '')
+  let responseString = req.body.Body.toUpperCase()
+  console.log('tele: ' + sms)
 
-  Appointment.findOneAndUpdate({ sms: sms }, { candidate: null }).exec((err, appt) => {
-    if (err) {
-      console.log(err)
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
-    }     
-    if (!appt) {      
-      return res.status(400).send({ message: 'appointment not found by number' })
-    }     
+  if (responseString.indexOf('CANCEL') > -1) {
+    Appointment.findOneAndUpdate({ sms: sms }, { candidate: null }).exec((err, appt) => {
+      if (err) {
+        console.log(err)
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+      }     
+      if (!appt) {      
+        return res.status(400).send({ message: 'appointment not found by number' })
+      }     
 
-    res.jsonp({ message: 'success!' })        
-  })
-    
+      res.jsonp({ message: 'success!' })        
+    })
+  } else {
+    res.jsonp({ message: 'candidate SMS texted backed with ' + responseString })        
+  }
 }
 
 exports.createAppointmentScheduleForAllDepartment = function(req, res) {
