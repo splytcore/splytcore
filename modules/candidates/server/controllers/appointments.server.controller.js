@@ -46,7 +46,7 @@ exports.setAppointment = function(candidate) {
         let apptString = momenttz(appt.appointment).tz('America/Los_Angeles').format('h:mm a z M/D/YYYY')
         console.log(apptString)
         let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
-        message += 'If you would like to cancel your appoint please reply with cancel'              
+        message += 'If you would like to cancel your appoint please reply with 1'              
         commons.sendSMS(candidate.sms, message)
           .then((result) => {          
             candidate.appointment = appt //this is temp. only used for emiting correct appointment.
@@ -189,7 +189,7 @@ exports.update = function(req, res) {
       let apptString = momenttz(newAppt.appointment).tz('America/Los_Angeles').format('h:mm a z M/D/YYYY')
       console.log('appt time in PST: ' + apptString)
       let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${newAppt.candidate.department.display} department at ${apptString}.`
-      message += 'If you would like to cancel your appoint please reply with cancel'      
+      message += 'If you would like to cancel your appoint please reply with 1'      
       commons.sendSMS(newAppt.candidate.sms, message)
         .then((result) => {
           // candidate.appointment = newAppt //this is temp. only used for emiting correct appointment.
@@ -252,10 +252,10 @@ exports.cancelBySMS = function(req, res) {
   console.log(req.body)    
 
   let sms = req.body.From.replace('+1', '')
-  let responseString = req.body.Body.toUpperCase()
+  let responseInt = parseInt(req.body.Body)
   console.log('tele: ' + sms)
 
-  if (responseString.indexOf('CANCEL') > -1) {
+  if (responseInt === 1) {
     async.waterfall([
       function findCandidate(next) {
         Candidate.findOne({sms: sms}).exec((err, candidate) => {
@@ -294,7 +294,7 @@ exports.cancelBySMS = function(req, res) {
       res.jsonp({ message: 'appointment canceled succssfully!' })        
     })        
   } else {
-    res.jsonp({ message: 'candidate SMS texted backed with ' + responseString })        
+    res.jsonp({ message: 'candidate SMS texted backed with ' + responseInt })        
   }
 }
 
