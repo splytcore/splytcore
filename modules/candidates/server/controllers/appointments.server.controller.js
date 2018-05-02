@@ -258,7 +258,7 @@ exports.cancelBySMS = function(req, res) {
     
     async.waterfall([
       function findCandidate(next) {
-        Candidate.findOne({sms: sms}).exec((err, candidate) => {
+        Candidate.findOne({ sms: sms }).exec((err, candidate) => {
           if (!candidate) {
             return res.status(400).send({ message: 'candidate not found' })    
           } else {
@@ -270,8 +270,7 @@ exports.cancelBySMS = function(req, res) {
         Appointment.findOneAndUpdate({ candidate : candidate }, { candidate: null }).exec((err, appt) => {
           if (!appt) {      
             return res.status(400).send({ message: 'appointment not found by candidate' })
-          } else {
-            console.log()
+          } else {            
             next(err)            
           }
         })
