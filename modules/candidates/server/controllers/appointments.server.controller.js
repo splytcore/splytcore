@@ -46,7 +46,7 @@ exports.setAppointment = function(candidate) {
         let apptString = momenttz(appt.appointment).tz('America/Los_Angeles').format('h:mm a z M/D/YYYY')
         console.log(apptString)
         let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${candidate.department.display} department at ${apptString}`
-        
+        message += 'If you would like to cancel your appoint please reply with cancel'              
         commons.sendSMS(candidate.sms, message)
           .then((result) => {          
             candidate.appointment = appt //this is temp. only used for emiting correct appointment.
@@ -188,8 +188,8 @@ exports.update = function(req, res) {
       console.log('appt time in GMT : ' + newAppt.appointment)              
       let apptString = momenttz(newAppt.appointment).tz('America/Los_Angeles').format('h:mm a z M/D/YYYY')
       console.log('appt time in PST: ' + apptString)
-      let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${newAppt.candidate.department.display} department at ${apptString}`
-            
+      let message = `Blockchains: WE LIKA LIKA LIKA YOU ALOT! Please go to the ${newAppt.candidate.department.display} department at ${apptString}.`
+      message += 'If you would like to cancel your appoint please reply with cancel'      
       commons.sendSMS(newAppt.candidate.sms, message)
         .then((result) => {
           // candidate.appointment = newAppt //this is temp. only used for emiting correct appointment.
