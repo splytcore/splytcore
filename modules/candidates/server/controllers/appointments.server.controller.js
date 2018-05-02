@@ -231,6 +231,28 @@ exports.delete = function(req, res) {
 
 }
 
+//@desc cancel appt by candidates responding by SMS
+exports.cancelBySMS = function(req, res) {
+  
+  console.log('cancel by SMS body:')
+  console.log(req.body)  
+
+  let sms = req.body.sms
+
+  Appointment.findOneAndUpdate({ sms: sms }, { candidate: null }).exec((err, appt) => {
+    if (err) {
+      console.log(err)
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+    }     
+    if (!appt) {      
+      return res.status(400).send({ message: 'appointment not found by number' })
+    }     
+
+    res.jsonp({ message: 'success!' })        
+  })
+    
+}
+
 exports.createAppointmentScheduleForAllDepartment = function(req, res) {
 
   console.log('create schedule for all...')  

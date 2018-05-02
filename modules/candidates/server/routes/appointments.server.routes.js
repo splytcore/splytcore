@@ -21,7 +21,10 @@ module.exports = function(app) {
     .delete(appointments.deleteAppointmentScheduleByDepartment)
   //end setup
 
-  
+  app.route('/api/appointments/cancelBySMS')
+    .post(appointments.cancelBySMS)
+    .get(appointments.cancelBySMS)
+
   app.route('/api/appointments/department/:department/open').all(appointmentsPolicy.isAllowed)
     .get(appointments.listByOpenApptsAndDept)
 
@@ -30,6 +33,7 @@ module.exports = function(app) {
 
   app.route('/api/appointments').all(appointmentsPolicy.isAllowed)
     .get(appointments.list) 
+    
 
   //@desc this sets new appointment with reference to the candidate
   //It removes candidate reference from old appt so it will be open to use  
