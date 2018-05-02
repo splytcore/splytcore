@@ -253,9 +253,9 @@ exports.cancelBySMS = function(req, res) {
 
   let sms = req.body.From.replace('+1', '')
   let responseString = req.body.Body.toUpperCase()
-  console.log('tele: ' + sms)
-
+  console.log('tele: ' + sms)                              
   if (responseString.indexOf('DECLINE') > -1) {
+    
     async.waterfall([
       function findCandidate(next) {
         Candidate.findOne({sms: sms}).exec((err, candidate) => {
@@ -266,11 +266,12 @@ exports.cancelBySMS = function(req, res) {
           }
         })
       },
-      function findAppointment(candidate, next) {
+      function findAppointment(candidate, next) {        
         Appointment.findOneAndUpdate({ candidate : candidate }, { candidate: null }).exec((err, appt) => {
           if (!appt) {      
-            return res.status(400).send({ message: 'appointment not found by number' })
+            return res.status(400).send({ message: 'appointment not found by candidate' })
           } else {
+            console.log()
             next(err)            
           }
         })
