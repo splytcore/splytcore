@@ -218,16 +218,28 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   
   let appt = req.appointment  
+  let sms = appt.candidate.sms
   appt.candidate = null
   appt.save((err) => {
     if (err) {
-      console.log(err)      
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    }       
-    res.jsonp({ message: 'success' })
+    }           
   })
+  
+  let message = 'Your appointment have been canceled. If you would like to reschedule, please see a staff member.'
+  commons.sendSMS(sms, message)
+    .then(() => {
+      console.log('success cancel sms sent')
+      res.jsonp({ message: 'success' })
+    })
+    .catch((err) => {          
+      console.log(err)
+      return res.status(400).send({
+        message: 'error sending sms cancel appointment'
+      })      
+    })  
 
 }
 
@@ -244,17 +256,43 @@ exports.cancelBySMS = function(req, res) {
   console.log('tele: ' + sms)
 
   if (responseString.indexOf('CANCEL') > -1) {
-    Appointment.findOneAndUpdate({ sms: sms }, { candidate: null }).exec((err, appt) => {
+    async.waterfall([
+      function findCandidate(next) {
+        Candidate.findOne({sms: sms}).exec((err, candidate) => {
+          if (!candidate) {
+            return res.status(400).send({ message: 'candidate not found' })    
+          } else {
+            next(err, candidate)
+          }
+        })
+      },
+      function findAppointment(candidate, next) {
+        Appointment.findOneAndUpdate({ candidate : candidate }, { candidate: null }).exec((err, appt) => {
+          if (!appt) {      
+            return res.status(400).send({ message: 'appointment not found by number' })
+          } else {
+            next(err)            
+          }
+        })
+      },
+      function sendCancelSMS(next) {
+        let message = 'Your appointment have been canceled. If you would like to reschedule, please see a staff member.'
+        commons.sendSMS(sms, message)
+          .then(() => {
+            console.log('success cancel sms sent')
+            next()
+          })
+          .catch((err) => {          
+            return res.status(400).send({ message: 'Error sending sms canceling appointment' })
+          })    
+      }
+    ], (err) => {
       if (err) {
         console.log(err)
         return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
       }     
-      if (!appt) {      
-        return res.status(400).send({ message: 'appointment not found by number' })
-      }     
-
-      res.jsonp({ message: 'success!' })        
-    })
+      res.jsonp({ message: 'appointment canceled succssfully!' })        
+    })        
   } else {
     res.jsonp({ message: 'candidate SMS texted backed with ' + responseString })        
   }

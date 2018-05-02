@@ -21,9 +21,9 @@ module.exports = function(app) {
     .delete(appointments.deleteAppointmentScheduleByDepartment)
   //end setup
 
+  //Twilio calls this api when candidate cancels by SMS
   app.route('/api/appointments/cancelBySMS')
-    .post(appointments.cancelBySMS)
-    .get(appointments.cancelBySMS)
+    .post(appointments.cancelBySMS)    
 
   app.route('/api/appointments/department/:department/open').all(appointmentsPolicy.isAllowed)
     .get(appointments.listByOpenApptsAndDept)
