@@ -14,6 +14,8 @@
     vm.findCandidate = findCandidate
 
     vm.buildPager = function () {
+      vm.sortKey = 'lastName'
+      vm.sortReverse = false
       vm.pagedItems = []
       vm.itemsPerPage = 10
       vm.currentPage = 1

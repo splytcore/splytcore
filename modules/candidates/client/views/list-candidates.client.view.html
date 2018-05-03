@@ -36,16 +36,18 @@
 
   <div class="list-group">
     <div href="#" class="list-group-item active ">
+      {{vm.sortKey}}{{vm.sortReverse}}
+
       <h4 class="list-group-item-heading row">
-        <span class="col-sm-3">CANDIDATE</span>
-        <span class="col-sm-3">POSITION</span>
-        <span class="col-sm-2">DEPARTMENT</span>
-        <span class="col-sm-2">APPOINTMENT</span>
-        <span class="col-sm-2">LOCKED BY</span>
+        <span class="col-sm-3" ng-click="vm.sortKey = 'lastName'; vm.sortReverse = !vm.sortReverse">CANDIDATE</span>
+        <span class="col-sm-3" ng-click="vm.sortKey = 'position.name'; vm.sortReverse = !vm.sortReverse">POSITION</span>
+        <span class="col-sm-2" ng-click="vm.sortKey = 'department.name'; vm.sortReverse = !vm.sortReverse">DEPARTMENT</span>
+        <span class="col-sm-2" ng-click="vm.sortKey = 'appointment'; vm.sortReverse = !vm.sortReverse">APPOINTMENT</span>
+        <span class="col-sm-2" ng-click="vm.sortKey = 'lockedBy'; vm.sortReverse = !vm.sortReverse">LOCKED BY</span>
       </h4>      
     </div>
  
-    <a ng-repeat="candidate in vm.pagedItems"
+    <a ng-repeat="candidate in vm.pagedItems | orderBy:vm.sortKey:vm.sortReverse"
        ui-sref="candidates.edit({ candidateId: candidate._id })"
        class="list-group-item">
       <h4 class="list-group-item-heading row">
