@@ -12,10 +12,18 @@
     vm.applyFilters = applyFilters
 
     vm.findCandidate = findCandidate
+    vm.sortKey = 'lastName'
+    vm.sortReverse = false
+
+
+    vm.sortData = function (sortKey){
+      vm.sortKey = sortKey 
+      vm.sortReverse = !vm.sortReverse
+      vm.candidates = $filter('orderBy')(vm.candidates, vm.sortKey, vm.sortReverse)
+      vm.buildPager()
+    }
 
     vm.buildPager = function () {
-      vm.sortKey = 'lastName'
-      vm.sortReverse = false
       vm.pagedItems = []
       vm.itemsPerPage = 10
       vm.currentPage = 1

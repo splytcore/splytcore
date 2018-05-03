@@ -20,13 +20,13 @@
   <div class="list-group">
     <div href="#" class="list-group-item active">
       <h4 class="list-group-item-heading row">
-        <span class="col-sm-4">CANDIDATE</span>        
-        <span class="col-sm-4">APPOINTMENT</span>                
-        <span class="col-sm-4">DEPARTMENT</span>                
+        <span class="col-sm-4" ng-click="vm.sortData('candidate.lastName')">CANDIDATE</span>        
+        <span class="col-sm-4" ng-click="vm.sortData('appointment')">APPOINTMENT</span>                
+        <span class="col-sm-4" ng-click="vm.sortData('department.name')">DEPARTMENT</span>                
       </h4>      
     </div>
 
-    <a ng-repeat="appt in vm.pagedItems"
+    <a ng-repeat="appt in vm.pagedItems | orderBy:vm.sortKey:vm.sortReverse"
        ui-sref="appointments.edit({ appointmentId: appt._id })"
        class="list-group-item">
       <h4 class="list-group-item-heading row">

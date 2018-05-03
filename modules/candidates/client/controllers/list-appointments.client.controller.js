@@ -6,9 +6,9 @@
     .module('candidates')
     .controller('AppointmentsListController', AppointmentsListController);
 
-  AppointmentsListController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AppointmentsService', 'DepartmentsService'];
+  AppointmentsListController.$inject = ['$filter', '$scope', '$state', '$window', 'Authentication', 'AppointmentsService', 'DepartmentsService'];
 
-  function AppointmentsListController ($scope, $state, $window, Authentication, AppointmentsService, DepartmentsService) {
+  function AppointmentsListController ($filter, $scope, $state, $window, Authentication, AppointmentsService, DepartmentsService) {
     
     var vm = this;
     vm.authentication = Authentication;
@@ -16,6 +16,17 @@
     vm.error = null
     vm.form = {}
     vm.listByDepartment = listByDepartment
+
+    vm.sortKey = 'candidate.lastName'
+    vm.sortReverse = false
+
+    vm.sortData = function (sortKey){
+      vm.sortKey = sortKey 
+      vm.sortReverse = !vm.sortReverse
+      vm.appointments = $filter('orderBy')(vm.appointments, vm.sortKey, vm.sortReverse)
+      vm.buildPager()
+    }
+
 
     vm.buildPager = function () {
       vm.pagedItems = []
