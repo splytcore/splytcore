@@ -42,37 +42,39 @@ describe('Candidate Load testing', () => {
       password: 'g'
     }
 
-  
+    let url = baseURL + 'api/auth/signin'
+    
+    request
+      .post(url)
+      .send(credentials)    
+      .end((err, result) => {
+        if (err) {        
+          console.log('error signin in') 
+          console.log(err)
+          return done(err)
+        }              
+        let setcookie = result.headers["set-cookie"]           
+        console.log('cookie to string: ' + setcookie)
+        let cookies = cookie.parse(setcookie.toString()) 
+        cookieStr = 'sessionId=' + cookies.sessionId
+        console.log(cookieStr)          
+        done()
+      })
+    
+    // let url = baseURL + 'api/positions'
+
+    // console.log(url)    
     // request
-    //   .post(baseURL + 'api/auth/signin')
-    //   .send(credentials)    
+    //   .get(url)
     //   .end((err, result) => {
     //     if (err) {         
     //       console.log(err)
     //       return done(err)
-    //     }              
-    //     let setcookie = result.headers["set-cookie"]           
-    //     console.log('cookie to string: ' + setcookie)
-    //     let cookies = cookie.parse(setcookie.toString()) 
-    //     cookieStr = 'sessionId=' + cookies.sessionId
-    //     console.log(cookieStr)          
+    //     }                      
+    //     console.log('positions length ' + result.body.length)
+    //     positions = result.body                
+    //     done()
     //   })
-    
-    let url = baseURL + 'api/positions'
-
-    console.log(url)    
-    request
-      .get(url)
-      .end((err, result) => {
-        if (err) {         
-          console.log(err)
-          return done(err)
-        }                      
-        console.log(result.body)
-        console.log('positions length ' + result.body.length)
-        positions = result.body                
-        done()
-      })
 
   })
 
@@ -83,40 +85,77 @@ describe('Candidate Load testing', () => {
    })
 
 
-  it('should be able to create 1000 registrations', (done) => {    
+  // it('should be able to create 1000 registrations', (done) => {    
   
-    let times = 1000
-    let cnt = 0
-    let complete = false
+  //   let times = 1000
+  //   let cnt = 0
+  //   let complete = false
 
-    let registration = setInterval(function register() {
-      let email = Date.now() + '@fakemailfsdfds.com'
-      let candidate = { 
-        lastName: random.last(), 
-        firstName: random.first() , 
-        email: email,
-        sms: '2136180615',
-        position: positions[2],
-        registeredFrom: 'WEB'
-      }      
+  //   let registration = setInterval(function register() {
+  //     let email = Date.now() + '@fakemailfsdfds.com'
+  //     let candidate = { 
+  //       lastName: random.last(), 
+  //       firstName: random.first() , 
+  //       email: email,
+  //       sms: '2136180615',
+  //       position: positions[2],
+  //       registeredFrom: 'WEB'
+  //     }      
+  //     request
+  //       .post(baseURL + 'api/register/WEB')
+  //       .send(candidate)
+  //       .end((err, res) => {
+  //         // Handle signin error        
+  //         console.log(err ? 'create candidate error: ' + err.toString() : '')               
+  //         cnt++
+  //         console.log('counter: ' + cnt)
+  //         if (cnt > times && !complete) {
+  //           complete = true
+  //           clearInterval(registration);
+  //           return done()
+  //         }
+  //       })          
+  //   } ,1000); //1000 for every second
+
+
+  // })
+
+
+  it('should be able to checkin 1000 candidates', (done) => {    
+
       request
-        .post(baseURL + 'api/register/WEB')
-        .send(candidate)
+        .get(baseURL + 'api/candidates?stage=REGISTERED')        
+        .set('Cookie', [cookieStr])
         .end((err, res) => {
           // Handle signin error        
-          console.log(err ? 'create candidate error: ' + err.toString() : '')               
-          cnt++
-          console.log('counter: ' + cnt)
-          if (cnt > times && !complete) {
-            complete = true
-            clearInterval(registration);
-            return done()
-          }
-        })          
-    } ,1000); //1000 for every second
-
-
+          console.log(err ? 'get candidates error: ' + err.toString() : '')               
+          console.log('number of results: ' + res.body.length)
+          let candidates = res.body
+          
+          async.each(candidates, (candidate, callback) => {                          
+            console.log(candidate.lastName)
+            let url = baseURL + 'api/candidates/' + candidate._id
+            request
+              .put(url)
+              .set('Cookie', [cookieStr])
+              .send({ stage: 'QUEUE' })
+              .end((err, result) => {
+                if (err) {         
+                  console.log(err)
+                  return done(err)
+                }          
+                console.log(result.body.message)                                            
+                callback()
+              })                        
+          }, (err) => {
+            if(err) {
+              return done(err)
+            }             
+            done()
+          })
+        }) 
   })
+
 
 
   // it('should be able to handle 100 list candidates requests', (done) => {    
