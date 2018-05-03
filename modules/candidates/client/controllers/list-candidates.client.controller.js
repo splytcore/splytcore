@@ -41,8 +41,8 @@
     }
 
     CandidatesService.list()
-      .success((res) => {          
-        vm.candidates = res
+      .success((res) => {                  
+        vm.candidates = $filter('orderBy')(res, vm.sortKey, vm.sortReverse)
         vm.buildPager()
       })
       .error((res) => {

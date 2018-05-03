@@ -364,9 +364,8 @@ exports.unlockCandidate = function(req, res) {
 
 exports.findCandidate = function(req, res) {
   
-  //TODO: mininum length?  
   let search = req.params.search
-  console.log('serach key' + search)
+  
   console.log(search)
   Candidate.find({ $or: [{ lastName: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { sms: search }] })
   .populate('notes.user', 'displayName')  

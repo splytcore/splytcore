@@ -64,12 +64,12 @@
 //             return done()
 //           }
 //         })          
-//     } ,100); //1000 for every second
+//     } ,1000); //1000 for every second
 
 //   })
 
 
-//   it('should be able to register 1000 candidates for position 2 from mobile device', (done) => {    
+//   it('should be able to register 1000 candidates for position 2 from web', (done) => {    
     
 //     let times = 1000
 //     let cnt = 0
@@ -83,10 +83,10 @@
 //         email: email,
 //         sms: '2136180615',
 //         position: positions[2],
-//         registeredFrom: 'MOBILE'
+//         registeredFrom: 'WEB'
 //       }
 //       agent
-//         .post('/api/register/MOBILE')
+//         .post('/api/register/WEB')
 //         .send(candidate)
 //         .expect(200)
 //         .end((err, res) => {
@@ -100,7 +100,7 @@
 //             return done()
 //           }
 //         })          
-//     } ,100); //1000 for every second
+//     } ,1000); //1000 for every second
 
 //   })
 

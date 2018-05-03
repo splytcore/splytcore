@@ -47,8 +47,8 @@
 
 
     AppointmentsService.list()
-      .success((res) => {
-        vm.appointments = res          
+      .success((res) => {        
+        vm.appointments = $filter('orderBy')(res, vm.sortKey, vm.sortReverse)
         vm.buildPager()
       })
       .error((res) => {
