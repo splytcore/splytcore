@@ -58,7 +58,8 @@
       console.log('department: ' + vm.department._id)      
       AppointmentsService.listByDepartment(vm.department._id)
         .success((res) => {
-          vm.appointments = res          
+          vm.appointments = res 
+          vm.buildPager()         
         })
         .error((res) => {
           console.log('failure')

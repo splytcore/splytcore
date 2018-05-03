@@ -366,7 +366,7 @@ exports.findCandidate = function(req, res) {
   
   //TODO: mininum length?  
   let search = req.params.search
-
+  console.log('serach key' + search)
   console.log(search)
   Candidate.find({ $or: [{ lastName: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { sms: search }] })
   .populate('notes.user', 'displayName')  
@@ -377,7 +377,7 @@ exports.findCandidate = function(req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })      
-    } 
+    }     
     res.jsonp(candidates)
   })
 

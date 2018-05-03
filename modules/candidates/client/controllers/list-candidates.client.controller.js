@@ -75,11 +75,10 @@
       vm.filters += vm.stage ? ('&stage='+ vm.stage) : ''
       console.log(vm.filters)            
       CandidatesService.listByFilters(vm.filters)
-        .success((res) => {
-          
+        .success((res) => {          
           console.log('number of results: ' + res.length)
           vm.candidates = res
-
+          vm.buildPager()
         })
         .error((res) => {
           console.log('failure')
@@ -93,6 +92,7 @@
       CandidatesService.findCandidate(vm.search)
         .success((res) => {
           vm.candidates = res
+          vm.buildPager()
         })
         .error((res) => {
           console.log('failure')

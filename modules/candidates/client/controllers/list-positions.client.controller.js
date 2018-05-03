@@ -54,6 +54,7 @@
       PositionsService.listByDept(vm.department._id)
         .success((res) => {
           vm.positions = res
+          vm.buildPager()
         })
         .error((res) => {
           console.log('failure')
