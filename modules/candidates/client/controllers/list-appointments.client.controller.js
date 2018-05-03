@@ -16,10 +16,29 @@
     vm.error = null
     vm.form = {}
     vm.listByDepartment = listByDepartment
-                       
+
+    vm.buildPager = function () {
+      vm.pagedItems = []
+      vm.itemsPerPage = 10
+      vm.currentPage = 1
+      vm.figureOutItemsToDisplay()
+    };
+
+    vm.figureOutItemsToDisplay = function () {
+      let begin = ((vm.currentPage - 1) * vm.itemsPerPage)
+      let end = begin + vm.itemsPerPage
+      vm.pagedItems = vm.appointments.slice(begin, end)
+    }
+
+    vm.pageChanged = function () {      
+      vm.figureOutItemsToDisplay()
+    }
+
+
     AppointmentsService.list()
       .success((res) => {
         vm.appointments = res          
+        vm.buildPager()
       })
       .error((res) => {
         console.log('failure')

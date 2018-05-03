@@ -11,9 +11,28 @@
     var vm = this    
     vm.listByDept = listByDept
 
+
+    vm.buildPager = function () {
+      vm.pagedItems = []
+      vm.itemsPerPage = 10
+      vm.currentPage = 1
+      vm.figureOutItemsToDisplay()
+    };
+
+    vm.figureOutItemsToDisplay = function () {
+      let begin = ((vm.currentPage - 1) * vm.itemsPerPage)
+      let end = begin + vm.itemsPerPage
+      vm.pagedItems = vm.positions.slice(begin, end)
+    }
+
+    vm.pageChanged = function () {      
+      vm.figureOutItemsToDisplay()
+    }
+
     PositionsService.list()
       .success((res) => {
         vm.positions = res
+        vm.buildPager()
       })
       .error((res) => {
         console.log('failure')

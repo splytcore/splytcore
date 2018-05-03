@@ -20,20 +20,23 @@
   <div class="list-group">
 
     <div href="#" class="list-group-item active">
-      <h4 class="list-group-item-heading">POSITION
-        <p class="list-group-item-text pull-right">DEPARTMENT</p>
+      <h4 class="list-group-item-heading row">
+        <span class="col-sm-6">POSITION</span>
+        <span class="col-sm-6">DEPARTMENT</span>
       </h4>      
     </div>
 
-    <a ng-repeat="position in vm.positions"
+    <a ng-repeat="position in vm.pagedItems"
        ui-sref="positions.edit({ positionId: position._id })"
        class="list-group-item">
-      <h4 class="list-group-item-heading">
-        {{ position.display }}
-        <span class="pull-right"> {{position.department.display}} </span>
+      <h4 class="list-group-item-heading row">
+        <span class="col-sm-6">{{ position.display }}</span>
+        <span class="col-sm-6">{{ position.department.display }}</span>                
       </h4>      
     </a>
   </div>
 
-  
+  <pagination boundary-links="true" max-size="8" items-per-page="vm.itemsPerPage" total-items="vm.positions.length" 
+    ng-model="vm.currentPage" ng-change="vm.pageChanged()"></pagination> 
+
 </section>

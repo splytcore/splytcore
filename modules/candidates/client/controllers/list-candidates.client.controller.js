@@ -5,17 +5,35 @@
     .module('candidates')
     .controller('CandidatesListController', CandidatesListController);
 
-  CandidatesListController.$inject = ['CandidatesService', 'PositionsService', 'DepartmentsService', 'Socket', '$scope'];
+  CandidatesListController.$inject = ['$filter', 'CandidatesService', 'PositionsService', 'DepartmentsService', 'Socket', '$scope'];
 
-  function CandidatesListController(CandidatesService, PositionsService, DepartmentsService, Socket, $scope) {
+  function CandidatesListController($filter, CandidatesService, PositionsService, DepartmentsService, Socket, $scope) {
     var vm = this
     vm.applyFilters = applyFilters
 
     vm.findCandidate = findCandidate
 
+    vm.buildPager = function () {
+      vm.pagedItems = []
+      vm.itemsPerPage = 10
+      vm.currentPage = 1
+      vm.figureOutItemsToDisplay()
+    }
+
+    vm.figureOutItemsToDisplay = function () {
+      let begin = ((vm.currentPage - 1) * vm.itemsPerPage)
+      let end = begin + vm.itemsPerPage
+      vm.pagedItems = vm.candidates.slice(begin, end)
+    }
+
+    vm.pageChanged = function () {      
+      vm.figureOutItemsToDisplay()
+    }
+
     CandidatesService.list()
       .success((res) => {          
         vm.candidates = res
+        vm.buildPager()
       })
       .error((res) => {
         console.log(res)        
