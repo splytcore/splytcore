@@ -122,38 +122,61 @@ describe('Candidate Load testing', () => {
 
 
   it('should be able to checkin 1000 candidates', (done) => {    
+    
+    new Promise((resolve, reject) => {
+        // let url = baseURL + 'api/candidates?stage=REGISTERED'
+        let url = baseURL + 'api/candidates?stage=QUEUE'        
+        request          
+          .get(url)        
+          .set('Cookie', [cookieStr])
+          .end((err, res) => {
+            if (err) {
+              reject(err)
+            } else {
+              console.log(err ? 'get candidates error: ' + err.toString() : '')               
+              console.log('number of results: ' + res.body.length)              
+              resolve(res.body)
+            }
+          })    
+    })
+    .then((candidates) => {
+      async.each(candidates, (candidate, callback) => {                                      
+        console.log(candidate.lastName)
+        // request
+        //   .put(baseURL + 'api/candidates/' + candidate._id)
+        //   .set('Cookie', [cookieStr])
+        //   .send({ stage: 'QUEUE' })
+        //   .end((err, result) => {
+        //     if (err) {         
+        //       console.log(err)
+        //       callback(err)
+        //     }          
+        //     console.log(result.body.message)                                            
+        //     callback()
+        //   })                        
+        callback(new Error())
+      }, (err) => {
+        if(err) {
+          return done(err)
+        }             
+        done()
+      })
+    })
+    .catch((err) => {
+      console.log('error man')      
+      console.log(err)      
+    })
 
-      request
-        .get(baseURL + 'api/candidates?stage=REGISTERED')        
-        .set('Cookie', [cookieStr])
-        .end((err, res) => {
-          // Handle signin error        
-          console.log(err ? 'get candidates error: ' + err.toString() : '')               
-          console.log('number of results: ' + res.body.length)
-          let candidates = res.body
-          
-          async.each(candidates, (candidate, callback) => {                          
-            console.log(candidate.lastName)
-            let url = baseURL + 'api/candidates/' + candidate._id
-            request
-              .put(url)
-              .set('Cookie', [cookieStr])
-              .send({ stage: 'QUEUE' })
-              .end((err, result) => {
-                if (err) {         
-                  console.log(err)
-                  return done(err)
-                }          
-                console.log(result.body.message)                                            
-                callback()
-              })                        
-          }, (err) => {
-            if(err) {
-              return done(err)
-            }             
-            done()
-          })
-        }) 
+    // getCandidates()      
+    //   .then((candidates) => {
+    //     console.log(candidates.length)
+    //     done()
+    //   })
+    //   .catch((err) => {
+    //     return done(err)
+    //   })
+
+
   })
 
 
