@@ -11,6 +11,7 @@ angular.module('core.admin.routes').config(['$stateProvider',
         data: {
           roles: ['admin']
         }
-      });
+      })
+  
   }
-]);
+])

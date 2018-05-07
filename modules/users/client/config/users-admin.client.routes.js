@@ -9,6 +9,14 @@ angular.module('users.admin.routes').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/admin/list-users.client.view.html',
         controller: 'UserListController'
       })
+    .state('admin.systems', {        
+        url: '/systems',        
+        templateUrl: 'modules/users/client/views/systems.client.view.html',
+        controller: 'SystemsController',
+        data: {
+          roles: ['admin']
+        }
+      })          
       .state('admin.user', {
         url: '/users/:userId',
         templateUrl: 'modules/users/client/views/admin/view-user.client.view.html',

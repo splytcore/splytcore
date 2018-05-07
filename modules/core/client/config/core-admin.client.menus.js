@@ -7,6 +7,7 @@ angular.module('core.admin').run(['Menus',
       state: 'admin',
       type: 'dropdown',
       roles: ['admin']
-    });
+    })
   }
+
 ]);

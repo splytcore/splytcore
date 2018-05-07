@@ -3,10 +3,25 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  mongoose = require('mongoose'),
-  User = mongoose.model('User'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+const path = require('path')
+const mongoose = require('mongoose')
+const User = mongoose.model('User')
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const config = require(path.resolve('./config/config'))
+
+
+/**
+ * Return system settings
+ * Currently just return which db we're using
+ *
+ */
+
+exports.settings = function(req, res) {  
+
+  let settings = { db: config.db.uri }
+  res.json(settings)
+}
+
 
 /**
  * Show the current user
