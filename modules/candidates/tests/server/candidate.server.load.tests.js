@@ -139,7 +139,7 @@ describe('Candidate Load testing', () => {
             }
           })    
     })
-    .then((candidates) => {
+    .then((candidates) => {      
       async.each(candidates, (candidate, callback) => {                                      
         console.log(candidate.lastName)
         // request
