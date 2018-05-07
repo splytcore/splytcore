@@ -21,6 +21,7 @@
     vm.sortReverse = false
 
     vm.sortData = function (sortKey){
+      console.log('sort by: ' + sortKey)
       vm.sortKey = sortKey 
       vm.sortReverse = !vm.sortReverse
       vm.appointments = $filter('orderBy')(vm.appointments, vm.sortKey, vm.sortReverse)
