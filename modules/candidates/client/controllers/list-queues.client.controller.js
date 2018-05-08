@@ -80,23 +80,23 @@
     })
 
       // socket listener for candidate      
-    Socket.on('lockedChannel', function (candidate) {
-      vm.candidates.forEach((c) => {
-        if (c._id.toString() === candidate._id.toString()) {
-          console.log('display locked')
-          c.lockedBy = candidate.lockedBy
-        }
-      })
+    Socket.on('lockedChannel', function (candidate) {      
+      vm.candidate = $filter('filter')(vm.candidates, {_id: candidate._id})[0]                
+      console.log(vm.candidate)
+      vm.candidate.lockedBy = candidate.lockedBy
+      // vm.candidate.lockedBy = candidate.lockedBy
+      // vm.candidates.forEach((c) => {
+      //   if (c._id.toString() === candidate._id.toString()) {
+      //     console.log('display locked')
+      //     c.lockedBy = candidate.lockedBy
+      //   }
+      // })
     })
 
     // socket listener for candidate      
     Socket.on('unlockedChannel', function (candidate) {
-      vm.candidates.forEach((c) => {
-        if (c._id.toString() === candidate._id.toString()) {
-          console.log('display locked')
-          c.lockedBy = null
-        }        
-      })      
+      vm.candidate = $filter('filter')(vm.candidates, {_id: candidate._id})[0]                
+      vm.candidate.lockedBy = null
     })
 
   }

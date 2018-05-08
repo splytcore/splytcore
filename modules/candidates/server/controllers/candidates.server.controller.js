@@ -276,19 +276,19 @@ exports.lockCandidate = function(req, res) {
       .populate('department')  
       .populate('position')        
       .exec()
-        .then((candidate) => {
-          if (candidate) {
-            return res.status(400).send({
-              message: 'Sorry, you can only lock one candidate at a time'
-            })  
-          } else {                    
-            cb()
-          }                  
-        })        
-        .catch((err) => {
-          console.log(err)
-          cb(err)
-        })
+      .then((candidate) => {
+        if (candidate) {
+          return res.status(400).send({
+            message: 'Sorry, you can only lock one candidate at a time'
+          })  
+        } 
+        cb()
+        return null
+      })        
+      .catch((err) => {
+        console.log(err)
+        return cb(err)
+      })
     },
     function lockCandidate(cb) {
       req.candidate.lockedBy = req.user
