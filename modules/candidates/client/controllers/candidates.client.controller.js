@@ -122,6 +122,7 @@
       CandidatesService.unlock(vm.candidate._id)
         .success((res) => {
           vm.success = res.message                         
+          vm.candidate.lockedBy = null
         })
         .error((res) => {
           console.log('failure')
@@ -132,7 +133,8 @@
     function lock() {
       CandidatesService.lock(vm.candidate._id)
         .success((res) => {
-          vm.success = res.message                         
+          vm.success = res.message
+          vm.candidate.lockedBy = vm.authentication.user                         
         })
         .error((res) => {
           console.log('failure')

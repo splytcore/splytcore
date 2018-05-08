@@ -263,7 +263,7 @@ exports.lockCandidate = function(req, res) {
     function alreadyLocked(cb) {
       if (req.candidate.lockedBy) {
         return res.status(400).send({
-          message: 'Sorry, Already Locke!'
+          message: 'Sorry, Already Locked!'
         })  
       } else {
         cb()
@@ -450,7 +450,7 @@ exports.list = function(req, res) {
 
   Candidate.find(req.query)
   .sort(sort)
-  .populate('lockedBy', 'displayName')
+  .populate('lockedBy', 'displayName')  
   .populate('position')
   .populate('department')  
   .populate('notes.user', 'displayName')  

@@ -122,6 +122,8 @@
     // event listener for new checkins
     Socket.on('checkinChannel', function (candidate) {
       console.log(candidate)      
+      vm.candidates.push(candidate)
+      vm.buildPager()
       console.log('checkinChannel event handler')      
     })
 

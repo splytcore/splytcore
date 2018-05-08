@@ -5,13 +5,41 @@
     .module('candidates')
     .controller('QueuesListController', QueuesListController);
 
-  QueuesListController.$inject = ['CandidatesService', 'Socket', '$scope', '$state']
+  QueuesListController.$inject = ['$filter', 'CandidatesService', 'Socket', '$scope', '$state']
 
-  function QueuesListController(CandidatesService, Socket, $scope, $state) {
+  function QueuesListController($filter, CandidatesService, Socket, $scope, $state) {
     var vm = this    
     vm.listCheckins = listCheckins
 
+    vm.sortKey = 'checkin'
+    vm.sortReverse = false
+
     listCheckins()
+
+    vm.sortData = function (sortKey){
+      vm.sortKey = sortKey 
+      vm.sortReverse = !vm.sortReverse
+      vm.candidates = $filter('orderBy')(vm.candidates, vm.sortKey, vm.sortReverse)
+      vm.buildPager()
+    }
+
+    vm.buildPager = function () {
+      vm.pagedItems = []
+      vm.itemsPerPage = 10
+      vm.currentPage = 1
+      vm.figureOutItemsToDisplay()
+    }
+
+    vm.figureOutItemsToDisplay = function () {
+      let begin = ((vm.currentPage - 1) * vm.itemsPerPage)
+      let end = begin + vm.itemsPerPage
+      vm.pagedItems = vm.candidates.slice(begin, end)
+    }
+
+    vm.pageChanged = function () {      
+      vm.figureOutItemsToDisplay()
+    }
+
 
     function listCheckins() { 
       let page = $state.params.page ? $state.params.page : 1
@@ -19,26 +47,14 @@
       CandidatesService.listCheckins(page, limit)
         .success((res) => {
           // console.log(res)
-          vm.candidates = res
+          vm.candidates = $filter('orderBy')(res, vm.sortKey, vm.sortReverse)          
+          vm.buildPager()
         })
         .error((res) => {
           console.log('failure')
           console.log(res)        
         })      
     }    
-
-    function findCandidate() {
-      CandidatesService.findCandidate(vm.query)
-        .success((res) => {          
-          vm.candidates = res
-        })
-        .error((res) => {
-          console.log('failure')
-          console.log(res)
-          vm.error = res.message
-        })  
-    }
-
 
     // Make sure the Socket is connected
     if (!Socket.socket) {
@@ -52,7 +68,8 @@
     Socket.on('checkinChannel', function (candidate) {
       console.log(candidate)      
       console.log('checkinChannel event handler')
-      listCheckins() //refresh page
+      vm.candidates.push(candidate)
+      vm.buildPager()            
     })
 
     // Remove the event listener when the controller instance is destroyed

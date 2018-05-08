@@ -67,7 +67,8 @@
     }
 
     function listCheckins (page, limit) {
-      return $http.get('/api/candidates?stage=QUEUE&sort=appointment&page=' + page + '&limit=' + limit)      
+      // return $http.get('/api/candidates?stage=QUEUE&sort=appointment&page=' + page + '&limit=' + limit)      
+      return $http.get('/api/candidates?stage=QUEUE')      
     }
 
     function listByFilters(filters) {
