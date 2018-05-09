@@ -33,23 +33,21 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
 
-  web3.test()
-  .then((result) => {
-    console.log(result)
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-
   // convert mongoose document to JSON
   var reward = req.reward ? req.reward.toJSON() : {};
+ 
+  web3.getRewardAmountById(reward._id)
+    .then((result) => {
+      console.log('after all' + result)
+      reward.ether = result
+      reward.isCurrentUserOwner = req.user && reward.user && reward.user._id.toString() === req.user._id.toString()
+      res.jsonp(reward)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  reward.isCurrentUserOwner = req.user && reward.user && reward.user._id.toString() === req.user._id.toString();
-
-  res.jsonp(reward);
-};
+}
 
 /**
  * Update a Reward

@@ -21,9 +21,16 @@ var RewardSchema = new Schema({
     default: Date.now
   },
   //Reward amount. Transient field to get from contract
+  finder: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   ether: {
     type: Number
   },  
+  stage: {
+    type: String
+  },    
   user: {
     type: Schema.ObjectId,
     ref: 'User'
