@@ -1,0 +1,33 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.reward._id ? 'Edit Reward' : 'New Reward'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.rewardForm" class="form-horizontal" ng-submit="vm.save(vm.form.rewardForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.reward.name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="vm.form.rewardForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reward name is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="reward">Reward Amount</label>
+          <input name="ether" type="text" ng-model="vm.reward.ether" id="name" class="form-control" placeholder="Reward Amount" required>
+          <div ng-messages="vm.form.rewardForm.ether.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reward Amount is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.reward._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
