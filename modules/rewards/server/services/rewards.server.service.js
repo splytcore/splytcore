@@ -110,10 +110,9 @@ exports.getRewardContractById = function(rewardId) {
   // return rewardContractManager.getRewardById(rewardId)
   
   return new Promise((resolve, reject) => {
-    setTimeout(function(str1, str2) {
-      console.log(str1 + " " + str2);      
+    setTimeout(function() {      
       resolve('0xfakeaddress')  
-    }, 5000, "Hello.", "How are you?");          
+    }, 5000);          
   })
 
 }
@@ -130,10 +129,9 @@ exports.getRewardAmountById = function(rewardId) {
   .then((address) => {
     console.log('address: ' + address)
     return new Promise((resolve, reject) => {
-      setTimeout(function(str1, str2) {
-        console.log(str1 + " " + str2);
+      setTimeout(function() {        
         resolve (88)  
-      }, 5000, "Hello.", "How are you?");      
+      }, 5000)
     })    
   })
   .then((amount) => {
@@ -141,40 +139,40 @@ exports.getRewardAmountById = function(rewardId) {
     return amount
   })
   .then((amount) => {
-    console.log('amount: ' + amount)
+    console.log('step: ' + amount)
     return 2
   })
   .then((amount) => {
-    console.log('amount: ' + amount)
-    return amount
-  })
-  .then((amount) => {
-    console.log('amount: ' + amount)
-    return 3
-  })
-  .then((amount) => {
-    console.log('amount: ' + amount)
+    console.log('step: ' + amount)
     return 4
   })
   .then((amount) => {
-    console.log('amount: ' + amount)
+    console.log('step: ' + amount)
     return 5
   })
   .then((amount) => {
-    console.log('amount: ' + amount)
+    console.log('step: ' + amount)
     return 6
   })
   .then((amount) => {
-    console.log('amount: ' + amount)
+    console.log('step: ' + amount)
     return 7
   })
   .then((amount) => {
-    console.log('amount: ' + amount)
+    console.log('step: ' + amount)
     return 8
   })
   .then((amount) => {
-    console.log('amount: ' + amount)
+    console.log('step: ' + amount)
     return 9
+  })
+  .then((amount) => {
+    console.log('step: ' + amount)
+    return 10
+  })
+  .then((amount) => {
+    console.log('step: ' + amount)
+    return 11
   })
 
 }
