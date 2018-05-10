@@ -6,8 +6,7 @@ angular.module('users.admin').controller('SystemsController', ['$q', 'SystemsSer
     $scope.authentication = Authentication;    
 
     let vm = this
-    vm.getSettings = getSettings
-    vm.testing = 'wtfman'
+    vm.getSettings = getSettings    
     getSettings()
 
     function getSettings() {
