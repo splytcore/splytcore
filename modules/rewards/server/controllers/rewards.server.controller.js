@@ -14,7 +14,18 @@ var path = require('path'),
  * Create a Reward
  */
 exports.create = function(req, res) {
-  var reward = new Reward(req.body);
+
+  let reward = new Reward(req.body);
+
+  web3.createReward(reward._id)
+    .then((result) => {
+      console.log('create reward contract result..' + result)            
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  
   reward.user = req.user;
 
   reward.save(function(err) {
@@ -36,9 +47,9 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   var reward = req.reward ? req.reward.toJSON() : {};
  
-  web3.getRewardAmountById(reward._id)
+  web3.getRewardInfo(reward._id)
     .then((result) => {
-      console.log('after all' + result)
+      console.log('reward amount' + result)
       reward.ether = result
       reward.isCurrentUserOwner = req.user && reward.user && reward.user._id.toString() === req.user._id.toString()
       res.jsonp(reward)
@@ -54,7 +65,6 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
   var reward = req.reward;
-
   reward = _.extend(reward, req.body);
 
   reward.save(function(err) {
@@ -89,6 +99,15 @@ exports.delete = function(req, res) {
  * List of Rewards
  */
 exports.list = function(req, res) {
+
+  web3.getRewardsLength()
+  .then((result) => {
+    console.log('Number of reward contracts...' + result)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+
   Reward.find().sort('-created').populate('user', 'displayName').exec(function(err, rewards) {
     if (err) {
       return res.status(400).send({
