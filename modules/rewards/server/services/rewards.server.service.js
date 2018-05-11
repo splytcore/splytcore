@@ -152,12 +152,22 @@ exports.getRewardInfo = function(_rewardId) {
         console.log('mongo id for reward: ' + id)
         rewardId = id
         return rewardContract.methods.promisor().call()    
-      })               
-      .then((promisor) => {            
-        console.log('promisor id for reward: ' + promisor)
-        promisor = promisor
-        resolve(rewardId)
       })                     
+      .then((promisor) => {            
+        console.log('promisor: ' + promisor)
+        promisor = promisor
+        return rewardContract.methods.promisee().call()
+      })               
+      .then((promisee) => {            
+        console.log('promisee: ' + promisor)
+        promisee = promisee        
+        return rewardContract.methods.stage().call()
+      })                           
+      .then((stage) => {            
+        console.log('stage: ' + stage)
+        stage = stage
+        resolve(rewardId)
+      })                                 
       .catch((err) => {
         console.log(err)
         reject(err)
