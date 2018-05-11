@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Rewards</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="reward in vm.rewards"
+       ui-sref="rewards.view({ rewardId: reward._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="reward.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="reward.user" ng-bind="reward.user.displayName"></span>
+        <span ng-if="!reward.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="reward.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.rewards.$resolved && !vm.rewards.length">
+    No Rewards yet, why don't you <a ui-sref="rewards.create">create one</a>?
+  </div>
+</section>
