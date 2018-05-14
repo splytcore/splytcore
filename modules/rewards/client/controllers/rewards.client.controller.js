@@ -6,9 +6,9 @@
     .module('rewards')
     .controller('RewardsController', RewardsController);
 
-  RewardsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'rewardResolve'];
+  RewardsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'rewardResolve', 'CategoriesService'];
 
-  function RewardsController ($scope, $state, $window, Authentication, reward) {
+  function RewardsController ($scope, $state, $window, Authentication, reward, CategoriesService) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -17,6 +17,9 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+
+    vm.categories = CategoriesService.query()
+
 
     // Remove existing Reward
     function remove() {

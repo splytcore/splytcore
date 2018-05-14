@@ -37,9 +37,11 @@ web3.eth.net.isListening()
     // console.log(rewardManager)
     return
 })
-.then(() => {      
-    console.log('unlocking application wallet: ' + wallet)        
-    return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000)
+.then(() => {          
+    return web3.eth.getBalance(wallet)
+}).then((balance) => {      
+    console.log('Balance: ' + web3.utils.fromWei(balance, 'ether'))        
+    return web3.eth.personal.lockAccount(wallet)    
 }).then((result) => {      
   console.log('unlock result: ' + result)
   return result
@@ -127,11 +129,16 @@ exports.getRewardContractByIndex = function(index) {
 
 exports.getRewardInfo = function(_rewardId) {
 
-  let rewardId
-  let amount
-  let stage
-  let promisor
-  let promisee
+  let result = {
+
+  }
+  // let rewardId
+  // let amount
+  // let stage
+  // let promisor
+  // let promisee
+  // let contractAddress
+  // let rewardEther
 
   
 
@@ -142,31 +149,42 @@ exports.getRewardInfo = function(_rewardId) {
       exports.getRewardContractById(_rewardId)
       .then((address) => {
         console.log('contract address: ' + address)
-        return new web3.eth.Contract(rewardABI, address)     
-      })
+        if (address.indexOf('0x00000000000000') > -1) {
+          console.log('address not found')
+          return reject('No contract address found. Not yet mined?')
+        } else {
+          result.address = address
+          return new web3.eth.Contract(rewardABI, address)     
+        }
+      })            
       .then((reward) => {            
         rewardContract = reward 
+        return web3.eth.getBalance(result.address)                      
+      })         
+      .then((rewardAmount) => {   
+        console.log('reward amt: ' + rewardAmount)                 
+        result.ether = web3.utils.fromWei(rewardAmount, 'ether')
         return rewardContract.methods.id().call()            
       })         
       .then((id) => {            
         console.log('mongo id for reward: ' + id)
-        rewardId = id
+        result.rewardId = id
         return rewardContract.methods.promisor().call()    
       })                     
       .then((promisor) => {            
         console.log('promisor: ' + promisor)
-        promisor = promisor
+        result.promisor = promisor
         return rewardContract.methods.promisee().call()
       })               
       .then((promisee) => {            
-        console.log('promisee: ' + promisor)
-        promisee = promisee        
+        console.log('promisee: ' + promisee)
+        result.promisee = promisee        
         return rewardContract.methods.stage().call()
       })                           
       .then((stage) => {            
         console.log('stage: ' + stage)
-        stage = stage
-        resolve(rewardId)
+        result.stage = stage        
+        resolve(result)
       })                                 
       .catch((err) => {
         console.log(err)

@@ -46,17 +46,32 @@ exports.read = function(req, res) {
 
   // convert mongoose document to JSON
   var reward = req.reward ? req.reward.toJSON() : {};
- 
+  reward.isCurrentUserOwner = req.user && reward.user && reward.user._id.toString() === req.user._id.toString() 
+  
   web3.getRewardInfo(reward._id)
     .then((result) => {
-      console.log('reward amount' + result)
-      reward.ether = result
-      reward.isCurrentUserOwner = req.user && reward.user && reward.user._id.toString() === req.user._id.toString()
+      console.log('reward amount' + result.ether)
+      console.log('reward address' + result.address)
+      console.log('promisor '  + result.promisor)
+      console.log('promisee '  + result.promisee)
+      console.log('stage '  + result.stage)
+      reward.address = result.address
+      reward.ether = result.ether
+      reward.promisor = result.promisor
+      reward.promisee = result.promisee
+      reward.stage = result.stage
+
       res.jsonp(reward)
     })
     .catch((err) => {
       console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
     })
+
+
+
 
 }
 
@@ -130,7 +145,11 @@ exports.rewardByID = function(req, res, next, id) {
     });
   }
 
-  Reward.findById(id).populate('user', 'displayName').exec(function (err, reward) {
+  Reward.findById(id)
+  .populate('user', 'displayName')
+  .populate('category')
+  .exec(function (err, reward) {
+
     if (err) {
       return next(err);
     } else if (!reward) {

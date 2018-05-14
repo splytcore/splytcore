@@ -5,20 +5,62 @@
   <div class="col-md-12">
     <form name="vm.form.rewardForm" class="form-horizontal" ng-submit="vm.save(vm.form.rewardForm.$valid)" novalidate>
       <fieldset>
+
         <div class="form-group" show-errors>
-          <label class="control-label" for="name">Name</label>
-          <input name="name" type="text" ng-model="vm.reward.name" id="name" class="form-control" placeholder="Name" required>
-          <div ng-messages="vm.form.rewardForm.name.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Reward name is required.</p>
+          <label class="control-label" for="title">Title</label>
+          <input name="title" type="text" ng-model="vm.reward.title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="vm.form.rewardForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reward title is required.</p>
+          </div>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="description">Description</label>
+          <input name="description" type="text" ng-model="vm.reward.description" id="description" class="form-control" placeholder="Description" required>
+          <div ng-messages="vm.form.rewardForm.description.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reward description is required.</p>
+          </div>
+        </div>
+        
+        <div class="form-group" show-errors>
+          <label class="control-label" for="category">Category</label>          
+          <select class="form-control" name="position" ng-model="vm.reward.category._id">            
+           <option ng-repeat="c in vm.categories" value="{{c._id}}" ng-selected="c._id == vm.reward.category._id">
+              {{c.name}}            
+            </option>          
+          </select>
+
+          <div ng-messages="vm.form.rewardForm.reward.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Category is required.</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="reward">Reward Amount</label>
-          <input name="ether" type="text" ng-model="vm.reward.ether" id="name" class="form-control" placeholder="Reward Amount" required>
-          <div ng-messages="vm.form.rewardForm.ether.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Reward Amount is required.</p>
-          </div>
+          <label class="control-label" for="stage">Contract Stage</label>
+          <input name="ether" type="text" ng-model="vm.reward.stage" id="stage" class="form-control" placeholder="Stage">
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="promisor">Promisor Wallet</label>
+          <input name="ether" type="text" ng-model="vm.reward.promisor" id="promisor" class="form-control" placeholder="Promisor">
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="promisee">Promisee Wallet</label>
+          <input name="promisee" type="text" ng-model="vm.reward.promisee" id="ether" class="form-control" placeholder="Promisee">
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="ether">Reward Amount</label>
+          <input name="ether" type="text" ng-model="vm.reward.ether" id="ether" class="form-control" placeholder="Reward Amount">
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="reward">Contract Address</label>
+          <input name="address" type="text" ng-model="vm.reward.address" id="address" class="form-control" placeholder="Contract Address">
         </div>
 
         <div class="form-group">

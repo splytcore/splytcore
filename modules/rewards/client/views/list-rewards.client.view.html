@@ -13,7 +13,7 @@
         <span ng-if="reward.user" ng-bind="reward.user.displayName"></span>
         <span ng-if="!reward.user">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="reward.name"></h4>
+      <h4 class="list-group-item-heading" ng-bind="reward.title"></h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="vm.rewards.$resolved && !vm.rewards.length">
