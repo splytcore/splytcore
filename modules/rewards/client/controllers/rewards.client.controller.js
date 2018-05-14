@@ -17,8 +17,17 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.setFulfilled = setFulfilled;
+    vm.verify = verify;
+    vm.verifyFalse = verifyFalse;
+    vm.releaseReward = releaseReward;
 
-    vm.categories = CategoriesService.query()
+    // vm.categories = CategoriesService.query()
+    CategoriesService.query().$promise
+    .then((result) => {
+        console.log(result)
+        vm.categories = result
+    });
 
 
     // Remove existing Reward
@@ -27,6 +36,24 @@
         vm.reward.$remove($state.go('rewards.list'));
       }
     }
+
+    // Set fullfilled by promisee
+    function setFulfilled() {
+
+    }
+
+    function verify() {
+
+    }
+
+    function setVerifyFalse() {
+
+    }
+
+    function releaeReward() {
+
+    }
+
 
     // Save Reward
     function save(isValid) {

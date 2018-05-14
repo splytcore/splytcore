@@ -9,6 +9,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider(host))
 console.log('initiate web3')
 
 
+const privatekey = '2cd1cce5054f2c9d1b1bc8217f7f0db9ae881703fa8d74b5aacccd4ab0af38e1'
+
 let rewardABI = [{"constant":false,"inputs":[],"name":"verifyFalse","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"promisee","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"id","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"stage","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"promisor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"setFulfilled","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stage","type":"uint8"}],"name":"setStage","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"releaseReward","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"verify","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_id","type":"string"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]
 
 let rewardManagerABI = [{"constant":true,"inputs":[{"name":"_id","type":"string"}],"name":"getRewardById","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_index","type":"uint256"}],"name":"getRewardByIndex","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"string"}],"name":"createReward","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getRewardsLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]
@@ -33,15 +35,14 @@ web3.eth.net.isListening()
 .then((blockNumber) => {  
     console.log('version: ' + web3.version)
     console.log('current block: ' + blockNumber)   
-    rewardManager = new web3.eth.Contract(rewardManagerABI, rewardManagerAddress)    
-    // console.log(rewardManager)
+    rewardManager = new web3.eth.Contract(rewardManagerABI, rewardManagerAddress)        
     return
 })
 .then(() => {          
     return web3.eth.getBalance(wallet)
 }).then((balance) => {      
     console.log('Balance: ' + web3.utils.fromWei(balance, 'ether'))        
-    return web3.eth.personal.lockAccount(wallet)    
+    return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000)        
 }).then((result) => {      
   console.log('unlock result: ' + result)
   return result
@@ -54,19 +55,6 @@ web3.eth.net.isListening()
   console.log('error connecting to web3')
   console.log(err)
 })
-
-
-
-
-//   web3.eth.getBalance(appWallet)
-//   .then(balance => {
-//     appBalance = web3.utils.fromWei(balance)
-//     if (appBalance > 10) {
-//       console.log('App wallet balance:\t' + Chalk.green(appBalance + ' Ether'))
-//     } else {
-//       console.log('App Balance:\t' + Chalk.red(appBalance + ' Ether'))
-//     }
-//   })
 
 
 exports.getRewardAmountById = function(rewardId) {
@@ -111,20 +99,10 @@ exports.getRewardsLength = function() {
 
 exports.getRewardContractById = function(rewardId) {
   return rewardManager.methods.getRewardById(web3.utils.toHex(rewardId)).call()
-  
-  // return new Promise((resolve, reject) => {
-  //   resolve('0xfakeaddress')  
-  // })
-
 }
 
 exports.getRewardContractByIndex = function(index) {
   return rewardManager.methods.getRewardByIndex(index).call()
-  
-  // return new Promise((resolve, reject) => {
-  //   resolve('0xfakeaddress')  
-  // })
-
 }
 
 exports.getRewardInfo = function(_rewardId) {
@@ -139,8 +117,6 @@ exports.getRewardInfo = function(_rewardId) {
   // let promisee
   // let contractAddress
   // let rewardEther
-
-  
 
   return new Promise((resolve, reject) => {            
       
