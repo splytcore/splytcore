@@ -48,8 +48,7 @@ exports.read = function(req, res) {
   var reward = req.reward ? req.reward.toJSON() : {};
   reward.isCurrentUserOwner = req.user && reward.user && reward.user._id.toString() === req.user._id.toString() 
   
-
-  web3.getRewardInfo(reward._id)
+  web3.getRewardInfo(reward._id.toString())
     .then((result) => {
       console.log('reward amount' + result.ether)
       console.log('reward address' + result.address)

@@ -10,7 +10,7 @@ contract RewardManager {
 
 
     function createReward(string _id) public returns (bool) {
-        Reward reward = new Reward(_id);
+        Reward reward = new Reward(_id, msg.sender);
         rewardsByIndex.push(reward);
         rewardsById[_id] = reward;
         return true;

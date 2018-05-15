@@ -35,41 +35,9 @@
 
     vm.gas = {
       // from: vm.publicKey,
-      gasPrice: 3000000,   //maximum price per gas
-      gas: 4600000 //max number of gas to be used  
+      gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
+      gas: vm.web3.toHex(4600000) //max number of gas to be used  
     }
-
-    // const EthereumTx = require('ethereumjs-tx')
-    // const privateKey = Buffer.from(vm.privateKey, 'hex')
-
-    // const txParams = {
-    //   nonce: '0x00',
-    //   gasPrice: '0x09184e72a000', 
-    //   gasLimit: '0x2710',
-    //   to: '0x0000000000000000000000000000000000000000', 
-    //   value: '0x00', 
-    //   data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057',
-    //   // EIP 155 chainId - mainnet: 1, ropsten: 3
-    //   chainId: 3
-    // }
-
-    // const tx = new EthereumTx(txParams)
-    // tx.sign(privateKey)
-    // const serializedTx = tx.serialize()    
-
-    // .then((result) => {
-    //   console.log('connecting to geth host node...' + host)  
-    //   return web3.eth.getBlockNumber()
-    // })
-    // .then((blockNumber) => {  
-    //     console.log('version: ' + web3.version)
-    //     console.log('current block: ' + blockNumber)   
-    //     return
-    // }).catch((err) => {
-    //   console.log('error connecting to web3')
-    //   console.log(err)
-    // })
-
 
     vm.authentication = Authentication;
     vm.reward = reward;
@@ -85,13 +53,17 @@
 
     console.log('rewardId: ' + vm.reward._id)
     console.log('rewardIdHex: ' + vm.web3.toHex(vm.reward._id))
+    
+    if (vm.reward._id) {
+      vm.rewardContract = vm.rewardABI.at(vm.reward.address)
+    }
+
     // vm.categories = CategoriesService.query()
     CategoriesService.query().$promise
     .then((result) => {
         console.log(result)
         vm.categories = result
-    });
-
+    })
 
     // Remove existing Reward
     function remove() {

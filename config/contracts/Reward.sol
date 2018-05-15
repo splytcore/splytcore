@@ -31,9 +31,9 @@ contract Reward {
         
     }
     
-    constructor(string _id) payable public {
+    constructor(string _id, address _promisor) payable public {
         id = _id;
-        promisor = msg.sender;
+        promisor = _promisor;
         stage = Stage.ACTIVE;    
     }
     
