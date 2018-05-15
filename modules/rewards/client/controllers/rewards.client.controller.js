@@ -145,15 +145,25 @@
     }
 
     function verify() {
+      //need to use promisor wallet
+      vm.rewardContract.verify.sendTransaction(vm.gas, (err, trxid) => {
+        console.log('trxid: ' + trxid)
+      })
 
     }
 
     function verifyFalse() {
-
+      //need to use promisor wallet
+      vm.rewardContract.verifyFalse.sendTransaction(vm.gas, (err, trxid) => {
+        console.log('trxid: ' + trxid)
+      })
     }
 
     function releaseReward() {
-
+      //anyone can call this function to pay promisee
+      vm.rewardContract.releaseReward.sendTransaction(vm.gas, (err, trxid) => {
+        console.log('trxid: ' + trxid)
+      })
     }
 
 
