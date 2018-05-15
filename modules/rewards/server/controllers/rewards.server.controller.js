@@ -17,13 +17,13 @@ exports.create = function(req, res) {
 
   let reward = new Reward(req.body);
 
-  web3.createReward(reward._id)
-    .then((result) => {
-      console.log('create reward contract result..' + result)            
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  // web3.createReward(reward._id)
+  //   .then((result) => {
+  //     console.log('create reward contract result..' + result)            
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
 
   
   reward.user = req.user;

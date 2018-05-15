@@ -19,25 +19,24 @@
     console.log('is connected: ' + vm.web3.isConnected())
     // console.log('blockNumber: ' + vm.web3.eth.blockNumber)
 
-    // Get the contract instance using your contract's abi and address:
-    vm.rewardAddress = '0x6C023Afa01048df03a0bFdadb4387f9F395C705e'
-    vm.rewardABI = [{"constant":false,"inputs":[],"name":"verifyFalse","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"promisee","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"id","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"stage","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"promisor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"setFulfilled","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stage","type":"uint8"}],"name":"setStage","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"releaseReward","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"verify","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_id","type":"string"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]
-    vm.rewardContract = vm.web3.eth.contract(vm.rewardABI).at(vm.rewardAddress)
+    // Get the contract instance using your contract's abi and address:    
+    vm.rewardABI = vm.web3.eth.contract([{"constant":false,"inputs":[],"name":"verifyFalse","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"promisee","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"id","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"stage","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"promisor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"setFulfilled","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stage","type":"uint8"}],"name":"setStage","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"releaseReward","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"verify","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_id","type":"string"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}])
+    
+    vm.rewardManagerABI = vm.web3.eth.contract([{"constant":true,"inputs":[{"name":"_id","type":"string"}],"name":"getRewardById","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_index","type":"uint256"}],"name":"getRewardByIndex","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"string"}],"name":"createReward","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getRewardsLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]);
 
-    vm.rewardManagerABI = [{"constant":true,"inputs":[{"name":"_id","type":"string"}],"name":"getRewardById","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_index","type":"uint256"}],"name":"getRewardByIndex","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"string"}],"name":"createReward","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getRewardsLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]
-    vm.rewardManagerAddress = '0x00D75D555767fe9bC56c383fa94Ded07099d3a26'
+    vm.rewardManagerAddress = '0x8178404A4Ea7BF418C78Db434D32D2b80bB778DA'
 
-    vm.rewardManagerContract = vm.web3.eth.contract(vm.rewardManagerABI).at(vm.rewardManagerAddress)
+    vm.rewardManagerContract = vm.rewardManagerABI.at(vm.rewardManagerAddress)
 
     // Call a function of the contract:
-    vm.rewardContract.stage((err, res) => {
-      console.log('gettint stage: ' + res)
-    })
+    // vm.rewardContract.stage((err, res) => {
+    //   console.log('gettint stage: ' + res)
+    // })
 
     vm.gas = {
-      from: vm.publicKey,
-      gasPrice: 300000,   //maximum price per gas
-      gas: 4700000 //max number of gas to be used  
+      // from: vm.publicKey,
+      gasPrice: 3000000,   //maximum price per gas
+      gas: 4600000 //max number of gas to be used  
     }
 
     // const EthereumTx = require('ethereumjs-tx')
@@ -106,43 +105,43 @@
       console.log('fulfilled!')                      
 
       //example of how to use $q to chain promises
-      $q((resolve, reject) => {        
-        var deferred = $q.defer();
-        setTimeout(function() {          
-          resolve('step 1')
-        }, 1000)
-      })
-      .then((step) => {
-        console.log(step)
-        let deferred = $q.defer()
-        setTimeout(function() {                    
-          deferred.resolve('step 2')
-        }, 1000)        
-        return deferred.promise
-      })
-      .then((step) => {
-        console.log(step)
-        let deferred = $q.defer()
-        setTimeout(function() {                    
-          deferred.reject('step 3')
-        }, 1000)        
-        return deferred.promise
-      })
-      .then((step) => {
-        console.log(step)
-        let deferred = $q.defer()
-        setTimeout(function() {                    
-          deferred.resolve('final')
-        }, 1000)        
-        return deferred.promise
-      })
-      .then((step) => {
-        console.log(step)
-      })
-      .catch((err) => {
-        console.log('error')
-        console.log(err)
-      })
+      // $q((resolve, reject) => {        
+      //   var deferred = $q.defer();
+      //   setTimeout(function() {          
+      //     resolve('step 1')
+      //   }, 1000)
+      // })
+      // .then((step) => {
+      //   console.log(step)
+      //   let deferred = $q.defer()
+      //   setTimeout(function() {                    
+      //     deferred.resolve('step 2')
+      //   }, 1000)        
+      //   return deferred.promise
+      // })
+      // .then((step) => {
+      //   console.log(step)
+      //   let deferred = $q.defer()
+      //   setTimeout(function() {                    
+      //     deferred.reject('step 3')
+      //   }, 1000)        
+      //   return deferred.promise
+      // })
+      // .then((step) => {
+      //   console.log(step)
+      //   let deferred = $q.defer()
+      //   setTimeout(function() {                    
+      //     deferred.resolve('final')
+      //   }, 1000)        
+      //   return deferred.promise
+      // })
+      // .then((step) => {
+      //   console.log(step)
+      // })
+      // .catch((err) => {
+      //   console.log('error')
+      //   console.log(err)
+      // })
 
       vm.rewardContract.setFulfilled.sendTransaction(vm.gas, (err, trxid) => {
         console.log('trxid: ' + trxid)
