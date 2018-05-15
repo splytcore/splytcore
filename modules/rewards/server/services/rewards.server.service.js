@@ -98,7 +98,10 @@ exports.getRewardsLength = function() {
 }
 
 exports.getRewardContractById = function(rewardId) {
-  return rewardManager.methods.getRewardById(web3.utils.toHex(rewardId)).call()
+  console.log('rewardId: ' + rewardId)
+  let rewardIdHex = web3.utils.toHex(rewardId)
+  console.log('rewardId in Hex: ' + rewardIdHex)
+  return rewardManager.methods.getRewardById(rewardIdHex).call()
 }
 
 exports.getRewardContractByIndex = function(index) {
