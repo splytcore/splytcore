@@ -3,7 +3,6 @@
 const request = require('supertest')      
 const path = require('path')
 const mongoose = require('mongoose')
-const fetch = require("node-fetch")
 
 const Candidate = mongoose.model('Candidate')
 const Position = mongoose.model('Position')
