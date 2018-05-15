@@ -14,15 +14,12 @@
     vm.publicKey = '0xD1A421A5F199cd16Ca49778841CB88053768d5f1'
     vm.privateKey = 'c165c12ca90658dfc7906c11dde6a7e5f9c67d49476649d9a26bb2e65578b352'  
 
-    if (typeof vm.web3 !== 'undefined') {
-      vm.web3 = new Web3(web3.currentProvider);
-    } else {
-      // set the provider you want from Web3.providers
-      vm.web3 = new Web3(new Web3.providers.HttpProvider('http://13.59.96.69:8555'));
-    }
+    
+    
+    vm.web3 = new Web3($window.web3.currentProvider);
     
     console.log('is connected: ' + vm.web3.isConnected())
-    console.log('blockNumber: ' + vm.web3.eth.blockNumber)
+    // console.log('blockNumber: ' + vm.web3.eth.blockNumber)
 
   // Get the contract instance using your contract's abi and address:
   vm.rewardAddress = '0x6C023Afa01048df03a0bFdadb4387f9F395C705e'
@@ -35,7 +32,7 @@
   })
 
   vm.gas = {
-    from: vm.privateKey,
+    from: vm.publicKey,
     gasPrice: 300000,   //maximum price per gas
     gas: 4700000 //max number of gas to be used  
   }
@@ -141,9 +138,9 @@
         console.log(err)
       })
 
-      // vm.rewardContract.setFulfilled.sendTransaction(vm.gas, (err, trxid) => {
-      //   console.log('trxid: ' + trxid)
-      // })
+      vm.rewardContract.setFulfilled.sendTransaction(vm.gas, (err, trxid) => {
+        console.log('trxid: ' + trxid)
+      })
 
     }
 
