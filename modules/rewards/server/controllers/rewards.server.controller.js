@@ -65,9 +65,7 @@ exports.read = function(req, res) {
     })
     .catch((err) => {
       console.log(err)
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      })
+      res.jsonp(reward)
     })
 
 }
