@@ -8,8 +8,12 @@ contract RewardManager {
     address[] rewardsByIndex;
     mapping (string => address) rewardsById;
 
+    modifier onlyUniqueId(string _id) {
+        require(rewardsById[_id] == address(0x0));
+        _;
+    }
 
-    function createReward(string _id) public returns (bool) {
+    function createReward(string _id) public onlyUniqueId(_id) returns (bool) {
         Reward reward = new Reward(_id, msg.sender);
         rewardsByIndex.push(reward);
         rewardsById[_id] = reward;

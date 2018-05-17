@@ -38,35 +38,48 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="stage">Contract Stage</label>
-          <input name="ether" type="text" ng-model="vm.reward.stage" id="stage" class="form-control" placeholder="Stage">
+          <span name="stage" id="stage" class="form-control" disabled>
+            {{ vm.reward.stage }}
+          </span>
+
         </div>
 
 
         <div class="form-group" show-errors>
           <label class="control-label" for="promisor">Promisor Wallet</label>
-          <input name="ether" type="text" ng-model="vm.reward.promisor" id="promisor" class="form-control" placeholder="Promisor">
+          <span name="promisor" id="promisor" class="form-control" disabled>
+            {{ vm.reward.promisor }}
+          </span>
+
         </div>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="promisee">Promisee Wallet</label>
-          <input name="promisee" type="text" ng-model="vm.reward.promisee" id="ether" class="form-control" placeholder="Promisee">
+          <span name="promisee" id="promisee" class="form-control" disabled>
+            {{ vm.reward.promisee }}
+          </span>
         </div>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="ether">Reward Amount</label>
-          <input name="ether" type="text" ng-model="vm.reward.ether" id="ether" class="form-control" placeholder="Reward Amount">
+
+          <span name="ether" id="ether" class="form-control" disabled>
+            {{ vm.reward.ether }}
+          </span>
         </div>
 
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="reward">Contract Address</label>
-          <input name="address" type="text" ng-model="vm.reward.address" id="address" class="form-control" placeholder="Contract Address">
+          <label class="control-label" for="reward">Contract Address</label>          
+          <span name="address" id="address" class="form-control" disabled>
+            {{ vm.reward.address }}
+          </span>
         </div>
 
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.reward._id ? 'Update' : 'Create'}}</button>
           <button type="button" class="btn btn-default" ng-click="vm.setFulfilled()">Set Fulfilled</button>
-          <button type="button" class="btn btn-default" ng-click="vm.setVerify()">Verify by Promisor</button>
+          <button type="button" class="btn btn-default" ng-click="vm.verify()">Verify by Promisor</button>
           <button type="button" class="btn btn-default" ng-click="vm.releaseReward()">Release Reward</button>
         </div>
         <div ng-show="vm.error" class="text-danger">
