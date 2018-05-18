@@ -79,7 +79,13 @@
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.reward._id ? 'Update' : 'Create'}}</button>
           <button type="button" class="btn btn-default" ng-click="vm.setFulfilled()">Set Fulfilled</button>
-          <button type="button" class="btn btn-default" ng-click="vm.verify()">Verify by Promisor</button>
+-           {{ vm.myWallet[0] }}
+          {{ vm.reward.promisor }}
+        start
+    {{ vm.myWallet[0].trim().equalsIgnoreCase(vm.reward.promisor.trim()) ? true : false }}
+
+    end
+          <button ng-show="vm.myWallet.indexOf(vm.reward.promisor) > -1 ? true : false" type="button" class="btn btn-default" ng-click="vm.verify()">Verify by Promisor</button>
           <button type="button" class="btn btn-default" ng-click="vm.releaseReward()">Release Reward</button>
         </div>
         <div ng-show="vm.error" class="text-danger">

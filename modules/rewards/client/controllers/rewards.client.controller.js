@@ -17,6 +17,10 @@
     vm.web3 = new Web3($window.web3.currentProvider);
     
     console.log('is connected: ' + vm.web3.isConnected())
+    
+    console.log('web3 accounts: ' + vm.web3.eth.accounts)
+    vm.myWallet  = vm.web3.eth.accounts;
+    
     // console.log('blockNumber: ' + vm.web3.eth.blockNumber)
 
     // Get the contract instance using your contract's abi and address:    
