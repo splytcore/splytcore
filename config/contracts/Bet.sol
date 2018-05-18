@@ -11,11 +11,10 @@ contract Bet is Owned {
     enum Stage { OPEN, ACTIVE, FINALIZED }
     
     bytes32 public betId;
-    bool public isWon = false;
     address public winningTeam;  //Which team money is on to win
     Game public game; //game bet on
     Stage currentStage;
-    int currentMoneyLine;
+    
     uint vig;
         
     struct Bettor {
@@ -29,7 +28,7 @@ contract Bet is Owned {
     
     
     modifier onlyWon() {
-        require(isWon == true);
+        require(game.getWinner() == winningTeam);
         _;
     }
 
@@ -44,29 +43,39 @@ contract Bet is Owned {
     }
     
     function() public payable onlyStage(Stage.OPEN) {
+
+        int moneyLine = game.getCurrentMoneyLineByAddress(winningTeam);
         
-        bettors[msg.sender] = Bettor(msg.sender, msg.value, false, currentMoneyLine);
+        bettors[msg.sender] = Bettor(msg.sender, msg.value, false, moneyLine);
 
     }
     
     constructor(address _gameAddress) public {
-        betId = "bedId";
+        betId = "betId";
         game = Game(_gameAddress);
         // winningTeam = _teamId;
     }    
+
     
     //@notice set final stage where you cant change state
-    function finalize() public onlyStage(Stage.ACTIVE) onlyOwner {
-        if (winningTeam == game.winner()) {
-            isWon = true;    
-        }
+    // function finalize() public onlyStage(Stage.ACTIVE) onlyOwner {
+    //     if (winningTeam == game.winner()) {
+    //         isWon = true;    
+    //     }
         
-    }    
+    // }    
 
     //@notice if this contract is set to won, all address can withdraw 
-    function payMe() public onlyWon onlyUnpaid {
+    function payMe() public onlyWon onlyUnpaid returns (uint){
         bettors[msg.sender].isPaid = true;
-        address(this).transfer(bettors[msg.sender].wage);
+        uint myWinnings;
+        if (bettors[msg.sender].moneyLine > 0) {
+            myWinnings = bettors[msg.sender].wage * (uint(bettors[msg.sender].moneyLine) / 100);
+        } else {
+            myWinnings = bettors[msg.sender].wage / (uint(bettors[msg.sender].moneyLine) / 100);
+        }
+        bettors[msg.sender].wallet.transfer(myWinnings);
+        return myWinnings;
     }    
 
     function getBet() public view returns (bytes32, address, uint, bool) {
@@ -83,8 +92,8 @@ contract Bet is Owned {
         currentStage = Stage(uint(currentStage) + 1);
     }        
 
-    function updateMoneyLine(int _moneyLine) public onlyOwner {
-        currentMoneyLine = _moneyLine;
-    }        
+    // function updateMoneyLine(int _moneyLine) public onlyOwner {
+    //     currentMoneyLine = _moneyLine;
+    // }        
 
 }

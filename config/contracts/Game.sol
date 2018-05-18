@@ -10,6 +10,7 @@ contract Game is Owned {
     struct Team {
         address id;
         uint score;
+        int moneyLine;
     }
     
     Team home;
@@ -30,9 +31,14 @@ contract Game is Owned {
         gameId = "gameId";
     }    
 
-    function setTeams(address _visitor, address _home) public onlyOwner {
-        visitor.id = _visitor;
+    function setHomeTeam(address _home, int _moneyLine) public onlyOwner {
         home.id = _home;
+        home.moneyLine = _moneyLine;
+    }    
+
+    function setVisitorTeam(address _visitor, int _moneyLine) public onlyOwner {
+        visitor.id = _visitor;
+        visitor.moneyLine = _moneyLine;
     }    
 
     function setWinner() public onlyOwner onlyStage(Stage.GAME_OVER) {
@@ -58,6 +64,26 @@ contract Game is Owned {
 
     function getTeams() public view returns (address, address){
         return (visitor.id, home.id);
+    }    
+
+    function getCurrentMoneyLineByAddress(address _address) public view returns (int){
+        if (_address == home.id) {
+            return home.moneyLine;
+        } else if (_address == visitor.id) {
+            return visitor.moneyLine;
+
+        } else {
+            return (0);    
+        }
+        
+    }    
+
+    function getHomeMoneyLine() public view returns (int){
+        return (home.moneyLine);
+    }    
+
+    function getVisitorMoneyLine() public view returns (int){
+        return (visitor.moneyLine);
     }    
 
     function getWinner() public view returns (address) {
