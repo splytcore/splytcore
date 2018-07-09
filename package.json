@@ -1,14 +1,14 @@
 {
-  "name": "checkin",
-  "description": "checkin api for blockchains.com",
+  "name": "reward",
+  "description": "reward aplication using Ethereum",
   "version": "0.4.2",
   "meanjs-version": "0.4.2",
   "private": false,
-  "author": "blockchains.com",
+  "author": "scott kim",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dmcnetid/checkin_api.git"
+    "url": "https://github.com/megatronv7/reward.git"
   },
   "engines": {
     "node": ">=0.10.28",

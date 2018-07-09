@@ -1,7 +1,7 @@
-checkin_api  
+Reward API
 
-git clone https://github.com/dmcnetid/checkin_api.git  
-cd checkin_api  
+git clone https://github.com/megatronv7/reward.git
+cd reward
 npm install  
 sudo bower install --allow-root  
 gulp  
@@ -9,12 +9,12 @@ gulp
 DATABASE SETUP  
 
 Stage  
-use checkin-stage  
-db.createUser({ user: "user", pwd: "bernsInc2016!", roles: [{ role: "readWrite", db: "checkin-stage" }] })  
+use reward-stage  
+db.createUser({ user: "user", pwd: "bernsInc2016!", roles: [{ role: "readWrite", db: "reward-stage" }] })  
 
 Test  
-use checkin-test   
-db.createUser({ user: "user", pwd: "bernsInc2016!", roles: [{ role: "readWrite", db: "checkin-test" }] })  
+use reward-test   
+db.createUser({ user: "user", pwd: "bernsInc2016!", roles: [{ role: "readWrite", db: "reward-test" }] })  
 
 
 
@@ -27,8 +27,8 @@ Production
 Start  
 sudo pm2 start pm2.json  
 
-Stop  
-sudo pm2 stop CHECKIN  
+St
+sudo pm2 stop REWARD
 
 
 
