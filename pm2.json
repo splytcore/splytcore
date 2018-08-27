@@ -1,6 +1,6 @@
 {
   "apps" : [{
-    "name"        : "Checkin",
+    "name"        : "SPLYT",
     "script"      : "gulp",
     "watch"       : false,
     // "env": {

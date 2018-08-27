@@ -5,10 +5,10 @@ var defaultEnvConfig = require('./default');
 module.exports = {  
   db: {
     // uri: 'mongodb://35.162.114.40/checkin-stage', // points to AWS DEV - MONGODB
-    uri: 'mongodb://35.162.114.40/comp-demo', // points to AWS DEV - MONGODB
+    uri: 'mongodb://35.162.114.40/splytcore2-dev', // points to AWS DEV - MONGODB
     options: {
       user: 'user',
-      pass: 'bernsInc2016!'
+      pass: 'splytcore2018!'
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
@@ -34,6 +34,9 @@ module.exports = {
   },
   app: {
     title: defaultEnvConfig.app.title + ' - Development Environment'
+  },
+  ethereum: {
+    url: 'http://local-host:8445'
   },
   livereload: true,
   seedDB: {

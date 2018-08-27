@@ -79,10 +79,6 @@ var UserSchema = new Schema({
     default: ['user'],
     required: 'Please provide at least one role'
   },
-  department: {
-    type: Schema.ObjectId,
-    ref: 'Department'
-  },
   updated: {
     type: Date
   },

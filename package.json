@@ -1,6 +1,6 @@
 {
-  "name": "reward",
-  "description": "reward aplication using Ethereum",
+  "name": "splytcore2",
+  "description": "splytcore application using Ethereum",
   "version": "0.4.2",
   "meanjs-version": "0.4.2",
   "private": false,
@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/megatronv7/reward.git"
+    "url": "https://github.com/megatronv7/splytcore2.git"
   },
   "engines": {
     "node": ">=0.10.28",

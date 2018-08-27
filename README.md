@@ -1,7 +1,7 @@
-Reward API
+Splytcore2 API
 
-git clone https://github.com/megatronv7/reward.git
-cd reward
+git clone https://github.com/megatronv7/splytcore2.git
+cd splytcore2
 npm install  
 sudo bower install --allow-root  
 gulp  
@@ -9,12 +9,12 @@ gulp
 DATABASE SETUP  
 
 Stage  
-use reward-stage  
-db.createUser({ user: "user", pwd: "bernsInc2016!", roles: [{ role: "readWrite", db: "reward-stage" }] })  
+use splytcore-stage  
+db.createUser({ user: "user", pwd: "splyt2016!", roles: [{ role: "readWrite", db: "splytcore-stage" }] })  
 
 Test  
-use reward-test   
-db.createUser({ user: "user", pwd: "bernsInc2016!", roles: [{ role: "readWrite", db: "reward-test" }] })  
+use splytcore-test   
+db.createUser({ user: "user", pwd: "splyt2016!", roles: [{ role: "readWrite", db: "splytcore-test" }] })  
 
 
 
@@ -28,7 +28,7 @@ Start
 sudo pm2 start pm2.json  
 
 St
-sudo pm2 stop REWARD
+sudo pm2 stop SPLYT
 
 
 
