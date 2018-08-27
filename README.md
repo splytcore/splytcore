@@ -1,8 +1,8 @@
 Splytcore2 API
 
 git clone https://github.com/megatronv7/splytcore2.git
-cd splytcore2
-npm install  
+cd splytcore2. 
+npm install    
 sudo bower install --allow-root  
 gulp  
 
