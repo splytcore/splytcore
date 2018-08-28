@@ -14,6 +14,9 @@
     vm.save = save;    
     vm.asset = asset;
 
+    vm.myWallet = EthService.getMyWallet();
+
+    console.log('buyer wallet: ' + vm.myWallet)
     // Save Asset
     function purchase() {
 

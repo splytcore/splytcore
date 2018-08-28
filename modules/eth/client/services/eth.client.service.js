@@ -13,6 +13,7 @@
   
     vm.createAsset = createAsset;
     vm.purchase = purchase;
+    vm.getMyWallet = getMyWallet;
 
     vm.publicKey = '0xD1A421A5F199cd16Ca49778841CB88053768d5f1'
     vm.privateKey = 'c165c12ca90658dfc7906c11dde6a7e5f9c67d49476649d9a26bb2e65578b352'  
@@ -22,7 +23,6 @@
     console.log('is connected: ' + vm.web3.isConnected())
     
     console.log('web3 accounts: ' + vm.web3.eth.accounts)
-    vm.myWallet  = vm.web3.eth.accounts;
     
     // console.log('blockNumber: ' + vm.web3.eth.blockNumber)
 
@@ -44,6 +44,10 @@
       // from: vm.publicKey,
       gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
       gas: vm.web3.toHex(4600000) //max number of gas to be used  
+    }
+
+    function getMyWallet() {
+      return vm.web3.eth.accounts
     }
 
     // Set fullfilled by promisee
