@@ -6,9 +6,9 @@
     .module('eth')
     .service('EthService', EthService);
 
-  EthService.$inject = ['$http', '$window'];
+  EthService.$inject = ['$http', '$window', '$q'];
 
-  function EthService($http, $window) {
+  function EthService($http, $window, $q) {
     let vm = this
   
     vm.createAsset = createAsset;
@@ -16,8 +16,8 @@
     vm.getMyWallets = getMyWallets;
     vm.getAllABI = getAllABI;
 
-    vm.publicKey = '0xD1A421A5F199cd16Ca49778841CB88053768d5f1'
-    vm.privateKey = 'c165c12ca90658dfc7906c11dde6a7e5f9c67d49476649d9a26bb2e65578b352'  
+    vm.getAssetsLength = getAssetsLength;
+
     
     vm.web3 = new Web3($window.web3.currentProvider);
     
@@ -80,6 +80,13 @@
       gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
       gas: vm.web3.toHex(4600000) //max number of gas to be used  
     }
+
+    function getAssetsLength() {
+      // vm.assetManagerContract.getAssetsLength((err, length) => {
+      //   console.log('number of listed assets ' + length)
+      // })      
+    }
+
 
     function getMyWallets() {
       return vm.web3.eth.accounts
@@ -163,12 +170,12 @@
       })
     }
 
-    function createAsset(assetId) {
-
-      console.log('toHex: ' + vm.web3.toHex(assetId))
-      let assetIdHex = vm.web3.toHex(assetId)
+    function createAsset(asset) {
+      console.log(asset)
+      console.log('toHex: ' + vm.web3.toHex(asset._id))
+      let assetIdHex = vm.web3.toHex(asset._id)
       $q((resolve, reject) => {                  
-        vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {
+        vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, 0, asset.sellerWallet, asset.title, 10000, 0xD1A421A5F199cd16Ca49778841CB88053768d5f1, 0, 10, 1, vm.gas, (err, trxid) => {
           console.log('trxid: ' + trxid)
           if (err) {
             reject(err)

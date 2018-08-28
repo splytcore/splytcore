@@ -41,8 +41,8 @@
         vm.asset.$save(successCallback, errorCallback);
       }
 
-      function successCallback(res) {                
-          EthService.createAsset(vm.asset._id);
+      function successCallback(asset) {                
+          EthService.createAsset(asset);
       }
 
       function errorCallback(res) {

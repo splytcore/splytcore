@@ -5,10 +5,12 @@
     .module('assets')
     .controller('AssetsListController', AssetsListController);
 
-  AssetsListController.$inject = ['AssetsService'];
+  AssetsListController.$inject = ['AssetsService', 'EthService'];
 
-  function AssetsListController(AssetsService) {
+  function AssetsListController(AssetsService, EthService) {
     var vm = this;
     vm.assets = AssetsService.query();
+    EthService.getAssetsLength();
+    
   }
 }());
