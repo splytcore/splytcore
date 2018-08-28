@@ -20,7 +20,11 @@ var OrderSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  user: {
+  //buyer wallet
+  wallet: {
+    type: String
+  },
+  buyer: {
     type: Schema.ObjectId,
     ref: 'User'
   }

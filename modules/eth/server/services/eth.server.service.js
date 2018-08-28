@@ -37,20 +37,20 @@ web3.eth.net.isListening()
     console.log('current block: ' + blockNumber)   
     assetManager = new web3.eth.Contract(assetManagerABI, assetManagerAddress)        
     return
-})
-.then(() => {          
-    return web3.eth.getBalance(wallet)
-}).then((balance) => {      
-    console.log('Balance: ' + web3.utils.fromWei(balance, 'ether'))        
-    return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000)        
-}).then((result) => {      
-  console.log('unlock result: ' + result)
-  return result
-}).then((isLocked) => {      
-    console.log('lets lock the account back up for safetly meassure: ')        
-    return web3.eth.personal.lockAccount(wallet)
-}).then((result) => {      
-  console.log('lock result: ' + result)
+// })
+// .then(() => {          
+//     return web3.eth.getBalance(wallet)
+// }).then((balance) => {      
+//     console.log('Balance: ' + web3.utils.fromWei(balance, 'ether'))        
+//     return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000)        
+// }).then((result) => {      
+//   console.log('unlock result: ' + result)
+//   return result
+// }).then((isLocked) => {      
+//     console.log('lets lock the account back up for safetly meassure: ')        
+//     return web3.eth.personal.lockAccount(wallet)
+// }).then((result) => {      
+//   console.log('lock result: ' + result)
 }).catch((err) => {
   console.log('error connecting to web3')
   console.log(err)

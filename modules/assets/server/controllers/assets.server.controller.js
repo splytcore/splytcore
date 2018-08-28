@@ -7,7 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Asset = mongoose.model('Asset'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  web3 = require(path.resolve('./modules/assets/server/services/assets.server.service')),
+  web3 = require(path.resolve('./modules/eth/server/services/eth.server.service')),
   _ = require('lodash');
 
 /**

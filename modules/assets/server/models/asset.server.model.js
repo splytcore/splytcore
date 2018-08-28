@@ -26,14 +26,16 @@ var AssetSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  //reward amount from contract
-  ether: {
-    type: Number
-  },  
+  seller: {
+    type: String
+  }, 
+  marketPlaces: [{
+    type: String
+  }],  
+  //contract address
   address: {
     type: String
-  },      
-  //promisor
+  },       
   user: {
     type: Schema.ObjectId,
     ref: 'User'

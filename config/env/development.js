@@ -36,7 +36,7 @@ module.exports = {
     title: defaultEnvConfig.app.title + ' - Development Environment'
   },
   ethereum: {
-    url: 'http://local-host:8445'
+    url: 'http://127.0.0.1:8545'
   },
   livereload: true,
   seedDB: {
