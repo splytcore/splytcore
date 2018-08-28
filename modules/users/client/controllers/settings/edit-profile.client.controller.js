@@ -1,18 +1,8 @@
 'use strict';
 
-angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication', 'DepartmentsService',
-  function ($scope, $http, $location, Users, Authentication, DepartmentsService) {
+angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication',
+  function ($scope, $http, $location, Users, Authentication) {
     $scope.user = Authentication.user;
-
-
-    DepartmentsService.list()
-      .success((res) => {
-         console.log(res)
-        $scope.departments = res
-      })
-      .error((err) => {
-        console.log(err)
-      })  
       
     // Update a user profile
     $scope.updateUserProfile = function (isValid) {

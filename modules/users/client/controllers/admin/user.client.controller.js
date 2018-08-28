@@ -1,17 +1,9 @@
 'use strict';
 
-angular.module('users.admin').controller('UserController', ['$scope', '$state', 'Authentication', 'userResolve', 'DepartmentsService', 
-  function ($scope, $state, Authentication, userResolve, DepartmentsService) {
+angular.module('users.admin').controller('UserController', ['$scope', '$state', 'Authentication', 'userResolve', 
+  function ($scope, $state, Authentication, userResolve) {
     $scope.authentication = Authentication;
     $scope.user = userResolve;
-
-    DepartmentsService.list()
-      .success((res) => {        
-        $scope.departments = res
-      })
-      .error((err) => {
-        console.log(err)
-      })    
 
     $scope.remove = function (user) {
       if (confirm('Are you sure you want to delete this user?')) {
