@@ -7,7 +7,9 @@ const host = config.ethereum.url
 const web3 = new Web3(new Web3.providers.HttpProvider(host))
 
 const SplytManager = require(path.resolve('./config/abi/SplytManager.json'))
-
+const AssetManager = require(path.resolve('./config/abi/AssetManager.json'))
+const OrderManager = require(path.resolve('./config/abi/OrderManager.json'))
+const ArbitrationManager = require(path.resolve('./config/abi/ArbitrationManager.json'))
 
 console.log('initiate web3')
 
@@ -87,6 +89,22 @@ exports.getSplytManagerABI = function() {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })
   return SplytManager.abi;
 }
+
+exports.getAssetManagerABI = function() {
+  // return assetManager.methods.getassetsLength().call({ from: gas.from })
+  return AssetManager.abi;
+}
+
+exports.getOrderManagerABI = function() {
+  // return assetManager.methods.getassetsLength().call({ from: gas.from })
+  return OrderManager.abi;
+}
+
+exports.getArbitrationManagerABI = function() {
+  // return assetManager.methods.getassetsLength().call({ from: gas.from })
+  return ArbitrationManager.abi;
+}
+
 
 exports.createAsset = function(assetId) {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })
