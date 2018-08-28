@@ -34,7 +34,8 @@ var AssetSchema = new Schema({
   }],  
   //contract address
   address: {
-    type: String
+    type: String,
+    default: ''
   },       
   user: {
     type: Schema.ObjectId,

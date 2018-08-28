@@ -41,9 +41,6 @@
         templateUrl: 'modules/assets/client/views/form-asset.client.view.html',
         controller: 'AssetsController',
         controllerAs: 'vm',
-        resolve: {
-          assetResolve: getAsset
-        },
         data: {
           roles: ['user', 'admin'],
           pageTitle: 'Edit Asset {{ assetResolve.name }}'

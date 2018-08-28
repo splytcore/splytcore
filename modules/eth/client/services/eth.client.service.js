@@ -74,13 +74,12 @@
       gas: vm.web3.toHex(4600000) //max number of gas to be used  
     }
 
-    function getAddressByAssetId(assetId) {
+
+    function getAddressByAssetId(assetId, done) {
       console.log('assetId: ' + assetId)
       let assetIdHex = vm.web3.toHex(assetId)
       vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
-        console.log(err)
-        console.log(address)
-        return address;
+        done(err, address)
       })
           
     }

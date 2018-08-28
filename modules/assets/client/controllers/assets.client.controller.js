@@ -6,28 +6,44 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService'];
+  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AssetsService', '$q', 'EthService'];
 
-  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService) {
-    var vm = this;
-    vm.purchase = purchase;
-    vm.save = save;    
-    vm.asset = asset;
+  function AssetsController ($scope, $state, $window, Authentication, AssetsService, $q, EthService) {
+    var vm = this
+    vm.purchase = purchase
+    vm.save = save   
+    
+    if ($state.params.assetId) {
+      AssetsService.get($state.params.assetId)
+        .success((res) => {             
+          vm.asset = res    
+          EthService.getAddressByAssetId(res._id, (err, address) => {
+            vm.asset.address = address
+            $scope.$apply()
+          })
+        })
+        .error((res) => {          
+          console.log(res)
+        })        
+    } else {
+      vm.asset = {}
+    }
 
     vm.myWallets = EthService.getMyWallets();
 
     console.log('buyer wallet: ' + vm.myWallets)
-    // Save Asset
+    // vm.asset.sellerWallet = vm.asset ? 'not found' : vm.myWallets[0]
+   
+    // EthService.getAddressByAssetId(vm.asset._id, (err, address) => {
+    //   console.log('returned address: ' + address)
+    //   asset.address = address 
+    //   console.log(vm.asset)
 
+    // })
 
-    vm.asset.sellerWallet = !vm.asset._id ? vm.myWallets[0] : 'not found';
-
-    vm.asset.contractAddress = vm.asset._id ? EthService.getAddressByAssetId(vm.asset._id) : ''
-
-      
     function purchase() {
 
-      EthService.purchase(vm.asset._id);
+      EthService.purchase(vm.asset._id)
 
     }
 
