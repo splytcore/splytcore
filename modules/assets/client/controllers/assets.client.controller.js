@@ -14,10 +14,14 @@
     vm.save = save;    
     vm.asset = asset;
 
-    vm.myWallet = EthService.getMyWallet();
+    vm.myWallets = EthService.getMyWallets();
 
-    console.log('buyer wallet: ' + vm.myWallet)
+    console.log('buyer wallet: ' + vm.myWallets)
     // Save Asset
+
+
+    vm.asset.sellerWallet = !vm.asset._id ? vm.myWallets[0] : 'not found';
+      
     function purchase() {
 
       EthService.purchase(vm.asset._id);

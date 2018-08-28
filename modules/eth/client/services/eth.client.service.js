@@ -13,7 +13,8 @@
   
     vm.createAsset = createAsset;
     vm.purchase = purchase;
-    vm.getMyWallet = getMyWallet;
+    vm.getMyWallets = getMyWallets;
+    vm.getSplytManagerABI = getSplytManagerABI;
 
     vm.publicKey = '0xD1A421A5F199cd16Ca49778841CB88053768d5f1'
     vm.privateKey = 'c165c12ca90658dfc7906c11dde6a7e5f9c67d49476649d9a26bb2e65578b352'  
@@ -25,6 +26,43 @@
     console.log('web3 accounts: ' + vm.web3.eth.accounts)
     
     // console.log('blockNumber: ' + vm.web3.eth.blockNumber)
+    vm.splytManagerABI;
+    vm.splytManagerContract;
+    getSplytManagerABI()
+      .success((config) => {
+          console.log(config);
+          vm.splytManagerABI = vm.web3.eth.contract(config.abi)
+          vm.splytManagerContract = vm.splytManagerABI.at(config.address)
+          vm.splytManagerContract.getManagerTrackerAddress((err, result) => {
+            console.log('ManagerTrackerAddress: ' + result)
+          })
+
+          vm.splytManagerContract.assetManager((err, result) => {
+            console.log('assetManager ' + result)
+          })
+
+          vm.splytManagerContract.orderManager((err, result) => {
+            console.log('orderManager ' + result)
+          })
+
+          vm.splytManagerContract.arbitrationManager((err, result) => {
+            console.log('arbitrationManager ' + result)
+          })
+
+
+          vm.splytManagerContract.owner((err, result) => {
+            console.log('splytManagerContract owner ' + result)
+          })
+
+          // vm.assetContract.setFulfilled.sendTransaction(vm.gas, (err, trxid) => {
+          //   console.log('trxid: ' + trxid)
+          // })
+
+          // console.log(vm.splytManagerContract.methods.getManagerTrackerAddress().call())
+      })
+      .error((err) => {
+        console.log(err)
+      })
 
     // Get the contract instance using your contract's abi and address:    
     vm.assetABI = vm.web3.eth.contract([{"constant":false,"inputs":[],"name":"verifyFalse","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"promisee","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"id","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"stage","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"promisor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"setFulfilled","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stage","type":"uint8"}],"name":"setStage","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"releaseAsset","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"verify","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_id","type":"string"},{"name":"_promisor","type":"address"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]);
@@ -46,7 +84,7 @@
       gas: vm.web3.toHex(4600000) //max number of gas to be used  
     }
 
-    function getMyWallet() {
+    function getMyWallets() {
       return vm.web3.eth.accounts
     }
 
@@ -98,6 +136,11 @@
       })
 
     }
+
+    function getSplytManagerABI() {
+      return $http.get('/api/abi/splytManagerABI');
+    }
+
 
     function verify() {
       //need to use promisor wallet

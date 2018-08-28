@@ -26,7 +26,7 @@ var AssetSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  seller: {
+  sellerWallet: {
     type: String
   }, 
   marketPlaces: [{

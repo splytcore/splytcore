@@ -6,6 +6,9 @@ const config = require(path.resolve('./config/config'))
 const host = config.ethereum.url
 const web3 = new Web3(new Web3.providers.HttpProvider(host))
 
+const SplytManager = require(path.resolve('./config/abi/SplytManager.json'))
+
+
 console.log('initiate web3')
 
 
@@ -78,6 +81,11 @@ exports.getAssetAmountById = function(assetId) {
     console.log(err)
   })
 
+}
+
+exports.getSplytManagerABI = function() {
+  // return assetManager.methods.getassetsLength().call({ from: gas.from })
+  return SplytManager.abi;
 }
 
 exports.createAsset = function(assetId) {
