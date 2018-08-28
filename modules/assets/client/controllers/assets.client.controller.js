@@ -21,6 +21,9 @@
 
 
     vm.asset.sellerWallet = !vm.asset._id ? vm.myWallets[0] : 'not found';
+
+    vm.asset.contractAddress = vm.asset._id ? EthService.getAddressByAssetId(vm.asset._id) : ''
+
       
     function purchase() {
 

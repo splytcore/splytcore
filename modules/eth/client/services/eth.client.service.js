@@ -17,7 +17,7 @@
     vm.getAllABI = getAllABI;
 
     vm.getAssetsLength = getAssetsLength;
-
+    vm.getAddressByAssetId = getAddressByAssetId;
     
     vm.web3 = new Web3($window.web3.currentProvider);
     
@@ -54,8 +54,6 @@
             vm.arbitrationManagerContract = vm.web3.eth.contract(config.arbitrationManagerABI).at(address) 
           })
 
-
-
           vm.splytManagerContract.owner((err, result) => {
             console.log('splytManagerContract owner ' + result)
           })
@@ -70,16 +68,23 @@
         console.log(err)
       })
 
-    // Call a function of the contract:
-    // vm.assetContract.stage((err, res) => {
-    //   console.log('gettint stage: ' + res)
-    // })
-
     vm.gas = {
       // from: vm.publicKey,
       gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
       gas: vm.web3.toHex(4600000) //max number of gas to be used  
     }
+
+    function getAddressByAssetId(assetId) {
+      console.log('assetId: ' + assetId)
+      let assetIdHex = vm.web3.toHex(assetId)
+      vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
+        console.log(err)
+        console.log(address)
+        return address;
+      })
+          
+    }
+
 
     function getAssetsLength() {
       // vm.assetManagerContract.getAssetsLength((err, length) => {
@@ -143,22 +148,6 @@
 
     function getAllABI() {
       return $http.get('/api/abi/getAll');
-    }
-
-
-    function verify() {
-      //need to use promisor wallet
-      vm.assetContract.verify.sendTransaction(vm.gas, (err, trxid) => {
-        console.log('trxid: ' + trxid)
-      })
-
-    }
-
-    function verifyFalse() {
-      //need to use promisor wallet
-      vm.assetContract.verifyFalse.sendTransaction(vm.gas, (err, trxid) => {
-        console.log('trxid: ' + trxid)
-      })
     }
 
     function purchase(assetId) {

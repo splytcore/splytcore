@@ -10,7 +10,7 @@
   function AssetsListController(AssetsService, EthService) {
     var vm = this;
     vm.assets = AssetsService.query();
-    EthService.getAssetsLength();
+    // EthService.getAssetsLength();
     
   }
 }());
