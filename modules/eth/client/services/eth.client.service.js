@@ -15,6 +15,7 @@
     vm.purchase = purchase;
     vm.getMyWallets = getMyWallets;
     vm.getAllABI = getAllABI;
+    vm.getAssetInfo = getAssetInfo;
 
     vm.getAssetsLength = getAssetsLength;
     vm.getAddressByAssetId = getAddressByAssetId;
@@ -74,7 +75,6 @@
       gas: vm.web3.toHex(4600000) //max number of gas to be used  
     }
 
-
     function getAddressByAssetId(assetId, done) {
       console.log('assetId: ' + assetId)
       let assetIdHex = vm.web3.toHex(assetId)
@@ -94,6 +94,29 @@
 
     function getMyWallets() {
       return vm.web3.eth.accounts
+    }
+
+    function getAssetInfo(assetId) {
+      console.log('assetId: ' + assetId)
+      let assetIdHex = vm.web3.toHex(assetId)
+      $q((resolve, reject) => {        
+        vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
+          resolve(address)
+        })                
+      })
+      .then((address) => {
+        console.log(address)
+        let deferred = $q.defer()
+        vm.assetManagerContract.getAssetInfo(address, (err, fields) => {
+          console.log(fields)
+          deferred.resolve('step 2')
+        })
+        return deferred.promise
+      })
+      .catch((err) => {
+        console.log('error')
+        console.log(err)
+      })
     }
 
     // Set fullfilled by promisee
