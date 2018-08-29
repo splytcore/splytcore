@@ -16,6 +16,8 @@
     vm.getMyWallets = getMyWallets;
     vm.getAllABI = getAllABI;
     vm.getAssetInfo = getAssetInfo;
+    
+    vm.getAssetStatus = getAssetStatus;
 
     vm.getAssetsLength = getAssetsLength;
     vm.getAddressByAssetId = getAddressByAssetId;
@@ -172,13 +174,30 @@
       return $http.get('/api/abi/getAll');
     }
 
+
+    function getAssetStatus(assetId) {
+      let assetIdHex = vm.web3.toHex(assetId)
+      //anyone can call this function to pay promisee
+      // vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {     
+      vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
+        vm.assetManagerContract.getStatus(address, (err, status) => {
+          console.log('status: ' + status)
+          return status;
+        })        
+      })
+
+    }
+
     function purchase(assetId) {
       let assetIdHex = vm.web3.toHex(assetId)
       //anyone can call this function to pay promisee
-      // vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {      
-      vm.assetManagerContract.purchase.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {
-        console.log('trxid: ' + trxid)
+      // vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {     
+      vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
+        vm.orderManagerContract.purchase.sendTransaction(address, 1, 10000, vm.gas, (err, trxid) => {
+          console.log('trxid: ' + trxid)
+        })        
       })
+
     }
 
     function createAsset(asset) {

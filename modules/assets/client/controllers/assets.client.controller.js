@@ -32,6 +32,9 @@
       $scope.$apply()
     })
 
+    vm.assetStatus = EthService.getAssetStatus(vm.asset._id);
+    console.log('status fields: ' + vm.assetStatus)
+
     function purchase() {
 
       EthService.purchase(vm.asset._id)
