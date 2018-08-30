@@ -79,7 +79,7 @@ exports.update = function(req, res) {
   var asset = req.asset;
   asset = _.extend(asset, req.body);
 
-  Asset.save(function(err) {
+  asset.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -96,7 +96,7 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   var asset = req.asset;
 
-  Asset.remove(function(err) {
+  asset.remove(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -111,14 +111,6 @@ exports.delete = function(req, res) {
  * List of assets
  */
 exports.list = function(req, res) {
-
-  // web3.getAssetsLength()
-  // .then((result) => {
-  //   console.log('Number of asset contracts...' + result)
-  // })
-  // .catch((err) => {
-  //   console.log(err)
-  // })
 
   Asset.find().sort('-created').populate('user', 'displayName').exec(function(err, assets) {
     if (err) {

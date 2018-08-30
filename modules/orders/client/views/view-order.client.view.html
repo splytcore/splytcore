@@ -2,8 +2,7 @@
   <div class="page-header">
     <h1 ng-bind="vm.order.name"></h1>
   </div>
-  <div class="pull-right"
-       ng-show="vm.order.isCurrentUserOwner">
+  <div class="pull-right">
     <a class="btn btn-primary"
        ui-sref="orders.edit({ orderId: vm.order._id })">
       <i class="glyphicon glyphicon-edit"></i>
@@ -17,8 +16,7 @@
       Posted on
       <span ng-bind="vm.order.created | date:'mediumDate'"></span>
       by
-      <span ng-if="vm.order.user"
-            ng-bind="vm.order.user.displayName"></span>
+      <span ng-bind="vm.order.user.displayName"></span>
       <span ng-if="!vm.order.user">Deleted User</span>
     </em>
   </small>

@@ -13,6 +13,7 @@
     vm.purchase = purchase
     vm.save = save   
     vm.asset = asset
+    vm.remove = remove
 
     vm.myWallets = EthService.getMyWallets();
 
@@ -62,5 +63,11 @@
         vm.error = res.data.message;
       }
     }
+
+    function remove() {
+      if ($window.confirm('Are you sure you want to delete?')) {
+        vm.asset.$remove($state.go('assets.list'));
+      }
+    }    
   }
 }());
