@@ -20,21 +20,25 @@
     console.log('buyer wallet: ' + vm.myWallets)
     vm.asset.sellerWallet = !vm.asset._id ? vm.myWallets[0] : 'not found';
    
+    if (vm.asset._id) {
+      EthService.getAddressByAssetId(vm.asset._id, (err, address) => {
+        console.log('returned address: ' + address)
+        asset.address = address 
+        console.log(vm.asset)
+        $scope.$apply()
+      })
 
-    EthService.getAddressByAssetId(vm.asset._id, (err, address) => {
-      console.log('returned address: ' + address)
-      asset.address = address 
-      console.log(vm.asset)
-      $scope.$apply()
-    })
+      EthService.getAssetInfo(vm.asset._id, (err, fields) => {
+        console.log('returned fields: ' + fields)
+        $scope.$apply()
+      })
+  
+      vm.assetStatus = EthService.getAssetStatus(vm.asset._id);
+      console.log('status fields: ' + vm.assetStatus)
 
-    EthService.getAssetInfo(vm.asset._id, (err, fields) => {
-      console.log('returned fields: ' + fields)
-      $scope.$apply()
-    })
+    }
 
-    vm.assetStatus = EthService.getAssetStatus(vm.asset._id);
-    console.log('status fields: ' + vm.assetStatus)
+    
 
     function purchase() {
 
