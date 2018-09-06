@@ -122,6 +122,11 @@ exports.getArbitrationManagerABI = function() {
   return ArbitrationManager.abi;
 }
 
+exports.getReputationManagerABI = function() {
+  // return assetManager.methods.getassetsLength().call({ from: gas.from })
+  return ReputationManager.abi;
+}
+
 
 exports.createAsset = function(assetId) {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })

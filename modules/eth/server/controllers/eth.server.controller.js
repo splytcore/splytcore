@@ -16,6 +16,7 @@ exports.getAll = function(req, res) {
   let assetManagerABI = EthService.getAssetManagerABI();
   let orderManagerABI = EthService.getOrderManagerABI();
   let arbitrationManagerABI = EthService.getArbitrationManagerABI();
+  let reputationManagerABI = EthService.getReputationManagerABI();
   
   let splytManagerAddress = config.ethereum.splytManagerAddress;
 
@@ -23,6 +24,7 @@ exports.getAll = function(req, res) {
   			  assetManagerABI: assetManagerABI,
   			  orderManagerABI: orderManagerABI,
   			  arbitrationManagerABI: arbitrationManagerABI,
+          reputationManagerABI: reputationManagerABI,          
   			  splytManagerAddress: splytManagerAddress });
 };
 

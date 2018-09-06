@@ -34,6 +34,7 @@
     vm.orderManagerContract
     vm.assetManagerContract
     vm.arbitrationManagerContract
+    vm.reputationManagerContract
 
     getAllABI()
       .success((config) => {
@@ -56,6 +57,11 @@
           vm.splytManagerContract.arbitrationManager((err, address) => {
             console.log('arbitrationManager ' + address)
             vm.arbitrationManagerContract = vm.web3.eth.contract(config.arbitrationManagerABI).at(address) 
+          })
+
+          vm.splytManagerContract.reputationManager((err, address) => {
+            console.log('reputationManager ' + address)
+            vm.reputationManagerContract = vm.web3.eth.contract(config.reputationManagerABI).at(address) 
           })
 
           vm.splytManagerContract.owner((err, result) => {
@@ -209,6 +215,14 @@
       })
 
     }
+
+    function createRate(wallet, rating) { 
+      vm.reputationManagerContract.createRate.sendTransaction(wallet, rating, vm.gas, (err, trxid) => {
+        console.log('trxid: ' + trxid)
+      })        
+
+    }
+
 
     function createAsset(asset) {
       console.log(asset)
