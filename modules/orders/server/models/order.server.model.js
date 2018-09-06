@@ -10,21 +10,16 @@ var mongoose = require('mongoose'),
  * Order Schema
  */
 var OrderSchema = new Schema({
-  name: {
-    type: String,
-    default: '',
-    required: 'Please fill Order name',
-    trim: true
-  },
   created: {
     type: Date,
     default: Date.now
   },
-  //buyer wallet
-  wallet: {
-    type: String
+  asset: {
+    type: Schema.ObjectId,
+    ref: 'Asset'
   },
-  buyer: {
+  //buyer
+  user: {
     type: Schema.ObjectId,
     ref: 'User'
   }

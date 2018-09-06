@@ -10,18 +10,29 @@ const SplytManager = require(path.resolve('./config/abi/SplytManager.json'))
 const AssetManager = require(path.resolve('./config/abi/AssetManager.json'))
 const OrderManager = require(path.resolve('./config/abi/OrderManager.json'))
 const ArbitrationManager = require(path.resolve('./config/abi/ArbitrationManager.json'))
+const ReputationManager = require(path.resolve('./config/abi/ReputationManager.json'))
 
 console.log('initiate web3')
 
 
-const privatekey = '2cd1cce5054f2c9d1b1bc8217f7f0db9ae881703fa8d74b5aacccd4ab0af38e1'
+const privateKey = '2cd1cce5054f2c9d1b1bc8217f7f0db9ae881703fa8d74b5aacccd4ab0af38e1'
 
-let assetABI = [{"constant":false,"inputs":[],"name":"verifyFalse","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"promisee","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"id","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"stage","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"promisor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"setFulfilled","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stage","type":"uint8"}],"name":"setStage","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"releaseasset","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"verify","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_id","type":"string"},{"name":"_promisor","type":"address"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]
-let assetManagerABI = [{"constant":true,"inputs":[{"name":"_id","type":"string"}],"name":"getassetById","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_index","type":"uint256"}],"name":"getassetByIndex","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_id","type":"string"}],"name":"createasset","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getassetsLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]
+// const assetManagerABI = AssetManager.abi;
+// const splytManagerABI = SplytManager.abi;
+// const orderManagerABI = OrderManager.abi;
+// const arbitrationManagerABI = ArbitrationManager.abi;
+// const reputationManagerABI = ReputationManager.abi;
 
-let assetManagerAddress = '0x422b09aad8100348Fd25E05Dd16122aD91e8b884'
+//once we have the splytManager address, we can retrieve address of the other managers
+const splytManagerAddress = config.ethereum.splytManagerAddress
+console.log('splytManagerAddress: ' + splytManagerAddress)
 
-let assetManager
+let splytManager;
+let assetManager;
+let orderManager;
+let reputationManager;
+let arbitrationManager;
+
 const wallet = config.ethereum.wallet
 const walletPassword = config.ethereum.password
 
@@ -40,18 +51,24 @@ web3.eth.net.isListening()
 .then((blockNumber) => {  
     console.log('version: ' + web3.version)
     console.log('current block: ' + blockNumber)   
-    assetManager = new web3.eth.Contract(assetManagerABI, assetManagerAddress)        
     return
-// })
-// .then(() => {          
-//     return web3.eth.getBalance(wallet)
-// }).then((balance) => {      
-//     console.log('Balance: ' + web3.utils.fromWei(balance, 'ether'))        
-//     return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000)        
-// }).then((result) => {      
+})
+.then(() => {      
+  splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
+  return 
+}).then(() => {
+  // console.log('splytManager: ' + splytManager.methods.assetManager().call())      
+
+  // let address =  await splytManager.methods.assetManager().call()
+  // console.log('await address: ' + address)
+  // assetManager = new web3.eth.Contract(assetManagerABI, splytManager.assetManager())     
+  // orderManager = new web3.eth.Contract(orderManagerABI, assetManagerAddress)        
+
+}).then(() => {      
 //   console.log('unlock result: ' + result)
 //   return result
 // }).then((isLocked) => {      
+//     web3.eth.personal.unlockAccount(wallet, walletPassword, 1000)
 //     console.log('lets lock the account back up for safetly meassure: ')        
 //     return web3.eth.personal.lockAccount(wallet)
 // }).then((result) => {      
@@ -62,28 +79,28 @@ web3.eth.net.isListening()
 })
 
 
-exports.getAssetAmountById = function(assetId) {
+// exports.getAssetAmountById = function(assetId) {
 
-  return new Promise((resolve, reject) => {      
-    exports.getassetContractById(assetId)
-      .then((address) => {
-        resolve(address)
-      })
-  })
-  .then((address) => {
-    return new web3.eth.Contract(assetABI, address)     
-  })
-  .then((asset) => {    
-    asset.id.call((err,result) => {
-      console.log('asset id: ' + result)
-    })
-    return asset.methods.getAmount().call({ from: gas.from })
-  })
-  .catch((err) => {
-    console.log(err)
-  })
+//   return new Promise((resolve, reject) => {      
+//     exports.getassetContractById(assetId)
+//       .then((address) => {
+//         resolve(address)
+//       })
+//   })
+//   .then((address) => {
+//     return new web3.eth.Contract(assetABI, address)     
+//   })
+//   .then((asset) => {    
+//     asset.id.call((err,result) => {
+//       console.log('asset id: ' + result)
+//     })
+//     return asset.methods.getAmount().call({ from: gas.from })
+//   })
+//   .catch((err) => {
+//     console.log(err)
+//   })
 
-}
+// }
 
 exports.getSplytManagerABI = function() {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })
@@ -120,7 +137,7 @@ exports.createAsset = function(assetId) {
 
 
 exports.getAssetsLength = function() {
-  return assetManager.methods.getassetsLength().call()
+  return assetManager.methods.getAssetsLength().call()
 }
 
 exports.getAssetContractById = function(assetId) {
@@ -131,7 +148,7 @@ exports.getAssetContractById = function(assetId) {
 }
 
 exports.getAssetContractByIndex = function(index) {
-  return assetManager.methods.getassetByIndex(index).call()
+  return assetManager.methods.getAssetByIndex(index).call()
 }
 
 exports.getAssetInfo = function(_assetId) {
@@ -147,55 +164,55 @@ exports.getAssetInfo = function(_assetId) {
   // let contractAddress
   // let assetEther
 
-  return new Promise((resolve, reject) => {            
+  // return new Promise((resolve, reject) => {            
       
-      let assetContract
+  //     let assetContract
 
-      exports.getassetContractById(_assetId)
-      .then((address) => {
-        console.log('contract address: ' + address)
-        if (address.indexOf('0x00000000000000') > -1) {
-          console.log('address not found')
-          return reject('No contract address found. Not yet mined?')
-        } else {
-          result.address = address
-          return new web3.eth.Contract(assetABI, address)     
-        }
-      })            
-      .then((asset) => {            
-        assetContract = asset 
-        return web3.eth.getBalance(result.address)                      
-      })         
-      .then((assetAmount) => {   
-        console.log('asset amt: ' + assetAmount)                 
-        result.ether = web3.utils.fromWei(assetAmount, 'ether')
-        return assetContract.methods.id().call()            
-      })         
-      .then((id) => {            
-        console.log('mongo id for asset: ' + id)
-        result.assetId = id
-        return assetContract.methods.promisor().call()    
-      })                     
-      .then((promisor) => {            
-        console.log('promisor: ' + promisor)
-        result.promisor = promisor
-        return assetContract.methods.promisee().call()
-      })               
-      .then((promisee) => {            
-        console.log('promisee: ' + promisee)
-        result.promisee = promisee        
-        return assetContract.methods.stage().call()
-      })                           
-      .then((stage) => {            
-        console.log('stage: ' + stage)
-        result.stage = stage        
-        resolve(result)
-      })                                 
-      .catch((err) => {
-        console.log(err)
-        reject(err)
-      })
-  })
+  //     exports.getAssetContractById(_assetId)
+  //     .then((address) => {
+  //       console.log('contract address: ' + address)
+  //       if (address.indexOf('0x00000000000000') > -1) {
+  //         console.log('address not found')
+  //         return reject('No contract address found. Not yet mined?')
+  //       } else {
+  //         result.address = address
+  //         return new web3.eth.Contract(ssetABI, address)     
+  //       }
+  //     })            
+  //     .then((asset) => {            
+  //       assetContract = asset 
+  //       return web3.eth.getBalance(result.address)                      
+  //     })         
+  //     .then((assetAmount) => {   
+  //       console.log('asset amt: ' + assetAmount)                 
+  //       result.ether = web3.utils.fromWei(assetAmount, 'ether')
+  //       return assetContract.methods.id().call()            
+  //     })         
+  //     .then((id) => {            
+  //       console.log('mongo id for asset: ' + id)
+  //       result.assetId = id
+  //       return assetContract.methods.promisor().call()    
+  //     })                     
+  //     .then((promisor) => {            
+  //       console.log('promisor: ' + promisor)
+  //       result.promisor = promisor
+  //       return assetContract.methods.promisee().call()
+  //     })               
+  //     .then((promisee) => {            
+  //       console.log('promisee: ' + promisee)
+  //       result.promisee = promisee        
+  //       return assetContract.methods.stage().call()
+  //     })                           
+  //     .then((stage) => {            
+  //       console.log('stage: ' + stage)
+  //       result.stage = stage        
+  //       resolve(result)
+  //     })                                 
+  //     .catch((err) => {
+  //       console.log(err)
+  //       reject(err)
+  //     })
+  // })
 
 }
 

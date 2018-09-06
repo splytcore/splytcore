@@ -36,7 +36,9 @@ module.exports = {
     title: defaultEnvConfig.app.title + ' - Development Environment'
   },
   ethereum: {
-    url: 'http://127.0.0.1:8545'
+    //Get this from testrpc for dev
+    url: 'http://127.0.0.1:8545',
+    splytManagerAddress: '0xcb60de3996b0bac26545ee20460ea9b214f99b2e'
   },
   livereload: true,
   seedDB: {

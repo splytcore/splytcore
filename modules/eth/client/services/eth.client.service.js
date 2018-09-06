@@ -21,14 +21,15 @@
 
     vm.getAssetsLength = getAssetsLength;
     vm.getAddressByAssetId = getAddressByAssetId;
-    
+ 
+    vm.getTokenBalance = getTokenBalance;
+ 
+
     vm.web3 = new Web3($window.web3.currentProvider);
     
     console.log('is connected: ' + vm.web3.isConnected())
-    
     console.log('web3 accounts: ' + vm.web3.eth.accounts)
     
-    // console.log('blockNumber: ' + vm.web3.eth.blockNumber)
     vm.splytManagerContract
     vm.orderManagerContract
     vm.assetManagerContract
@@ -96,6 +97,14 @@
 
     function getMyWallets() {
       return vm.web3.eth.accounts
+    }
+
+    function getTokenBalance() {
+      vm.splytManagerContract.getBalance(vm.web3.eth.accounts, (err, balance) => {
+        console.log(vm.web3.eth.accounts + ' tokens balance: ' + balance)
+        return balance
+      })
+
     }
 
     function getAssetInfo(assetId) {
@@ -188,12 +197,13 @@
 
     }
 
-    function purchase(assetId) {
+    function purchase(orderId, assetId) {
       let assetIdHex = vm.web3.toHex(assetId)
+      let orderIdHex = vm.web3.toHex(orderId)
       //anyone can call this function to pay promisee
       // vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {     
       vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
-        vm.orderManagerContract.purchase.sendTransaction(address, 1, 10000, vm.gas, (err, trxid) => {
+        vm.orderManagerContract.purchase.sendTransaction(orderIdHex, address, 1, 10000, vm.gas, (err, trxid) => {
           console.log('trxid: ' + trxid)
         })        
       })
