@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Arbitrations</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="arbitration in vm.arbitrations"
+       ui-sref="arbitrations.view({ arbitrationId: arbitration._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="arbitration.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="arbitration.user" ng-bind="arbitration.user.displayName"></span>
+        <span ng-if="!arbitration.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="arbitration.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.arbitrations.$resolved && !vm.arbitrations.length">
+    No Arbitrations yet, why don't you <a ui-sref="arbitrations.create">create one</a>?
+  </div>
+</section>
