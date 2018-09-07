@@ -18,13 +18,13 @@ exports.create = function(req, res) {
   let asset = new Asset(req.body);
   console.log('assetId: ' + asset._id)
   EthService.createAsset(asset)
-    .then((result) => {
-      console.log('create asset contract result..' + result)            
-    })
-    .catch((err) => {
-      console.log(err)
-    }
-  )
+  //   .then((result) => {
+  //     console.log('create asset contract result..' + result)            
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   }
+  // )
 
   asset.user = req.user;
 

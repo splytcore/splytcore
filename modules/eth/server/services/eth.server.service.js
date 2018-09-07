@@ -5,7 +5,6 @@ const path = require('path')
 const config = require(path.resolve('./config/config'))
 const host = config.ethereum.url
 const web3 = new Web3(new Web3.providers.HttpProvider(host))
-const utils = web3.utils._;
 
 const SplytManager = require(path.resolve('./config/abi/SplytManager.json'))
 const AssetManager = require(path.resolve('./config/abi/AssetManager.json'))
@@ -15,14 +14,13 @@ const ReputationManager = require(path.resolve('./config/abi/ReputationManager.j
 
 console.log('initiate web3')
 
-
-const privateKey = '2cd1cce5054f2c9d1b1bc8217f7f0db9ae881703fa8d74b5aacccd4ab0af38e1'
+//only for dev
+const masterPrivateKey = 'c51c59d469bd7fe61e53b98fd476a5e4f601f7ae2d065de058709508b82e3e5a'
 let masterWallet  
 let defaultBuyer
 let defaultSeller 
 let defaultMarketPlace 
 let defaultArbitrator
-
 
 // const assetManagerABI = AssetManager.abi;
 // const splytManagerABI = SplytManager.abi;
@@ -33,6 +31,11 @@ let defaultArbitrator
 //once we have the splytManager address, we can retrieve address of the other managers
 const splytManagerAddress = config.ethereum.splytManagerAddress
 console.log('splytManagerAddress: ' + splytManagerAddress)
+
+let assetManagerAddress;
+let orderManagerAddress;
+let reputationManagerAddress;
+let arbitrationManagerAddress;
 
 let splytManager;
 let assetManager;
@@ -77,7 +80,8 @@ web3.eth.net.isListening()
   
  splytManager.methods.assetManager().call()
   .then((address) => {
-    console.log('splytManager address: ' + address);    
+    console.log('splytManager address: ' + address);  
+      assetManagerAddress = address  
        assetManager = new web3.eth.Contract(AssetManager.abi, address)    
   })
  
@@ -96,10 +100,20 @@ web3.eth.net.isListening()
   splytManager.methods.reputationManager().call()
   .then((address) => {
     console.log('reputationManager address: ' + address);    
-    reputationManager = new web3.eth.Contract(ReputationManager.abi, address)    
+    reputationManager = new web3.eth.Contract(ReputationManager.abi, address)   
   })  
+  
+  splytManager.methods.getBalance(defaultSeller).call()  
+  .then((balance) => {
+    console.log('default seller balance: ' + balance)  
+    if (balance < 1) {
+      console.log('seller cannot perform any changes for contracts')
+    }
+  })     
+
   return
-}).then(() => {      
+}).then(() => {   
+
 //   console.log('unlock result: ' + result)
 //   return result
 // }).then((isLocked) => {      
@@ -115,8 +129,22 @@ web3.eth.net.isListening()
 })
 
 
-exports.signTrx = function(trx, privateKey) {
-  return web3.eth.accounts.signTransaction(trx, privateKey)
+exports.signTrx = function(encoded) {
+  web3.eth.getTransactionCount(defaultSeller, function (err, nonce) {
+    console.log("nonce: " + nonce)
+    let rawTrx = {
+      to: assetManagerAddress,
+    // value": web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+    // "chainId": 3
+      nonce: nonce,
+      data: encoded,
+      from: defaultSeller,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used  
+    }
+
+    return web3.eth.accounts.signTransaction(rawTrx, masterWallet)
+  })
 }
 
 // exports.getAssetAmountById = function(assetId) {
@@ -172,16 +200,13 @@ exports.createAsset = function(asset) {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })
   // return exports.unlockWallet()
   // .then(() => {
-    
-
 
   asset.marketPlaces.push(defaultMarketPlace) //hard code for now
   asset.marketPlacesAmount.push(2) //hard code for now
   asset.seller = defaultSeller
 
-  console.log(asset)
-
-  return assetManager.methods.createAsset(
+  console.log(asset)  
+  let encoded =  assetManager.methods.createAsset(
     web3.utils.toHex(asset._id), 
     asset.term, 
     asset.seller, 
@@ -191,7 +216,34 @@ exports.createAsset = function(asset) {
     asset.marketPlaces[0],
     asset.marketplacesAmount[0],
     asset.inventoryCount
-    ).send(gas)
+    ).encodeABI();
+
+
+  exports.signTransaction(encoded)
+    .then((signedTrx) => {
+      web3.eth.sendSignedTransaction(signedTrx.rawTransaction)
+    })
+    .then((receipt) => {
+      console.log("Transaction receipt: ", receipt)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+
+
+
+
+  // return assetManager.methods.createAsset(
+  //   web3.utils.toHex(asset._id), 
+  //   asset.term, 
+  //   asset.seller, 
+  //   web3.utils.toHex(asset.title),
+  //   asset.totalCost,
+  //   asset.expDate.getTime()/1000,
+  //   asset.marketPlaces[0],
+  //   asset.marketplacesAmount[0],
+  //   asset.inventoryCount
+  //   ).send(gas)
   
 }
 
