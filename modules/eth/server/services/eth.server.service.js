@@ -214,12 +214,12 @@ exports.createAsset = function(asset) {
     asset.totalCost,
     asset.expDate.getTime()/1000,
     asset.marketPlaces[0],
-    asset.marketplacesAmount[0],
+    asset.marketPlacesAmount[0],
     asset.inventoryCount
     ).encodeABI();
 
 
-  exports.signTransaction(encoded)
+  exports.signTrx(encoded)
     .then((signedTrx) => {
       web3.eth.sendSignedTransaction(signedTrx.rawTransaction)
     })
