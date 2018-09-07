@@ -16,7 +16,7 @@ console.log('initiate web3')
 
 
 const privateKey = '2cd1cce5054f2c9d1b1bc8217f7f0db9ae881703fa8d74b5aacccd4ab0af38e1'
-
+let masterWallet
 // const assetManagerABI = AssetManager.abi;
 // const splytManagerABI = SplytManager.abi;
 // const orderManagerABI = OrderManager.abi;
@@ -51,19 +51,40 @@ web3.eth.net.isListening()
 .then((blockNumber) => {  
     console.log('version: ' + web3.version)
     console.log('current block: ' + blockNumber)   
-    return
+    return web3.eth.getAccounts()
 })
-.then(() => {      
+.then((accounts) => {
+  console.log(accounts)
+  console.log('master wallet: ' + accounts[0])
+  masterWallet = accounts[0]
   splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
   return 
 }).then(() => {
-  // console.log('splytManager: ' + splytManager.methods.assetManager().call())      
+  
+ splytManager.methods.assetManager().call()
+  .then((address) => {
+    console.log('splytManager address: ' + address);    
+       assetManager = new web3.eth.Contract(AssetManager.abi, address)    
+  })
+ 
+  splytManager.methods.orderManager().call()
+  .then((address) => {
+    console.log('orderManager address: ' + address);    
+    orderManager = new web3.eth.Contract(OrderManager.abi, address)    
+  })
 
-  // let address =  await splytManager.methods.assetManager().call()
-  // console.log('await address: ' + address)
-  // assetManager = new web3.eth.Contract(assetManagerABI, splytManager.assetManager())     
-  // orderManager = new web3.eth.Contract(orderManagerABI, assetManagerAddress)        
-
+ splytManager.methods.arbitrationManager().call()
+  .then((address) => {
+    console.log('arbitrationManager address: ' + address);    
+    arbitrationManager = new web3.eth.Contract(ArbitrationManager.abi, address)    
+  })
+  
+  splytManager.methods.reputationManager().call()
+  .then((address) => {
+    console.log('reputationManager address: ' + address);    
+    reputationManager = new web3.eth.Contract(ReputationManager.abi, address)    
+  })  
+  return
 }).then(() => {      
 //   console.log('unlock result: ' + result)
 //   return result
@@ -73,11 +94,16 @@ web3.eth.net.isListening()
 //     return web3.eth.personal.lockAccount(wallet)
 // }).then((result) => {      
 //   console.log('lock result: ' + result)
+  return
 }).catch((err) => {
   console.log('error connecting to web3')
   console.log(err)
 })
 
+
+exports.signTrx = function(trx, privateKey) {
+  return web3.eth.accounts.signTransaction(trx, privateKey)
+}
 
 // exports.getAssetAmountById = function(assetId) {
 
@@ -128,15 +154,29 @@ exports.getReputationManagerABI = function() {
 }
 
 
-exports.createAsset = function(assetId) {
+exports.createAsset = function(asset) {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })
-  return exports.unlockWallet()
-  .then(() => {
-    return assetManager.methods.createasset(web3.utils.toHex(assetId)).send(gas)
-  })
-  .catch((err) => {
-    console.log('create asset error: ' + err)
-  })
+  // return exports.unlockWallet()
+  // .then(() => {
+  // async function create_asset(_assetId = "0x31f2ae92057a7123ef0e490a", _term = 0, _seller = defaultSeller, _title = "MyTitle",
+  //     _totalCost = 1000, _expirationDate = 10001556712588, _mpAddress = defaultMarketPlace, _mpAmount = 2, _inventoryCount = 2) {
+    
+
+
+  return assetManager.methods.createAsset(
+    web3.utils.toHex(asset._id), asset.term, 
+    asset.seller, 
+    asset.web3.utils.toHex(asset.title),
+    asset.totalCost,
+    asset.expDate,
+    asset.marketPlaces[0],
+    asset.marketplacesAmount[0],
+    asset.inventoryCount
+    ).send(gas)
+  // })
+  // .catch((err) => {
+  //   console.log('create asset error: ' + err)
+  // })
   
 }
 

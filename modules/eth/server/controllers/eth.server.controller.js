@@ -12,21 +12,33 @@ var path = require('path'),
 
 exports.getAll = function(req, res) {
   
-  let splytManagerABI = EthService.getSplytManagerABI();
-  let assetManagerABI = EthService.getAssetManagerABI();
-  let orderManagerABI = EthService.getOrderManagerABI();
-  let arbitrationManagerABI = EthService.getArbitrationManagerABI();
-  let reputationManagerABI = EthService.getReputationManagerABI();
+  let splytManagerABI = EthService.getSplytManagerABI()
+  let assetManagerABI = EthService.getAssetManagerABI()
+  let orderManagerABI = EthService.getOrderManagerABI()
+  let arbitrationManagerABI = EthService.getArbitrationManagerABI()
+  let reputationManagerABI = EthService.getReputationManagerABI()
   
-  let splytManagerAddress = config.ethereum.splytManagerAddress;
+  let splytManagerAddress = config.ethereum.splytManagerAddress
 
   res.jsonp({ splytManagerABI: splytManagerABI, 
   			  assetManagerABI: assetManagerABI,
   			  orderManagerABI: orderManagerABI,
   			  arbitrationManagerABI: arbitrationManagerABI,
           reputationManagerABI: reputationManagerABI,          
-  			  splytManagerAddress: splytManagerAddress });
-};
+  			  splytManagerAddress: splytManagerAddress })
+}
+
+exports.createAsset = function() {
 
 
+
+  EthService.createAsset(trx, privateKey)
+    .then((res) => {
+      console.log('successful createAsset')
+      console.log(res)
+    }).catch((err) => {
+      console.log('error creating asset')
+      console.log(err)
+    })    
+}
 

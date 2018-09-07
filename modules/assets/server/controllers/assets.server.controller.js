@@ -7,7 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Asset = mongoose.model('Asset'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  web3 = require(path.resolve('./modules/eth/server/services/eth.server.service')),
+  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),
   _ = require('lodash');
 
 /**
@@ -16,16 +16,17 @@ var path = require('path'),
 exports.create = function(req, res) {
 
   let asset = new Asset(req.body);
+  console.log('assetId: ' + asset._id)
 
-  // web3.createasset(asset._id)
-  //   .then((result) => {
-  //     console.log('create asset contract result..' + result)            
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   })
+  EthService.createAsset(asset)
+    .then((result) => {
+      console.log('create asset contract result..' + result)            
+    })
+    .catch((err) => {
+      console.log(err)
+    }
+  )
 
-  
   asset.user = req.user;
 
   asset.save(function(err) {

@@ -75,7 +75,7 @@
       }
 
       function successCallback(asset) {                
-          EthService.createAsset(asset);
+          //EthService.createAsset(asset);
       }
 
       function errorCallback(res) {
