@@ -5,6 +5,7 @@ const path = require('path')
 const config = require(path.resolve('./config/config'))
 const host = config.ethereum.url
 const web3 = new Web3(new Web3.providers.HttpProvider(host))
+const utils = web3.utils._;
 
 const SplytManager = require(path.resolve('./config/abi/SplytManager.json'))
 const AssetManager = require(path.resolve('./config/abi/AssetManager.json'))
@@ -16,7 +17,13 @@ console.log('initiate web3')
 
 
 const privateKey = '2cd1cce5054f2c9d1b1bc8217f7f0db9ae881703fa8d74b5aacccd4ab0af38e1'
-let masterWallet
+let masterWallet  
+let defaultBuyer
+let defaultSeller 
+let defaultMarketPlace 
+let defaultArbitrator
+
+
 // const assetManagerABI = AssetManager.abi;
 // const splytManagerABI = SplytManager.abi;
 // const orderManagerABI = OrderManager.abi;
@@ -42,6 +49,8 @@ const gas = {
   gas: web3.utils.toHex(4700000) //max number of gas to be used  
 }
 
+ console.log('toHex: ' + web3.utils.toHex(4700000))
+
 //check if connect to geth node
 web3.eth.net.isListening()
 .then((result) => {
@@ -57,6 +66,11 @@ web3.eth.net.isListening()
   console.log(accounts)
   console.log('master wallet: ' + accounts[0])
   masterWallet = accounts[0]
+  defaultBuyer = accounts[0]
+  defaultSeller = accounts[1]
+  defaultMarketPlace = accounts[2]
+  defaultArbitrator = accounts[3]
+
   splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
   return 
 }).then(() => {
@@ -158,25 +172,26 @@ exports.createAsset = function(asset) {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })
   // return exports.unlockWallet()
   // .then(() => {
-  // async function create_asset(_assetId = "0x31f2ae92057a7123ef0e490a", _term = 0, _seller = defaultSeller, _title = "MyTitle",
-  //     _totalCost = 1000, _expirationDate = 10001556712588, _mpAddress = defaultMarketPlace, _mpAmount = 2, _inventoryCount = 2) {
     
 
 
+  asset.marketPlaces.push(defaultMarketPlace) //hard code for now
+  asset.marketPlacesAmount.push(2) //hard code for now
+  asset.seller = defaultSeller
+
+  console.log(asset)
+
   return assetManager.methods.createAsset(
-    web3.utils.toHex(asset._id), asset.term, 
+    web3.utils.toHex(asset._id), 
+    asset.term, 
     asset.seller, 
-    asset.web3.utils.toHex(asset.title),
+    web3.utils.toHex(asset.title),
     asset.totalCost,
-    asset.expDate,
+    asset.expDate.getTime()/1000,
     asset.marketPlaces[0],
     asset.marketplacesAmount[0],
     asset.inventoryCount
     ).send(gas)
-  // })
-  // .catch((err) => {
-  //   console.log('create asset error: ' + err)
-  // })
   
 }
 

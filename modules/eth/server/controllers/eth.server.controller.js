@@ -28,17 +28,17 @@ exports.getAll = function(req, res) {
   			  splytManagerAddress: splytManagerAddress })
 }
 
-exports.createAsset = function() {
+// exports.createAsset = function() {
 
 
 
-  EthService.createAsset(trx, privateKey)
-    .then((res) => {
-      console.log('successful createAsset')
-      console.log(res)
-    }).catch((err) => {
-      console.log('error creating asset')
-      console.log(err)
-    })    
-}
+//   EthService.createAsset(trx, privateKey)
+//     .then((res) => {
+//       console.log('successful createAsset')
+//       console.log(res)
+//     }).catch((err) => {
+//       console.log('error creating asset')
+//       console.log(err)
+//     })    
+// }
 

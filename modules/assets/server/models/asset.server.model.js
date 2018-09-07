@@ -12,7 +12,7 @@ var mongoose = require('mongoose'),
 var AssetSchema = new Schema({
   title: {
     type: String,
-    default: '',
+    default: 'Fake Asset #' + Date.now,
     required: 'Please fill title',
     trim: true
   },  
@@ -36,7 +36,8 @@ var AssetSchema = new Schema({
   },  
   //seller wallet
   seller: {
-    type: String
+    type: String,
+    default: '0x6281c6cA89b4CcB15AaA6D0CE2d7783Aa1F092c1'
   }, 
   marketPlaces: [{
     type: String,
