@@ -143,7 +143,16 @@ exports.signTrx = function(encoded) {
       gas: web3.utils.toHex(4700000) //max number of gas to be used  
     }
 
-    return web3.eth.accounts.signTransaction(rawTrx, masterWallet)
+    web3.eth.accounts.signTransaction(rawTrx, masterPrivateKey)
+    .then((signedTrx) => {
+      web3.eth.sendSignedTransaction(signedTrx.rawTransaction)
+    })
+    .then((receipt) => {
+      console.log("Transaction receipt: ", receipt)
+    })
+    .catch((err) => {
+      console.error(err)
+    })    
   })
 }
 
@@ -220,15 +229,6 @@ exports.createAsset = function(asset) {
 
 
   exports.signTrx(encoded)
-    .then((signedTrx) => {
-      web3.eth.sendSignedTransaction(signedTrx.rawTransaction)
-    })
-    .then((receipt) => {
-      console.log("Transaction receipt: ", receipt)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
 
 
 
