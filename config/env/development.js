@@ -38,6 +38,7 @@ module.exports = {
   ethereum: {
     //Get this from testrpc for dev
     url: 'http://127.0.0.1:8545',
+    //this has to be updated everytime you run truffle migrate
     splytManagerAddress: '0xcb60de3996b0bac26545ee20460ea9b214f99b2e'
   },
   livereload: true,

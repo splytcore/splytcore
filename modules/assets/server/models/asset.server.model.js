@@ -50,7 +50,11 @@ var AssetSchema = new Schema({
   inventoryCount: {
     type: Number,
     default: 2
-  },        
+  },
+  status: {
+    type: String,
+    default: '0'
+  },
   //contract address
   address: {
     type: String,

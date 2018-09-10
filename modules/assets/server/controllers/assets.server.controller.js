@@ -44,31 +44,31 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
 
-  console.log('this bing called?')
   // convert mongoose document to JSON
   var asset = req.asset ? req.asset.toJSON() : {};
   asset.isCurrentUserOwner = req.user && asset.user && asset.user._id.toString() === req.user._id.toString() 
-  res.jsonp(asset)  
-  
-  // web3.getassetInfo(asset._id.toString())
-  //   .then((result) => {
-      // console.log('asset amount' + result.ether)
-      // console.log('asset address' + result.address)
-      // console.log('promisor '  + result.promisor)
-      // console.log('promisee '  + result.promisee)
-      // console.log('stage '  + result.stage)
-      // asset.address = result.address
-      // asset.ether = result.ether
-      // asset.promisor = result.promisor
-      // asset.promisee = result.promisee
-      // asset.stage = result.stage
 
-    //   res.jsonp(asset)
-    // })
-    // .catch((err) => {
-    //   console.log(err)
-    //   res.jsonp(asset)
-    // })
+  EthService.getAssetInfoByAssetId(asset._id)
+    .then((fields) => {
+      console.log('successful get asset info')
+      console.log(fields)
+
+      asset.address = fields[0]
+
+      asset.status = fields[2]
+      
+      asset.term = fields[3]
+      asset.inventoryCount = fields[4]
+      asset.seller = fields[5]      
+      asset.totalCost = fields[6]
+
+      console.log(asset)
+      
+      res.jsonp(asset)  
+    })
+    .catch((err) => {
+      res.jsonp(err)  
+    })
 
 }
 

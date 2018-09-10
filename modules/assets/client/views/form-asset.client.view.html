@@ -41,25 +41,37 @@
         <div class="form-group" show-errors>
           <label class="control-label" for="seller">Seller Wallet</label>
           <span name="seller" id="seller" class="form-control" disabled>
-            {{ vm.asset.sellerWallet }}
+            {{ vm.asset.seller }}
+          </span>
+        </div>
+
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="ether">Status</label>
+
+          <span name="status" id="status" class="form-control" disabled>
+            {{ vm.asset.status }}
           </span>
         </div>
 
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="ether">Token Price</label>
+          <label class="control-label" for="ether">Total Cost</label>
 
-          <span name="tokenAmount" id="tokenAmount" class="form-control" disabled>
-            {{ vm.asset.tokenAmount }}
+          <span name="totalCost" id="totalCost" class="form-control" disabled>
+            {{ vm.asset.totalCost }}
           </span>
         </div>
 
+        {{vm.asset}}
         <div class="form-group" show-errors>
           <label class="control-label" for="asset">Contract Address</label>       
           <span name="address" id="address" class="form-control" disabled>
             {{ vm.asset.address }}
           </span>
         </div>
+
 
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.asset._id ? 'Update' : 'Create'}}</button>

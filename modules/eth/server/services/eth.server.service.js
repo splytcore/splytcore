@@ -12,10 +12,15 @@ const OrderManager = require(path.resolve('./config/abi/OrderManager.json'))
 const ArbitrationManager = require(path.resolve('./config/abi/ArbitrationManager.json'))
 const ReputationManager = require(path.resolve('./config/abi/ReputationManager.json'))
 
+const SatToken = require(path.resolve('./config/abi/SatToken.json')) //used to set tokens for accounts
+
 console.log('initiate web3')
 
 //only for dev
-const masterPrivateKey = 'c51c59d469bd7fe61e53b98fd476a5e4f601f7ae2d065de058709508b82e3e5a'
+//master key has to be updated everytime rpctest starts or restarts
+const masterPrivateKey = '56c94e8a22948356615b861b5f4e048055812518b864bcc8f93496cf6dbb7bf1'
+const defaultBuyerPrivateKey = '7541a92083e326478c75180f8247ce914f9a1e3f4d23f99ec1d20f75527ccde8'
+
 let masterWallet  
 let defaultBuyer
 let defaultSeller 
@@ -36,19 +41,21 @@ let assetManagerAddress;
 let orderManagerAddress;
 let reputationManagerAddress;
 let arbitrationManagerAddress;
+let satTokenAddress;
 
 let splytManager;
 let assetManager;
 let orderManager;
 let reputationManager;
 let arbitrationManager;
+let satToken
 
 const wallet = config.ethereum.wallet
 const walletPassword = config.ethereum.password
 
 const gas = {
-  from: wallet,
-  gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+  from: masterWallet,
+  gasPrice: web3.utils.toHex(3000000),   //maximum price per gas
   gas: web3.utils.toHex(4700000) //max number of gas to be used  
 }
 
@@ -69,8 +76,8 @@ web3.eth.net.isListening()
   console.log(accounts)
   console.log('master wallet: ' + accounts[0])
   masterWallet = accounts[0]
-  defaultBuyer = accounts[0]
-  defaultSeller = accounts[1]
+  defaultSeller = accounts[0]
+  defaultBuyer = accounts[1]
   defaultMarketPlace = accounts[2]
   defaultArbitrator = accounts[3]
 
@@ -81,8 +88,8 @@ web3.eth.net.isListening()
  splytManager.methods.assetManager().call()
   .then((address) => {
     console.log('splytManager address: ' + address);  
-      assetManagerAddress = address  
-       assetManager = new web3.eth.Contract(AssetManager.abi, address)    
+    assetManagerAddress = address  
+    assetManager = new web3.eth.Contract(AssetManager.abi, address)    
   })
  
   splytManager.methods.orderManager().call()
@@ -102,15 +109,73 @@ web3.eth.net.isListening()
     console.log('reputationManager address: ' + address);    
     reputationManager = new web3.eth.Contract(ReputationManager.abi, address)   
   })  
-  
+
+  splytManager.methods.satToken().call()
+  .then((address) => {
+    console.log('satToken address: ' + address);    
+    satToken = new web3.eth.Contract(SatToken.abi, address)  
+  })  
+
+  //get seller token balance
   splytManager.methods.getBalance(defaultSeller).call()  
   .then((balance) => {
-    console.log('default seller balance: ' + balance)  
+    console.log('default seller SatToken balance: ' + balance)  
     if (balance < 1) {
-      console.log('seller cannot perform any changes for contracts')
+      exports.initUser(defaultSeller)
     }
   })     
 
+  splytManager.methods.getBalance(defaultBuyer).call()  
+  .then((balance) => {
+    console.log('default buyer SatToken balance: ' + balance)  
+    if (balance < 1) {
+      exports.initUser(defaultBuyer, defaultBuyerPrivateKey)
+    }
+  })     
+
+  splytManager.methods.getBalance(defaultMarketPlace).call()  
+  .then((balance) => {
+    console.log('default marketPlace SatToken balance: ' + balance)  
+    if (balance < 1) {
+      exports.initUser(defaultMarketPlace, 'privateKey')
+    }
+  })     
+
+
+  web3.eth.getBalance(defaultSeller)
+  .then((balance) => {
+    console.log('default seller Ether balance: ' + web3.utils.fromWei(balance))  
+    if (balance < 1) {
+      console.log('seller cannot perform any changes for contracts')
+    }
+  })      
+  .catch((err) => {
+    console.log(err)
+  })
+
+
+  web3.eth.getBalance(defaultBuyer)
+  .then((balance) => {
+    console.log('default buyer Ether balance: ' + web3.utils.fromWei(balance))  
+    if (balance < 1) {
+      console.log('default buyer cannot perform any changes for contracts')
+    }
+  })      
+  .catch((err) => {
+    console.log(err)
+  })
+
+
+  web3.eth.getBalance(defaultSeller)
+  .then((balance) => {
+    console.log('default seller Ether balance: ' + web3.utils.fromWei(balance))  
+    if (balance < 1) {
+      console.log('seller cannot perform any changes for contracts')
+    }
+  })      
+  .catch((err) => {
+    console.log(err)
+  })  
   return
 }).then(() => {   
 
@@ -129,7 +194,8 @@ web3.eth.net.isListening()
 })
 
 
-exports.signTrx = function(encoded) {
+//TODO: use for testnet network
+exports.signTrx = function(account, privateKey, encoded) {
   web3.eth.getTransactionCount(defaultSeller, function (err, nonce) {
     console.log("nonce: " + nonce)
     let rawTrx = {
@@ -138,12 +204,12 @@ exports.signTrx = function(encoded) {
     // "chainId": 3
       nonce: nonce,
       data: encoded,
-      from: defaultSeller,
+      from: account,
       gasPrice: web3.utils.toHex(300000),   //maximum price per gas
       gas: web3.utils.toHex(4700000) //max number of gas to be used  
     }
 
-    web3.eth.accounts.signTransaction(rawTrx, masterPrivateKey)
+    web3.eth.accounts.signTransaction(rawTrx, privateKey)
     .then((signedTrx) => {
       web3.eth.sendSignedTransaction(signedTrx.rawTransaction)
     })
@@ -215,7 +281,14 @@ exports.createAsset = function(asset) {
   asset.seller = defaultSeller
 
   console.log(asset)  
-  let encoded =  assetManager.methods.createAsset(
+
+  let trx = {
+      from: defaultSeller,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+  assetManager.methods.createAsset(
     web3.utils.toHex(asset._id), 
     asset.term, 
     asset.seller, 
@@ -225,25 +298,17 @@ exports.createAsset = function(asset) {
     asset.marketPlaces[0],
     asset.marketPlacesAmount[0],
     asset.inventoryCount
-    ).encodeABI();
+    ).send(trx)
+    .then((result) => {
+      console.log('create asset: ')
+      console.log(result)
+    })
+    .catch((err) => {
+      console.log('create asset error')
+      console.log(err)
+    })
 
-
-  exports.signTrx(encoded)
-
-
-
-
-  // return assetManager.methods.createAsset(
-  //   web3.utils.toHex(asset._id), 
-  //   asset.term, 
-  //   asset.seller, 
-  //   web3.utils.toHex(asset.title),
-  //   asset.totalCost,
-  //   asset.expDate.getTime()/1000,
-  //   asset.marketPlaces[0],
-  //   asset.marketplacesAmount[0],
-  //   asset.inventoryCount
-  //   ).send(gas)
+  // exports.signTrx(encoded)
   
 }
 
@@ -263,68 +328,49 @@ exports.getAssetContractByIndex = function(index) {
   return assetManager.methods.getAssetByIndex(index).call()
 }
 
-exports.getAssetInfo = function(_assetId) {
-
-  let result = {
-
+exports.initUser = function(account, privateKey) {
+  
+  let trx = {
+      from: account,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }
-  // let assetId
-  // let amount
-  // let stage
-  // let promisor
-  // let promisee
-  // let contractAddress
-  // let assetEther
 
-  // return new Promise((resolve, reject) => {            
-      
-  //     let assetContract
+  satToken.methods.initUser(account).send(trx)
+    .then((result) => {
+      console.log(result)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
-  //     exports.getAssetContractById(_assetId)
-  //     .then((address) => {
-  //       console.log('contract address: ' + address)
-  //       if (address.indexOf('0x00000000000000') > -1) {
-  //         console.log('address not found')
-  //         return reject('No contract address found. Not yet mined?')
-  //       } else {
-  //         result.address = address
-  //         return new web3.eth.Contract(ssetABI, address)     
-  //       }
-  //     })            
-  //     .then((asset) => {            
-  //       assetContract = asset 
-  //       return web3.eth.getBalance(result.address)                      
-  //     })         
-  //     .then((assetAmount) => {   
-  //       console.log('asset amt: ' + assetAmount)                 
-  //       result.ether = web3.utils.fromWei(assetAmount, 'ether')
-  //       return assetContract.methods.id().call()            
-  //     })         
-  //     .then((id) => {            
-  //       console.log('mongo id for asset: ' + id)
-  //       result.assetId = id
-  //       return assetContract.methods.promisor().call()    
-  //     })                     
-  //     .then((promisor) => {            
-  //       console.log('promisor: ' + promisor)
-  //       result.promisor = promisor
-  //       return assetContract.methods.promisee().call()
-  //     })               
-  //     .then((promisee) => {            
-  //       console.log('promisee: ' + promisee)
-  //       result.promisee = promisee        
-  //       return assetContract.methods.stage().call()
-  //     })                           
-  //     .then((stage) => {            
-  //       console.log('stage: ' + stage)
-  //       result.stage = stage        
-  //       resolve(result)
-  //     })                                 
-  //     .catch((err) => {
-  //       console.log(err)
-  //       reject(err)
-  //     })
-  // })
+
+exports.getAssetInfoByAssetId = function(assetId) {
+  console.log('get asset info from contracts...')  
+  let assetIdHex = web3.utils.toHex(assetId)
+  let assetAddress
+  return new Promise((resolve, reject) => {                
+    assetManager.methods.getAssetInfoByAssetId(assetIdHex).call()
+      // .then((address) => {
+      //   console.log('contract address: ' + address)
+      //   if (address.indexOf('0x00000000000000') > -1) {
+      //     console.log('address not found')
+      //     return reject('No contract address found. Not yet mined?')
+      //   } else {
+      //     assetAddress = address
+      //     return assetManager.methods.getAssetInfoByAddress(address).call()
+      //   }
+      // })            
+      .then((result) => {  
+        console.log(result)             
+        resolve(result)                     
+      })              
+      .catch((err) => {
+        console.log(err)
+        reject(err)
+      })
+  })
 
 }
 
@@ -336,62 +382,3 @@ exports.lockWallet = function() {
   return web3.eth.personal.lockAccount(wallet)
 }
 
-
-// exports.getassetAmountById = function(assetId) {
-
-//   return new Promise((resolve, reject) => {    
-//     exports.getassetContractById(assetId)
-//     .then((address) => {
-//       resolve(address)
-//     })
-//   })
-//   .then((address) => {
-//     console.log('address: ' + address)
-//     return new Promise((resolve, reject) => {
-//       setTimeout(function() {        
-//         resolve (88)  
-//       }, 5000)
-//     })    
-//   })
-//   .then((amount) => {
-//     console.log('amount: ' + amount)
-//     return amount
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 2
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 4
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 5  vaultContract.methods.changeEscapeHatch(web3.utils.toHex(escapeHatch.name.split('\u0000')[0]), escapeHatch.escapeHatchCaller, escapeHatch.escapeHatchDestination)
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 6
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 7
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 8
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 9
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 10
-//   })
-//   .then((amount) => {
-//     console.log('step: ' + amount)
-//     return 11
-//   })
-
-// }
