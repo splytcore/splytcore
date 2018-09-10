@@ -1,7 +1,8 @@
-Splytcore2 API
+# splytcoreui
+UI to demonstrate contract's functionality
 
-git clone https://github.com/megatronv7/splytcore2.git
-cd splytcore2. 
+git clone https://github.com/splytcore/splytcoreui.git
+cd splytcoreui. 
 npm install    
 sudo bower install --allow-root  
 gulp  
@@ -17,7 +18,6 @@ use splytcore-test
 db.createUser({ user: "user", pwd: "splyt2016!", roles: [{ role: "readWrite", db: "splytcore-test" }] })  
 
 
-
 ENVIRONMENTS STARTUP  
 
 Development  
@@ -27,7 +27,7 @@ Production
 Start  
 sudo pm2 start pm2.json  
 
-St
+stop
 sudo pm2 stop SPLYT
 
 
