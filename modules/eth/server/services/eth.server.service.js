@@ -293,7 +293,7 @@ exports.createAsset = function(asset) {
       gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }
 
-  assetManager.methods.createAsset(
+  return assetManager.methods.createAsset(
     web3.utils.toHex(asset._id), 
     asset.term, 
     asset.seller, 
@@ -304,14 +304,14 @@ exports.createAsset = function(asset) {
     asset.marketPlacesAmount[0],
     asset.inventoryCount
     ).send(trx)
-    .then((result) => {
-      console.log('create asset: ')
-      console.log(result)
-    })
-    .catch((err) => {
-      console.log('create asset error')
-      console.log(err)
-    })
+    // .then((result) => {
+    //   console.log('create asset: ')
+    //   console.log(result)
+    // })
+    // .catch((err) => {
+    //   console.log('create asset error')
+    //   console.log(err)
+    // })
 
   // exports.signTrx(encoded)
   

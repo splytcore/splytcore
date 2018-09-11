@@ -18,25 +18,28 @@ exports.create = function(req, res) {
   let asset = new Asset(req.body);
   console.log('assetId: ' + asset._id)
   EthService.createAsset(asset)
-  //   .then((result) => {
-  //     console.log('create asset contract result..' + result)            
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   }
-  // )
+    .then((result) => {
+      console.log('create asset contract result..' + result)    
 
-  asset.user = req.user;
-
-  asset.save(function(err) {
-    if (err) {
+      asset.user = req.user;
+      asset.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.jsonp(asset);
+        }
+      })
+    })
+    .catch((err) => {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(asset);
+        message: 'error creating asset'
+      })
     }
-  });
+  )
+
+
 };
 
 /**
