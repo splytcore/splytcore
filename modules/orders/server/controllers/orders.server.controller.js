@@ -55,8 +55,29 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   order.isCurrentUserOwner = req.user && order.user && order.user._id.toString() === req.user._id.toString();
 
-  res.jsonp(order);
-};
+  EthService.getOrderInfoByOrderId(order._id)
+     .then((fields) => {
+      console.log('successful get asset info')
+      console.log(fields)
+
+      // asset.address = fields[0]
+
+      // asset.status = fields[2]
+      
+      // asset.term = fields[3]
+      // asset.inventoryCount = fields[4]
+      // asset.seller = fields[5]      
+      // asset.totalCost = fields[6]
+
+      // console.log(asset)
+      
+      res.jsonp(order)  
+    })
+    .catch((err) => {
+      res.jsonp(err)  
+    })  
+
+}
 
 /**
  * Update a Order

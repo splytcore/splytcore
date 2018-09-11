@@ -385,17 +385,24 @@ exports.getAssetInfoByAssetId = function(assetId) {
   let assetIdHex = web3.utils.toHex(assetId)
   let assetAddress
   return new Promise((resolve, reject) => {                
-    assetManager.methods.getAssetInfoByAssetId(assetIdHex).call()
-      // .then((address) => {
-      //   console.log('contract address: ' + address)
-      //   if (address.indexOf('0x00000000000000') > -1) {
-      //     console.log('address not found')
-      //     return reject('No contract address found. Not yet mined?')
-      //   } else {
-      //     assetAddress = address
-      //     return assetManager.methods.getAssetInfoByAddress(address).call()
-      //   }
-      // })            
+    assetManager.methods.getAssetInfoByAssetId(assetIdHex).call()         
+      .then((result) => {  
+        console.log(result)             
+        resolve(result)                     
+      })              
+      .catch((err) => {
+        console.log(err)
+        reject(err)
+      })
+  })
+
+}
+
+exports.getOrderInfoByOrderId = function(orderId) {
+  console.log('get order info from contracts...')  
+  let orderIdHex = web3.utils.toHex(orderId)
+  return new Promise((resolve, reject) => {                
+    orderManager.methods.getOrderByOrderId(orderIdHex).call()          
       .then((result) => {  
         console.log(result)             
         resolve(result)                     
