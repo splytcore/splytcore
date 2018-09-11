@@ -18,6 +18,14 @@ var OrderSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Asset'
   },
+  status: {
+    type: Number,
+    default: 0
+  },    
+  type: {
+    type: Number,
+    default: 0
+  },  
   quantity: {
     type: Number,
     default: 1
