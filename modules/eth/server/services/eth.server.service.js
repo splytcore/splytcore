@@ -283,7 +283,7 @@ exports.createAsset = function(asset) {
 
   asset.marketPlaces.push(defaultMarketPlace) //hard code for now
   asset.marketPlacesAmount.push(2) //hard code for now
-  asset.seller = defaultSeller
+
 
   console.log(asset)  
 
@@ -293,7 +293,7 @@ exports.createAsset = function(asset) {
       gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }
 
-  return assetManager.methods.createAsset(
+  return assetManager.methods.purchase(
     web3.utils.toHex(asset._id), 
     asset.term, 
     asset.seller, 
@@ -303,6 +303,35 @@ exports.createAsset = function(asset) {
     asset.marketPlaces[0],
     asset.marketPlacesAmount[0],
     asset.inventoryCount
+    ).send(trx)
+    // .then((result) => {
+    //   console.log('create asset: ')
+    //   console.log(result)
+    // })
+    // .catch((err) => {
+    //   console.log('create asset error')
+    //   console.log(err)
+    // })
+
+  // exports.signTrx(encoded)
+  
+}
+
+exports.purchase = function(order) {
+
+  console.log(order)  
+
+  let trx = {
+      from: order.buyerWallet,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+  return orderManager.methods.purchase(
+    web3.utils.toHex(order.asset._id), 
+    order.asset.address, 
+    order.quantity, 
+    order.totalAmount,
     ).send(trx)
     // .then((result) => {
     //   console.log('create asset: ')

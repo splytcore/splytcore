@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Order = mongoose.model('Order'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
   _ = require('lodash');
 
 /**
@@ -16,15 +17,31 @@ exports.create = function(req, res) {
   var order = new Order(req.body);
   order.user = req.user;
 
-  order.save(function(err) {
-    if (err) {
+  EthService.purchase(order)
+    .then((result) => {
+      console.log('create asset contract result..' + result)    
+      order.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.jsonp(order);
+        }
+      })
+    })
+    .catch((err) => {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(order);
+        message: 'error creating asset'
+      })
     }
-  });
+  )
+
+
+
+
+
+
 };
 
 /**

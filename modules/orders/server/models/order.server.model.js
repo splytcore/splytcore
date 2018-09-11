@@ -18,7 +18,19 @@ var OrderSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Asset'
   },
-  //buyer
+  quantity: {
+    type: Number,
+    default: 1
+  },
+  totalAmount: {
+    type: Number,
+    default: 0
+  },  
+  //buyer wallet
+  buyerWallet: {
+    type: String,
+    default: ''
+  },
   user: {
     type: Schema.ObjectId,
     ref: 'User'
