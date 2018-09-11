@@ -14,8 +14,23 @@
     vm.save = save   
     vm.asset = asset
     vm.remove = remove
+    
+    if (!vm.asset._id) {
+      EthService.getDefaultWallets()
+        .success((wallets) => {
+          console.log(wallets)
+          vm.asset.seller = wallets.defaultSeller
+          vm.marketPlaces = []
+          vm.marketPlaces.push(wallets.defaultMarketPlace)
+          vm.asset.marketPlaces = vm.marketPlaces
+          vm.asset.status = 0
+        })
+        .error((err) => {
+          console.log(err)
+        })
+    }
 
-    // vm.myWallets = EthService.getMyWallets();
+
     // vm.getTokenBalance = EthService.getTokenBalance();
 
 

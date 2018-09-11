@@ -28,17 +28,11 @@ exports.getAll = function(req, res) {
   			  splytManagerAddress: splytManagerAddress })
 }
 
-// exports.createAsset = function() {
+exports.getDefaultWallets = function(req, res) {
 
-
-
-//   EthService.createAsset(trx, privateKey)
-//     .then((res) => {
-//       console.log('successful createAsset')
-//       console.log(res)
-//     }).catch((err) => {
-//       console.log('error creating asset')
-//       console.log(err)
-//     })    
-// }
+  let wallets = EthService.getDefaultWallets()
+  console.log(wallets)
+  res.jsonp(wallets)
+ 
+}
 

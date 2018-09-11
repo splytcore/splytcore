@@ -195,6 +195,11 @@ web3.eth.net.isListening()
 
 
 //TODO: use for testnet network
+exports.getDefaultWallets = function(account, privateKey, encoded) {
+  return ({ defaultSeller: defaultSeller, defaultBuyer: defaultBuyer, defaultMarketPlace: defaultMarketPlace, defaultArbitrator: defaultArbitrator })
+}
+
+//TODO: use for testnet network like ropsten or rinky
 exports.signTrx = function(account, privateKey, encoded) {
   web3.eth.getTransactionCount(defaultSeller, function (err, nonce) {
     console.log("nonce: " + nonce)

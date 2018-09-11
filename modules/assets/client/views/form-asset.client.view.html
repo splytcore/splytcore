@@ -27,7 +27,7 @@
         <div class="form-group" show-errors>
           <label class="control-label" for="marketPlaces">Market Places</label>          
           <select class="form-control" name="marketPlaces">            
-           <option ng-repeat="m in vm.asset.marketPlaces" value="{{m._id}}">
+           <option ng-repeat="m in vm.asset.marketPlaces track by $index" value="{{m}}">
               {{m}}            
             </option>          
           </select>
@@ -58,13 +58,12 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="ether">Total Cost</label>
-
-          <span name="totalCost" id="totalCost" class="form-control" disabled>
-            {{ vm.asset.totalCost }}
-          </span>
+          <input name="totalCost" type="text" ng-model="vm.asset.totalCost" id="totalCost" class="form-control" placeholder="total cost in tokens" required>
+          <div ng-messages="vm.form.assetForm.totalCost.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Total cost is required.</p>
+          </div>       
         </div>
 
-        {{vm.asset}}
         <div class="form-group" show-errors>
           <label class="control-label" for="asset">Contract Address</label>       
           <span name="address" id="address" class="form-control" disabled>

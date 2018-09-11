@@ -10,5 +10,7 @@ module.exports = function(app) {
   app.route('/api/abi/getAll')
     .get(eth.getAll)
 
+  app.route('/api/eth/getDefaultWallets')
+    .get(eth.getDefaultWallets)
 
 };

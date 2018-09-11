@@ -13,7 +13,9 @@
   
     vm.createAsset = createAsset;
     vm.purchase = purchase;
-    vm.getMyWallets = getMyWallets;
+    
+    vm.getDefaultWallets = getDefaultWallets;
+
     vm.getAllABI = getAllABI;
     vm.getAssetInfo = getAssetInfo;
     
@@ -101,8 +103,8 @@
     }
 
 
-    function getMyWallets() {
-      return vm.web3.eth.accounts
+    function getDefaultWallets() {
+      return $http.get('/api/eth/getDefaultWallets');
     }
 
     function getTokenBalance() {
