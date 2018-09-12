@@ -14,9 +14,17 @@ var ArbitrationSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  asset: {
-    type: Schema.ObjectId,
-    ref: 'Asset'
+  reporterWallet: {
+    type: String,
+    default: ''
+  },    
+  reason: {
+    type: Number,
+    default: 0
+  },      
+  assetAddress: {
+    type: String,
+    default: ''
   },  
   user: {
     type: Schema.ObjectId,

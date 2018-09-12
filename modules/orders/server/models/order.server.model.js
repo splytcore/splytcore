@@ -34,7 +34,7 @@ var OrderSchema = new Schema({
     type: Number,
     default: 1
   },
-  totalAmount: {
+  trxAmount: {
     type: Number,
     default: 0
   },  

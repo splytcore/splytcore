@@ -26,6 +26,7 @@ let defaultBuyer
 let defaultSeller 
 let defaultMarketPlace 
 let defaultArbitrator
+let defaultReporter //who flags an arbitration
 
 // const assetManagerABI = AssetManager.abi;
 // const splytManagerABI = SplytManager.abi;
@@ -80,7 +81,7 @@ web3.eth.net.isListening()
   defaultBuyer = accounts[1]
   defaultMarketPlace = accounts[2]
   defaultArbitrator = accounts[3]
-
+  defaultReporter = accounts[4]
   splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
   return 
 }).then(() => {
@@ -140,6 +141,13 @@ web3.eth.net.isListening()
       exports.initUser(defaultMarketPlace, 'privateKey')
     }
   })     
+  splytManager.methods.getBalance(defaultReporter).call()  
+  .then((balance) => {
+    console.log('default reporter SatToken balance: ' + balance)  
+    if (balance < 1) {
+      exports.initUser(defaultReporter, 'privateKey')
+    }
+  })     
 
 
   web3.eth.getBalance(defaultSeller)
@@ -154,28 +162,28 @@ web3.eth.net.isListening()
   })
 
 
-  web3.eth.getBalance(defaultBuyer)
+  web3.eth.getBalance(defaultReporter)
   .then((balance) => {
-    console.log('default buyer Ether balance: ' + web3.utils.fromWei(balance))  
+    console.log('default reporter Ether balance: ' + web3.utils.fromWei(balance))  
     if (balance < 1) {
-      console.log('default buyer cannot perform any changes for contracts')
+      console.log('reporter cannot perform any changes for contracts')
     }
   })      
   .catch((err) => {
     console.log(err)
   })
 
-
-  web3.eth.getBalance(defaultSeller)
+  web3.eth.getBalance(defaultArbitrator)
   .then((balance) => {
-    console.log('default seller Ether balance: ' + web3.utils.fromWei(balance))  
+    console.log('default arbitraitor Ether balance: ' + web3.utils.fromWei(balance))  
     if (balance < 1) {
-      console.log('seller cannot perform any changes for contracts')
+      console.log('arbitrator cannot perform any changes for contracts')
     }
   })      
   .catch((err) => {
     console.log(err)
   })  
+
   return
 }).then(() => {   
 
@@ -196,7 +204,7 @@ web3.eth.net.isListening()
 
 //TODO: use for testnet network
 exports.getDefaultWallets = function(account, privateKey, encoded) {
-  return ({ defaultSeller: defaultSeller, defaultBuyer: defaultBuyer, defaultMarketPlace: defaultMarketPlace, defaultArbitrator: defaultArbitrator })
+  return ({ defaultSeller: defaultSeller, defaultBuyer: defaultBuyer, defaultMarketPlace: defaultMarketPlace, defaultArbitrator: defaultArbitrator, defaultReporter: defaultReporter })
 }
 
 //TODO: use for testnet network like ropsten or rinky
@@ -339,7 +347,35 @@ exports.purchase = function(order) {
     orderIdHex, 
     order.assetAddress, 
     order.quantity, 
-    order.totalAmount
+    order.trxAmount
+    ).send(trx)
+  
+}
+
+exports.createArbitration = function(arbitration) {
+
+  console.log(arbitration)  
+
+  let trx = {
+      from: arbitration.reporterWallet,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+  let idHex = prepend0x(arbitration._id.toString())
+  
+  console.log('arbitrationIdHex: ' + idHex)
+
+  console.log(idHex)
+  console.log(arbitration.reporterWallet)
+  console.log(arbitration.assetAddress)
+  console.log(arbitration.reason)
+
+
+  return arbitrationManager.methods.createArbitration(
+    idHex, 
+    arbitration.assetAddress, 
+    arbitration.reason
     ).send(trx)
   
 }
@@ -351,6 +387,10 @@ exports.getAssetsLength = function() {
 
 exports.getOrdersLength = function() {
   return orderManager.methods.getOrdersLength().call()
+}
+
+exports.getArbitrationsLength = function() {
+  return arbitrationManager.methods.getArbitrationsLength().call()
 }
 
 
@@ -401,9 +441,23 @@ exports.getOrderInfoByOrderId = function(orderId) {
 }
 
 exports.getOrderInfoByIndex = function(index) {
-  console.log('getting order for index' + index)
+  console.log('getting order for index ' + index)
   return orderManager.methods.getOrderInfoByIndex(parseInt(index)).call()         
 }
+
+exports.getArbitrationInfoByArbitrationId = function(arbitrationId) {
+  console.log('getting arbitration for id ' + arbitrationId)
+  
+  return arbitrationManager.methods.getArbitrationInfoByArbitrationId(prepend0x(arbitrationId)).call()         
+}
+
+
+exports.getArbitrationInfoByIndex = function(index) {
+  console.log('getting arbitration for index ' + index)
+  
+  return arbitrationManager.methods.getArbitrationInfoByIndex(parseInt(index)).call()         
+}
+
 
 exports.unlockWallet = function() {  
   return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000) //stay open for 1 second only

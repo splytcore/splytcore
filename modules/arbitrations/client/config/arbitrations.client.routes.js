@@ -24,7 +24,7 @@
         }
       })
       .state('arbitrations.create', {
-        url: '/create',
+        url: '/create/:assetAddress/:title',
         templateUrl: 'modules/arbitrations/client/views/form-arbitration.client.view.html',
         controller: 'ArbitrationsController',
         controllerAs: 'vm',

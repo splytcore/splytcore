@@ -6,19 +6,14 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'orderResolve', 'arbitrationResolve'];
+  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService'];
 
-  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, order, arbitration) {
+  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService) {
     var vm = this
-    vm.purchase = purchase
     vm.save = save   
     vm.asset = asset
     vm.remove = remove
-    vm.arbitration = arbitration
-
-    vm.initArbitration = initArbitration
-
-    // if (!vm.asset._id) {
+    if (!vm.asset._id) {
       EthService.getDefaultWallets()
         .success((wallets) => {
           console.log(wallets)
@@ -32,7 +27,7 @@
         .error((err) => {
           console.log(err)
         })
-    // }
+    }
 
 
     // vm.getTokenBalance = EthService.getTokenBalance();
@@ -58,49 +53,6 @@
     //   console.log('status fields: ' + vm.assetStatus)
 
     // }
-
-    
-    function initArbitration() {
-
-      if (!vm.asset._id) {
-        return false;      
-      }
-
-      vm.arbitration.asset = vm.asset
-      vm.arbitration.$save(
-        (res) => {
-          console.log('succesffl arbitration')
-          console.log(res._id)
-          // EthService.purchase(res._id, vm.asset._id)
-        },
-        (err) => {
-          console.log(err)
-        }
-      )
-    }
-
-    function purchase() {
-
-      if (!vm.asset._id) {
-        return false;      
-      }
-
-      order.asset = vm.asset
-      order.totalAmount = vm.asset.totalCost
-      order.assetAddress = vm.asset.address
-      order.buyerWallet = vm.defaultBuyer
-      order.quantity = 1
-      order.$save(
-        (res) => {
-          console.log('succesffl purchase')
-          console.log(res._id)
-          // EthService.purchase(res._id, vm.asset._id)
-        },
-        (err) => {
-          console.log(err)
-        }
-      )
-    }
 
     function save(isValid) {
       if (!isValid) {

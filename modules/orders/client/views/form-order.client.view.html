@@ -7,18 +7,18 @@
       <fieldset>
         
         <div class="form-group" show-errors>
-          <label class="control-label" for="asset">Asset</label>
-          <input name="asset" type="text" ng-model="vm.order.asset" id="asset" class="form-control" placeholder="Asset" disabled>
+          <label class="control-label" for="asset">Asset Address</label>
+          <input name="asset" type="text" ng-model="vm.order.assetAddress" id="asset" class="form-control" placeholder="Asset" disabled>
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="name">Total Amount</label>
-          <input name="name" type="text" ng-model="vm.order.totalAmount" id="totalAmount" class="form-control" placeholder="Total Amount" disabled>
+          <label class="control-label" for="name">Trx Amount</label>
+          <input name="name" type="text" ng-model="vm.order.trxAmount" id="trxAmount" class="form-control" placeholder="Trx Amount">
         </div>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Quantity</label>
-          <input name="quantity" type="text" ng-model="vm.order.quantity" id="quanitty" class="form-control" placeholder="Total Amount" disabled>
+          <input name="quantity" type="text" ng-model="vm.order.quantity" id="quantity" class="form-control" placeholder="quantity" >
         </div>
 
 
@@ -28,7 +28,7 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="buyerWallet">Status</label>
+          <label class="control-label" for="buyerWallet">Status(0:NA, 1:PIF, 2:CLOSED, 3:REQUESTED_REFUND, 4:REFUNDED, 5:CONTRIBUTIONS_OPEN, 6:CONTRIBUTIONS_FULFILLED, 7:OTHER)</label>
           <input name="status" type="text" ng-model="vm.order.status" id="status" class="form-control" placeholder="Status" disabled>
         </div>
 

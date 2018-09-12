@@ -6,17 +6,34 @@
     .module('orders')
     .controller('OrdersController', OrdersController);
 
-  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve'];
+  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService'];
 
-  function OrdersController ($scope, $state, $window, Authentication, order) {
+  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService) {
     var vm = this;
-
+    console.log($stateParams)
     vm.authentication = Authentication;
     vm.order = order;
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+
+    if (!vm.order._id) {
+      EthService.getDefaultWallets()
+        .success((wallets) => {
+          console.log(wallets)
+          order.buyerWallet = wallets.defaultBuyer
+          order.assetAddress = $stateParams.assetAddress
+          order.trxAmount = $stateParams.trxAmount   
+          order.quantity = 1
+          order.status = 0
+        })
+        .error((err) => {
+          console.log(err)
+        })
+
+    }
+
 
     // Remove existing Order
     function remove() {

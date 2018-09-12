@@ -11,5 +11,6 @@
     var vm = this;
 
     vm.arbitrations = ArbitrationsService.query();
+
   }
 }());

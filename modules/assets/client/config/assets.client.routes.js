@@ -44,8 +44,7 @@
         controllerAs: 'vm',
         resolve: {
           assetResolve: getAsset,
-          orderResolve: newOrder,
-          arbitrationResolve: newArbitration          
+          orderResolve: newOrder   
         },        
         data: {
           roles: ['user', 'admin'],

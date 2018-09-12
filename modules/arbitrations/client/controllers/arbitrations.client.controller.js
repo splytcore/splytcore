@@ -6,17 +6,37 @@
     .module('arbitrations')
     .controller('ArbitrationsController', ArbitrationsController);
 
-  ArbitrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arbitrationResolve'];
+  ArbitrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arbitrationResolve', '$stateParams', 'EthService'];
 
-  function ArbitrationsController ($scope, $state, $window, Authentication, arbitration) {
+  function ArbitrationsController ($scope, $state, $window, Authentication, arbitration, $stateParams, EthService) {
+    
+    console.log($stateParams)
+
     var vm = this;
+    console.log(arbitration)
+    vm.title = $stateParams.title
 
     vm.authentication = Authentication;
     vm.arbitration = arbitration;
+    vm.arbitration.assetAddress = $stateParams.assetAddress
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+
+
+    EthService.getDefaultWallets()
+      .success((wallets) => {
+        console.log(wallets)
+        vm.defaultArbitrator = wallets.defaultArbitrator
+        if (!arbitration._id) {
+          arbitration.reporterWallet = wallets.defaultSeller
+          console.log(arbitration.reporterWallet)
+        }
+      })
+      .error((err) => {
+        console.log(err)
+      })
 
     // Remove existing Arbitration
     function remove() {
@@ -40,7 +60,7 @@
       }
 
       function successCallback(res) {
-        $state.go('arbitrations.view', {
+        $state.go('arbitrations.edit', {
           arbitrationId: res._id
         });
       }

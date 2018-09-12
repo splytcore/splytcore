@@ -69,10 +69,10 @@ exports.read = function(req, res) {
       let order = {
         version: fields[0],
         _id: fields[1].substr(2),
-        asset: fields[2],
+        assetAddress: fields[2],
         buyerWallet: fields[3],
         quantity: fields[4],
-        totalAmount: fields[5],
+        trxAmount: fields[5],
         status: fields[6]
       }
 
