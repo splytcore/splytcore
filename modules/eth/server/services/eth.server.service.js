@@ -275,6 +275,9 @@ exports.getReputationManagerABI = function() {
   return ReputationManager.abi;
 }
 
+function prepend0x(value) {
+  return "0x" + value
+}
 
 exports.createAsset = function(asset) {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })
@@ -293,8 +296,9 @@ exports.createAsset = function(asset) {
       gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }
 
-  return assetManager.methods.purchase(
-    web3.utils.toHex(asset._id), 
+
+  return assetManager.methods.createAsset(
+    prepend0x(asset._id), 
     asset.term, 
     asset.seller, 
     web3.utils.toHex(asset.title),
@@ -327,22 +331,16 @@ exports.purchase = function(order) {
       gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }
 
-  return orderManager.methods.purchase(
-    web3.utils.toHex(order.asset._id), 
-    order.asset.address, 
-    order.quantity, 
-    order.totalAmount,
-    ).send(trx)
-    // .then((result) => {
-    //   console.log('create asset: ')
-    //   console.log(result)
-    // })
-    // .catch((err) => {
-    //   console.log('create asset error')
-    //   console.log(err)
-    // })
+  let orderIdHex = prepend0x(order._id.toString())
+  
+  console.log('orderIdHex: ' + orderIdHex)
 
-  // exports.signTrx(encoded)
+  return orderManager.methods.purchase(
+    orderIdHex, 
+    order.assetAddress, 
+    order.quantity, 
+    order.totalAmount
+    ).send(trx)
   
 }
 
@@ -351,9 +349,14 @@ exports.getAssetsLength = function() {
   return assetManager.methods.getAssetsLength().call()
 }
 
+exports.getOrdersLength = function() {
+  return orderManager.methods.getOrdersLength().call()
+}
+
+
 exports.getAssetContractById = function(assetId) {
   console.log('assetId: ' + assetId)
-  let assetIdHex = web3.utils.toHex(assetId)
+  let assetIdHex = prepend0x(assetId)
   console.log('assetId in Hex: ' + assetIdHex)
   return assetManager.methods.getassetById(assetIdHex).call()
 }
@@ -379,40 +382,27 @@ exports.initUser = function(account, privateKey) {
     })
 }
 
-
 exports.getAssetInfoByAssetId = function(assetId) {
   console.log('get asset info from contracts...')  
-  let assetIdHex = web3.utils.toHex(assetId)
-  let assetAddress
-  return new Promise((resolve, reject) => {                
-    assetManager.methods.getAssetInfoByAssetId(assetIdHex).call()         
-      .then((result) => {  
-        console.log(result)             
-        resolve(result)                     
-      })              
-      .catch((err) => {
-        console.log(err)
-        reject(err)
-      })
-  })
-
+  let assetIdHex = prepend0x(assetId)
+  let assetAddress           
+  return assetManager.methods.getAssetInfoByAssetId(assetIdHex).call()         
 }
+
+exports.getAssetInfoByIndex = function(index) {
+  return assetManager.methods.getAssetInfoByIndex(index).call()         
+}
+
 
 exports.getOrderInfoByOrderId = function(orderId) {
   console.log('get order info from contracts...')  
-  let orderIdHex = web3.utils.toHex(orderId)
-  return new Promise((resolve, reject) => {                
-    orderManager.methods.getOrderByOrderId(orderIdHex).call()          
-      .then((result) => {  
-        console.log(result)             
-        resolve(result)                     
-      })              
-      .catch((err) => {
-        console.log(err)
-        reject(err)
-      })
-  })
+  let orderIdHex = prepend0x(orderId)            
+  return orderManager.methods.getOrderByOrderId(orderIdHex).call()          
+}
 
+exports.getOrderInfoByIndex = function(index) {
+  console.log('getting order for index' + index)
+  return orderManager.methods.getOrderInfoByIndex(parseInt(index)).call()         
 }
 
 exports.unlockWallet = function() {  

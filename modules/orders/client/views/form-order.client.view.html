@@ -1,19 +1,39 @@
 <section>
   <div class="page-header">
-    <h1>{{vm.order._id ? 'Edit Order' : 'New Order'}}</h1>
+    <h1>Order ID#{{ vm.order._id }}</h1>
   </div>
   <div class="col-md-12">
     <form name="vm.form.orderForm" class="form-horizontal" ng-submit="vm.save(vm.form.orderForm.$valid)" novalidate>
       <fieldset>
+        
         <div class="form-group" show-errors>
-          <label class="control-label" for="name">Name</label>
-          <input name="name" type="text" ng-model="vm.order.name" id="name" class="form-control" placeholder="Name" required>
-          <div ng-messages="vm.form.orderForm.name.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Order name is required.</p>
-          </div>
+          <label class="control-label" for="asset">Asset</label>
+          <input name="asset" type="text" ng-model="vm.order.asset" id="asset" class="form-control" placeholder="Asset" disabled>
         </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Total Amount</label>
+          <input name="name" type="text" ng-model="vm.order.totalAmount" id="totalAmount" class="form-control" placeholder="Total Amount" disabled>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Quantity</label>
+          <input name="quantity" type="text" ng-model="vm.order.quantity" id="quanitty" class="form-control" placeholder="Total Amount" disabled>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="buyerWallet">BuyerWallet</label>
+          <input name="buyerWallet" type="text" ng-model="vm.order.buyerWallet" id="quanitty" class="form-control" placeholder="Buyer Wallet" disabled>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="buyerWallet">Status</label>
+          <input name="status" type="text" ng-model="vm.order.status" id="status" class="form-control" placeholder="Status" disabled>
+        </div>
+
         <div class="form-group">
-          <button type="submit" class="btn btn-default">{{vm.order._id ? 'Update' : 'Create'}}</button>
+          <button type="submit" class="btn btn-default">{{vm.order._id ? 'Request Refund' : 'Create'}}</button>
         </div>
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>

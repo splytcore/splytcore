@@ -18,6 +18,10 @@ var OrderSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Asset'
   },
+  assetAddress: {
+    type: String,
+    default: ''
+  },
   status: {
     type: Number,
     default: 0

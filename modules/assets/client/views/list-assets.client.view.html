@@ -13,7 +13,7 @@
         <span ng-if="asset.user" ng-bind="asset.user.displayName"></span>
         <span ng-if="!asset.user">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="asset.title"></h4>
+      <h4 class="list-group-item-heading">{{asset}}</h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="vm.assets.$resolved && !vm.assets.length">

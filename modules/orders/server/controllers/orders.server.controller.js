@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Order = mongoose.model('Order'),
+  async = require('async'),  
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
   _ = require('lodash');
@@ -14,6 +15,9 @@ var path = require('path'),
  * Create a Order
  */
 exports.create = function(req, res) {
+
+  console.log('creating order')
+
   var order = new Order(req.body);
   order.user = req.user;
 
@@ -37,40 +41,41 @@ exports.create = function(req, res) {
     }
   )
 
-
-
-
-
-
-};
+}
 
 /**
  * Show the current Order
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  var order = req.order ? req.order.toJSON() : {};
+  var tmpOrder = req.order ? req.order.toJSON() : {};
 
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  order.isCurrentUserOwner = req.user && order.user && order.user._id.toString() === req.user._id.toString();
+  // order.isCurrentUserOwner = req.user && order.user && order.user._id.toString() === req.user._id.toString();
 
-  EthService.getOrderInfoByOrderId(order._id)
+  EthService.getOrderInfoByOrderId(tmpOrder._id)
      .then((fields) => {
-      console.log('successful get asset info')
+      console.log('successful get order info')
       console.log(fields)
 
-      // asset.address = fields[0]
+            // 0 orders[_orderId].version,    
+            // 1 orders[_orderId].orderId,
+            // 2 orders[_orderId].asset,    
+            // 3 orders[_orderId].buyer,
+            // 4 orders[_orderId].quantity,
+            // 5 orders[_orderId].paidAmount,
+            // 6 orders[_orderId].status);
+      let order = {
+        version: fields[0],
+        _id: fields[1].substr(2),
+        asset: fields[2],
+        buyerWallet: fields[3],
+        quantity: fields[4],
+        totalAmount: fields[5],
+        status: fields[6]
+      }
 
-      // asset.status = fields[2]
-      
-      // asset.term = fields[3]
-      // asset.inventoryCount = fields[4]
-      // asset.seller = fields[5]      
-      // asset.totalCost = fields[6]
-
-      // console.log(asset)
-      
       res.jsonp(order)  
     })
     .catch((err) => {
@@ -119,15 +124,64 @@ exports.delete = function(req, res) {
  * List of Orders
  */
 exports.list = function(req, res) {
-  Order.find().sort('-created').populate('user', 'displayName').exec(function(err, orders) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(orders);
-    }
-  });
+  
+  let orders = []
+  EthService.getOrdersLength()
+  .then((length) => {
+    console.log('number of orders ' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getOrderInfoByIndex(index)
+      .then((fields) => {
+        console.log('what is going on')
+        console.log(fields)
+            // orders[_orderId].version,    
+            // orders[_orderId].orderId,
+            // orders[_orderId].asset,    
+            // orders[_orderId].buyer,
+            // orders[_orderId].quantity,
+            // orders[_orderId].paidAmount,
+            // orders[_orderId].status);
+
+        orders.push({
+          version: fields[0],
+          _id: fields[1].substr(2),
+          asset: fields[2],
+          buyerWallet: fields[3],
+          quantity: fields[4],
+          totalAmount: fields[5],
+          status: fields[6]
+          })
+        callback()
+      })
+      .catch((err) => {
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        console.log(orders)
+        res.jsonp(orders)
+      }      
+    })
+  })
+  .catch((err) => {
+    res.jsonp(err)
+  })  
+
+  // Order.find().sort('-created').populate('user', 'displayName').exec(function(err, orders) {
+  //   if (err) {
+  //     return res.status(400).send({
+  //       message: errorHandler.getErrorMessage(err)
+  //     });
+  //   } else {
+  //     res.jsonp(orders);
+  //   }
+  // });
 };
 
 /**

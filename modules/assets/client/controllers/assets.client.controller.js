@@ -15,20 +15,21 @@
     vm.asset = asset
     vm.remove = remove
     
-    if (!vm.asset._id) {
+    // if (!vm.asset._id) {
       EthService.getDefaultWallets()
         .success((wallets) => {
           console.log(wallets)
           vm.asset.seller = wallets.defaultSeller
           vm.marketPlaces = []
           vm.marketPlaces.push(wallets.defaultMarketPlace)
+          vm.defaultBuyer = wallets.defaultBuyer
           vm.asset.marketPlaces = vm.marketPlaces
           vm.asset.status = 0
         })
         .error((err) => {
           console.log(err)
         })
-    }
+    // }
 
 
     // vm.getTokenBalance = EthService.getTokenBalance();
@@ -63,7 +64,11 @@
         return false;      
       }
 
-      order.asset = vm.asset._id;
+      order.asset = vm.asset
+      order.totalAmount = vm.asset.totalCost
+      order.assetAddress = vm.asset.address
+      order.buyerWallet = vm.defaultBuyer
+      order.quantity = 1
       order.$save(
         (res) => {
           console.log('succesffl purchase')
@@ -90,7 +95,7 @@
       }
 
       function successCallback(asset) {                
-          //EthService.createAsset(asset);
+          //EthService.createAsset(asset); //if you want to use metamask. Currently using backend to interact with contracts
       }
 
       function errorCallback(res) {

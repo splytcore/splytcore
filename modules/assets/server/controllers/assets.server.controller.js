@@ -5,6 +5,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
+  async = require('async'),
   Asset = mongoose.model('Asset'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),
@@ -48,25 +49,26 @@ exports.create = function(req, res) {
 exports.read = function(req, res) {
 
   // convert mongoose document to JSON
-  var asset = req.asset ? req.asset.toJSON() : {};
-  asset.isCurrentUserOwner = req.user && asset.user && asset.user._id.toString() === req.user._id.toString() 
+  var tempAsset = req.asset ? req.asset.toJSON() : {};
+  let assetId = tempAsset._id
+  // asset.isCurrentUserOwner = req.user && asset.user && asset.user._id.toString() === req.user._id.toString() 
 
-  EthService.getAssetInfoByAssetId(asset._id)
+  EthService.getAssetInfoByAssetId(assetId)
     .then((fields) => {
       console.log('successful get asset info')
       console.log(fields)
-
-      asset.address = fields[0]
-
-      asset.status = fields[2]
-      
-      asset.term = fields[3]
-      asset.inventoryCount = fields[4]
-      asset.seller = fields[5]      
-      asset.totalCost = fields[6]
-
+      let asset = {
+          title: tempAsset.title, //this is from db
+          description: tempAsset.description, //this is from db
+          address : fields[0],
+          _id: fields[1].substr(2),
+          status : fields[2],
+          term: fields[3],
+          inventoryCount: fields[4],
+          seller: fields[5],
+          totalCost: fields[6]
+      }
       console.log(asset)
-      
       res.jsonp(asset)  
     })
     .catch((err) => {
@@ -115,15 +117,56 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  Asset.find().sort('-created').populate('user', 'displayName').exec(function(err, assets) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(assets);
-    }
-  });
+  let assets = []
+  EthService.getAssetsLength()
+  .then((length) => {
+    console.log('number of assets listed' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getAssetInfoByIndex(index)
+      .then((fields) => {
+        console.log(fields)
+        // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
+
+
+        assets.push({
+          assetAddress: fields[0],
+          _id: fields[1].substr(2),
+          status: fields[2],
+          term: fields[3],
+          inventoryCount: fields[4],
+          seller: fields[5],
+          totalCost: fields[6]
+          })
+        callback()
+      })
+      .catch((err) => {
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(assets);
+      }      
+    })
+  })
+  .catch((err) => {
+    res.jsonp(err)
+  })
+
+  // Asset.find().sort('-created').populate('user', 'displayName').exec(function(err, assets) {
+  //   if (err) {
+  //     return res.status(400).send({
+  //       message: errorHandler.getErrorMessage(err)
+  //     });
+  //   } else {
+  //     res.jsonp(assets);
+  //   }
+  // });
 };
 
 /**
