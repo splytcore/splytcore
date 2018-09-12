@@ -44,7 +44,8 @@
         controllerAs: 'vm',
         resolve: {
           assetResolve: getAsset,
-          orderResolve: newOrder
+          orderResolve: newOrder,
+          arbitrationResolve: newArbitration          
         },        
         data: {
           roles: ['user', 'admin'],
@@ -85,5 +86,11 @@
   function newOrder(OrdersService) {
     return new OrdersService();
   }
+
+  newArbitration.$inject = ['ArbitrationsService'];
+
+  function newArbitration(ArbitrationsService) {
+    return new ArbitrationsService();
+  }  
 
 }());

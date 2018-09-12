@@ -10,16 +10,14 @@ var mongoose = require('mongoose'),
  * Arbitration Schema
  */
 var ArbitrationSchema = new Schema({
-  name: {
-    type: String,
-    default: '',
-    required: 'Please fill Arbitration name',
-    trim: true
-  },
   created: {
     type: Date,
     default: Date.now
   },
+  asset: {
+    type: Schema.ObjectId,
+    ref: 'Asset'
+  },  
   user: {
     type: Schema.ObjectId,
     ref: 'User'

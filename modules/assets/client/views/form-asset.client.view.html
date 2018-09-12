@@ -81,6 +81,9 @@
           <button type="submit" class="btn btn-default">{{vm.asset._id ? 'Update' : 'Create'}}</button>
           <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.purchase()">Purchase</button>
           <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>
+           
+           <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.initArbitration()">Initial Arbitration</button>
+                   
         </div>
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>

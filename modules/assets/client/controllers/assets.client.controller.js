@@ -6,15 +6,18 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'orderResolve'];
+  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'orderResolve', 'arbitrationResolve'];
 
-  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, order) {
+  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, order, arbitration) {
     var vm = this
     vm.purchase = purchase
     vm.save = save   
     vm.asset = asset
     vm.remove = remove
-    
+    vm.arbitration = arbitration
+
+    vm.initArbitration = initArbitration
+
     // if (!vm.asset._id) {
       EthService.getDefaultWallets()
         .success((wallets) => {
@@ -57,6 +60,24 @@
     // }
 
     
+    function initArbitration() {
+
+      if (!vm.asset._id) {
+        return false;      
+      }
+
+      vm.arbitration.asset = vm.asset
+      vm.arbitration.$save(
+        (res) => {
+          console.log('succesffl arbitration')
+          console.log(res._id)
+          // EthService.purchase(res._id, vm.asset._id)
+        },
+        (err) => {
+          console.log(err)
+        }
+      )
+    }
 
     function purchase() {
 
