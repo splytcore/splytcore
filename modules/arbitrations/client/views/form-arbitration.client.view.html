@@ -9,7 +9,8 @@
         
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Asset Address</label>
-          <input name="assetAddress" type="text" ng-model="vm.arbitration.assetAddress" id="assetAddress" class="form-control" placeholder="assetAddress" required>
+          <input name="assetAddress" type="text" ng-model="vm.arbitration.assetAddress" id="assetAddress" class="form-control" placeholder="assetAddress" required 
+            ng-disabled="vm.arbitration._id">
           <div ng-messages="vm.form.arbitrationForm.assetAddress.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset Address is required.</p>
           </div>
@@ -18,7 +19,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Reason(0:SPAM 1:BROKEN 2:NOTRECIEVED 3:NOREASON)</label>
-          <input name="reason" type="text" ng-model="vm.arbitration.reason" id="reason" class="form-control" placeholder="reason" required>
+          <input name="reason" type="text" ng-model="vm.arbitration.reason" id="reason" class="form-control" placeholder="reason" required ng-disabled="vm.arbitration._id">
           <div ng-messages="vm.form.arbitrationForm.reason.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Reason is required.</p>
           </div>
@@ -26,7 +27,8 @@
         
         <div class="form-group" show-errors>
           <label class="control-label" for="reporterWallet">Reporter Wallet</label>
-          <input name="reporterWallet" type="text" ng-model="vm.arbitration.reporterWallet" id="reporterWallet" class="form-control" placeholder="reporterWallet" required>
+          <input name="reporterWallet" type="text" ng-model="vm.arbitration.reporterWallet" id="reporterWallet" class="form-control" placeholder="reporterWallet" 
+          ng-disabled="vm.arbitration._id" required>
           <div ng-messages="vm.form.arbitrationForm.reporterWallet.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Reporter Wallet is required.</p>
           </div>
@@ -42,7 +44,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="winner">Winner of Arbitration by arbitrator(0: UNDECIED, 1:REPORTER 2:SELLER)</label>
-          <input name="winner" type="text" ng-model="vm.arbitration.winner" id="winner" class="form-control" placeholder="winner">
+          <input name="winner" type="text" ng-model="vm.arbitration.winner" id="winner" class="form-control" placeholder="winner" ng-disabled="vm.arbitration._id">
           <div ng-messages="vm.form.arbitrationForm.winner.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Arbitriator Wallet is required.</p>
           </div>

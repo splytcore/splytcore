@@ -24,20 +24,19 @@
     vm.remove = remove;
     vm.save = save;
 
-
-    EthService.getDefaultWallets()
-      .success((wallets) => {
-        console.log(wallets)
-        vm.defaultArbitrator = wallets.defaultArbitrator
-        if (!arbitration._id) {
+    if (!arbitration._id) {
+      EthService.getDefaultWallets()
+        .success((wallets) => {
+          console.log(wallets)
+          vm.defaultArbitrator = wallets.defaultArbitrator
           arbitration.reporterWallet = wallets.defaultSeller
           console.log(arbitration.reporterWallet)
-        }
-      })
-      .error((err) => {
-        console.log(err)
-      })
-
+          arbitration.reason = 0
+        })
+        .error((err) => {
+          console.log(err)
+        })
+    }
     // Remove existing Arbitration
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
