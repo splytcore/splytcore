@@ -42,8 +42,7 @@
         controller: 'AssetsController',
         controllerAs: 'vm',
         resolve: {
-          assetResolve: getAsset,
-          orderResolve: newOrder   
+          assetResolve: getAsset
         },        
         data: {
           roles: ['user', 'admin'],

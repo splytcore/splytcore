@@ -458,6 +458,14 @@ exports.getArbitrationInfoByIndex = function(index) {
   return arbitrationManager.methods.getArbitrationInfoByIndex(parseInt(index)).call()         
 }
 
+exports.createAccount = function() {  
+  console.log('creating account')
+  return web3.eth.accounts.create()
+  // console.log('return accounts')
+  // console.log(accounts)
+  // return web3.eth.personal.newAccount('clippers')
+}
+
 
 exports.unlockWallet = function() {  
   return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000) //stay open for 1 second only

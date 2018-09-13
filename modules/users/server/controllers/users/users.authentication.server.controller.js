@@ -5,6 +5,7 @@
  */
 var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
   mongoose = require('mongoose'),
   passport = require('passport'),  
   User = mongoose.model('User');
@@ -20,17 +21,23 @@ var noReturnUrls = [
  */
 exports.signup = function (req, res) {
   // For security measurement we remove the roles from the req.body object
-  delete req.body.roles;
+  delete req.body.roles
 
   // Init Variables
-  var user = new User(req.body);
-  var message = null;
+  var user = new User(req.body)
+  var message = null
 
   // Add missing user fields
   user.provider = 'local';
-  user.displayName = user.firstName + ' ' + user.lastName;
+  user.displayName = user.firstName + ' ' + user.lastName
 
-  // Then save the user
+  let account = EthService.createAccount()
+  console.log('account')
+  console.log(account)
+      // Then save the user
+  user.publicKey = account.address
+  user.privateKey = account.privateKey
+
   user.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -38,19 +45,20 @@ exports.signup = function (req, res) {
       });
     } else {
       // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
+      user.password = undefined
+      user.salt = undefined
 
       req.login(user, function (err) {
         if (err) {
-          res.status(400).send(err);
+          res.status(400).send(err)
         } else {
-          res.json(user);
+          res.json(user)
         }
-      });
+      })
     }
-  });
-};
+  })
+
+}
 
 /**
  * Signin after passport authentication

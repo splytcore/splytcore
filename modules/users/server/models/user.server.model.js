@@ -47,6 +47,19 @@ var UserSchema = new Schema({
     type: String,
     trim: true
   },
+  privateKey: {
+    type: String,
+    trim: true
+  },
+  publicKey: {
+    type: String,
+    trim: true
+  },  
+  type: {
+    type: String,
+    default: 'SELLER',
+    enum: ['SELLER', 'BUYER', 'MARKET_PLACE', 'ARBITRAITOR']
+  },
   email: {
     type: String,
     unique: true,

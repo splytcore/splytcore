@@ -16,20 +16,23 @@
             <p class="help-block error-text" ng-message="required">Last name is required.</p>
           </div>
         </div>
-        
+
         <div class="form-group" show-errors>
-          <label for="department">Department</label>          
-
-          <select class="form-control" name='department' ng-model="user.department._id">          
-            <option ng-repeat="d in departments" value="{{d._id}}" ng-selected="d._id == user.department._id">
-              {{d.display}}            
-            </option>
-          </select>
-
-          <div ng-messages="userForm.department.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Department is required.</p>
+          <label for="publicKey">Public Key(wallet)</label>
+          <input type="text" id="publicKey" name="publicKey" class="form-control" ng-model="user.publicKey" placeholder="Public Key" required>
+          <div ng-messages="userForm.publicKey.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Public Key is required.</p>
           </div>
         </div>
+        
+        <div class="form-group" show-errors>
+          <label for="publicKey">Private Key(DEV PURPOSES)</label>
+          <input type="text" id="privateKey" name="privateKey" class="form-control" ng-model="user.privateKey" placeholder="Private Key" required>
+          <div ng-messages="userForm.privateKey.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Private Key is required.</p>
+          </div>
+        </div>
+        
 
         <div class="form-group" show-errors>
           <label for="email">Email</label>
