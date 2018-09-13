@@ -32,7 +32,17 @@
             <p class="help-block error-text" ng-message="required">Private Key is required.</p>
           </div>
         </div>
+
+        <div class="form-group" show-errors>
+          <label for="ethers">Ether Balance</label>
+          <input type="text" id="ethers" name="ethers" class="form-control" ng-model="user.ethers" placeholder="ethers" disabled>
+        </div>
         
+        <div class="form-group" show-errors>
+          <label for="token">SAT Balance</label>
+          <input type="text" id="tokens" name="tokens" class="form-control" ng-model="user.tokens" placeholder="tokens" disabled>
+        </div>
+                        
 
         <div class="form-group" show-errors>
           <label for="email">Email</label>
