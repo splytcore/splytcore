@@ -83,6 +83,10 @@
           <button ng-show="vm.asset._id"  ui-sref="orders.create({ assetAddress: vm.asset.address, title: vm.asset.title, trxAmount: vm.asset.totalCost })" type="button" class="btn btn-default">Purchase</button>
 
           <button ng-show="vm.asset._id"  ui-sref="arbitrations.create({ assetAddress: vm.asset.address, title: vm.asset.title })" type="button" class="btn btn-default">Initial Arbitration</button>
+
+          <button ng-show="vm.asset._id"  ui-sref="reputations.create({ wallet: vm.asset.seller, title: vm.asset.title })" type="button" class="btn btn-default">Rate Seller</button>
+
+          <button ng-show="vm.asset._id"  ui-sref="reputations.create({ wallet: vm.asset.address, title: vm.asset.title })" type="button" class="btn btn-default">Rate Asset</button>          
                    
         </div>
         <div ng-show="vm.error" class="text-danger">

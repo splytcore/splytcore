@@ -24,7 +24,7 @@
         }
       })
       .state('reputations.create', {
-        url: '/create',
+        url: '/create/:wallet/:title',
         templateUrl: 'modules/reputations/client/views/form-reputation.client.view.html',
         controller: 'ReputationsController',
         controllerAs: 'vm',
@@ -49,18 +49,6 @@
           pageTitle: 'Edit Reputation {{ reputationResolve.name }}'
         }
       })
-      .state('reputations.view', {
-        url: '/:reputationId',
-        templateUrl: 'modules/reputations/client/views/view-reputation.client.view.html',
-        controller: 'ReputationsController',
-        controllerAs: 'vm',
-        resolve: {
-          reputationResolve: getReputation
-        },
-        data: {
-          pageTitle: 'Reputation {{ reputationResolve.name }}'
-        }
-      });
   }
 
   getReputation.$inject = ['$stateParams', 'ReputationsService'];

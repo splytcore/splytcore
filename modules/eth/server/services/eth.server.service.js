@@ -288,13 +288,10 @@ function prepend0x(value) {
 }
 
 exports.createAsset = function(asset) {
-  // return assetManager.methods.getassetsLength().call({ from: gas.from })
-  // return exports.unlockWallet()
-  // .then(() => {
+
 
   asset.marketPlaces.push(defaultMarketPlace) //hard code for now
   asset.marketPlacesAmount.push(2) //hard code for now
-
 
   console.log(asset)  
 
@@ -311,7 +308,7 @@ exports.createAsset = function(asset) {
     asset.seller, 
     web3.utils.toHex(asset.title),
     asset.totalCost,
-    asset.expDate.getTime()/1000,
+    Math.floor(asset.expDate.getTime()/1000),
     asset.marketPlaces[0],
     asset.marketPlacesAmount[0],
     asset.inventoryCount
@@ -381,6 +378,24 @@ exports.createArbitration = function(arbitration) {
 }
 
 
+exports.createReputation = function(reputation) {
+
+  console.log(reputation)  
+
+  let trx = {
+      from: reputation.fromWallet,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+
+  return reputationManager.methods.createRate(
+    reputation.wallet, 
+    reputation.rating, 
+    ).send(trx)
+  
+}
+
 exports.getAssetsLength = function() {
   return assetManager.methods.getAssetsLength().call()
 }
@@ -392,7 +407,9 @@ exports.getOrdersLength = function() {
 exports.getArbitrationsLength = function() {
   return arbitrationManager.methods.getArbitrationsLength().call()
 }
-
+exports.getReputationsLength = function() {
+  return reputationManager.methods.getReputationsLength().call()
+}
 
 exports.getAssetContractById = function(assetId) {
   console.log('assetId: ' + assetId)
@@ -457,6 +474,26 @@ exports.getArbitrationInfoByIndex = function(index) {
   
   return arbitrationManager.methods.getArbitrationInfoByIndex(parseInt(index)).call()         
 }
+
+exports.getReputationInfoByIndex = function(index) {
+  console.log('getting reputation for index ' + index)
+  
+  return reputationManager.methods.getReputationInfoByIndex(parseInt(index)).call()         
+}
+
+exports.getReputationInfoByWallet = function(wallet) {
+  console.log('getting reputation for wallet ' + wallet)
+  
+  return reputationManager.methods.getReputationInfoByWallet(wallet).call()         
+}
+
+
+exports.getRateByWalletAndIndex = function(wallet, index) {
+  console.log('getting reputation for index ' + index)
+  console.log('wallet: ' + index)
+  return reputationManager.methods.getRateByWalletAndIndex(wallet, parseInt(index)).call()         
+}
+
 
 exports.createAccount = function() {  
   console.log('creating account')

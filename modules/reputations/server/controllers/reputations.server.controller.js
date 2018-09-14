@@ -7,6 +7,8 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Reputation = mongoose.model('Reputation'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  async = require('async'),  
+  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),    
   _ = require('lodash');
 
 /**
@@ -14,32 +16,53 @@ var path = require('path'),
  */
 exports.create = function(req, res) {
   var reputation = new Reputation(req.body);
-  reputation.user = req.user;
 
-  reputation.save(function(err) {
-    if (err) {
+  EthService.createReputation(reputation)
+    .then((result) => {
+      console.log('create arbitration contract result..' + result)    
+      reputation.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.jsonp(reputation);
+        }
+      })
+    })
+    .catch((err) => {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(reputation);
+        message: 'error creating asset'
+      })
     }
-  });
-};
+  )
+
+}
 
 /**
  * Show the current Reputation
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  var reputation = req.reputation ? req.reputation.toJSON() : {};
+  var tmpReputation = req.reputation;
+  console.log('temp reputation')
+  console.log(tmpReputation)
+  EthService.getReputationInfoByWallet(tmpReputation.wallet)
+     .then((fields) => {
+      console.log('successful get reputation info')
+      console.log(fields)
+      let rep = {
+          wallet: fields[0],
+          average: fields[1],
+          ratesCount: fields[2]
+        }
+      res.jsonp(rep)  
+    })
+    .catch((err) => {
+      res.jsonp(err)  
+    })  
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  reputation.isCurrentUserOwner = req.user && reputation.user && reputation.user._id.toString() === req.user._id.toString();
-
-  res.jsonp(reputation);
-};
+}
 
 /**
  * Update a Reputation
@@ -81,37 +104,72 @@ exports.delete = function(req, res) {
  * List of Reputations
  */
 exports.list = function(req, res) {
-  Reputation.find().sort('-created').populate('user', 'displayName').exec(function(err, reputations) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(reputations);
-    }
-  });
-};
+
+
+  let reputations = []
+
+  EthService.getReputationsLength()
+  .then((length) => {
+    console.log('number of reputations ' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getReputationInfoByIndex(index)
+      .then((fields) => {
+        console.log('resturn data')
+        console.log(fields)
+        reputations.push({
+          wallet: fields[0],
+          average: fields[1],
+          ratesCount: fields[2],
+          })
+        callback()
+      })
+      .catch((err) => {
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        console.log(reputations)
+        res.jsonp(reputations)
+      }      
+    })
+  })
+  .catch((err) => {
+    res.jsonp(err)
+  })  
+
+
+}
 
 /**
  * Reputation middleware
  */
 exports.reputationByID = function(req, res, next, id) {
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({
-      message: 'Reputation is invalid'
-    });
-  }
-
-  Reputation.findById(id).populate('user', 'displayName').exec(function (err, reputation) {
-    if (err) {
-      return next(err);
-    } else if (!reputation) {
-      return res.status(404).send({
-        message: 'No Reputation with that identifier has been found'
-      });
-    }
-    req.reputation = reputation;
+    console.log('repuation middleware wallet ' + id)
+    req.reputation = { wallet: id };
     next();
-  });
-};
+
+
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(400).send({
+  //     message: 'Reputation is invalid'
+  //   });
+  // }
+
+  // Reputation.findById(id).populate('user', 'displayName').exec(function (err, reputation) {
+  //   if (err) {
+  //     return next(err);
+  //   } else if (!reputation) {
+  //     return res.status(404).send({
+  //       message: 'No Reputation with that identifier has been found'
+  //     });
+  //   }
+    // req.reputation = reputation;
+    // next();
+  // })
+}

@@ -4,19 +4,10 @@
   </div>
   <div class="list-group">
     <a ng-repeat="reputation in vm.reputations"
-       ui-sref="reputations.view({ reputationId: reputation._id })"
+       ui-sref="reputations.edit({ reputationId: reputation.wallet })"
        class="list-group-item">
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="reputation.created | date:'mediumDate'"></span>
-        by
-        <span ng-if="reputation.user" ng-bind="reputation.user.displayName"></span>
-        <span ng-if="!reputation.user">Deleted User</span>
-      </small>
-      <h4 class="list-group-item-heading" ng-bind="reputation.name"></h4>
+      <h4 class="list-group-item-heading">{{ reputation }}</h4>
     </a>
   </div>
-  <div class="alert alert-warning text-center" ng-if="vm.reputations.$resolved && !vm.reputations.length">
-    No Reputations yet, why don't you <a ui-sref="reputations.create">create one</a>?
-  </div>
+
 </section>

@@ -173,16 +173,7 @@ exports.list = function(req, res) {
     res.jsonp(err)
   })  
 
-  // Order.find().sort('-created').populate('user', 'displayName').exec(function(err, orders) {
-  //   if (err) {
-  //     return res.status(400).send({
-  //       message: errorHandler.getErrorMessage(err)
-  //     });
-  //   } else {
-  //     res.jsonp(orders);
-  //   }
-  // });
-};
+}
 
 /**
  * Order middleware

@@ -1,17 +1,38 @@
 <section>
   <div class="page-header">
-    <h1>{{vm.reputation._id ? 'Edit Reputation' : 'New Reputation'}}</h1>
+    <h1>Reputation</h1>
   </div>
-  <div class="col-md-12">
+  <div class="col-md-12" ng-show="!vm.reputation.ratesCount">
+    <h2>Create Rate for Address {{ vm.reputation.wallet }}</h2>
     <form name="vm.form.reputationForm" class="form-horizontal" ng-submit="vm.save(vm.form.reputationForm.$valid)" novalidate>
       <fieldset>
+        
         <div class="form-group" show-errors>
-          <label class="control-label" for="name">Name</label>
-          <input name="name" type="text" ng-model="vm.reputation.name" id="name" class="form-control" placeholder="Name" required>
-          <div ng-messages="vm.form.reputationForm.name.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Reputation name is required.</p>
+          <label class="control-label" for="wallet">Wallet to Rate</label>
+          <input name="wallet" type="text" ng-model="vm.reputation.wallet" id="name" class="form-control" placeholder="Wallet" required>
+          <div ng-messages="vm.form.reputationForm.wallet.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Wallet is required.</p>
           </div>
         </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="wallet">Rating(1-5 only)</label>
+          <input name="rating" type="text" ng-model="vm.reputation.rating" id="name" class="form-control" placeholder="rating" required>
+          <div ng-messages="vm.form.reputationForm.rating.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Rating is required.</p>
+          </div>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="from">From Wallet</label>
+          <input name="fromWallet" type="text" ng-model="vm.reputation.fromWallet" id="name" class="form-control" placeholder="fromWallet" required>
+          <div ng-messages="vm.form.reputationForm.fromWallet.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">From Wallet is required.</p>
+          </div>
+        </div>
+
+
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.reputation._id ? 'Update' : 'Create'}}</button>
         </div>
@@ -21,4 +42,30 @@
       </fieldset>
     </form>
   </div>
+
+  <div class="col-md-12" ng-show="vm.reputation.ratesCount">
+    <h2>Summary for Address {{vm.reputation.wallet}}</h2>
+
+    <form name="vm.form.reputationForm" class="form-horizontal">
+      <fieldset>
+  
+        <div class="form-group" show-errors>
+          <label class="control-label" for="wallet">Average Rating(decimal 2)</label>
+          <input name="rating" type="text" ng-model="vm.reputation.average" id="averageRating" class="form-control" placeholder="rating" disabled>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="from">Total Number of People Who Rated</label>
+          <input name="fromWallet" type="text" ng-model="vm.reputation.ratesCount" id="name" class="form-control" placeholder="ratesCount" disabled>
+        </div>
+
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+
 </section>

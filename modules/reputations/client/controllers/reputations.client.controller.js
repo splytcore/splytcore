@@ -6,17 +6,26 @@
     .module('reputations')
     .controller('ReputationsController', ReputationsController);
 
-  ReputationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reputationResolve'];
+  ReputationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reputationResolve', '$stateParams'];
 
-  function ReputationsController ($scope, $state, $window, Authentication, reputation) {
+  function ReputationsController ($scope, $state, $window, Authentication, reputation, $stateParams) {
     var vm = this;
 
     vm.authentication = Authentication;
+    vm.user = vm.authentication.user
+    console.log(vm.user)
     vm.reputation = reputation;
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+
+    if (!vm.reputation._id) {
+      console.log('settin default')
+      vm.reputation.fromWallet = vm.user.publicKey
+      vm.reputation.wallet = $stateParams.wallet
+      vm.reputation.rating = 5
+    }
 
     // Remove existing Reputation
     function remove() {
@@ -40,9 +49,7 @@
       }
 
       function successCallback(res) {
-        $state.go('reputations.view', {
-          reputationId: res._id
-        });
+        $state.go('reputations.list')
       }
 
       function errorCallback(res) {

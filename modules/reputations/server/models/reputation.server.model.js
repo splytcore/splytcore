@@ -10,20 +10,25 @@ var mongoose = require('mongoose'),
  * Reputation Schema
  */
 var ReputationSchema = new Schema({
-  name: {
+  wallet: {
     type: String,
     default: '',
-    required: 'Please fill Reputation name',
+    required: 'Please fill wallet address',
     trim: true
   },
-  created: {
+  rating: {
+    type: Number,
+    default: 5,
+  },
+  fromWallet: {
+    type: String,
+    default: ''
+  },
+  date: {
     type: Date,
     default: Date.now
-  },
-  user: {
-    type: Schema.ObjectId,
-    ref: 'User'
   }
-});
 
-mongoose.model('Reputation', ReputationSchema);
+})
+
+mongoose.model('Reputation', ReputationSchema)
