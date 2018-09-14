@@ -2,11 +2,12 @@
   <div class="page-header">
     <h1>Arbitrations</h1>
   </div>
+
   <div class="list-group">
     <a ng-repeat="arbitration in vm.arbitrations"
        ui-sref="arbitrations.edit({ arbitrationId: arbitration._id })"
        class="list-group-item">
-       {{arbitration}}
+    <h4 class="list-group-item-heading"> {{arbitration}}</h4>       
     </a>
   </div>
 </section>

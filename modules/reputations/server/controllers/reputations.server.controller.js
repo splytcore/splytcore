@@ -42,7 +42,7 @@ exports.create = function(req, res) {
 /**
  * Show the current Reputation
  */
-exports.read = function(req, res) {
+exports.read = function(req, res, next) {
   // convert mongoose document to JSON
   var tmpReputation = req.reputation;
   console.log('temp reputation')
@@ -54,15 +54,54 @@ exports.read = function(req, res) {
       let rep = {
           wallet: fields[0],
           average: fields[1],
-          ratesCount: fields[2]
-        }
-      res.jsonp(rep)  
+          ratesCount: fields[2],
+          rates: []
+          }
+      // res.jsonp(rep) 
+      req.reputation =  rep
+      next()
     })
     .catch((err) => {
-      res.jsonp(err)  
+      return res.jsonp(err)  
     })  
 
 }
+
+// bind the rate details
+exports.bindRateDetail = function(req, res) {
+
+  let reputation = req.reputation
+  console.log(reputation)
+
+  async.times(parseInt(reputation.ratesCount), (index, callback) => {    
+    console.log('index:' + index)
+    EthService.getRateInfoByWalletAndIndex(reputation.wallet, index)
+    .then((fields) => {
+      console.log('fields')
+      console.log(fields)
+      reputation.rates.push({
+        rate: fields[0],
+        from: fields[1],
+        date: fields[2]
+        })
+      callback()
+    })
+    .catch((err) => {
+      console.log(err)
+      callback(err)
+    })
+  }, (err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(reputation);
+    }
+  })
+
+}
+
 
 /**
  * Update a Reputation

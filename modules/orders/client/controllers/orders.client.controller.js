@@ -57,13 +57,11 @@
       }
 
       function successCallback(res) {
-        $state.go('orders.view', {
-          orderId: res._id
-        });
+        $state.go('orders.list')
       }
 
       function errorCallback(res) {
-        vm.error = res.data.message;
+        vm.error = res.data.message
       }
     }
   }

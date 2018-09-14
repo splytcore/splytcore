@@ -67,7 +67,8 @@
         vm.asset.$save(successCallback, errorCallback);
       }
 
-      function successCallback(asset) {                
+      function successCallback(asset) {  
+        $state.go('assets.list')              
           //EthService.createAsset(asset); //if you want to use metamask. Currently using backend to interact with contracts
       }
 

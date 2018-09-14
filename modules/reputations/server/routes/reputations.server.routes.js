@@ -13,7 +13,7 @@ module.exports = function(app) {
     .post(reputations.create);
 
   app.route('/api/reputations/:reputationId').all(reputationsPolicy.isAllowed)
-    .get(reputations.read)
+    .get(reputations.read, reputations.bindRateDetail)
     .put(reputations.update)
     .delete(reputations.delete);
 

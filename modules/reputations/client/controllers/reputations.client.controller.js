@@ -20,7 +20,8 @@
     vm.remove = remove;
     vm.save = save;
 
-    if (!vm.reputation._id) {
+    console.log(reputation)
+    if (!vm.reputation.wallet) {
       console.log('settin default')
       vm.reputation.fromWallet = vm.user.publicKey
       vm.reputation.wallet = $stateParams.wallet

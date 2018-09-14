@@ -6,14 +6,6 @@
     <a ng-repeat="order in vm.orders"
        ui-sref="orders.edit({ orderId: order._id })"
        class="list-group-item">
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="order.created | date:'mediumDate'"></span>
-        by
-        <span ng-if="order.user" ng-bind="order.user.displayName"></span>
-        <span ng-if="!order.user">Deleted User</span>
-      </small>
-
       <h4 class="list-group-item-heading">OrderId: {{order._id}}  Asset Id: {{order.asset}}</h4>
     </a>
   </div>

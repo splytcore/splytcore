@@ -6,13 +6,6 @@
     <a ng-repeat="asset in vm.assets"
        ui-sref="assets.edit({ assetId: asset._id })"
        class="list-group-item">
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="asset.created | date:'mediumDate'"></span>
-        by
-        <span ng-if="asset.user" ng-bind="asset.user.displayName"></span>
-        <span ng-if="!asset.user">Deleted User</span>
-      </small>
       <h4 class="list-group-item-heading">{{asset}}</h4>
     </a>
   </div>

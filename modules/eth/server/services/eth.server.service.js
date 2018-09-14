@@ -391,7 +391,7 @@ exports.createReputation = function(reputation) {
 
   return reputationManager.methods.createRate(
     reputation.wallet, 
-    reputation.rating, 
+    reputation.rating 
     ).send(trx)
   
 }
@@ -480,18 +480,18 @@ exports.getReputationInfoByIndex = function(index) {
   
   return reputationManager.methods.getReputationInfoByIndex(parseInt(index)).call()         
 }
-
+// Returns just the summary of the reputation.
 exports.getReputationInfoByWallet = function(wallet) {
   console.log('getting reputation for wallet ' + wallet)
   
   return reputationManager.methods.getReputationInfoByWallet(wallet).call()         
 }
 
-
-exports.getRateByWalletAndIndex = function(wallet, index) {
+//Returns the detail of each rating
+exports.getRateInfoByWalletAndIndex = function(wallet, index) {
   console.log('getting reputation for index ' + index)
   console.log('wallet: ' + index)
-  return reputationManager.methods.getRateByWalletAndIndex(wallet, parseInt(index)).call()         
+  return reputationManager.methods.getRateInfoByWalletAndIndex(wallet, parseInt(index)).call()         
 }
 
 
