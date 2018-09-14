@@ -36,3 +36,8 @@ exports.getDefaultWallets = function(req, res) {
  
 }
 
+exports.getSplytServiceInfo = function(req, res) {
+
+  res.jsonp(EthService.getSplytServiceInfo())
+ 
+}

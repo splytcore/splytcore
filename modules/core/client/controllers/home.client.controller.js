@@ -1,9 +1,18 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication',
-  function ($q, $scope, Authentication) {
+angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', 'EthService',
+  function ($q, $scope, Authentication, EthService) {
     // This provides Authentication context.
-    $scope.authentication = Authentication;
+    $scope.authentication = Authentication
+    $scope.user = $scope.authentication.user
+    EthService.getSplytServiceInfo()
+      .success((result) => {
+        console.log(result)
+        $scope.splyt = result
+      })
+      .catch((err) => {
+        console.log(err)
+      })
 
     //example of how simple async 
     // $q((resolve, reject) => {

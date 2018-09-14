@@ -55,6 +55,14 @@ var UserSchema = new Schema({
     type: String,
     trim: true
   },  
+  tokenBalance: {
+    type: String,
+    trim: true
+  }, 
+  etherBalance: {
+    type: String,
+    trim: true
+  },   
   type: {
     type: String,
     default: 'SELLER',

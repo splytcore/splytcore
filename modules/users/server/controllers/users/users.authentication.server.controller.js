@@ -8,7 +8,7 @@ var path = require('path'),
   EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
   mongoose = require('mongoose'),
   passport = require('passport'),  
-  User = mongoose.model('User');
+  User = mongoose.model('User')
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -66,29 +66,42 @@ exports.signup = function (req, res) {
 exports.signin = function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
     if (err || !user) {
-      res.status(400).send(info);
+      res.status(400).send(info)
     } else {
       // Remove sensitive data before login
       user.password = undefined;
       user.salt = undefined;
-
-      req.login(user, function (err) {
+      req.login(user, (err) =>  {
         if (err) {
-          res.status(400).send(err);
+          res.status(400).send(err)
         } else {            
-          let cookies = req.cookies   
-          console.log(cookies.sessionId)       
-          res.json({ user: user, sessionId: cookies.sessionId });
+          EthService.getEtherBalance(user.publicKey)
+          .then((balance) => {
+            user.etherBalance = balance
+            EthService.getTokenBalance(user.publicKey) 
+            .then((balance) => {
+              user.tokenBalance = balance
+              let cookies = req.cookies   
+              console.log(cookies.sessionId)       
+              res.json({ user: user, sessionId: cookies.sessionId })
+            })
+            .catch((err) => {
+              res.json(err)
+            })
+          })
+          .catch((err) => {
+            res.json(err)
+          })          
         }
       })
     }
   })(req, res, next)
-};
+}
 
 /**
  * Signout
  */
 exports.signout = function (req, res) {
-  req.logout();
-  res.redirect('/');
+  req.logout()
+  res.redirect('/')
 };

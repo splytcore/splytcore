@@ -4,4 +4,25 @@
       <h1>Welcome to Splytcore2 API</h1>
     </p>
   </div>
+
+  	<ul>
+  		<h4>Splyt Contracts</h4>
+  		<li>Token Address: {{splyt.tokenAddress}}</li>
+  		<li>Stake Address: {{splyt.stakeAddress}}</li>
+  		<li>SplytManager Address: {{splyt.splytManagerAddress}}</li>
+  		<li>AssetManager Address: {{ splyt.assetManagerAddress }}</li>
+  		<li>OrderManager Address: {{ splyt.orderManagerAddress }}</li>
+  		<li>ArbitrationManager Address: {{ splyt.arbitrationManagerAddress }}</li>
+  		<li>ReputationManager Address: {{ splyt.reputationManagerAddress }}</li>
+
+  	</ul>
+
+
+  	<ul>
+  		<h4>My Balances</h4>
+  		<li>My Wallet: {{user.publicKey}}</li>
+  		<li>My Token Balance: {{ user.tokenBalance }}</li>
+  		<li>My Ether Balance: {{ user.etherBalance }}</li>  		
+  	</ul>
+
 </section>

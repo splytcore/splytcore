@@ -11,6 +11,8 @@
   function EthService($http, $window, $q) {
     let vm = this
   
+    vm.getSplytServiceInfo = getSplytServiceInfo;
+
     vm.createAsset = createAsset;
     vm.purchase = purchase;
     
@@ -102,6 +104,9 @@
       // })      
     }
 
+    function getSplytWallets() {
+      return $http.get('/api/eth/getDefaultWallets');
+    }
 
     function getDefaultWallets() {
       return $http.get('/api/eth/getDefaultWallets');
@@ -189,6 +194,10 @@
 
     function getAllABI() {
       return $http.get('/api/abi/getAll');
+    }
+
+    function getSplytServiceInfo() {
+      return $http.get('/api/eth/getSplytServiceInfo');
     }
 
 

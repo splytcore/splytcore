@@ -59,9 +59,7 @@
       }
 
       function successCallback(res) {
-        $state.go('arbitrations.edit', {
-          arbitrationId: res._id
-        });
+        $state.go('arbitrations.list')
       }
 
       function errorCallback(res) {

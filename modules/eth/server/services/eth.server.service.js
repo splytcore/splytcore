@@ -43,6 +43,8 @@ let orderManagerAddress;
 let reputationManagerAddress;
 let arbitrationManagerAddress;
 let satTokenAddress;
+let stakeAddress;
+
 
 let splytManager;
 let assetManager;
@@ -88,32 +90,43 @@ web3.eth.net.isListening()
   
  splytManager.methods.assetManager().call()
   .then((address) => {
-    console.log('splytManager address: ' + address);  
+    console.log('splytManager address: ' + address)  
     assetManagerAddress = address  
     assetManager = new web3.eth.Contract(AssetManager.abi, address)    
   })
  
   splytManager.methods.orderManager().call()
   .then((address) => {
-    console.log('orderManager address: ' + address);    
+    console.log('orderManager address: ' + address)
+    orderManagerAddress = address
     orderManager = new web3.eth.Contract(OrderManager.abi, address)    
   })
 
  splytManager.methods.arbitrationManager().call()
   .then((address) => {
-    console.log('arbitrationManager address: ' + address);    
+    console.log('arbitrationManager address: ' + address) 
+    arbitrationManagerAddress = address    
     arbitrationManager = new web3.eth.Contract(ArbitrationManager.abi, address)    
   })
   
   splytManager.methods.reputationManager().call()
   .then((address) => {
-    console.log('reputationManager address: ' + address);    
+    console.log('reputationManager address: ' + address) 
+    reputationManagerAddress = address   
     reputationManager = new web3.eth.Contract(ReputationManager.abi, address)   
   })  
 
+  splytManager.methods.stake().call()
+  .then((address) => {
+    console.log('stake address: ' + address) 
+    stakeAddress = address
+  })  
+
+
   splytManager.methods.satToken().call()
   .then((address) => {
-    console.log('satToken address: ' + address);    
+    console.log('satToken address: ' + address)
+    satTokenAddress = address   
     satToken = new web3.eth.Contract(SatToken.abi, address)  
   })  
 
@@ -503,6 +516,13 @@ exports.createAccount = function() {
   // return web3.eth.personal.newAccount('clippers')
 }
 
+exports.getTokenBalance = function() { 
+  return splytManager.methods.getBalance(defaultBuyer).call()  
+}
+
+exports.getEtherBalance = function(wallet) { 
+  return web3.eth.getBalance(wallet)
+}
 
 exports.unlockWallet = function() {  
   return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000) //stay open for 1 second only
@@ -512,3 +532,15 @@ exports.lockWallet = function() {
   return web3.eth.personal.lockAccount(wallet)
 }
 
+
+exports.getSplytServiceInfo = function() {  
+  return ({
+    tokenAddress: satTokenAddress,
+    stakeAddress: stakeAddress,
+    splytManagerAddress: splytManagerAddress,
+    assetManagerAddress: assetManagerAddress,
+    orderManagerAddress: orderManagerAddress,
+    arbitrationManagerAddress: arbitrationManagerAddress,
+    reputationManagerAddress: reputationManagerAddress
+  })
+}
