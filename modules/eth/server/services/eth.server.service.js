@@ -467,7 +467,7 @@ exports.getAssetInfoByIndex = function(index) {
 exports.getOrderInfoByOrderId = function(orderId) {
   console.log('get order info from contracts...')  
   let orderIdHex = prepend0x(orderId)            
-  return orderManager.methods.getOrderByOrderId(orderIdHex).call()          
+  return orderManager.methods.getOrderInfoByOrderId(orderIdHex).call()          
 }
 
 exports.getOrderInfoByIndex = function(index) {

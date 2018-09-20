@@ -63,10 +63,11 @@ exports.read = function(req, res) {
           address : fields[0],
           _id: fields[1].substr(2),
           status : fields[2],
-          term: fields[3],
-          inventoryCount: fields[4],
-          seller: fields[5],
-          totalCost: fields[6]
+          type : fields[3],          
+          term: fields[4],
+          inventoryCount: fields[5],
+          seller: fields[6],
+          totalCost: fields[7]
       }
       console.log(asset)
       res.jsonp(asset)  
@@ -127,17 +128,16 @@ exports.list = function(req, res) {
       .then((fields) => {
         console.log(fields)
         // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
-
-
-        assets.push({
-          assetAddress: fields[0],
-          _id: fields[1].substr(2),
-          status: fields[2],
-          term: fields[3],
-          inventoryCount: fields[4],
-          seller: fields[5],
-          totalCost: fields[6]
-          })
+          assets.push({
+            assetAddress: fields[0],
+            _id: fields[1].substr(2),
+            status: fields[2],
+            type: fields[3],
+            term: fields[4],
+            inventoryCount: fields[5],
+            seller: fields[6],
+            totalCost: fields[7]
+            })
         callback()
       })
       .catch((err) => {
@@ -167,8 +167,65 @@ exports.list = function(req, res) {
   //     res.jsonp(assets);
   //   }
   // });
-};
+}
 
+
+exports.listMyAssets = function(req, res) {
+
+  let myWallet = req.user.publicKey
+  console.log('mywallet: ' + myWallet)
+  let assets = []
+  EthService.getAssetsLength()
+  .then((length) => {
+    console.log('number of assets listed' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getAssetInfoByIndex(index)
+      .then((fields) => {
+        console.log(fields)
+        // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
+        if (myWallet.indexOf(fields[5]) > -1 ) {
+          assets.push({
+            assetAddress: fields[0],
+            _id: fields[1].substr(2),
+            status: fields[2],
+            type: fields[3],
+            term: fields[4],
+            inventoryCount: fields[5],
+            seller: fields[6],
+            totalCost: fields[7]
+            })
+        }
+        callback()
+      })
+      .catch((err) => {
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(assets);
+      }      
+    })
+  })
+  .catch((err) => {
+    res.jsonp(err)
+  })
+
+  // Asset.find().sort('-created').populate('user', 'displayName').exec(function(err, assets) {
+  //   if (err) {
+  //     return res.status(400).send({
+  //       message: errorHandler.getErrorMessage(err)
+  //     });
+  //   } else {
+  //     res.jsonp(assets);
+  //   }
+  // });
+}
 /**
  * asset middleware
  */

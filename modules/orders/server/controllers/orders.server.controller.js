@@ -133,7 +133,6 @@ exports.list = function(req, res) {
       console.log('index:' + index)
       EthService.getOrderInfoByIndex(index)
       .then((fields) => {
-        console.log('what is going on')
         console.log(fields)
             // orders[_orderId].version,    
             // orders[_orderId].orderId,
@@ -175,6 +174,62 @@ exports.list = function(req, res) {
 
 }
 
+/**
+ * List of Orders
+ */
+exports.listMyOrders = function(req, res) {
+  
+  let user = req.user
+
+  let orders = []
+  EthService.getOrdersLength()
+  .then((length) => {
+    console.log('number of orders ' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getOrderInfoByIndex(index)
+      .then((fields) => {
+        console.log(fields)
+            // orders[_orderId].version,    
+            // orders[_orderId].orderId,
+            // orders[_orderId].asset,    
+            // orders[_orderId].buyer,
+            // orders[_orderId].quantity,
+            // orders[_orderId].paidAmount,
+            // orders[_orderId].status);
+        if (user.wallet.indexOf(fields[3]) > -1) {
+          orders.push({
+            version: fields[0],
+            _id: fields[1].substr(2),
+            asset: fields[2],
+            buyerWallet: fields[3],
+            quantity: fields[4],
+            totalAmount: fields[5],
+            status: fields[6]
+            })
+        }
+        callback()
+      })
+      .catch((err) => {
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        console.log(orders)
+        res.jsonp(orders)
+      }      
+    })
+  })
+  .catch((err) => {
+    res.jsonp(err)
+  })  
+
+}
 /**
  * Order middleware
  */
