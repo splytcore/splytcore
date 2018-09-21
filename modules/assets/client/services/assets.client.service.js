@@ -15,6 +15,14 @@
       update: {
         method: 'PUT'
       }
-    });
+      // ,
+      // query: {
+      //   method: 'GET',
+      //   params: { scotts: name },
+      //   isArray: true
+      // }    
+    })
+
+
   }
 }());

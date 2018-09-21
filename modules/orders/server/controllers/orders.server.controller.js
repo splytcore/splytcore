@@ -18,8 +18,8 @@ exports.create = function(req, res) {
 
   console.log('creating order')
 
-  var order = new Order(req.body);
-  order.user = req.user;
+  var order = new Order(req.body)
+  order.user = req.user
 
   EthService.purchase(order)
     .then((result) => {
@@ -125,61 +125,7 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
   
-  let orders = []
-  EthService.getOrdersLength()
-  .then((length) => {
-    console.log('number of orders ' + length)
-    async.times(parseInt(length), (index, callback) => {    
-      console.log('index:' + index)
-      EthService.getOrderInfoByIndex(index)
-      .then((fields) => {
-        console.log(fields)
-            // orders[_orderId].version,    
-            // orders[_orderId].orderId,
-            // orders[_orderId].asset,    
-            // orders[_orderId].buyer,
-            // orders[_orderId].quantity,
-            // orders[_orderId].paidAmount,
-            // orders[_orderId].status);
-
-        orders.push({
-          version: fields[0],
-          _id: fields[1].substr(2),
-          asset: fields[2],
-          buyerWallet: fields[3],
-          quantity: fields[4],
-          totalAmount: fields[5],
-          status: fields[6]
-          })
-        callback()
-      })
-      .catch((err) => {
-        console.log(err)
-        callback(err)
-      })  
-    }, (err) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        console.log(orders)
-        res.jsonp(orders)
-      }      
-    })
-  })
-  .catch((err) => {
-    res.jsonp(err)
-  })  
-
-}
-
-/**
- * List of Orders
- */
-exports.listMyOrders = function(req, res) {
-  
-  let user = req.user
+  let wallet = req.query.wallet ? req.query.wallet : null
 
   let orders = []
   EthService.getOrdersLength()
@@ -197,7 +143,8 @@ exports.listMyOrders = function(req, res) {
             // orders[_orderId].quantity,
             // orders[_orderId].paidAmount,
             // orders[_orderId].status);
-        if (user.wallet.indexOf(fields[3]) > -1) {
+
+        if (!req.query.wallet || fields[3].indexOf(wallet) > -1) {
           orders.push({
             version: fields[0],
             _id: fields[1].substr(2),
@@ -230,6 +177,7 @@ exports.listMyOrders = function(req, res) {
   })  
 
 }
+
 /**
  * Order middleware
  */

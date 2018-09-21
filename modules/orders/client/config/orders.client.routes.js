@@ -23,6 +23,15 @@
           pageTitle: 'Orders List'
         }
       })
+      .state('orders.listMyOrders', {
+        url: '/myOrders',
+        templateUrl: 'modules/orders/client/views/list-orders.client.view.html',
+        controller: 'OrdersListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Orders List'
+        }
+      })
       .state('orders.create', {
         url: '/create/:assetAddress/:title/:trxAmount',
         templateUrl: 'modules/orders/client/views/form-order.client.view.html',

@@ -23,6 +23,15 @@
           pageTitle: 'assets List'
         }
       })
+      .state('assets.listMyAssets', {
+        url: '/myAssets',
+        templateUrl: 'modules/assets/client/views/list-assets.client.view.html',
+        controller: 'AssetsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'assets List'
+        }
+      })      
       .state('assets.create', {
         url: '/create',
         templateUrl: 'modules/assets/client/views/form-asset.client.view.html',

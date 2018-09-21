@@ -18,7 +18,13 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'orders', {
-      title: 'List Orders',
+      title: 'List My Orders',
+      state: 'orders.listMyOrders'
+    })
+
+    // Add the dropdown list item
+    Menus.addSubMenuItem('topbar', 'orders', {
+      title: 'List All Orders',
       state: 'orders.list'
     })
 

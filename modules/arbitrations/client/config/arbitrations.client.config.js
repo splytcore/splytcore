@@ -18,7 +18,13 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'arbitrations', {
-      title: 'List Arbitrations',
+      title: 'List My Arbitrations',
+      state: 'arbitrations.listMyArbitrations'
+    })
+
+    // Add the dropdown list item
+    Menus.addSubMenuItem('topbar', 'arbitrations', {
+      title: 'List All Arbitrations',
       state: 'arbitrations.list'
     })
   }

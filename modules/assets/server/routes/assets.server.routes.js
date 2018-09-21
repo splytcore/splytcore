@@ -12,10 +12,6 @@ module.exports = function(app) {
     .get(assets.list)
     .post(assets.create);
 
-  app.route('/api/myAssets').all()
-    .get(assets.listMyAssets)
-
-
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
     .get(assets.read)
     .put(assets.update)

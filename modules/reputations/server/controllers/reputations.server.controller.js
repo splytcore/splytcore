@@ -144,9 +144,12 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
+  console.log('wallet: ' + req.query.wallet)
 
   let reputations = []
 
+  let wallet = req.query.wallet ? req.query.wallet : null
+  
   EthService.getReputationsLength()
   .then((length) => {
     console.log('number of reputations ' + length)
@@ -156,6 +159,7 @@ exports.list = function(req, res) {
       .then((fields) => {
         console.log('resturn data')
         console.log(fields)
+        if (!wallet || fields[0].indexOf(wallet) > -1)
         reputations.push({
           wallet: fields[0],
           average: fields[1],

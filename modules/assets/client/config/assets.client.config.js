@@ -18,8 +18,13 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'assets', {
-      title: 'List Assets',
+      title: 'List All Assets',
       state: 'assets.list'
+    });
+
+    Menus.addSubMenuItem('topbar', 'assets', {
+      title: 'List My Assets',
+      state: 'assets.listMyAssets'
     });
 
     // Add the dropdown create item

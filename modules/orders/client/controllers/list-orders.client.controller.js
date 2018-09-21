@@ -5,13 +5,15 @@
     .module('orders')
     .controller('OrdersListController', OrdersListController);
 
-  OrdersListController.$inject = ['OrdersService'];
+  OrdersListController.$inject = ['OrdersService', 'Authentication', '$state'];
 
-  function OrdersListController(OrdersService) {
+  function OrdersListController(OrdersService, Authentication, $state) {
     var vm = this;
+    
+    vm.user = Authentication.user
 
-    vm.orders = OrdersService.query();
-    console.log(vm.orders);
-
+    vm.wallet = $state.current.name.indexOf('orders.listMyOrders') > -1 ? vm.user.publicKey : null
+    vm.orders = OrdersService.query({ wallet: vm.wallet })
+  
   }
 }());

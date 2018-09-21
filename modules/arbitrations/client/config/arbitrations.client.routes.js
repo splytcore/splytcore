@@ -23,6 +23,17 @@
           pageTitle: 'Arbitrations List'
         }
       })
+
+      .state('arbitrations.listMyArbitrations', {
+        url: '/myArbitrations',
+        templateUrl: 'modules/arbitrations/client/views/list-arbitrations.client.view.html',
+        controller: 'ArbitrationsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Arbitrations List'
+        }
+      })
+
       .state('arbitrations.create', {
         url: '/create/:assetAddress/:title',
         templateUrl: 'modules/arbitrations/client/views/form-arbitration.client.view.html',
