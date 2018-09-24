@@ -28,6 +28,7 @@
  
     vm.getTokenBalance = getTokenBalance;
  
+    vm.getUserBalances = getUserBalances;
 
     vm.web3 = new Web3($window.web3.currentProvider);
     
@@ -191,6 +192,11 @@
       })
 
     }
+
+    function getUserBalances() {
+      return $http.get('/api/users/balances');
+    }
+
 
     function getAllABI() {
       return $http.get('/api/abi/getAll');

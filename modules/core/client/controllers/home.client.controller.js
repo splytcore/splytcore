@@ -14,6 +14,18 @@ angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentica
         console.log(err)
       })
 
+
+    if ($scope.user) {
+      EthService.getUserBalances()
+        .success((balances) => {
+          console.log(balances)
+          $scope.user.etherBalance = balances.etherBalance
+          $scope.user.tokenBalance = balances.tokenBalance      
+        })
+        .error((err) => {
+
+        })
+      }
     //example of how simple async 
     // $q((resolve, reject) => {
     //   setTimeout(function() {            

@@ -7,6 +7,7 @@ var _ = require('lodash'),
   fs = require('fs'),
   path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
   mongoose = require('mongoose'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
@@ -48,6 +49,32 @@ exports.update = function (req, res) {
     });
   }
 };
+
+
+exports.getBalances = function (req, res) {
+  // Init Variables
+  var user = req.user
+
+  let etherBalance
+  let tokenBalance
+
+  EthService.getEtherBalance(user.publicKey)
+  .then((balance) => {
+    etherBalance = balance
+    EthService.getTokenBalance(user.publicKey) 
+    .then((balance) => {
+      tokenBalance = balance
+      res.json({ etherBalance: etherBalance, tokenBalance: tokenBalance })
+    })
+    .catch((err) => {
+      res.json(err)
+    })
+  })
+  .catch((err) => {
+    res.json(err)
+  })    
+
+}
 
 /**
  * Update profile picture

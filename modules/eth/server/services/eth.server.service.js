@@ -521,7 +521,15 @@ exports.getTokenBalance = function() {
 }
 
 exports.getEtherBalance = function(wallet) { 
+  
   return web3.eth.getBalance(wallet)
+  .then((balance) => {
+    let ether =  web3.utils.fromWei(balance)
+    return ether  
+  })      
+  .catch((err) => {
+    console.log(err)
+  })
 }
 
 exports.unlockWallet = function() {  

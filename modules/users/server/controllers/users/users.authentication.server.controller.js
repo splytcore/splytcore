@@ -75,23 +75,9 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err)
         } else {            
-          EthService.getEtherBalance(user.publicKey)
-          .then((balance) => {
-            user.etherBalance = balance
-            EthService.getTokenBalance(user.publicKey) 
-            .then((balance) => {
-              user.tokenBalance = balance
-              let cookies = req.cookies   
-              console.log(cookies.sessionId)       
-              res.json({ user: user, sessionId: cookies.sessionId })
-            })
-            .catch((err) => {
-              res.json(err)
-            })
-          })
-          .catch((err) => {
-            res.json(err)
-          })          
+          let cookies = req.cookies   
+          console.log(cookies.sessionId)       
+          res.json({ user: user, sessionId: cookies.sessionId })
         }
       })
     }
