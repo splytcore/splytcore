@@ -13,6 +13,9 @@ module.exports = function(app) {
   app.route('/api/eth/getDefaultWallets')
     .get(eth.getDefaultWallets)
 
+  app.route('/api/eth/addMarketPlace')
+    .post(eth.addMarketPlace)
+
   app.route('/api/eth/getSplytServiceInfo')
     .get(eth.getSplytServiceInfo)
 

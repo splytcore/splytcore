@@ -303,7 +303,7 @@ function prepend0x(value) {
 exports.createAsset = function(asset) {
 
 
-  asset.marketPlaces.push(defaultMarketPlace) //hard code for now
+  // asset.marketPlaces.push(defaultMarketPlace) //hard code for now
   asset.marketPlacesAmount.push(2) //hard code for now
 
   console.log(asset)  
@@ -321,8 +321,8 @@ exports.createAsset = function(asset) {
     asset.seller, 
     web3.utils.toHex(asset.title),
     asset.totalCost,
-    Math.floor(asset.expDate.getTime()/1000),
-    asset.marketPlaces[0],
+    Math.floor(asset.expDate.getTime()/1000),  //convert to seconds
+    asset.marketPlaces[0].toString(),
     asset.marketPlacesAmount[0],
     asset.inventoryCount
     ).send(trx)
@@ -409,6 +409,26 @@ exports.createReputation = function(reputation) {
   
 }
 
+
+exports.addMarketPlace = function(assetId, marketPlace) {
+
+  console.log("assetId: " + assetId)  
+  console.log("marketPlace: " + marketPlace)  
+
+  let trx = {
+      from: marketPlace,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+
+  return assetManager.methods.addMarketPlaceByAssetId(
+    prepend0x(assetId)
+    ).send(trx)
+  
+}
+
+
 exports.getAssetsLength = function() {
   return assetManager.methods.getAssetsLength().call()
 }
@@ -477,8 +497,18 @@ exports.getOrderInfoByIndex = function(index) {
 
 exports.getArbitrationInfoByArbitrationId = function(arbitrationId) {
   console.log('getting arbitration for id ' + arbitrationId)
-  
   return arbitrationManager.methods.getArbitrationInfoByArbitrationId(prepend0x(arbitrationId)).call()         
+}
+
+
+exports.getMarketPlacesLengthByAssetId = function(assetId) {
+  console.log('getting marketplaces for id ' + assetId) 
+  return assetManager.methods.getMarketPlacesLengthByAssetId(prepend0x(assetId)).call()         
+}
+
+exports.getMarketPlaceByAssetIdAndIndex = function(assetId, index) {
+  console.log('getting marketplaces for id ' + assetId) 
+  return assetManager.methods.getMarketPlaceByAssetIdAndIndex(prepend0x(assetId), index).call()         
 }
 
 

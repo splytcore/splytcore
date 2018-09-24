@@ -41,12 +41,13 @@ exports.create = function(req, res) {
   )
 
 
-};
+}
+
 
 /**
  * Show the current asset
  */
-exports.read = function(req, res) {
+exports.read = function(req, res, next) {
 
   // convert mongoose document to JSON
   var tempAsset = req.asset ? req.asset.toJSON() : {};
@@ -70,7 +71,47 @@ exports.read = function(req, res) {
           totalCost: fields[7]
       }
       console.log(asset)
-      res.jsonp(asset)  
+      // res.jsonp(asset)  
+      req.asset = asset
+      next()
+    })
+    .catch((err) => {
+      return res.jsonp(err)  
+    })
+
+}
+
+exports.bindMarketPlaces = function(req, res) {
+
+  let asset = req.asset
+  let marketPlaces = []
+
+  EthService.getMarketPlacesLengthByAssetId(asset._id)
+    .then((length) => {
+      console.log('length')
+      console.log(length)
+      async.times(parseInt(length), (index, callback) => {    
+        console.log('index:' + index)
+        EthService.getMarketPlaceByAssetIdAndIndex(asset._id, index)
+        .then((address) => {
+          console.log(address)
+          marketPlaces.push(address)
+          callback()
+        })
+        .catch((err) => {
+          console.log(err)
+          callback(err)
+        })  
+      }, (err) => {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          asset.marketPlaces = marketPlaces
+          res.jsonp(asset)
+        }      
+      })
     })
     .catch((err) => {
       res.jsonp(err)  

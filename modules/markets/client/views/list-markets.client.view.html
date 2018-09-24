@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Markets</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="market in vm.markets"
+       ui-sref="markets.edit({ marketId: market._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="market.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="market.user" ng-bind="market.user.displayName"></span>
+        <span ng-if="!market.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading"> {{market.name }} =>  {{ market.wallet }} </h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.markets.$resolved && !vm.markets.length">
+    No Markets yet, why don't you <a ui-sref="markets.create">create one</a>?
+  </div>
+</section>

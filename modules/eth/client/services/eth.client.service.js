@@ -29,6 +29,8 @@
     vm.getTokenBalance = getTokenBalance;
  
     vm.getUserBalances = getUserBalances;
+    vm.addMarketPlace = addMarketPlace;
+
 
     vm.web3 = new Web3($window.web3.currentProvider);
     
@@ -103,6 +105,11 @@
       // vm.assetManagerContract.getAssetsLength((err, length) => {
       //   console.log('number of listed assets ' + length)
       // })      
+    }
+
+
+    function addMarketPlace(assetId, marketPlace) {
+      return $http.post('/api/eth/addMarketPlace', { assetId: assetId, marketPlace: marketPlace });
     }
 
     function getSplytWallets() {

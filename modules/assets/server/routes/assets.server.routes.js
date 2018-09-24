@@ -13,7 +13,7 @@ module.exports = function(app) {
     .post(assets.create);
 
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
-    .get(assets.read)
+    .get(assets.read, assets.bindMarketPlaces)
     .put(assets.update)
     .delete(assets.delete);
 

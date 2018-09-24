@@ -6,22 +6,22 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService'];
+  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService'];
 
-  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService) {
+  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, MarketsService) {
     var vm = this
     vm.save = save   
     vm.asset = asset
     vm.remove = remove
+
+    vm.addMarketPlace = addMarketPlace
+
     if (!vm.asset._id) {
       EthService.getDefaultWallets()
         .success((wallets) => {
           console.log(wallets)
           vm.asset.seller = wallets.defaultSeller
-          vm.marketPlaces = []
-          vm.marketPlaces.push(wallets.defaultMarketPlace)
           vm.defaultBuyer = wallets.defaultBuyer
-          vm.asset.marketPlaces = vm.marketPlaces
           vm.asset.status = 0
         })
         .error((err) => {
@@ -29,6 +29,7 @@
         })
     }
 
+    vm.marketPlaces = MarketsService.query()
 
     // vm.getTokenBalance = EthService.getTokenBalance();
 
@@ -59,8 +60,12 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.assetForm');
         return false;
       }
-
+      console.log(vm.asset)
       // TODO: move create/update logic to service
+      vm.asset.marketPlaces = [vm.selectedMarketPlace]
+
+      console.log(vm.asset)
+
       if (vm.asset._id) {
         vm.asset.$update(successCallback, errorCallback);
       } else {
@@ -81,6 +86,20 @@
       if ($window.confirm('Are you sure you want to delete?')) {
         vm.asset.$remove($state.go('assets.list'));
       }
-    }    
+    }
+
+    function addMarketPlace() {
+      EthService.addMarketPlace(vm.asset._id, vm.selectedMarketPlace)
+        .success((result) => {
+          console.log(result)
+          $window.location.reload();          
+        })
+        .error((err) => {
+          console.log(err)
+        })
+
+
+    }   
+
   }
 }());

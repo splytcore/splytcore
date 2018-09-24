@@ -41,3 +41,20 @@ exports.getSplytServiceInfo = function(req, res) {
   res.jsonp(EthService.getSplytServiceInfo())
  
 }
+
+exports.addMarketPlace = function(req, res) {
+  console.log(req.body)
+  let marketPlace = req.body.marketPlace
+  let assetId = req.body.assetId
+
+  EthService.addMarketPlace(assetId, marketPlace)
+    .then((result)=> {
+      console.log(result)
+      res.jsonp(result)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.jsonp(err)
+    })
+ 
+}

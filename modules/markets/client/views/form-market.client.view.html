@@ -1,0 +1,34 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.market._id ? 'Edit Market' : 'New Market'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.marketForm" class="form-horizontal" ng-submit="vm.save(vm.form.marketForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.market.name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="vm.form.marketForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Market name is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Wallet</label>
+          <input name="wallet" type="text" ng-model="vm.market.wallet" id="wallet" class="form-control" placeholder="Wallet" required>
+          <div ng-messages="vm.form.marketForm.walelt.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Market Wallet is required.</p>
+          </div>
+        </div>
+
+        
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.market._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
