@@ -18,15 +18,9 @@ console.log('initiate web3')
 
 //only for dev
 //master key has to be updated everytime rpctest starts or restarts
-const masterPrivateKey = '56c94e8a22948356615b861b5f4e048055812518b864bcc8f93496cf6dbb7bf1'
-const defaultBuyerPrivateKey = '7541a92083e326478c75180f8247ce914f9a1e3f4d23f99ec1d20f75527ccde8'
+// const masterPrivateKey = '56c94e8a22948356615b861b5f4e048055812518b864bcc8f93496cf6dbb7bf1'
 
-let masterWallet  
-let defaultBuyer
-let defaultSeller 
-let defaultMarketPlace 
-let defaultArbitrator
-let defaultReporter //who flags an arbitration
+let masterWallet  = config.ethereum.masterWallet
 
 // const assetManagerABI = AssetManager.abi;
 // const splytManagerABI = SplytManager.abi;
@@ -62,9 +56,8 @@ const gas = {
   gas: web3.utils.toHex(4700000) //max number of gas to be used  
 }
 
- console.log('toHex: ' + web3.utils.toHex(4700000))
-
 //check if connect to geth node
+console.log('trying to connect to ' + config.ethereum.url)
 web3.eth.net.isListening()
 .then((result) => {
   console.log('connecting to geth host node...' + host)  
@@ -77,13 +70,6 @@ web3.eth.net.isListening()
 })
 .then((accounts) => {
   console.log(accounts)
-  console.log('master wallet: ' + accounts[0])
-  masterWallet = accounts[0]
-  defaultSeller = accounts[0]
-  defaultBuyer = accounts[1]
-  defaultMarketPlace = accounts[2]
-  defaultArbitrator = accounts[3]
-  defaultReporter = accounts[4]
   splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
   return 
 }).then(() => {
@@ -130,72 +116,14 @@ web3.eth.net.isListening()
     satToken = new web3.eth.Contract(SatToken.abi, address)  
   })  
 
-  //get seller token balance
-  splytManager.methods.getBalance(defaultSeller).call()  
+  // get master token balance
+  splytManager.methods.getBalance(masterWallet).call()  
   .then((balance) => {
-    console.log('default seller SatToken balance: ' + balance)  
+    console.log('master wallet SatToken balance: ' + balance)  
     if (balance < 1) {
-      exports.initUser(defaultSeller)
+      exports.initUser(masterWallet)
     }
   })     
-
-  splytManager.methods.getBalance(defaultBuyer).call()  
-  .then((balance) => {
-    console.log('default buyer SatToken balance: ' + balance)  
-    if (balance < 1) {
-      exports.initUser(defaultBuyer, defaultBuyerPrivateKey)
-    }
-  })     
-
-  splytManager.methods.getBalance(defaultMarketPlace).call()  
-  .then((balance) => {
-    console.log('default marketPlace SatToken balance: ' + balance)  
-    if (balance < 1) {
-      exports.initUser(defaultMarketPlace, 'privateKey')
-    }
-  })     
-  splytManager.methods.getBalance(defaultReporter).call()  
-  .then((balance) => {
-    console.log('default reporter SatToken balance: ' + balance)  
-    if (balance < 1) {
-      exports.initUser(defaultReporter, 'privateKey')
-    }
-  })     
-
-
-  web3.eth.getBalance(defaultSeller)
-  .then((balance) => {
-    console.log('default seller Ether balance: ' + web3.utils.fromWei(balance))  
-    if (balance < 1) {
-      console.log('seller cannot perform any changes for contracts')
-    }
-  })      
-  .catch((err) => {
-    console.log(err)
-  })
-
-
-  web3.eth.getBalance(defaultReporter)
-  .then((balance) => {
-    console.log('default reporter Ether balance: ' + web3.utils.fromWei(balance))  
-    if (balance < 1) {
-      console.log('reporter cannot perform any changes for contracts')
-    }
-  })      
-  .catch((err) => {
-    console.log(err)
-  })
-
-  web3.eth.getBalance(defaultArbitrator)
-  .then((balance) => {
-    console.log('default arbitraitor Ether balance: ' + web3.utils.fromWei(balance))  
-    if (balance < 1) {
-      console.log('arbitrator cannot perform any changes for contracts')
-    }
-  })      
-  .catch((err) => {
-    console.log(err)
-  })  
 
   return
 }).then(() => {   
@@ -214,15 +142,9 @@ web3.eth.net.isListening()
   console.log(err)
 })
 
-
-//TODO: use for testnet network
-exports.getDefaultWallets = function(account, privateKey, encoded) {
-  return ({ defaultSeller: defaultSeller, defaultBuyer: defaultBuyer, defaultMarketPlace: defaultMarketPlace, defaultArbitrator: defaultArbitrator, defaultReporter: defaultReporter })
-}
-
 //TODO: use for testnet network like ropsten or rinky
 exports.signTrx = function(account, privateKey, encoded) {
-  web3.eth.getTransactionCount(defaultSeller, function (err, nonce) {
+  web3.eth.getTransactionCount(account, function (err, nonce) {
     console.log("nonce: " + nonce)
     let rawTrx = {
       to: assetManagerAddress,
@@ -455,10 +377,10 @@ exports.getAssetContractByIndex = function(index) {
   return assetManager.methods.getAssetByIndex(index).call()
 }
 
-exports.initUser = function(account, privateKey) {
+exports.initUser = function(account) {
   
   let trx = {
-      from: account,
+      from: masterWallet,
       gasPrice: web3.utils.toHex(300000),   //maximum price per gas
       gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }
@@ -546,8 +468,8 @@ exports.createAccount = function() {
   // return web3.eth.personal.newAccount('clippers')
 }
 
-exports.getTokenBalance = function() { 
-  return splytManager.methods.getBalance(defaultBuyer).call()  
+exports.getTokenBalance = function(wallet) { 
+  return splytManager.methods.getBalance(wallet).call()  
 }
 
 exports.getEtherBalance = function(wallet) { 

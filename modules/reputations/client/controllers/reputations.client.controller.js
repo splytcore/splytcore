@@ -22,7 +22,6 @@
 
     console.log(reputation)
     if (!vm.reputation.wallet) {
-      console.log('settin default')
       vm.reputation.fromWallet = vm.user.publicKey
       vm.reputation.wallet = $stateParams.wallet
       vm.reputation.rating = 5
