@@ -309,7 +309,7 @@ exports.createAsset = function(asset) {
   console.log(asset)  
 
   let trx = {
-      from: defaultSeller,
+      from: asset.seller,
       gasPrice: web3.utils.toHex(300000),   //maximum price per gas
       gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }

@@ -16,7 +16,7 @@
     console.log(arbitration)
     vm.title = $stateParams.title
 
-    vm.authentication = Authentication;
+    vm.user = Authentication.user;
     vm.arbitration = arbitration;
     vm.arbitration.assetAddress = $stateParams.assetAddress
     vm.error = null;
@@ -25,18 +25,10 @@
     vm.save = save;
 
     if (!arbitration._id) {
-      EthService.getDefaultWallets()
-        .success((wallets) => {
-          console.log(wallets)
-          vm.defaultArbitrator = wallets.defaultArbitrator
-          arbitration.reporterWallet = wallets.defaultSeller
-          console.log(arbitration.reporterWallet)
-          arbitration.reason = 0
-        })
-        .error((err) => {
-          console.log(err)
-        })
-    }
+        vm.defaultArbitrator = vm.user.publicKey
+        arbitration.reporterWallet = vm.user.publicKey
+        arbitration.reason = 0
+  }
     // Remove existing Arbitration
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {

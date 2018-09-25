@@ -24,7 +24,6 @@
           </div>
         </div>
         
-        selected market place{{vm.selectedMarketPlace}}
         <div class="form-group" ng-show="!vm.asset._id" show-errors>
           <label class="control-label" for="marketPlaces">Market Place</label>          
           <select class="form-control" name="marketPlaces" ng-model="vm.selectedMarketPlace">            
@@ -38,7 +37,7 @@
           </div>
         </div>
 
-        <div class="form-group" ng-show="vm.asset._id">   
+        <div class="form-group panel panel-default" ng-show="vm.asset._id">   
          <label class="control-label" for="marketPlaces">Participating Market Places</label>                    
           <ul ng-repeat="m in vm.asset.marketPlaces">
             <li> {{ m }} </li>

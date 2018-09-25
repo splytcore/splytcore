@@ -13,20 +13,15 @@
     vm.save = save   
     vm.asset = asset
     vm.remove = remove
+    vm.user = Authentication.user
 
     vm.addMarketPlace = addMarketPlace
 
     if (!vm.asset._id) {
-      EthService.getDefaultWallets()
-        .success((wallets) => {
-          console.log(wallets)
-          vm.asset.seller = wallets.defaultSeller
-          vm.defaultBuyer = wallets.defaultBuyer
-          vm.asset.status = 0
-        })
-        .error((err) => {
-          console.log(err)
-        })
+          vm.asset.seller = vm.user.publicKey
+          vm.defaultBuyer = vm.user.publicKey
+          vm.asset.status = 0 
+          vm.asset.inventory = 1
     }
 
     vm.marketPlaces = MarketsService.query()

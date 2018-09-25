@@ -16,7 +16,7 @@ var path = require('path'),
  */
 exports.create = function(req, res) {
 
-  let asset = new Asset(req.body);
+  let asset = new Asset(req.body)
   console.log('assetId: ' + asset._id)
   EthService.createAsset(asset)
     .then((result) => {
