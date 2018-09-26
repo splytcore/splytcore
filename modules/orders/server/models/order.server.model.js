@@ -43,6 +43,10 @@ var OrderSchema = new Schema({
     type: String,
     default: ''
   },
+  transactionHash: {
+    type: String,
+    default: ''
+  },  
   user: {
     type: Schema.ObjectId,
     ref: 'User'

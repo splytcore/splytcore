@@ -24,6 +24,16 @@
         }
       })
 
+      .state('arbitrations.listPending', {
+        url: '/listPending',
+        templateUrl: 'modules/arbitrations/client/views/list-arbitrations.client.view.html',
+        controller: 'ArbitrationsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Arbitrations List'
+        }
+      })
+
       .state('arbitrations.listMyArbitrations', {
         url: '/myArbitrations',
         templateUrl: 'modules/arbitrations/client/views/list-arbitrations.client.view.html',

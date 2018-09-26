@@ -16,6 +16,11 @@
       roles: ['*']
     })
 
+
+    Menus.addSubMenuItem('topbar', 'reputations', {
+      title: 'List Pending Reputations',
+      state: 'reputations.listPending'
+    })
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'reputations', {
       title: 'List My Reputations',

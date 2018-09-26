@@ -14,6 +14,15 @@
         url: '/orders',
         template: '<ui-view/>'
       })
+      .state('orders.listPending', {
+        url: '/listPending',
+        templateUrl: 'modules/orders/client/views/list-orders.client.view.html',
+        controller: 'OrdersListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Orders List'
+        }
+      })
       .state('orders.list', {
         url: '',
         templateUrl: 'modules/orders/client/views/list-orders.client.view.html',

@@ -119,6 +119,61 @@ exports.delete = function(req, res) {
  * List of Arbitrations
  */
 exports.list = function(req, res) {
+
+  let listPending = req.query.listPending ? req.query.listPending.toString() : null
+
+  if (listPending.indexOf('true') > -1) {
+    exports.listPending(req, res)
+  } else {
+    exports.listMined(req,res)
+  }
+    
+}
+
+exports.listPending = function(req, res) {
+
+  Arbitration.find().sort('-created').populate('user', 'displayName').exec(function(err, arbitrations) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      let pendingArbitrations = []
+      async.each(arbitrations, (arbitration, callback) => {    
+        console.log('trxHash:' + arbitration.transactionHash)
+        if (arbitration.transactionHash) {
+          EthService.getTransaction(arbitration.transactionHash)
+          .then((result) => {
+            console.log('blockNunmber')
+            console.log(result.blockNumber)
+            // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
+            let blockNumber = result.blockNumber ? parseInt(result.blockNumber) : 0
+            if (blockNumber === 0) {
+              pendingArbitrations.push(arbitration)
+            }
+            callback()
+          })
+          .catch((err) => {
+            console.log(err)
+            callback(err)
+          })  
+        } else {
+          callback()
+        }
+      }, (err) => {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.jsonp(pendingArbitrations);
+        }      
+      })
+    }
+  })    
+}
+
+exports.listMined = function(req, res) {
   
   let arbitrations = []
   let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null

@@ -403,7 +403,6 @@ exports.initUser = function(account) {
 exports.getAssetInfoByAssetId = function(assetId) {
   console.log('get asset info from contracts...')  
   let assetIdHex = prepend0x(assetId)
-  let assetAddress           
   return assetManager.methods.getAssetInfoByAssetId(assetIdHex).call()         
 }
 
@@ -411,6 +410,9 @@ exports.getAssetInfoByIndex = function(index) {
   return assetManager.methods.getAssetInfoByIndex(index).call()         
 }
 
+exports.getTransaction = function(trxHash) {
+  return web3.eth.getTransaction(trxHash)         
+}
 
 exports.getOrderInfoByOrderId = function(orderId) {
   console.log('get order info from contracts...')  

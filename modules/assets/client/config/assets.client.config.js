@@ -27,6 +27,12 @@
       state: 'assets.listMyAssets'
     });
 
+    Menus.addSubMenuItem('topbar', 'assets', {
+      title: 'List Pending Assets',
+      state: 'assets.listPendingAssets'
+    });
+
+
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'assets', {
       title: 'Create Asset',

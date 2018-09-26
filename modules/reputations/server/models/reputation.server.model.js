@@ -20,6 +20,10 @@ var ReputationSchema = new Schema({
     type: Number,
     default: 5,
   },
+  transactionHash: {
+    type: String,
+    default: ''
+  },  
   fromWallet: {
     type: String,
     default: ''

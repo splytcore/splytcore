@@ -16,6 +16,11 @@
       roles: ['*']
     })
 
+    Menus.addSubMenuItem('topbar', 'arbitrations', {
+      title: 'List Pending Arbitrations',
+      state: 'arbitrations.listPending'
+    })
+
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'arbitrations', {
       title: 'List My Arbitrations',

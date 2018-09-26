@@ -23,6 +23,15 @@
           pageTitle: 'Reputations List'
         }
       })
+      .state('reputations.listPending', {
+        url: '/listPending',
+        templateUrl: 'modules/reputations/client/views/list-reputations.client.view.html',
+        controller: 'ReputationsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Reputations List'
+        }
+      })   
       .state('reputations.listMyReputations', {
         url: '/myReputations',
         templateUrl: 'modules/reputations/client/views/list-reputations.client.view.html',

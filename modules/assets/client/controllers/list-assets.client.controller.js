@@ -12,7 +12,10 @@
 
     vm.user = Authentication.user
     vm.wallet = $state.current.name.indexOf('assets.listMyAssets') > -1 ? vm.user.publicKey : null
-    vm.assets = AssetsService.query({ wallet: vm.wallet })
+
+    vm.listPending = $state.current.name.indexOf('assets.listPendingAssets') > -1 ? true : false
+    
+    vm.assets = AssetsService.query({ wallet: vm.wallet, listPending: vm.listPending })
  
   }
 }());

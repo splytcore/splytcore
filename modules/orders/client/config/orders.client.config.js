@@ -16,6 +16,11 @@
       roles: ['*']
     })
 
+    Menus.addSubMenuItem('topbar', 'orders', {
+      title: 'List Pending Orders',
+      state: 'orders.listPending'
+    })
+
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'orders', {
       title: 'List My Orders',
