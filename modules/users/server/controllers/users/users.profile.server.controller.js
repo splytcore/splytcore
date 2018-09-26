@@ -76,6 +76,21 @@ exports.getBalances = function (req, res) {
 
 }
 
+exports.createAccount = function (req, res) {
+  // Init Variables
+  var user = req.user
+
+  EthService.createAccount2('clippers')
+  .then((wallet) => {
+      EthService.initUser(wallet)
+      res.json({ newAccount: wallet })
+  })
+  .catch((err) => {
+    res.json(err)
+  }) 
+
+}
+
 /**
  * Update profile picture
  */

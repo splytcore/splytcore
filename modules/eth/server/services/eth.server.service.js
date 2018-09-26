@@ -145,6 +145,11 @@ web3.eth.net.isListening()
   console.log(err)
 })
 
+exports.unlockAccount = function(account, pw) {
+  return web3.eth.personal.unlockAccount(account, pw, 1000)
+}
+
+
 //TODO: use for testnet network like ropsten or rinky
 exports.signTrx = function(account, privateKey, encoded) {
   web3.eth.getTransactionCount(account, function (err, nonce) {
@@ -476,6 +481,14 @@ exports.createAccount = function() {
   // return web3.eth.personal.newAccount('clippers')
 }
 
+exports.createAccount2 = function(pw) {  
+  console.log('creating account 2')
+  return web3.eth.personal.newAccount(pw)
+  // console.log('return accounts')
+  // console.log(accounts)
+  // return web3.eth.personal.newAccount('clippers')
+}
+
 exports.getTokenBalance = function(wallet) { 
   return splytManager.methods.getBalance(wallet).call()  
 }
@@ -490,10 +503,6 @@ exports.getEtherBalance = function(wallet) {
   .catch((err) => {
     console.log(err)
   })
-}
-
-exports.unlockWallet = function() {  
-  return web3.eth.personal.unlockAccount(wallet, walletPassword, 1000) //stay open for 1 second only
 }
 
 exports.lockWallet = function() {  

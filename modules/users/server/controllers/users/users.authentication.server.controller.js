@@ -31,32 +31,41 @@ exports.signup = function (req, res) {
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName
 
-  let account = EthService.createAccount()
-  console.log('account')
-  console.log(account)
-      // Then save the user
-  user.publicKey = account.address
-  user.privateKey = account.privateKey
+  EthService.createAccount2('splyt2018!')
+    .then((wallet) => {
 
-  user.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // Remove sensitive data before login
-      user.password = undefined
-      user.salt = undefined
 
-      req.login(user, function (err) {
-        if (err) {
-          res.status(400).send(err)
-        } else {
-          res.json(user)
-        }
-      })
-    }
+    console.log('account')
+    console.log(wallet)
+    EthService.initUser(wallet) //give default number of tokens for DEV ONLY
+    // Then save the user
+    user.publicKey = wallet
+ 
+    user.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        // Remove sensitive data before login
+        user.password = undefined
+        user.salt = undefined
+
+        req.login(user, function (err) {
+          if (err) {
+            res.status(400).send(err)
+          } else {
+            res.json(user)
+          }
+        })
+      }
+    })
+
   })
+  .catch((err) => {
+    res.status(400).send(err)
+  })
+
 
 }
 

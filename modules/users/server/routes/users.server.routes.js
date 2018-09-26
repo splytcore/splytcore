@@ -12,6 +12,8 @@ module.exports = function (app) {
   
   app.route('/api/users/balances').get(users.getBalances)
 
+  app.route('/api/users/newAccount').get(users.createAccount)
+
   // Finish by binding the user middleware
   app.param('userId', users.userByID);
 };
