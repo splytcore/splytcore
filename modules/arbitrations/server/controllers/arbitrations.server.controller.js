@@ -20,8 +20,9 @@ exports.create = function(req, res) {
   arbitration.user = req.user;
 
   EthService.createArbitration(arbitration)
-    .then((result) => {
-      console.log('create arbitration contract result..' + result)    
+    .on('transactionHash', (hash) => {
+      console.log('trxHash: ' + hash)
+      arbitration.transactionHash = hash
       arbitration.save(function(err) {
         if (err) {
           return res.status(400).send({
@@ -31,10 +32,10 @@ exports.create = function(req, res) {
           res.jsonp(arbitration);
         }
       })
-    })
-    .catch((err) => {
+    }) 
+    .on('error', (err) => {
       return res.status(400).send({
-        message: 'error creating asset'
+        message: 'error creating arbitration'
       })
     }
   )

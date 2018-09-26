@@ -19,10 +19,10 @@ exports.create = function(req, res) {
   let asset = new Asset(req.body)
   console.log('assetId: ' + asset._id)
   EthService.createAsset(asset)
-    .then((result) => {
-      console.log('create asset contract result..' + result)    
-
-      asset.user = req.user;
+    .on('transactionHash', function(hash){
+      console.log('transactionHash: ' + hash)
+      asset.transactionHash = hash
+      asset.user = req.user
       asset.save(function(err) {
         if (err) {
           return res.status(400).send({
@@ -32,8 +32,17 @@ exports.create = function(req, res) {
           res.jsonp(asset);
         }
       })
+    })    
+    .on('confirmation', function(confirmationNumber, receipt){
+        console.log('confirmation: ' + confirmationNumber)
+        console.log('receipt: ' + receipt)
     })
-    .catch((err) => {
+    .on('receipt', function(receipt) {
+      console.log('only receipt: ')
+      console.log(receipt)
+    })
+    .on('error', function (err) {
+      console.log('error creating asset contract')
       return res.status(400).send({
         message: 'error creating asset'
       })
@@ -49,6 +58,7 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res, next) {
 
+  console.log('gettign asset detail')
   // convert mongoose document to JSON
   var tempAsset = req.asset ? req.asset.toJSON() : {};
   let assetId = tempAsset._id
@@ -211,7 +221,9 @@ exports.list = function(req, res) {
  */
 exports.assetByID = function(req, res, next, id) {
 
+  console.log('assetId: ' + id)
   if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.log('assetId not found')
     return res.status(400).send({
       message: 'asset is invalid'
     });
@@ -222,8 +234,10 @@ exports.assetByID = function(req, res, next, id) {
   .exec(function (err, asset) {
 
     if (err) {
+      console.log(err)
       return next(err);
     } else if (!asset) {
+      console.log('asset not found')
       return res.status(404).send({
         message: 'No asset with that identifier has been found'
       });

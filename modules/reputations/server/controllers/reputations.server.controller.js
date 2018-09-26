@@ -18,8 +18,8 @@ exports.create = function(req, res) {
   var reputation = new Reputation(req.body);
 
   EthService.createReputation(reputation)
-    .then((result) => {
-      console.log('create arbitration contract result..' + result)    
+    .on('transactionHash', (hash) => {
+      reputation.transactionHash = hash
       reputation.save(function(err) {
         if (err) {
           return res.status(400).send({
@@ -29,10 +29,10 @@ exports.create = function(req, res) {
           res.jsonp(reputation);
         }
       })
-    })
-    .catch((err) => {
+    }) 
+    .on('error', (err) => {
       return res.status(400).send({
-        message: 'error creating asset'
+        message: 'error creating reputation'
       })
     }
   )

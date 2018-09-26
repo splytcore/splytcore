@@ -22,8 +22,8 @@ exports.create = function(req, res) {
   order.user = req.user
 
   EthService.purchase(order)
-    .then((result) => {
-      console.log('create asset contract result..' + result)    
+    .on('transactionHash', (hash) => {
+      order.transactionHash = hash
       order.save(function(err) {
         if (err) {
           return res.status(400).send({
@@ -33,10 +33,10 @@ exports.create = function(req, res) {
           res.jsonp(order);
         }
       })
-    })
-    .catch((err) => {
+    }) 
+    .on('error', (err) => {
       return res.status(400).send({
-        message: 'error creating asset'
+        message: 'error creating purchase'
       })
     }
   )

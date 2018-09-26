@@ -21,11 +21,15 @@ var ArbitrationSchema = new Schema({
   reason: {
     type: Number,
     default: 0
-  },      
+  },        
   assetAddress: {
     type: String,
     default: ''
-  },  
+  },
+  transactionHash: {
+    type: String,
+    default: ''
+  },      
   user: {
     type: Schema.ObjectId,
     ref: 'User'

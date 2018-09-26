@@ -64,6 +64,12 @@ var AssetSchema = new Schema({
     type: Number,
     default: 100000
   },      
+  transactionHash: {
+    type: String
+  },
+  blockNumber: {
+    type: String
+  },  
   user: {
     type: Schema.ObjectId,
     ref: 'User'
