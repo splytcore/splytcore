@@ -125,8 +125,8 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
   
-  let wallet = req.query.wallet ? req.query.wallet : null
-
+  let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null
+  console.log('wallet: ' + wallet)
   let orders = []
   EthService.getOrdersLength()
   .then((length) => {
@@ -144,7 +144,10 @@ exports.list = function(req, res) {
             // orders[_orderId].paidAmount,
             // orders[_orderId].status);
 
-        if (!req.query.wallet || fields[3].indexOf(wallet) > -1) {
+
+        let buyerWallet = fields[3].toUpperCase()
+
+        if (!req.query.wallet || wallet.indexOf(buyerWallet) > -1) {
           orders.push({
             version: fields[0],
             _id: fields[1].substr(2),

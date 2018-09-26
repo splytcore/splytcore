@@ -169,7 +169,7 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  let wallet = req.query.wallet ? req.query.wallet : null
+  let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null
   
   console.log('wallet: ' + wallet)
   
@@ -183,7 +183,8 @@ exports.list = function(req, res) {
       .then((fields) => {
         console.log(fields)
         // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
-        if (!req.query.wallet || wallet.indexOf(fields[5]) > -1 ) {
+        let seller = fields[6].toUpperCase()
+        if (!req.query.wallet || wallet.indexOf(seller) > -1 ) {
           assets.push({
             assetAddress: fields[0],
             _id: fields[1].substr(2),

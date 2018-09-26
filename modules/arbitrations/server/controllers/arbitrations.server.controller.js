@@ -121,7 +121,7 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
   
   let arbitrations = []
-  let wallet = req.query.wallet ? req.query.wallet : null
+  let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null
 
   EthService.getArbitrationsLength()
   .then((length) => {
@@ -139,8 +139,11 @@ exports.list = function(req, res) {
             // 5 a.asset(), 
             // 6 a.arbitrator()
         //list if your wallet is participating in the arbitration
+        let reporter  = fields[2].toUpperCase() 
+        let arbitrator  = fields[6].toUpperCase() 
+
         if (!req.query.wallet ||
-            (fields[2].indexOf(wallet) > -1 || fields[6].indexOf(wallet) > -1) 
+            (arbitrator.indexOf(wallet) > -1 || reporter.indexOf(wallet) > -1) 
             ) {
 
           arbitrations.push({

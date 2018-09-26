@@ -148,7 +148,7 @@ exports.list = function(req, res) {
 
   let reputations = []
 
-  let wallet = req.query.wallet ? req.query.wallet : null
+  let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null
   
   EthService.getReputationsLength()
   .then((length) => {
@@ -159,7 +159,8 @@ exports.list = function(req, res) {
       .then((fields) => {
         console.log('resturn data')
         console.log(fields)
-        if (!wallet || fields[0].indexOf(wallet) > -1)
+        let ratingWallet = fields[0].toUpperCase()
+        if (!wallet || ratingWallet.indexOf(wallet) > -1)
         reputations.push({
           wallet: fields[0],
           average: fields[1],
