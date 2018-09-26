@@ -37,9 +37,10 @@ module.exports = {
   },
   ethereum: {
     //Get this from testrpc for dev
-    url: 'http://127.0.0.1:8545',
+    url: 'http://13.58.147.177:8555',
     //this has to be updated everytime you run truffle migrate
-    splytManagerAddress: '0xcb60de3996b0bac26545ee20460ea9b214f99b2e'
+    splytManagerAddress: '0x61c0c80f7b174e752acbc22c3c14c60c7abff70f',
+    masterWallet: '0xf606a61e2fbc2db9b0b74f26c45469509dfb33ac'
   },
   livereload: true,
   seedDB: {

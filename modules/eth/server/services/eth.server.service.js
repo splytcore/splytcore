@@ -123,7 +123,10 @@ web3.eth.net.isListening()
     if (balance < 1) {
       exports.initUser(masterWallet)
     }
-  })     
+  }).catch((err) => {
+    console.log('error connecting to web3')
+    console.log(err)
+  })  
 
   return
 }).then(() => {   
@@ -332,20 +335,20 @@ exports.createReputation = function(reputation) {
 }
 
 
-exports.addMarketPlace = function(assetId, marketPlace) {
+exports.addMarketPlace = function(assetId, marketPlace, wallet) {
 
   console.log("assetId: " + assetId)  
   console.log("marketPlace: " + marketPlace)  
 
   let trx = {
-      from: marketPlace,
+      from: wallet,
       gasPrice: web3.utils.toHex(300000),   //maximum price per gas
       gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }
 
 
   return assetManager.methods.addMarketPlaceByAssetId(
-    prepend0x(assetId)
+    prepend0x(assetId, marketPlace)
     ).send(trx)
   
 }
@@ -386,12 +389,15 @@ exports.initUser = function(account) {
   }
 
   satToken.methods.initUser(account).send(trx)
-    .then((result) => {
-      console.log(result)
-    })
-    .catch((err) => {
+    .on('transactionHash', (hash) => {
+      console.log('trx for giving tokens: ' + hash)
+    }) 
+    .on('error', (err) => {
+      console.log('error giving tokens')
       console.log(err)
-    })
+    }
+  )
+
 }
 
 exports.getAssetInfoByAssetId = function(assetId) {

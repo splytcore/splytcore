@@ -108,8 +108,8 @@
     }
 
 
-    function addMarketPlace(assetId, marketPlace) {
-      return $http.post('/api/eth/addMarketPlace', { assetId: assetId, marketPlace: marketPlace });
+    function addMarketPlace(assetId, marketPlace, wallet) {
+      return $http.post('/api/eth/addMarketPlace', { assetId: assetId, marketPlace: marketPlace, wallet: wallet });
     }
 
     function getSplytWallets() {

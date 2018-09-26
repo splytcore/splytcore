@@ -46,15 +46,18 @@ exports.addMarketPlace = function(req, res) {
   console.log(req.body)
   let marketPlace = req.body.marketPlace
   let assetId = req.body.assetId
+  let wallet = req.body.wallet
 
-  EthService.addMarketPlace(assetId, marketPlace)
-    .then((result)=> {
-      console.log(result)
-      res.jsonp(result)
-    })
-    .catch((err) => {
-      console.log(err)
-      res.jsonp(err)
-    })
+  EthService.addMarketPlace(assetId, marketPlace, wallet)
+    .on('transactionHash', (hash) => {
+      console.log('trxHash: ' + hash)
+      res.jsonp(hash)
+    }) 
+    .on('error', (err) => {
+      return res.status(400).send({
+        message: 'error adding marketplace to asset'
+      })
+    }
+  )
  
 }
