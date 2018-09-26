@@ -14,6 +14,17 @@
         url: '/assets',
         template: '<ui-view/>'
       })
+
+      .state('assets.listPending', {
+        url: '/listPending',
+        templateUrl: 'modules/assets/client/views/list-assets.client.view.html',
+        controller: 'AssetsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'assets List'
+        }
+      })   
+
       .state('assets.list', {
         url: '',
         templateUrl: 'modules/assets/client/views/list-assets.client.view.html',
@@ -32,15 +43,7 @@
           pageTitle: 'assets List'
         }
       }) 
-      .state('assets.listPendingAssets', {
-        url: '/pendingAssets',
-        templateUrl: 'modules/assets/client/views/list-assets.client.view.html',
-        controller: 'AssetsListController',
-        controllerAs: 'vm',
-        data: {
-          pageTitle: 'assets List'
-        }
-      })   
+
       .state('assets.create', {
         url: '/create',
         templateUrl: 'modules/assets/client/views/form-asset.client.view.html',

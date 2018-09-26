@@ -15,7 +15,6 @@
     vm.wallet = $state.current.name.indexOf('orders.listMyOrders') > -1 ? vm.user.publicKey : null
 
     vm.listPending = $state.current.name.indexOf('orders.listPending') > -1 ? true : false
-
     vm.orders = OrdersService.query({ wallet: vm.wallet, listPending: vm.listPending })
   
   }
