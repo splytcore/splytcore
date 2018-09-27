@@ -36,7 +36,7 @@ exports.create = function(req, res) {
     }) 
     .on('error', (err) => {
       return res.status(400).send({
-        message: 'error creating purchase'
+        message: err.toString()
       })
     }
   )

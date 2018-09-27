@@ -145,9 +145,22 @@ web3.eth.net.isListening()
   console.log(err)
 })
 
+//by default unlock for 1 hour
 exports.unlockAccount = function(account, pw) {
-  return web3.eth.personal.unlockAccount(account, pw, 1000)
+  // let duration = web3.utils.toHex(0)
+  return web3.eth.personal.unlockAccount(account, pw)
 }
+
+// exports.lockAccount = function(account, pw) {
+
+//   web3.eth.personal.lockAccount(account, pw, )
+//   .then(() => {
+//     console.log('account locked!!')
+//   })
+//   .catch((err) => {
+//     console.log('error unlocking account: %s  %s', account, err.toString())
+//   })
+// }
 
 
 //TODO: use for testnet network like ropsten or rinky

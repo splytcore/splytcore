@@ -44,7 +44,7 @@ exports.create = function(req, res) {
     .on('error', function (err) {
       console.log('error creating asset contract')
       return res.status(400).send({
-        message: 'error creating asset'
+        message: err.toString()
       })
     }
   )

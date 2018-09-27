@@ -42,6 +42,21 @@ exports.getSplytServiceInfo = function(req, res) {
  
 }
 
+exports.unlockAccount = function(req, res, next) {
+  let user = req.user
+  EthService.unlockAccount(user.publicKey, "splyt2018!")
+    .then(() => {
+      console.log('successful unlocking of account')
+      next()       
+    })
+    .catch((err) => {
+      return res.status(400).send({
+        message: err.toString()
+      })      
+    })
+}
+
+
 exports.addMarketPlace = function(req, res) {
   console.log(req.body)
   let marketPlace = req.body.marketPlace
