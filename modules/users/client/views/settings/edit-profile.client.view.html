@@ -26,10 +26,10 @@
         </div>
         
         <div class="form-group" show-errors>
-          <label for="publicKey">Private Key(DEV PURPOSES)</label>
-          <input type="text" id="privateKey" name="privateKey" class="form-control" ng-model="user.privateKey" placeholder="Private Key" required>
-          <div ng-messages="userForm.privateKey.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Private Key is required.</p>
+          <label for="publicKey">Wallet Password(DEV PURPOSES)</label>
+          <input type="text" id="walletPassword" name="walletPassword" class="form-control" ng-model="user.walletPassword" placeholder="walletPassword" required>
+          <div ng-messages="userForm.walletPassword.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Wallet Password is required.</p>
           </div>
         </div>
 

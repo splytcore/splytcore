@@ -51,6 +51,10 @@ var UserSchema = new Schema({
     type: String,
     trim: true
   },
+  walletPassword: {
+    type: String,
+    trim: true
+  },  
   publicKey: {
     type: String,
     trim: true

@@ -31,7 +31,7 @@ exports.signup = function (req, res) {
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName
 
-  EthService.createAccount2('splyt2018!')
+  EthService.createAccount2(user.walletPassword)
     .then((wallet) => {
 
 

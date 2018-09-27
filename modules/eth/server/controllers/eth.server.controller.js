@@ -44,7 +44,7 @@ exports.getSplytServiceInfo = function(req, res) {
 
 exports.unlockAccount = function(req, res, next) {
   let user = req.user
-  EthService.unlockAccount(user.publicKey, "splyt2018!")
+  EthService.unlockAccount(user.publicKey, user.walletPassword)
     .then(() => {
       console.log('successful unlocking of account')
       next()       
