@@ -406,15 +406,7 @@ exports.initUser = function(account) {
       gas: web3.utils.toHex(4700000) //max number of gas to be used      
   }
 
-  satToken.methods.initUser(account).send(trx)
-    .on('transactionHash', (hash) => {
-      console.log('trx for giving tokens: ' + hash)
-    }) 
-    .on('error', (err) => {
-      console.log('error giving tokens')
-      console.log(err)
-    }
-  )
+  return satToken.methods.initUser(account).send(trx)
 
 }
 

@@ -23,6 +23,21 @@
             <p class="help-block error-text" ng-message="required">Asset description is required.</p>
           </div>
         </div>
+
+       <div class="form-group" show-errors>
+          <label class="control-label" for="description">Term</label>
+          <input name="term" type="text" ng-model="vm.asset.term" id="description" class="form-control" placeholder="Terms" required>
+          <div ng-messages="vm.form.assetForm.term.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset term is required.</p>
+          </div>
+        </div>
+
+
+       <div class="form-group" ng-show="vm.asset._id">
+          <label class="control-label" for="assetType">Asset Type(0=SINGLE, 1=FRACTIONAL)</label>
+          <input name="assetType" type="text" ng-model="vm.asset.type" id="assetType" class="form-control" placeholder="AssetType" disabled="">
+        </div>
+
         
         <div class="form-group" ng-show="!vm.asset._id" show-errors>
           <label class="control-label" for="marketPlaces">Market Place</label>          

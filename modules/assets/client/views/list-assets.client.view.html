@@ -2,6 +2,7 @@
   <div class="page-header">
     <h1>{{ vm.listPending ? 'PENDING ASSETS' : 'ASSETS' }}</h1>
   </div>
+  
   <div class="list-group">
     <a ng-repeat="asset in vm.assets"
        ui-sref="assets.edit({ assetId: asset._id })"
@@ -9,6 +10,7 @@
       <h4 class="list-group-item-heading">{{asset}}</h4>
     </a>
   </div>
+
   <div class="alert alert-warning text-center" ng-if="vm.assets.$resolved && !vm.assets.length">
     No Assets yet, why don't you <a ui-sref="assets.create">create one</a>?
   </div>

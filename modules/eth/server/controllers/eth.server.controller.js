@@ -56,6 +56,25 @@ exports.unlockAccount = function(req, res, next) {
     })
 }
 
+//give tokens
+exports.initUser = function(req, res) {
+
+  let user = req.user
+  EthService.initUser(user.publicKey, user.walletPassword)
+    .on('transactionHash', (hash) => {
+      console.log('trx for giving tokens: ' + hash)
+      res.jsonp(hash)
+    }) 
+    .on('error', (err) => {
+      console.log('error giving tokens')
+      console.log(err)
+      res.jsonp(err.toString())
+    }
+  )  
+
+
+}
+
 
 exports.addMarketPlace = function(req, res) {
   console.log(req.body)

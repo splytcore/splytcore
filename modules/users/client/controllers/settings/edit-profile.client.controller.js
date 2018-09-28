@@ -24,6 +24,18 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
       }, function (response) {
         $scope.error = response.data.message;
       });
-    };
+    }
+
+    $scope.initUser = function () {
+      $scope.success = $scope.error = null;
+
+      $http.get('/api/eth/initUser?wallet=' + $scope.user.publicKey)
+      .success((result) => {
+        alert(result)
+      })
+      .error((err)=> {
+        console.log(err)
+      })
+    }
   }
 ]);

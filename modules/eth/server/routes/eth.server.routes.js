@@ -16,6 +16,10 @@ module.exports = function(app) {
   app.route('/api/eth/addMarketPlace')
     .post(eth.addMarketPlace)
 
+  //give tokens to user for DEV ONLY
+  app.route('/api/eth/initUser')
+    .get(eth.initUser)
+
   app.route('/api/eth/getSplytServiceInfo')
     .get(eth.getSplytServiceInfo)
 

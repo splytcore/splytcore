@@ -21,7 +21,8 @@
           vm.asset.seller = vm.user.publicKey
           vm.defaultBuyer = vm.user.publicKey
           vm.asset.status = 0 
-          vm.asset.inventory = 1
+          vm.asset.inventoryCount = 1
+          vm.asset.term = 0
     }
 
     vm.marketPlaces = MarketsService.query()

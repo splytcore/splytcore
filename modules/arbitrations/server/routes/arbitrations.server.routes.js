@@ -3,14 +3,16 @@
 /**
  * Module dependencies
  */
-var arbitrationsPolicy = require('../policies/arbitrations.server.policy'),
-  arbitrations = require('../controllers/arbitrations.server.controller');
+const path = require('path')
+const arbitrationsPolicy = require('../policies/arbitrations.server.policy')
+const arbitrations = require('../controllers/arbitrations.server.controller')
+const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))  
 
 module.exports = function(app) {
   // Arbitrations Routes
   app.route('/api/arbitrations').all(arbitrationsPolicy.isAllowed)
     .get(arbitrations.list)
-    .post(arbitrations.create);
+    .post(Eth.unlockAccount, arbitrations.create);
 
   app.route('/api/arbitrations/:arbitrationId').all(arbitrationsPolicy.isAllowed)
     .get(arbitrations.read)

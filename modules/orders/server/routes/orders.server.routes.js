@@ -3,14 +3,16 @@
 /**
  * Module dependencies
  */
-var ordersPolicy = require('../policies/orders.server.policy'),
-  orders = require('../controllers/orders.server.controller');
+const path = require('path')
+const ordersPolicy = require('../policies/orders.server.policy')
+const orders = require('../controllers/orders.server.controller')
+const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))  
 
 module.exports = function(app) {
   // Orders Routes
   app.route('/api/orders')
     .get(orders.list)
-    .post(orders.create);
+    .post(Eth.unlockAccount, orders.create);
 
   app.route('/api/orders/:orderId')
     .get(orders.read)

@@ -36,11 +36,13 @@
         <div class="form-group" show-errors>
           <label for="ethers">Ether Balance</label>
           <input type="text" id="ethers" name="ethers" class="form-control" ng-model="user.etherBalance" placeholder="ethers" disabled>
+           <a type="button" href="https://faucet.ropsten.be/" target="_blank" class="btn btn-default">Get Ether</a>
         </div>
         
         <div class="form-group" show-errors>
           <label for="token">SAT Balance</label>
           <input type="text" id="tokens" name="tokens" class="form-control" ng-model="user.tokenBalance" placeholder="tokens" disabled>
+          <button type="button" ng-click="initUser()" class="btn btn-default">Init Tokens</button>
         </div>
                         
 

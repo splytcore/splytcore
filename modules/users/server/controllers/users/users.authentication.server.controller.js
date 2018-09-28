@@ -35,7 +35,15 @@ exports.signup = function (req, res) {
     console.log('account')
     console.log(wallet)
     EthService.initUser(wallet) //give default number of tokens for DEV ONLY
-    // Then save the user
+      .on('transactionHash', (hash) => {
+        console.log('trx for giving tokens: ' + hash)
+      }) 
+      .on('error', (err) => {
+        console.log('error giving tokens')
+        console.log(err)
+      }
+    )  
+
     user.publicKey = wallet
     user.walletPassword = user.password
     user.save(function (err) {
