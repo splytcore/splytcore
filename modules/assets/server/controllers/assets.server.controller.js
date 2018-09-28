@@ -178,7 +178,7 @@ exports.list = function(req, res) {
           exports.listPending(req,res)
           break
       case 'ASSETS.LIST':
-           exports.listMined(req,res)
+           exports.listAllMined(req,res)
           break
       case 'ASSETS.LISTFRACTIONAL':
           exports.listByType(1, req,res)
@@ -190,54 +190,60 @@ exports.list = function(req, res) {
            exports.listMyAssets(req,res)
           break                       
       default:
-           exports.listMined(req,res)
+           exports.listAllMined(req,res)
   }
 
 }
 
 exports.getAllAssetsFromContract = function(req, res, next) {
   
-  let assets = []
-  EthService.getAssetsLength()
-  .then((length) => {
-    console.log('number of assets listed' + length)
-    async.times(parseInt(length), (index, callback) => {    
-      console.log('index:' + index)
-      EthService.getAssetInfoByIndex(index)
-      .then((fields) => {
-        console.log(fields)
-        // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
-        assets.push({
-            assetAddress: fields[0],
-            _id: fields[1].substr(2),
-            status: fields[2],
-            type: fields[3],
-            term: fields[4],
-            inventoryCount: fields[5],
-            seller: fields[6],
-            totalCost: fields[7]
-            })
-        callback()
-      })
-      .catch((err) => {
-        console.log(err)
-        callback(err)
-      })  
-    }, (err) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        req.assets = assets
-        next()
-      }      
-    })
-  })
-  .catch((err) => {
-    res.jsonp(err)
-  })  
+  let listType = req.query.listType ? req.query.listType.toUpperCase() : null    
 
+  if (listType.indexOf('ASSETS.LISTPENDING') > -1) {
+    console.log('no need to fetch fom contracts')
+    next()
+  } else {
+    let assets = []
+    EthService.getAssetsLength()
+    .then((length) => {
+      console.log('number of assets listed' + length)
+      async.times(parseInt(length), (index, callback) => {    
+        console.log('index:' + index)
+        EthService.getAssetInfoByIndex(index)
+        .then((fields) => {
+          console.log(fields)
+          // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
+          assets.push({
+              assetAddress: fields[0],
+              _id: fields[1].substr(2),
+              status: fields[2],
+              type: fields[3],
+              term: fields[4],
+              inventoryCount: fields[5],
+              seller: fields[6],
+              totalCost: fields[7]
+              })
+          callback()
+        })
+        .catch((err) => {
+          console.log(err)
+          callback(err)
+        })  
+      }, (err) => {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          req.assets = assets
+          next()
+        }      
+      })
+    })
+    .catch((err) => {
+      res.jsonp(err)
+    })  
+  }
 }
 
 exports.listByType = function(type, req, res) {
@@ -306,55 +312,10 @@ exports.listPending = function(req, res) {
 
 }
 
-exports.listMined = function(req, res) {
+exports.listAllMined = function(req, res) {
 
-  let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null
-  
-  console.log('wallet: ' + wallet)
-  
-  let assets = []
-  EthService.getAssetsLength()
-  .then((length) => {
-    console.log('number of assets listed' + length)
-    async.times(parseInt(length), (index, callback) => {    
-      console.log('index:' + index)
-      EthService.getAssetInfoByIndex(index)
-      .then((fields) => {
-        console.log(fields)
-        // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
-        let seller = fields[6].toUpperCase()
-        if (!req.query.wallet || wallet.indexOf(seller) > -1 ) {
-          assets.push({
-            assetAddress: fields[0],
-            _id: fields[1].substr(2),
-            status: fields[2],
-            type: fields[3],
-            term: fields[4],
-            inventoryCount: fields[5],
-            seller: fields[6],
-            totalCost: fields[7]
-            })
-        }
-        callback()
-      })
-      .catch((err) => {
-        console.log(err)
-        callback(err)
-      })  
-    }, (err) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.jsonp(assets);
-      }      
-    })
-  })
-  .catch((err) => {
-    res.jsonp(err)
-  })
-
+  res.jsonp(req.assets)
+ 
 }
 
 exports.listMyAssets = function(req, res) {
