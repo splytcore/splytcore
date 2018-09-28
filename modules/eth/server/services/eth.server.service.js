@@ -333,6 +333,81 @@ exports.createArbitration = function(arbitration) {
   
 }
 
+exports.setArbitrator = function(arbitrationId, arbitrator) {
+
+  let trx = {
+      from: masterWallet,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+  let idHex = prepend0x(arbitrationId.toString())
+  
+  console.log('arbitrationIdHex: ' + idHex)
+
+  return arbitrationManager.methods.setArbitrator(
+    idHex, 
+    arbitrator
+    ).send(trx)
+  
+}
+
+
+exports.set2xStakeByReporter = function(arbitrationId, reporter) {
+
+  let trx = {
+      from: reporter,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+  let idHex = prepend0x(arbitrationId.toString())
+  
+  console.log('arbitrationIdHex: ' + idHex)
+
+  return arbitrationManager.methods.set2xStakeByReporter(
+    idHex
+    ).send(trx)
+  
+}
+
+exports.set2xStakeBySeller = function(arbitrationId, seller) {
+
+  let trx = {
+      from: seller,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+  let idHex = prepend0x(arbitrationId.toString())
+  
+  console.log('arbitrationIdHex: ' + idHex)
+
+  return arbitrationManager.methods.set2xStakeBySeller(
+    idHex
+    ).send(trx)
+  
+}
+
+exports.setWinner = function(arbitrationId, arbitrator, winner) {
+
+  let trx = {
+      from: arbitrator,
+      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+  }
+
+  let idHex = prepend0x(arbitrationId.toString())
+  
+  console.log('arbitrationIdHex: ' + idHex)
+
+  return arbitrationManager.methods.setWinner(
+    idHex,
+    web3.utils.toHex(winner)
+    ).send(trx)
+  
+}
+
 
 exports.createReputation = function(reputation) {
 

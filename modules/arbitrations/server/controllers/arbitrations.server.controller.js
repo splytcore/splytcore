@@ -34,9 +34,8 @@ exports.create = function(req, res) {
       })
     }) 
     .on('error', (err) => {
-      return res.status(400).send({
-        message: err.toString()
-      })
+      console.log('error creating arbitration contract')
+      console.log(err)
     }
   )
 
@@ -51,7 +50,7 @@ exports.read = function(req, res) {
 
   EthService.getArbitrationInfoByArbitrationId(tmpArbitration._id)
      .then((fields) => {
-      console.log('successful get order info')
+      console.log('successful get arbitgration info')
       console.log(fields)
 
             // 0 orders[_orderId].version,    
@@ -61,7 +60,7 @@ exports.read = function(req, res) {
             // 4 orders[_orderId].quantity,
             // 5 orders[_orderId].paidAmount,
             // 6 orders[_orderId].status);
-      let a = {
+      res.jsonp({
            _id: fields[0].substr(2),
           reason: fields[1],
           reporterWallet: fields[2],
@@ -69,9 +68,7 @@ exports.read = function(req, res) {
           status: fields[4],
           assetAddress: fields[5],
           arbitratorWallet: fields[6]
-      }
-
-      res.jsonp(a)  
+      })
     })
     .catch((err) => {
       res.jsonp(err)  
@@ -83,6 +80,9 @@ exports.read = function(req, res) {
  * Update a Arbitration
  */
 exports.update = function(req, res) {
+  console.log('updating arbitration')
+  console.log(req.query)
+  console.log(req.params)
   var arbitration = req.arbitration;
 
   arbitration = _.extend(arbitration, req.body);
@@ -98,6 +98,74 @@ exports.update = function(req, res) {
   });
 };
 
+exports.setArbitrator = function(req, res) {
+  
+  let arbId = req.params.arbitrationId
+  let arbitrator = req.user.publicKey
+
+  EthService.setArbitrator(arbId, arbitrator)
+    .on('transactionHash', (hash) => {
+      console.log('trxHash: ' + hash)
+      res.jsonp(hash);
+    }) 
+    .on('error', (err) => {
+      console.log('error creating arbitration contract')
+      console.log(err)
+    }
+  )
+}
+
+exports.set2xStakeByReporter = function(req, res) {
+  
+  let reporter = req.user.publicKey
+  let arbId = req.params.arbitrationId
+
+  EthService.set2xStakeByReporter(arbId, reporter)
+    .on('transactionHash', (hash) => {
+      console.log('trxHash: ' + hash)
+      res.jsonp(hash);
+    }) 
+    .on('error', (err) => {
+      console.log(err)
+    }
+  )
+
+}
+
+exports.set2xStakeBySeller = function(req, res) {
+  
+  let seller = req.user.publicKey
+  let arbId = req.params.arbitrationId
+
+  EthService.set2xStakeBySeller(arbId, seller)
+    .on('transactionHash', (hash) => {
+      console.log('trxHash: ' + hash)
+      res.jsonp(hash);
+    }) 
+    .on('error', (err) => {
+      console.log(err)
+    }
+  )
+
+}
+
+exports.setWinner = function(req, res) {
+  
+  let arbitrator = req.user.publicKey
+  let arbId = req.params.arbitrationId
+  let winner = req.body.winner
+
+  EthService.setWinner(arbId, arbitrator, winner)
+    .on('transactionHash', (hash) => {
+      console.log('trxHash: ' + hash)
+      res.jsonp(hash);
+    }) 
+    .on('error', (err) => {
+      console.log(err)
+    }
+  )
+
+}
 /**
  * Delete an Arbitration
  */
@@ -248,6 +316,8 @@ exports.listMined = function(req, res) {
  * Arbitration middleware
  */
 exports.arbitrationByID = function(req, res, next, id) {
+
+  console.log('this being called')
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({

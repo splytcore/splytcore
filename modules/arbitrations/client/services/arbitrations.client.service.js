@@ -10,7 +10,7 @@
 
   function ArbitrationsService($resource) {
     return $resource('api/arbitrations/:arbitrationId', {
-      arbitrationId: '@_id'
+      arbitrationId: '@_id',
     }, {
       update: {
         method: 'PUT'

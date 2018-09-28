@@ -14,11 +14,24 @@ module.exports = function(app) {
     .get(arbitrations.list)
     .post(Eth.unlockAccount, arbitrations.create);
 
+  app.route('/api/arbitrations/:arbitrationId/setArbitrator')
+    .post(Eth.unlockAccount, arbitrations.setArbitrator)
+
+  app.route('/api/arbitrations/:arbitrationId/set2xStakeByReporter')
+    .post(Eth.unlockAccount, arbitrations.set2xStakeByReporter)
+
+  app.route('/api/arbitrations/:arbitrationId/set2xStakeBySeller')
+    .post(Eth.unlockAccount, arbitrations.set2xStakeBySeller)
+
+  app.route('/api/arbitrations/:arbitrationId/setWinner')
+    .post(Eth.unlockAccount, arbitrations.setWinner)
+
   app.route('/api/arbitrations/:arbitrationId').all(arbitrationsPolicy.isAllowed)
     .get(arbitrations.read)
     .put(arbitrations.update)
     .delete(arbitrations.delete);
 
+ 
   // Finish by binding the Arbitration middleware
   app.param('arbitrationId', arbitrations.arbitrationByID);
 };

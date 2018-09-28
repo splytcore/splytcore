@@ -3,6 +3,8 @@
     <h1>{{vm.arbitration._id ? 'Edit Arbitration' : 'New Arbitration'}}</h1>
     <h2>{{vm.title}}</h2>
   </div>
+
+  {{ vm.arbitration}}
   <div class="col-md-12">
     <form name="vm.form.arbitrationForm" class="form-horizontal" ng-submit="vm.save(vm.form.arbitrationForm.$valid)" novalidate>
       <fieldset>
@@ -29,6 +31,7 @@
           <label class="control-label" for="reporterWallet">Reporter Wallet</label>
           <input name="reporterWallet" type="text" ng-model="vm.arbitration.reporterWallet" id="reporterWallet" class="form-control" placeholder="reporterWallet" 
           ng-disabled="vm.arbitration._id" required>
+          <button type="button" class="btn btn-default" ng-click="vm.set2xStakeByReporter()">Set 2x Stake By Reporter(you must be the reporter)</button>
           <div ng-messages="vm.form.arbitrationForm.reporterWallet.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Reporter Wallet is required.</p>
           </div>
@@ -36,15 +39,22 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="arbitratorWallet">Arbitrator Wallet</label>
-          <input name="arbitratorWallet" type="text" ng-model="vm.arbitration.arbitratorWallet" id="arbitratorWallet" class="form-control" placeholder="arbitratorWallet">
+          <input name="arbitratorWallet" type="text" ng-model="vm.arbitration.arbitratorWallet" id="arbitratorWallet" class="form-control" placeholder="arbitratorWallet"  disabled>
+ 
+          <button type="button" class="btn btn-default" ng-click="vm.setArbitrator()">Set Arbitrator</button>
+ 
           <div ng-messages="vm.form.arbitrationForm.arbitratorWallet.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Arbitriator Wallet is required.</p>
+            <p class="help-block error-text" ng-message="required">Arbitrator Wallet is required.</p>
           </div>
+
         </div>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="winner">Winner of Arbitration by arbitrator(0: UNDECIED, 1:REPORTER 2:SELLER)</label>
-          <input name="winner" type="text" ng-model="vm.arbitration.winner" id="winner" class="form-control" placeholder="winner" ng-disabled="vm.arbitration._id">
+          <input name="winner" type="text" ng-model="vm.arbitration.winner" id="winner" class="form-control" placeholder="winner">
+          
+          <button type="button" class="btn btn-default" ng-click="vm.setWinner()">Set Winner(you must be the arbitrator)</button>
+
           <div ng-messages="vm.form.arbitrationForm.winner.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Arbitriator Wallet is required.</p>
           </div>
@@ -57,8 +67,13 @@
 
 
         <div class="form-group">
-          <button type="submit" class="btn btn-default">{{vm.arbitration._id ? 'Update' : 'Create'}}</button>
+          <button ng-show="!vm.arbitration._id" type="submit" class="btn btn-default">{{vm.arbitration._id ? 'Update' : 'Create'}}</button>
         </div>
+
+        <div class="form-group" ng-show="vm.arbitration._id">
+          <button type="button" class="btn btn-default" ng-click="vm.set2xStakeBySeller()">Set 2x Stake By Seller(you must be the seller)</button>
+        </div>
+        
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>
         </div>
