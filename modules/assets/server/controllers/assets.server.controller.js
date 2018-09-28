@@ -252,7 +252,7 @@ exports.listByType = function(type, req, res) {
 
   async.each(req.assets, (asset, callback) => {    
     
-    if (parseInt(asset.type) == type) {
+    if (parseInt(asset.type) === type) {
       assets.push(asset)
     }    
     callback()
