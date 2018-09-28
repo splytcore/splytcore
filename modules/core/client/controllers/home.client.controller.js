@@ -20,7 +20,12 @@ angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentica
         .success((balances) => {
           console.log(balances)
           $scope.user.etherBalance = balances.etherBalance
-          $scope.user.tokenBalance = balances.tokenBalance      
+          $scope.user.tokenBalance = balances.tokenBalance    
+
+          if (parseInt(balances.etherBalance) < 1 ||  parseInt(balances.tokenBalance) < 1) {
+            alert('You do not have enough tokens or Ether to write to the blockchain!')
+          }
+
         })
         .error((err) => {
 
