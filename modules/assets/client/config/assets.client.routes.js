@@ -24,6 +24,25 @@
           pageTitle: 'assets List'
         }
       })   
+      .state('assets.listFractional', {
+        url: '/listFractional',
+        templateUrl: 'modules/assets/client/views/list-assets.client.view.html',
+        controller: 'AssetsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'assets List'
+        }
+      })   
+
+      .state('assets.listNormal', {
+        url: '/listNormal',
+        templateUrl: 'modules/assets/client/views/list-assets.client.view.html',
+        controller: 'AssetsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'assets List'
+        }
+      })   
 
       .state('assets.list', {
         url: '',

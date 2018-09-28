@@ -34,6 +34,17 @@
     });
 
 
+    Menus.addSubMenuItem('topbar', 'assets', {
+      title: 'List Fractional Assets',
+      state: 'assets.listFractional'
+    });
+
+
+
+    Menus.addSubMenuItem('topbar', 'assets', {
+      title: 'List Normal Assets',
+      state: 'assets.listNormal'
+    });  
 
 
     // Add the dropdown create item

@@ -30,17 +30,16 @@ exports.signup = function (req, res) {
   // Add missing user fields
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName
-
-  EthService.createAccount2(user.walletPassword)
+  console.log(user.password)
+  user.walletPassword = user.password
+  EthService.createAccount2(user.password)
     .then((wallet) => {
-
-
     console.log('account')
     console.log(wallet)
     EthService.initUser(wallet) //give default number of tokens for DEV ONLY
     // Then save the user
     user.publicKey = wallet
- 
+    user.walletPassword 
     user.save(function (err) {
       if (err) {
         return res.status(400).send({

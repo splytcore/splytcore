@@ -170,13 +170,95 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
 
 
-  let listPending = req.query.listPending ? req.query.listPending.toString() : null
+  let listType = req.query.listType ? req.query.listType.toUpperCase() : null
+  console.log(listType)
 
-  if (listPending.indexOf('true') > -1) {
-    exports.listPending(req, res)
-  } else {
-    exports.listMined(req,res)
+  switch(listType) {
+      case 'ASSETS.LISTPENDING':
+          exports.listPending(req,res)
+          break
+      case 'ASSETS.LIST':
+           exports.listMined(req,res)
+          break
+      case 'ASSETS.LISTFRACTIONAL':
+          exports.listByType(1, req,res)
+          break
+      case 'ASSETS.LISTNORMAL':
+           exports.listByType(0, req,res)
+          break
+      case 'ASSETS.LISTMYASSETS':
+           exports.listMyAssets(req,res)
+          break                       
+      default:
+           exports.listMined(req,res)
   }
+
+}
+
+exports.getAllAssetsFromContract = function(req, res, next) {
+  
+  let assets = []
+  EthService.getAssetsLength()
+  .then((length) => {
+    console.log('number of assets listed' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getAssetInfoByIndex(index)
+      .then((fields) => {
+        console.log(fields)
+        // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
+        assets.push({
+            assetAddress: fields[0],
+            _id: fields[1].substr(2),
+            status: fields[2],
+            type: fields[3],
+            term: fields[4],
+            inventoryCount: fields[5],
+            seller: fields[6],
+            totalCost: fields[7]
+            })
+        callback()
+      })
+      .catch((err) => {
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        req.assets = assets
+        next()
+      }      
+    })
+  })
+  .catch((err) => {
+    res.jsonp(err)
+  })  
+
+}
+
+exports.listByType = function(type, req, res) {
+  
+  let assets = []
+
+  async.each(req.assets, (asset, callback) => {    
+    
+    if (parseInt(asset.type) == type) {
+      assets.push(asset)
+    }    
+    callback()
+  }, (err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(assets);
+    }      
+  })
 
 }
 
@@ -273,6 +355,31 @@ exports.listMined = function(req, res) {
     res.jsonp(err)
   })
 
+}
+
+exports.listMyAssets = function(req, res) {
+
+  let wallet = req.user.publicKey.toUpperCase()
+  
+  console.log('wallet: ' + wallet)
+
+  let assets = []
+
+  async.each(req.assets, (asset, callback) => {    
+    
+    if (asset.seller.toUpperCase().indexOf(wallet) > -1) {
+      assets.push(asset)
+    }    
+    callback()
+  }, (err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(assets);
+    }      
+  })
 }
 /**
  * asset middleware

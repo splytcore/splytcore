@@ -11,7 +11,7 @@ var assetsPolicy = require('../policies/assets.server.policy'),
 module.exports = function(app) {
   // assets Routes
   app.route('/api/assets').all(assetsPolicy.isAllowed)
-    .get(assets.list)
+    .get(assets.getAllAssetsFromContract, assets.list)
     .post(Eth.unlockAccount, assets.create);
 
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
