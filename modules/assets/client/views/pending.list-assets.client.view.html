@@ -1,0 +1,19 @@
+<section>
+  <div class="page-header">
+    <h1> PENDING ASSETS </h1>
+  </div>
+  
+
+    <div class="list-group">
+      <a ng-repeat="asset in vm.assets"
+         href="https://ropsten.etherscan.io/tx/{{asset.transactionHash}}"
+         target="_blank"
+         class="list-group-item">
+        <h4 class="list-group-item-heading">
+          ID: {{asset._id}} </br>
+          HASH: {{asset.transactionHash}}
+        </h4>       
+      </a>
+    </div>
+
+</section>

@@ -143,7 +143,7 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  let listPending = req.query.listType ? req.query.listType.toUpperCase() : null
+  let listType = req.query.listType ? req.query.listType.toUpperCase() : null
 
   switch(listType) {
       case 'REPUTATIONS.LISTPENDING':

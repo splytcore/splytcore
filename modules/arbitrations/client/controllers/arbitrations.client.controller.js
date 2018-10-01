@@ -103,7 +103,7 @@
       }
 
       function successCallback(res) {
-        $state.go('arbitrations.list')
+        $state.go('arbitrations.listPending')
       }
 
       function errorCallback(res) {

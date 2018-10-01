@@ -16,7 +16,7 @@
       })
       .state('orders.listPending', {
         url: '/listPending',
-        templateUrl: 'modules/orders/client/views/list-orders.client.view.html',
+        templateUrl: 'modules/orders/client/views/pending.list-orders.client.view.html',
         controller: 'OrdersListController',
         controllerAs: 'vm',
         data: {

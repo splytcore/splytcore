@@ -25,7 +25,7 @@
       })
       .state('reputations.listPending', {
         url: '/listPending',
-        templateUrl: 'modules/reputations/client/views/list-reputations.client.view.html',
+        templateUrl: 'modules/reputations/client/views/pending.list-reputations.client.view.html',
         controller: 'ReputationsListController',
         controllerAs: 'vm',
         data: {

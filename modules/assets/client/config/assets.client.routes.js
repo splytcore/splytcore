@@ -17,7 +17,7 @@
 
       .state('assets.listPending', {
         url: '/listPending',
-        templateUrl: 'modules/assets/client/views/list-assets.client.view.html',
+        templateUrl: 'modules/assets/client/views/pending.list-assets.client.view.html',
         controller: 'AssetsListController',
         controllerAs: 'vm',
         data: {

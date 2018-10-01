@@ -1,0 +1,16 @@
+<section>
+  <div class="page-header">
+    <h1> PENDING REPUTATIONS </h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="reputation in vm.reputations"
+       href="https://ropsten.etherscan.io/tx/{{reputation.transactionHash}}"
+       class="list-group-item">
+      <h4 class="list-group-item-heading">
+      Rated Address: {{ reputation.wallet }} </br>
+      HASH: {{ reputation.transactionHash }}
+      </h4>
+    </a>
+  </div>
+
+</section>

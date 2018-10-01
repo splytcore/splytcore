@@ -49,7 +49,7 @@
       }
 
       function successCallback(res) {
-        $state.go('orders.list')
+        $state.go('orders.listPending')
       }
 
       function errorCallback(res) {

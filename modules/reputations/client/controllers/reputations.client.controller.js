@@ -49,7 +49,7 @@
       }
 
       function successCallback(res) {
-        $state.go('reputations.list')
+        $state.go('reputations.listPending')
       }
 
       function errorCallback(res) {

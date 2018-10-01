@@ -26,7 +26,7 @@
 
       .state('arbitrations.listPending', {
         url: '/listPending',
-        templateUrl: 'modules/arbitrations/client/views/list-arbitrations.client.view.html',
+        templateUrl: 'modules/arbitrations/client/views/pending.list-arbitrations.client.view.html',
         controller: 'ArbitrationsListController',
         controllerAs: 'vm',
         data: {
