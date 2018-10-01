@@ -55,6 +55,10 @@ var AssetSchema = new Schema({
     type: String,
     default: '0'
   },
+  imageURL: {
+    type: String,
+    default: 'modules/assets/client/img/asset.jpeg'
+  },  
   //contract address
   address: {
     type: String,

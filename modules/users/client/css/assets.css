@@ -1,0 +1,9 @@
+.asset-picture-detail {
+  min-height: 150px;
+  max-height: 150px;
+}
+
+.asset-picture-thumbnail {
+  max-width: 50px;
+  max-height: 50px;
+}
