@@ -188,12 +188,22 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  let listPending = req.query.listPending ? req.query.listPending.toString() : null
+  let listType = req.query.listType ? req.query.listType.toUpperCase() : null
+  
+  console.log(listType)
 
-  if (listPending.indexOf('true') > -1) {
-    exports.listPending(req, res)
-  } else {
-    exports.listMined(req,res)
+  switch(listType) {
+      case 'ARBITRATIONS.LISTPENDING':
+          exports.listPending(req,res)
+          break
+      case 'ARBITRATIONS.LIST':
+           exports.listAllMined(req,res)
+          break
+      case 'ARBITRATIONS.LISTMYARBITRATIONS':
+           exports.ListMyArbitrations(req,res)
+          break                       
+      default:
+           exports.listAllMined(req,res)
   }
     
 }
@@ -241,10 +251,68 @@ exports.listPending = function(req, res) {
   })    
 }
 
-exports.listMined = function(req, res) {
+exports.listAllMined = function(req, res) {
+  
+  console.log('listing all mined')
+  let arbitrations = []
+
+  EthService.getArbitrationsLength()
+  .then((length) => {
+    console.log('number of arbs ' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getArbitrationInfoByIndex(index)
+      .then((fields) => {
+        console.log(fields)
+            // 0 a.arbitrationId(), 
+            // 1 a.reason(), 
+            // 2 a.reporter(), 
+            // 3 a.winner(),
+            // 4 a.status(), 
+            // 5 a.asset(), 
+            // 6 a.arbitrator()
+        //list if your wallet is participating in the arbitration
+        arbitrations.push({
+          _id: fields[0].substr(2),
+          reason: fields[1],
+          reporter: fields[2],
+          winner: fields[3],
+          status: fields[4],
+          assetAddress: fields[5],
+          arbitrator: fields[6]
+          })
+        callback()
+      })
+      .catch((err) => {
+        console.log('error fetching arbitrations')
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      console.log('theres an error')
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        console.log(arbitrations)
+        res.jsonp(arbitrations)
+      }      
+    })
+  })
+  .catch((err) => {
+    console.log(err)
+    res.jsonp(err)
+  })  
+
+}
+
+
+
+exports.ListMyArbitrations = function(req, res) {
   
   let arbitrations = []
-  let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null
+  let myWallet = req.user.publicKey
 
   EthService.getArbitrationsLength()
   .then((length) => {
@@ -265,9 +333,7 @@ exports.listMined = function(req, res) {
         let reporter  = fields[2].toUpperCase() 
         let arbitrator  = fields[6].toUpperCase() 
 
-        if (!req.query.wallet ||
-            (arbitrator.indexOf(wallet) > -1 || reporter.indexOf(wallet) > -1) 
-            ) {
+        if (arbitrator.indexOf(myWallet) > -1 || reporter.indexOf(myWallet) > -1) {
 
           arbitrations.push({
             _id: fields[0].substr(2),

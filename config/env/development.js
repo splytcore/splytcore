@@ -39,7 +39,7 @@ module.exports = {
     //Get this from testrpc for dev
     url: 'http://13.58.147.177:8555',
     //this has to be updated everytime you run truffle migrate
-    splytManagerAddress: '0xe506a63e8eaf46a361987797adb50240ab11ff4c',
+    splytManagerAddress: '0x5f254608eeb2d6d109157597390c41492af90841',
     masterWallet: '0xf606a61e2fbc2db9b0b74f26c45469509dfb33ac'
   },
   livereload: true,

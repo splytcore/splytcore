@@ -1,6 +1,8 @@
 <section>
   <div class="page-header">
-    <h1> {{ vm.listPending ? 'PENDING ARBITRATIONS' : 'ARBITRATIONS'  }}</h1>
+    <h1> {{ vm.listType.indexOf('listPending') > -1 ? 'PENDING ARBITRATIONS' : 'ARBITRATIONS'  }} </h1>
+  </div>
+
   </div>
 
   <div class="list-group">
