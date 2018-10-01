@@ -30,7 +30,7 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'reputations', {
-      title: 'List All Reputations',
+      title: 'List All Mined Reputations',
       state: 'reputations.list'
     })
 

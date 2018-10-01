@@ -124,14 +124,22 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  let listPending = req.query.listPending ? req.query.listPending.toString() : null
+  let listType = req.query.listType ? req.query.listType.toUpperCase() : null
 
-  if (listPending.indexOf('true') > -1) {
-    exports.listPending(req, res)
-  } else {
-    exports.listMined(req,res)
+  switch(listType) {
+      case 'ORDERS.LISTPENDING':
+          exports.listPending(req,res)
+          break
+      case 'ORDERS.LIST':
+           exports.listAllMined(req,res)
+          break
+      case 'ORDERS.LISTMYORDERS':
+           exports.ListMyOrders(req,res)
+          break                       
+      default:
+           exports.listAllMined(req,res)
   }
-    
+
 }
 
 exports.listPending = function(req, res) {
@@ -177,11 +185,8 @@ exports.listPending = function(req, res) {
   })    
 }
 
-exports.listMined = function(req, res) {
+exports.listAllMined = function(req, res) {
 
-
-  let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null
-  console.log('wallet: ' + wallet)
   let orders = []
   EthService.getOrdersLength()
   .then((length) => {
@@ -199,10 +204,64 @@ exports.listMined = function(req, res) {
             // orders[_orderId].paidAmount,
             // orders[_orderId].status);
 
+        orders.push({
+          version: fields[0],
+          _id: fields[1].substr(2),
+          asset: fields[2],
+          buyerWallet: fields[3],
+          quantity: fields[4],
+          totalAmount: fields[5],
+          status: fields[6]
+          })
+        callback()
+      })
+      .catch((err) => {
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        console.log(orders)
+        res.jsonp(orders)
+      }      
+    })
+  })
+  .catch((err) => {
+    res.jsonp(err)
+  })  
+
+}
+
+
+exports.listMyOrders = function(req, res) {
+
+  let myWallet = req.user.publicKey ? req.user.publicKey.toUpperCase() : null
+
+  console.log('wallet: ' + myWallet)
+  let orders = []
+  EthService.getOrdersLength()
+  .then((length) => {
+    console.log('number of orders ' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getOrderInfoByIndex(index)
+      .then((fields) => {
+        console.log(fields)
+            // orders[_orderId].version,    
+            // orders[_orderId].orderId,
+            // orders[_orderId].asset,    
+            // orders[_orderId].buyer,
+            // orders[_orderId].quantity,
+            // orders[_orderId].paidAmount,
+            // orders[_orderId].status);
 
         let buyerWallet = fields[3].toUpperCase()
 
-        if (!req.query.wallet || wallet.indexOf(buyerWallet) > -1) {
+        if (myWallet.indexOf(buyerWallet) > -1) {
           orders.push({
             version: fields[0],
             _id: fields[1].substr(2),
@@ -235,7 +294,6 @@ exports.listMined = function(req, res) {
   })  
 
 }
-
 /**
  * Order middleware
  */

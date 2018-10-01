@@ -143,12 +143,20 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  let listPending = req.query.listPending ? req.query.listPending.toString() : null
+  let listPending = req.query.listType ? req.query.listType.toUpperCase() : null
 
-  if (listPending.indexOf('true') > -1) {
-    exports.listPending(req, res)
-  } else {
-    exports.listMined(req,res)
+  switch(listType) {
+      case 'REPUTATIONS.LISTPENDING':
+          exports.listPending(req,res)
+          break
+      case 'REPUTATIONS.LIST':
+           exports.listAllMined(req,res)
+          break
+      case 'REPUTATIONS.LISTMYREPUTATIONS':
+           exports.ListMyReputations(req,res)
+          break                       
+      default:
+           exports.listAllMined(req,res)
   }
     
 }
@@ -198,13 +206,55 @@ exports.listPending = function(req, res) {
 
 
 
-exports.listMined = function(req, res) {
-
-  console.log('wallet: ' + req.query.wallet)
+exports.listAllMined = function(req, res) {
 
   let reputations = []
 
-  let wallet = req.query.wallet ? req.query.wallet.toUpperCase() : null
+  EthService.getReputationsLength()
+  .then((length) => {
+    console.log('number of reputations ' + length)
+    async.times(parseInt(length), (index, callback) => {    
+      console.log('index:' + index)
+      EthService.getReputationInfoByIndex(index)
+      .then((fields) => {
+        console.log('resturn data')
+        console.log(fields)
+        reputations.push({
+          wallet: fields[0],
+          average: fields[1],
+          ratesCount: fields[2],
+        })
+        callback()
+      })
+      .catch((err) => {
+        console.log(err)
+        callback(err)
+      })  
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        console.log(reputations)
+        res.jsonp(reputations)
+      }      
+    })
+  })
+  .catch((err) => {
+    res.jsonp(err)
+  })  
+
+}
+
+
+exports.listMyReputations = function(req, res) {
+
+  let myWallet = req.user.publicKey.toUpperCase()
+
+  console.log('my wallet: ' + myWallet)
+
+  let reputations = []
   
   EthService.getReputationsLength()
   .then((length) => {
@@ -216,12 +266,13 @@ exports.listMined = function(req, res) {
         console.log('resturn data')
         console.log(fields)
         let ratingWallet = fields[0].toUpperCase()
-        if (!wallet || ratingWallet.indexOf(wallet) > -1)
-        reputations.push({
-          wallet: fields[0],
-          average: fields[1],
-          ratesCount: fields[2],
-          })
+        if (ratingWallet.indexOf(myWallet) > -1) {
+          reputations.push({
+            wallet: fields[0],
+            average: fields[1],
+            ratesCount: fields[2],
+            })
+        }
         callback()
       })
       .catch((err) => {
@@ -245,7 +296,6 @@ exports.listMined = function(req, res) {
 
 
 }
-
 /**
  * Reputation middleware
  */

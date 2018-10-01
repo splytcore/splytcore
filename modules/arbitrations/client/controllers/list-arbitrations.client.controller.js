@@ -8,7 +8,7 @@
   ArbitrationsListController.$inject = ['ArbitrationsService', 'Authentication', '$state'];
 
   function ArbitrationsListController(ArbitrationsService, Authentication, $state) {
-    var vm = this;
+    var vm = this
 
     vm.user = Authentication.user
     

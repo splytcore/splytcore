@@ -29,7 +29,7 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'arbitrations', {
-      title: 'List All Arbitrations',
+      title: 'List All Mined Arbitrations',
       state: 'arbitrations.list'
     })
   }

@@ -29,7 +29,7 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'orders', {
-      title: 'List All Orders',
+      title: 'List All Mined Orders',
       state: 'orders.list'
     })
 

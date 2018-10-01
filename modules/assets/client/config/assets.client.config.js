@@ -24,7 +24,7 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'assets', {
-      title: 'List All Assets',
+      title: 'List All Mined Assets',
       state: 'assets.list'
     });
 
