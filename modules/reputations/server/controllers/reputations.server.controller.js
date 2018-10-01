@@ -153,7 +153,7 @@ exports.list = function(req, res) {
            exports.listAllMined(req,res)
           break
       case 'REPUTATIONS.LISTMYREPUTATIONS':
-           exports.ListMyReputations(req,res)
+           exports.listMyReputations(req,res)
           break                       
       default:
            exports.listAllMined(req,res)

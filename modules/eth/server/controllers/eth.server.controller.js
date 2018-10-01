@@ -80,7 +80,7 @@ exports.addMarketPlace = function(req, res) {
   console.log(req.body)
   let marketPlace = req.body.marketPlace
   let assetId = req.body.assetId
-  let wallet = req.body.wallet
+  let wallet = req.user.publicKey
 
   EthService.addMarketPlace(assetId, marketPlace, wallet)
     .on('transactionHash', (hash) => {

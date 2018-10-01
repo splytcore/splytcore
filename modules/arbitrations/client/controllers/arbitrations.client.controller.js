@@ -46,7 +46,7 @@
     function setArbitrator() {
       ArbitraitionsManagerService.setArbitrator(vm.arbitration._id)
         .success((result) => {
-          console.log(result)
+          alert(result)
           console.log('success update')
         })
         .error((err) => {
@@ -57,7 +57,7 @@
     function setWinner() {
       ArbitraitionsManagerService.setWinner(vm.arbitration._id, vm.arbitration.winner)
         .success((result) => {
-          console.log(result)
+          alert(result)
           console.log('success update')
         })
         .error((err) => {
@@ -68,7 +68,7 @@
     function set2xStakeByReporter() {
       ArbitraitionsManagerService.set2xStakeByReporter(vm.arbitration._id)
         .success((result) => {
-          console.log(result)
+          alert(result)
           console.log('success update')
         })
         .error((err) => {
@@ -79,7 +79,7 @@
     function set2xStakeBySeller() {
       ArbitraitionsManagerService.set2xStakeBySeller(vm.arbitration._id)
         .success((result) => {
-          console.log(result)
+          alert(result)
           console.log('success update')
         })
         .error((err) => {

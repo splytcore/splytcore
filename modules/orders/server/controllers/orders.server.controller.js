@@ -134,7 +134,7 @@ exports.list = function(req, res) {
            exports.listAllMined(req,res)
           break
       case 'ORDERS.LISTMYORDERS':
-           exports.ListMyOrders(req,res)
+           exports.listMyOrders(req,res)
           break                       
       default:
            exports.listAllMined(req,res)

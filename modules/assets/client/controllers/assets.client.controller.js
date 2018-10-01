@@ -85,9 +85,10 @@
     }
 
     function addMarketPlace() {
-      EthService.addMarketPlace(vm.asset._id, vm.selectedMarketPlace, vm.user.publicKey)
+      EthService.addMarketPlace(vm.asset._id, vm.selectedMarketPlace)
         .success((result) => {
           console.log(result)
+          alert(result)
           $window.location.reload();          
         })
         .error((err) => {
