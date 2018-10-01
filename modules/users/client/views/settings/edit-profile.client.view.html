@@ -26,8 +26,9 @@
         </div>
         
         <div class="form-group" show-errors>
-          <label for="publicKey">Wallet Password(DEV PURPOSES)</label>
-          <input type="text" id="walletPassword" name="walletPassword" class="form-control" ng-model="user.walletPassword" placeholder="walletPassword" required>
+          <label for="publicKey">Wallet Password(DEV PURPOSES)</label> </br>
+          *Does not update wallet password! Only update if you change wallets
+          <input type="text" id="walletPassword" name="walletPassword" class="form-control" ng-model="user.walletPassword" placeholder="walletPassword" dsiable>
           <div ng-messages="userForm.walletPassword.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Wallet Password is required.</p>
           </div>

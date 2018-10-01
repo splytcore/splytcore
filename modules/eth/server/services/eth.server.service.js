@@ -76,7 +76,7 @@ web3.eth.net.isListening()
   
  splytManager.methods.assetManager().call()
   .then((address) => {
-    console.log('splytManager address: ' + address)  
+    console.log('assetManager address: ' + address)  
     assetManagerAddress = address  
     assetManager = new web3.eth.Contract(AssetManager.abi, address)    
   })
