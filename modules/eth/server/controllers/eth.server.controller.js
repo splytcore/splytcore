@@ -68,7 +68,7 @@ exports.initUser = function(req, res) {
     .on('error', (err) => {
       console.log('error giving tokens')
       console.log(err)
-      res.jsonp(err.toString())
+      // res.jsonp(err.toString())
     }
   )  
 
@@ -88,9 +88,8 @@ exports.addMarketPlace = function(req, res) {
       res.jsonp(hash)
     }) 
     .on('error', (err) => {
-      return res.status(400).send({
-        message: 'error adding marketplace to asset'
-      })
+      console.log('add market place error')
+      console.log(err)
     }
   )
  
