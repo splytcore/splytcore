@@ -110,8 +110,7 @@
 
 
         <div class="form-group">
-          <button type="submit" class="btn btn-default">{{vm.asset._id ? 'Update' : 'Create'}}</button>
-          <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>
+          <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>
 
           <button ng-show="vm.asset._id"  ui-sref="orders.create({ assetAddress: vm.asset.address, title: vm.asset.title, trxAmount: vm.asset.totalCost })" type="button" class="btn btn-default">Purchase</button>
 
