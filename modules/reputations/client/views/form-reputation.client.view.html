@@ -26,7 +26,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="from">From Wallet</label>
-          <input name="fromWallet" type="text" ng-model="vm.reputation.fromWallet" id="name" class="form-control" placeholder="fromWallet" required>
+          <input name="fromWallet" type="text" ng-model="vm.reputation.fromWallet" id="name" class="form-control" placeholder="fromWallet" required disabled>
           <div ng-messages="vm.form.reputationForm.fromWallet.$error" role="alert">
             <p class="help-block error-text" ng-message="required">From Wallet is required.</p>
           </div>

@@ -15,7 +15,9 @@ var path = require('path'),
  * Create a Reputation
  */
 exports.create = function(req, res) {
-  var reputation = new Reputation(req.body);
+  var reputation = new Reputation(req.body)
+  
+  reputation.fromWallet = req.user.publicKey
 
   EthService.createReputation(reputation)
     .on('transactionHash', (hash) => {

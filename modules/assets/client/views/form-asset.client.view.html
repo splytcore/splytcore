@@ -15,7 +15,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="title">Title</label>
-          <input name="title" type="text" ng-model="vm.asset.title" id="title" class="form-control" placeholder="Title" required>
+          <input name="title" type="text" ng-model="vm.asset.title" id="title" class="form-control" placeholder="Title" required ng-disabled="vm.asset._id">
           <div ng-messages="vm.form.assetForm.title.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset title is required.</p>
           </div>
@@ -24,7 +24,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="description">Description</label>
-          <input name="description" type="text" ng-model="vm.asset.description" id="description" class="form-control" placeholder="Description" required>
+          <input name="description" type="text" ng-model="vm.asset.description" id="description" class="form-control" placeholder="Description" ng-disabled="vm.asset._id" required>
           <div ng-messages="vm.form.assetForm.description.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset description is required.</p>
           </div>
@@ -32,7 +32,7 @@
 
        <div class="form-group" show-errors>
           <label class="control-label" for="description">Term</label>
-          <input name="term" type="text" ng-model="vm.asset.term" id="description" class="form-control" placeholder="Terms" required>
+          <input name="term" type="text" ng-model="vm.asset.term" id="description" class="form-control" placeholder="Terms" required ng-disabled="vm.asset._id">
           <div ng-messages="vm.form.assetForm.term.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset term is required.</p>
           </div>

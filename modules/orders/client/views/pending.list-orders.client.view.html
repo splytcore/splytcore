@@ -5,6 +5,7 @@
   <div class="list-group">
     <a ng-repeat="order in vm.orders"
         href="https://ropsten.etherscan.io/tx/{{order.transactionHash}}"
+        target="_blank"
        class="list-group-item">
       <h4 class="list-group-item-heading">
         OrderId: {{order._id}}  Asset Address: {{order.assetAddress}} </br> 
