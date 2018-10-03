@@ -58,28 +58,21 @@ exports.read = function(req, res, next) {
 
   console.log('gettign asset detail')
   // convert mongoose document to JSON
-  var tempAsset = req.asset ? req.asset.toJSON() : {};
-  let assetId = tempAsset._id
+  let asset = req.asset ? req.asset.toJSON() : {}
   // asset.isCurrentUserOwner = req.user && asset.user && asset.user._id.toString() === req.user._id.toString() 
 
-  EthService.getAssetInfoByAssetId(assetId)
+  EthService.getAssetInfoByAssetId(asset._id)
     .then((fields) => {
       console.log('successful get asset info')
       console.log(fields)
-      let asset = {
-          title: tempAsset.title, //this is from db
-          description: tempAsset.description, //this is from db
-          address : fields[0],
-          _id: fields[1].substr(2),
-          status : fields[2],
-          type : fields[3],          
-          term: fields[4],
-          inventoryCount: fields[5],
-          seller: fields[6],
-          totalCost: fields[7]
-      }
+      asset.address = fields[0]
+      asset.status = fields[2]
+      asset.type = fields[3]         
+      asset.term = fields[4]
+      asset.inventoryCount = fields[5]
+      asset.seller = fields[6]
+      asset.totalCost = fields[7]
       console.log(asset)
-      // res.jsonp(asset)  
       req.asset = asset
       next()
     })

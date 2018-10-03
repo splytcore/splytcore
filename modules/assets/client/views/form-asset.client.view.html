@@ -109,6 +109,12 @@
         </div>
 
 
+        <div class="form-group" ng-show="vm.asset._id">
+          <label class="control-label" for="asset">Transaction Hash</label> 
+          <a target="_blank" href="{{vm.etherscanURL + vm.asset.transactionHash}}"> {{vm.asset.transactionHash}} </a>
+        </div>
+
+
         <div class="form-group">
           <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>
 

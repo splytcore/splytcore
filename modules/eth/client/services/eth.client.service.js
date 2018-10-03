@@ -44,47 +44,48 @@
     vm.arbitrationManagerContract
     vm.reputationManagerContract
 
-    getAllABI()
-      .success((config) => {
-          console.log(config);
-          vm.splytManagerContract = vm.web3.eth.contract(config.splytManagerABI).at(config.splytManagerAddress)
-          vm.splytManagerContract.getManagerTrackerAddress((err, result) => {
-            console.log('ManagerTrackerAddress: ' + result)
-          })
+    //NOT USED. THIS IS ONLY FOR CLIENT SIDE USING METAMMASK EXECUTING THE CONTRACTS
+    // getAllABI()
+    //   .success((config) => {
+    //       console.log(config);
+    //       vm.splytManagerContract = vm.web3.eth.contract(config.splytManagerABI).at(config.splytManagerAddress)
+    //       vm.splytManagerContract.getManagerTrackerAddress((err, result) => {
+    //         console.log('ManagerTrackerAddress: ' + result)
+    //       })
 
-          vm.splytManagerContract.assetManager((err, address) => {
-            console.log('assetManager ' + address)
-            vm.assetManagerContract = vm.web3.eth.contract(config.assetManagerABI).at(address)      
-          })
+    //       vm.splytManagerContract.assetManager((err, address) => {
+    //         console.log('assetManager ' + address)
+    //         vm.assetManagerContract = vm.web3.eth.contract(config.assetManagerABI).at(address)      
+    //       })
 
-          vm.splytManagerContract.orderManager((err, address) => {
-            console.log('orderManager ' + address)
-            vm.orderManagerContract = vm.web3.eth.contract(config.orderManagerABI).at(address) 
-          })
+    //       vm.splytManagerContract.orderManager((err, address) => {
+    //         console.log('orderManager ' + address)
+    //         vm.orderManagerContract = vm.web3.eth.contract(config.orderManagerABI).at(address) 
+    //       })
 
-          vm.splytManagerContract.arbitrationManager((err, address) => {
-            console.log('arbitrationManager ' + address)
-            vm.arbitrationManagerContract = vm.web3.eth.contract(config.arbitrationManagerABI).at(address) 
-          })
+    //       vm.splytManagerContract.arbitrationManager((err, address) => {
+    //         console.log('arbitrationManager ' + address)
+    //         vm.arbitrationManagerContract = vm.web3.eth.contract(config.arbitrationManagerABI).at(address) 
+    //       })
 
-          vm.splytManagerContract.reputationManager((err, address) => {
-            console.log('reputationManager ' + address)
-            vm.reputationManagerContract = vm.web3.eth.contract(config.reputationManagerABI).at(address) 
-          })
+    //       vm.splytManagerContract.reputationManager((err, address) => {
+    //         console.log('reputationManager ' + address)
+    //         vm.reputationManagerContract = vm.web3.eth.contract(config.reputationManagerABI).at(address) 
+    //       })
 
-          vm.splytManagerContract.owner((err, result) => {
-            console.log('splytManagerContract owner ' + result)
-          })
+    //       vm.splytManagerContract.owner((err, result) => {
+    //         console.log('splytManagerContract owner ' + result)
+    //       })
 
           // vm.assetContract.setFulfilled.sendTransaction(vm.gas, (err, trxid) => {
           //   console.log('trxid: ' + trxid)
           // })
 
           // console.log(vm.splytManagerContract.methods.getManagerTrackerAddress().call())
-      })
-      .error((err) => {
-        console.log(err)
-      })
+      // })
+      // .error((err) => {
+      //   console.log(err)
+      // })
 
     vm.gas = {
       // from: vm.publicKey,

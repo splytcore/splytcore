@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', 'EthService',
-  function ($q, $scope, Authentication, EthService) {
+angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', 'EthService', '$cookies',
+  function ($q, $scope, Authentication, EthService, $cookies) {
     // This provides Authentication context.
     $scope.authentication = Authentication
     $scope.user = $scope.authentication.user
     EthService.getSplytServiceInfo()
       .success((result) => {
-        console.log(result)
         $scope.splyt = result
+        $cookies.etherscanURL = result.etherscanURL
       })
       .catch((err) => {
         console.log(err)
@@ -21,9 +21,11 @@ angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentica
           console.log(balances)
           $scope.user.etherBalance = balances.etherBalance
           $scope.user.tokenBalance = balances.tokenBalance    
+          $cookies.tokenBalance = balances.tokenBalance
+          $cookies.etherBalance = balances.etherBalance
 
-          if (parseInt(balances.etherBalance) < 1 ||  parseInt(balances.tokenBalance) < 1) {
-            alert('You do not have enough tokens or Ether to write to the blockchain!')
+          if (parseFloat(balances.etherBalance) < .10 ||  parseInt(balances.tokenBalance) < 1) {
+            alert('You do not have the minimium requirements of tokens or Ether to write to the blockchain!')
           }
 
         })

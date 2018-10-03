@@ -46,9 +46,9 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  var tmpArbitration = req.arbitration ? req.arbitration.toJSON() : {};
+  var arbitration = req.arbitration ? req.arbitration.toJSON() : {};
 
-  EthService.getArbitrationInfoByArbitrationId(tmpArbitration._id)
+  EthService.getArbitrationInfoByArbitrationId(arbitration._id)
      .then((fields) => {
       console.log('successful get arbitgration info')
       console.log(fields)
@@ -60,15 +60,13 @@ exports.read = function(req, res) {
             // 4 orders[_orderId].quantity,
             // 5 orders[_orderId].paidAmount,
             // 6 orders[_orderId].status);
-      res.jsonp({
-           _id: fields[0].substr(2),
-          reason: fields[1],
-          reporterWallet: fields[2],
-          winner: fields[3],
-          status: fields[4],
-          assetAddress: fields[5],
-          arbitratorWallet: fields[6]
-      })
+      arbitration.reason = fields[1]
+      arbitration.eporterWallet = fields[2]
+      arbitration.winner = fields[3]
+      arbitration.status = fields[4]
+      arbitration.assetAddress = fields[5]
+      arbitration.arbitratorWallet = fields[6]
+      res.jsonp(arbitration)
     })
     .catch((err) => {
       res.jsonp(err)  

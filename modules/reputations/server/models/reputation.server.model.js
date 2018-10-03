@@ -20,14 +20,32 @@ var ReputationSchema = new Schema({
     type: Number,
     default: 5,
   },
-  transactionHash: {
+  transactionHashes: [{
     type: String,
     default: ''
-  },  
+  }],  
   fromWallet: {
     type: String,
     default: ''
   },
+  rates: [{
+    rate: {
+      type: String,
+      default: ''
+    },
+    from: {
+      type: String,
+      default: ''
+    },
+    date: {
+      type: String,
+      default: ''
+    },
+    transactionHash: {
+      type: String,
+      default: ''
+    }    
+  }],    
   date: {
     type: Date,
     default: Date.now

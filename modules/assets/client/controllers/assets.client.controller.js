@@ -6,9 +6,9 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService'];
+  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService', '$cookies'];
 
-  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, MarketsService) {
+  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, MarketsService, $cookies) {
     var vm = this
     vm.save = save   
     vm.asset = asset
@@ -16,6 +16,10 @@
     vm.user = Authentication.user
 
     vm.addMarketPlace = addMarketPlace
+
+    console.log('etherscanurl ' + $cookies.etherscanURL)
+    
+    vm.etherscanURL = $cookies.etherscanURL
 
     if (!vm.asset._id) {
           vm.asset.seller = vm.user.publicKey
@@ -26,30 +30,6 @@
     }
 
     vm.marketPlaces = MarketsService.query()
-
-    // vm.getTokenBalance = EthService.getTokenBalance();
-
-
-    // console.log('buyer wallet: ' + vm.myWallets)
-    // vm.asset.seller = !vm.asset._id ? vm.myWallets[0] : 'not found';
-   
-    // if (vm.asset._id) {
-    //   EthService.getAddressByAssetId(vm.asset._id, (err, address) => {
-    //     console.log('returned address: ' + address)
-    //     asset.address = address 
-    //     console.log(vm.asset)
-    //     $scope.$apply()
-    //   })
-
-    //   EthService.getAssetInfo(vm.asset._id, (err, fields) => {
-    //     console.log('returned fields: ' + fields)
-    //     $scope.$apply()
-    //   })
-  
-    //   vm.assetStatus = EthService.getAssetStatus(vm.asset._id);
-    //   console.log('status fields: ' + vm.assetStatus)
-
-    // }
 
     function save(isValid) {
       if (!isValid) {
@@ -89,7 +69,7 @@
         .success((result) => {
           console.log(result)
           alert(result)
-          $window.location.reload();          
+          // $window.location.reload();          
         })
         .error((err) => {
           console.log(err)

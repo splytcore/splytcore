@@ -21,7 +21,7 @@ exports.create = function(req, res) {
 
   EthService.createReputation(reputation)
     .on('transactionHash', (hash) => {
-      reputation.transactionHash = hash
+      reputation.transactionHashes.push(hash)
       reputation.save(function(err) {
         if (err) {
           return res.status(400).send({
@@ -45,21 +45,19 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res, next) {
   // convert mongoose document to JSON
-  var tmpReputation = req.reputation;
-  console.log('temp reputation')
-  console.log(tmpReputation)
-  EthService.getReputationInfoByWallet(tmpReputation.wallet)
+  let reputation = req.reputation;
+
+  EthService.getReputationInfoByWallet(reputation.wallet)
      .then((fields) => {
       console.log('successful get reputation info')
       console.log(fields)
-      let rep = {
-          wallet: fields[0],
-          average: fields[1],
-          ratesCount: fields[2],
-          rates: []
-          }
+      // let rep = {
+      //     wallet: fields[0],
+      reputation.average = fields[1]
+      reputation.ratesCount = fields[2]
+      reputation.rates = []
       // res.jsonp(rep) 
-      req.reputation =  rep
+      req.reputation =  reputation
       next()
     })
     .catch((err) => {
@@ -173,9 +171,11 @@ exports.listPending = function(req, res) {
     } else {
       let pendingReputations = []
       async.each(reputations, (rep, callback) => {    
-        console.log('trxHash:' + rep.transactionHash)
-        if (rep.transactionHash) {
-          EthService.getTransaction(rep.transactionHash)
+        console.log('trxHash:' + rep.transactionHashes)
+        let length = rep.transactionHashes.length
+        console.log('length:' + length)
+        if (length > 0) {
+          EthService.getTransaction(rep.transactionHashes[length -1])
           .then((result) => {
             console.log('blockNunmber')
             console.log(result.blockNumber)

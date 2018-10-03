@@ -579,21 +579,22 @@ exports.addAccountByPrivateKey = function(privateKey, password) {
 exports.isAccountExist = function(account) {  
 
   console.log('lenght of accounts: ' + accounts.length)
-  accounts.forEach((a, index) => {
-    // console.log(account)
-    
-    // if (index > 200) {
-    //   console.log(a)
-    // }
-    if (a.toUpperCase().toString() === account.toUpperCase().toString()) {
-     
-      console.log('found ' + account)
-      console.log(index)
-      return true
-    } 
+
+  return new Promise((resolve, reject) => {
+    accounts.forEach((a, index) => {
+      if (a.toUpperCase().toString() === account.toUpperCase().toString()) {       
+        console.log('found ' + account)
+        console.log(index)
+        resolve(true)
+      } 
+      if (parseInt(index) === (parseInt(accounts.length) - 1 )) {
+        resolve(false)
+      }
+    })
+
   })
 
-  return false
+
 }
 
 
@@ -606,6 +607,7 @@ exports.getSplytServiceInfo = function() {
     assetManagerAddress: assetManagerAddress,
     orderManagerAddress: orderManagerAddress,
     arbitrationManagerAddress: arbitrationManagerAddress,
-    reputationManagerAddress: reputationManagerAddress
+    reputationManagerAddress: reputationManagerAddress,
+    etherscanURL: config.ethereum.etherscanURL    
   })
 }

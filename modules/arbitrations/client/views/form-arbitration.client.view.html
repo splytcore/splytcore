@@ -66,6 +66,12 @@
         </div>
 
 
+        <div class="form-group" ng-show="vm.arbitration._id">
+          <label class="control-label" for="trxHash">Transaction Hash</label> 
+          <a target="_blank" href="{{vm.etherscanURL + vm.arbitration.transactionHash}}"> {{vm.arbitration.transactionHash}}</a>
+        </div>
+
+
         <div class="form-group">
           <button ng-show="!vm.arbitration._id" type="submit" class="btn btn-default">{{vm.arbitration._id ? 'Update' : 'Create'}}</button>
         </div>

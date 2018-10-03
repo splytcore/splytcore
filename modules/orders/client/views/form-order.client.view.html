@@ -32,6 +32,12 @@
           <input name="status" type="text" ng-model="vm.order.status" id="status" class="form-control" placeholder="Status" disabled>
         </div>
 
+        <div class="form-group" ng-show="vm.order._id">
+          <label class="control-label" for="trxHash">Transaction Hash</label> 
+          <a target="_blank" href="{{vm.etherscanURL + vm.order.transactionHash}}"> {{vm.order.transactionHash}}</a>
+        </div>
+
+
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.order._id ? 'Request Refund' : 'Create'}}</button>
         </div>

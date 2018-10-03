@@ -6,9 +6,9 @@
     .module('reputations')
     .controller('ReputationsController', ReputationsController);
 
-  ReputationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reputationResolve', '$stateParams'];
+  ReputationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reputationResolve', '$stateParams', '$cookies'];
 
-  function ReputationsController ($scope, $state, $window, Authentication, reputation, $stateParams) {
+  function ReputationsController ($scope, $state, $window, Authentication, reputation, $stateParams, $cookies) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -20,6 +20,8 @@
     vm.remove = remove;
     vm.save = save;
 
+    vm.etherscanURL = $cookies.etherscanURL
+    
     console.log(reputation)
     if (!vm.reputation.wallet) {
       vm.reputation.fromWallet = vm.user.publicKey

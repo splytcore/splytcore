@@ -20,12 +20,14 @@ exports.getAll = function(req, res) {
   
   let splytManagerAddress = config.ethereum.splytManagerAddress
 
-  res.jsonp({ splytManagerABI: splytManagerABI, 
+  res.jsonp({ 
+          splytManagerABI: splytManagerABI, 
   			  assetManagerABI: assetManagerABI,
   			  orderManagerABI: orderManagerABI,
   			  arbitrationManagerABI: arbitrationManagerABI,
           reputationManagerABI: reputationManagerABI,          
-  			  splytManagerAddress: splytManagerAddress })
+  			  splytManagerAddress: splytManagerAddress
+          })
 }
 
 exports.getDefaultWallets = function(req, res) {
@@ -124,7 +126,15 @@ exports.isAccountExist = function(req, res) {
 
   let account = req.query.account
   console.log('checking if account exist: ' + account)
-  res.jsonp(EthService.isAccountExist(account))
+  
+  EthService.isAccountExist(account)
+    .then((result) => {
+      res.jsonp(result)
+    })  
+    .catch((err) => {
+      res.status(400).send(err)
+    }
+  )
  
 }
 

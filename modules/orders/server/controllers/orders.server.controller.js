@@ -47,13 +47,13 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  var tmpOrder = req.order ? req.order.toJSON() : {};
+  let order = req.order ? req.order.toJSON() : {};
 
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   // order.isCurrentUserOwner = req.user && order.user && order.user._id.toString() === req.user._id.toString();
 
-  EthService.getOrderInfoByOrderId(tmpOrder._id)
+  EthService.getOrderInfoByOrderId(order._id)
      .then((fields) => {
       console.log('successful get order info')
       console.log(fields)
@@ -65,16 +65,13 @@ exports.read = function(req, res) {
             // 4 orders[_orderId].quantity,
             // 5 orders[_orderId].paidAmount,
             // 6 orders[_orderId].status);
-      let order = {
-        version: fields[0],
-        _id: fields[1].substr(2),
-        assetAddress: fields[2],
-        buyerWallet: fields[3],
-        quantity: fields[4],
-        trxAmount: fields[5],
-        status: fields[6]
-      }
-
+      order.version = fields[0]
+      // _id: fields[1].substr(2),
+      order.assetAddress = fields[2]
+      order.buyerWallet = fields[3]
+      order.quantity = fields[4]
+      order.trxAmount = fields[5]
+      order.status = fields[6]
       res.jsonp(order)  
     })
     .catch((err) => {

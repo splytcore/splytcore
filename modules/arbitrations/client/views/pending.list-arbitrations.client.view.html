@@ -5,7 +5,7 @@
 
   <div class="list-group">
     <a ng-repeat="arbitration in vm.arbitrations"
-       href="https://ropsten.etherscan.io/tx/{{arbitration.transactionHash}}"
+       href="{{vm.etherscanURL + arbitration.transactionHash}}"
        target="_blank"
        class="list-group-item">
     <h4 class="list-group-item-heading">ID: {{arbitration._id}} Asset Address: {{arbitration.assetAddress}} </br>

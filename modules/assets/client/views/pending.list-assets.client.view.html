@@ -6,7 +6,7 @@
 
     <div class="list-group">
       <a ng-repeat="asset in vm.assets"
-         href="https://ropsten.etherscan.io/tx/{{asset.transactionHash}}"
+         href="{{vm.etherscanURL + asset.transactionHash}}"
          target="_blank"
          class="list-group-item">
         <h4 class="list-group-item-heading">

@@ -6,9 +6,9 @@
     .module('arbitrations')
     .controller('ArbitrationsController', ArbitrationsController);
 
-  ArbitrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arbitrationResolve', '$stateParams', 'EthService', 'ArbitraitionsManagerService'];
+  ArbitrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arbitrationResolve', '$stateParams', 'EthService', 'ArbitraitionsManagerService', '$cookies'];
 
-  function ArbitrationsController ($scope, $state, $window, Authentication, arbitration, $stateParams, EthService, ArbitraitionsManagerService) {
+  function ArbitrationsController ($scope, $state, $window, Authentication, arbitration, $stateParams, EthService, ArbitraitionsManagerService, $cookies) {
     
     console.log($stateParams)
 
@@ -28,7 +28,7 @@
     vm.set2xStakeBySeller = set2xStakeBySeller
     vm.setWinner = setWinner
 
-
+    vm.etherscanURL = $cookies.etherscanURL
 
     if (!arbitration._id) {
         arbitration.reporterWallet = vm.user.publicKey

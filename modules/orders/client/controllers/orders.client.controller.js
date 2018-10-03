@@ -6,9 +6,9 @@
     .module('orders')
     .controller('OrdersController', OrdersController);
 
-  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService'];
+  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies'];
 
-  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService) {
+  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies) {
     var vm = this;
     console.log($stateParams)
     vm.user = Authentication.user;
@@ -17,6 +17,9 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+
+    vm.etherscanURL = $cookies.etherscanURL
+    
 
     if (!vm.order._id) {
         order.buyerWallet = vm.user.publicKey
