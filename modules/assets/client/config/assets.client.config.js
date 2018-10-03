@@ -30,6 +30,7 @@
 
     Menus.addSubMenuItem('topbar', 'assets', {
       title: 'List My Assets',
+      roles: ['user'],
       state: 'assets.listMyAssets'
     });
 

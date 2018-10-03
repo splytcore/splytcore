@@ -59,6 +59,7 @@
         controller: 'AssetsListController',
         controllerAs: 'vm',
         data: {
+          roles: ['user', 'admin'],
           pageTitle: 'assets List'
         }
       }) 

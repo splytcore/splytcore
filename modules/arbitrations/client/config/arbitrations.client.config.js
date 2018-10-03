@@ -24,6 +24,7 @@
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'arbitrations', {
       title: 'List My Arbitrations',
+      roles: ['user'],
       state: 'arbitrations.listMyArbitrations'
     })
 

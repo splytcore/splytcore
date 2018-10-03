@@ -24,6 +24,7 @@
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'orders', {
       title: 'List My Orders',
+      roles: ['user'],
       state: 'orders.listMyOrders'
     })
 

@@ -24,6 +24,7 @@
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'reputations', {
       title: 'List My Reputations',
+      roles: ['user'],
       state: 'reputations.listMyReputations'
     })
 
