@@ -32,6 +32,8 @@ let masterWallet  = config.ethereum.masterWallet
 const splytManagerAddress = config.ethereum.splytManagerAddress
 console.log('splytManagerAddress: ' + splytManagerAddress)
 
+let accounts //all accounts in this geth/parity client
+
 let assetManagerAddress;
 let orderManagerAddress;
 let reputationManagerAddress;
@@ -47,12 +49,13 @@ let reputationManager;
 let arbitrationManager;
 let satToken
 
+
 const wallet = config.ethereum.wallet
 const walletPassword = config.ethereum.password
 
-const gas = {
+const defaultGas = {
   from: masterWallet,
-  gasPrice: web3.utils.toHex(3000000),   //maximum price per gas
+  gasPrice: web3.utils.toHex(300000),   //maximum price per gas
   gas: web3.utils.toHex(4700000) //max number of gas to be used  
 }
 
@@ -68,8 +71,10 @@ web3.eth.net.isListening()
     console.log('current block: ' + blockNumber)   
     return web3.eth.getAccounts()
 })
-.then((accounts) => {
+.then((res_accounts) => {
+  accounts = res_accounts
   console.log(accounts)
+
   splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
   return 
 }).then(() => {
@@ -164,55 +169,21 @@ exports.unlockAccount = function(account, pw) {
 
 
 //TODO: use for testnet network like ropsten or rinky
-exports.signTrx = function(account, privateKey, encoded) {
-  web3.eth.getTransactionCount(account, function (err, nonce) {
-    console.log("nonce: " + nonce)
-    let rawTrx = {
-      to: assetManagerAddress,
-    // value": web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-    // "chainId": 3
-      nonce: nonce,
-      data: encoded,
-      from: account,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used  
-    }
+exports.signTrx = function(to, from, privateKey, encodedABI) {
 
-    web3.eth.accounts.signTransaction(rawTrx, privateKey)
-    .then((signedTrx) => {
-      web3.eth.sendSignedTransaction(signedTrx.rawTransaction)
-    })
-    .then((receipt) => {
-      console.log("Transaction receipt: ", receipt)
-    })
-    .catch((err) => {
-      console.error(err)
-    })    
-  })
+  let trx = {
+    to: to,
+    from: from,
+    gasPrice: defaultGas.gasPrice,
+    gas: defaultGas.gas,
+    data: encodedABI
+  }
+  
+  let signedTrx = web3.eth.accounts.signTransaction(trx, privateKey)
+  return web3.eth.sendSignedTransaction(signedTrx.rawTransaction)
+
 }
 
-// exports.getAssetAmountById = function(assetId) {
-
-//   return new Promise((resolve, reject) => {      
-//     exports.getassetContractById(assetId)
-//       .then((address) => {
-//         resolve(address)
-//       })
-//   })
-//   .then((address) => {
-//     return new web3.eth.Contract(assetABI, address)     
-//   })
-//   .then((asset) => {    
-//     asset.id.call((err,result) => {
-//       console.log('asset id: ' + result)
-//     })
-//     return asset.methods.getAmount().call({ from: gas.from })
-//   })
-//   .catch((err) => {
-//     console.log(err)
-//   })
-
-// }
 
 exports.getSplytManagerABI = function() {
   // return assetManager.methods.getassetsLength().call({ from: gas.from })
@@ -253,8 +224,8 @@ exports.createAsset = function(asset) {
 
   let trx = {
       from: asset.seller,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
 
@@ -288,8 +259,8 @@ exports.purchase = function(order) {
 
   let trx = {
       from: order.buyerWallet,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
   let orderIdHex = prepend0x(order._id.toString())
@@ -311,8 +282,8 @@ exports.createArbitration = function(arbitration) {
 
   let trx = {
       from: arbitration.reporterWallet,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
   let idHex = prepend0x(arbitration._id.toString())
@@ -337,8 +308,8 @@ exports.setArbitrator = function(arbitrationId, arbitrator) {
 
   let trx = {
       from: masterWallet,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
   let idHex = prepend0x(arbitrationId.toString())
@@ -357,8 +328,8 @@ exports.set2xStakeByReporter = function(arbitrationId, reporter) {
 
   let trx = {
       from: reporter,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
   let idHex = prepend0x(arbitrationId.toString())
@@ -375,8 +346,8 @@ exports.set2xStakeBySeller = function(arbitrationId, seller) {
 
   let trx = {
       from: seller,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gasPrice //max number of gas to be used      
   }
 
   let idHex = prepend0x(arbitrationId.toString())
@@ -393,8 +364,8 @@ exports.setWinner = function(arbitrationId, arbitrator, winner) {
 
   let trx = {
       from: arbitrator,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gasPrice //max number of gas to be used      
   }
 
   let idHex = prepend0x(arbitrationId.toString())
@@ -415,8 +386,8 @@ exports.createReputation = function(reputation) {
 
   let trx = {
       from: reputation.fromWallet,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
 
@@ -435,8 +406,8 @@ exports.addMarketPlace = function(assetId, marketPlace, wallet) {
 
   let trx = {
       from: wallet,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
 
@@ -477,8 +448,8 @@ exports.initUser = function(account) {
   
   let trx = {
       from: masterWallet,
-      gasPrice: web3.utils.toHex(300000),   //maximum price per gas
-      gas: web3.utils.toHex(4700000) //max number of gas to be used      
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
   return satToken.methods.initUser(account).send(trx)
@@ -588,6 +559,43 @@ exports.getEtherBalance = function(wallet) {
 exports.lockWallet = function() {  
   return web3.eth.personal.lockAccount(wallet)
 }
+
+exports.addAccountByPrivateKey = function(privateKey, password) {  
+  
+  return new Promise((resolve, reject) => {
+
+    let account  = web3.eth.accounts.privateKeyToAccount(prepend0x(privateKey))
+    console.log('account: ' + account.address)
+  
+    let result2 = web3.eth.accounts.wallet.add(account, password)
+    console.log('add wallet result')
+    console.log(result2)
+
+  })
+
+}
+
+
+exports.isAccountExist = function(account) {  
+
+  console.log('lenght of accounts: ' + accounts.length)
+  accounts.forEach((a, index) => {
+    // console.log(account)
+    
+    // if (index > 200) {
+    //   console.log(a)
+    // }
+    if (a.toUpperCase().toString() === account.toUpperCase().toString()) {
+     
+      console.log('found ' + account)
+      console.log(index)
+      return true
+    } 
+  })
+
+  return false
+}
+
 
 
 exports.getSplytServiceInfo = function() {  

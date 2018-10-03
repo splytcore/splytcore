@@ -23,4 +23,15 @@ module.exports = function(app) {
   app.route('/api/eth/getSplytServiceInfo')
     .get(eth.getSplytServiceInfo)
 
+  app.route('/api/eth/createNewAccount')
+    .post(eth.createNewAccount)
+
+
+  //FOR DEV PURPOSE ONLY
+  app.route('/api/eth/addAccountByPrivateKey')
+    .get(eth.addAccountByPrivateKey)
+  //FOR DEV PURPOSE ONLY
+  app.route('/api/eth/isAccountExist')
+    .get(eth.isAccountExist)
+
 }

@@ -1,9 +1,24 @@
 'use strict';
 
-angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-  function ($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication', 'EthService',
+  function ($scope, $http, $location, Users, Authentication, EthService) {
     $scope.user = Authentication.user;
       
+
+    // Update a user profile
+    $scope.createNewWallet = function () {
+      EthService.createNewWallet($scope.user.walletPassword)
+        .success((result) => {
+          console.log(result)
+          $scope.user.publicKey = result.publicKey
+          $scope.success = true;
+        })
+        .error((err) => {
+          console.log(err)
+        })
+
+    }
+
     // Update a user profile
     $scope.updateUserProfile = function (isValid) {
       $scope.success = $scope.error = null;

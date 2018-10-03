@@ -94,3 +94,56 @@ exports.addMarketPlace = function(req, res) {
   )
  
 }
+
+exports.createNewAccount = function(req, res) {
+  
+  console.log(req.body)
+  let walletPassword = req.body.walletPassword
+  console.log(walletPassword)
+  let user = req.user
+  user.walletPassword = walletPassword
+
+  EthService.createAccount2(walletPassword)
+    .then((wallet) => {
+      console.log('account')
+      console.log(wallet)
+      user.publicKey = wallet
+      user.save((err) => {
+        res.jsonp({ publicKey: wallet })
+      })
+    })  
+    .catch((err) => {
+      res.status(400).send(err)
+    }
+  )
+
+}
+
+
+exports.isAccountExist = function(req, res) {
+
+  let account = req.query.account
+  console.log('checking if account exist: ' + account)
+  res.jsonp(EthService.isAccountExist(account))
+ 
+}
+
+
+exports.addAccountByPrivateKey = function(req, res) {
+
+  let privateKey = req.query.privateKey
+  let password = req.query.password
+
+  console.log(privateKey)
+  console.log(password)
+
+  EthService.addAccountByPrivateKey(privateKey, password)
+    .then((result)  => {
+      res.jsonp(result)
+    }) 
+    .catch((err) => {
+      res.jsonp(err)
+    }
+  )
+ 
+}

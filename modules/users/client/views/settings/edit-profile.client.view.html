@@ -18,7 +18,7 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label for="publicKey">Public Key(wallet)</label>
+          <label for="publicKey">Public Key(wallet we generated ONLY!)</label>
           <input type="text" id="publicKey" name="publicKey" class="form-control" ng-model="user.publicKey" placeholder="Public Key" required>
           <div ng-messages="userForm.publicKey.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Public Key is required.</p>
@@ -29,6 +29,7 @@
           <label for="publicKey">Wallet Password(DEV PURPOSES)</label> </br>
           *Does not update wallet password! Only update if you change wallets
           <input type="text" id="walletPassword" name="walletPassword" class="form-control" ng-model="user.walletPassword" placeholder="walletPassword" dsiable>
+          <button type="button" ng-click="createNewWallet()" class="btn btn-default">Create New Wallet</button>
           <div ng-messages="userForm.walletPassword.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Wallet Password is required.</p>
           </div>

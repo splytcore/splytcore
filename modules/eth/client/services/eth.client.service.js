@@ -30,6 +30,7 @@
  
     vm.getUserBalances = getUserBalances;
     vm.addMarketPlace = addMarketPlace;
+    vm.createNewWallet = createNewWallet;
 
 
     vm.web3 = new Web3($window.web3.currentProvider);
@@ -89,6 +90,10 @@
       // from: vm.publicKey,
       gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
       gas: vm.web3.toHex(4600000) //max number of gas to be used  
+    }
+
+    function createNewWallet(walletPassword) {    
+      return $http.post('/api/eth/createNewAccount', { walletPassword: walletPassword })
     }
 
     function getAddressByAssetId(assetId, done) {
@@ -239,6 +244,7 @@
       })
 
     }
+
 
     function createRate(wallet, rating) { 
       vm.reputationManagerContract.createRate.sendTransaction(wallet, rating, vm.gas, (err, trxid) => {
