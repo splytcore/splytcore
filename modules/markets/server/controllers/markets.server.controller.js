@@ -3,12 +3,13 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  mongoose = require('mongoose'),
-  Market = mongoose.model('Market'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
-
+const path = require('path')
+const mongoose = require('mongoose')
+const Market = mongoose.model('Market')
+const async = require('async')
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const  _ = require('lodash')
+const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
 /**
  * Create a Market
  */
@@ -38,8 +39,16 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   market.isCurrentUserOwner = req.user && market.user && market.user._id.toString() === req.user._id.toString();
 
-  res.jsonp(market);
-};
+  EthService.getTokenBalance(market.wallet)
+    .then((tokenBalance) => {
+      market.tokenBalance = tokenBalance
+      res.jsonp(market);
+    })
+    .catch((err) => {
+      return res.status(400).send({ message: err.toString() })
+
+    })
+}
 
 /**
  * Update a Market
@@ -81,16 +90,38 @@ exports.delete = function(req, res) {
  * List of Markets
  */
 exports.list = function(req, res) {
-  Market.find().sort('-created').populate('user', 'displayName').exec(function(err, markets) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(markets);
-    }
-  });
-};
+ 
+  async.waterfall([
+    function getMarkets (next) {             
+      Market.find().sort('-created').populate('user', 'displayName').exec(function(err, markets) {
+        next(err, markets)
+      })
+    },    
+    function bindTokenBalance(markets, next) {
+      async.each(markets, (market, callback) => {  
+        EthService.getTokenBalance(market.wallet)
+          .then((tokenBalance) => {
+            market.tokenBalance = tokenBalance
+            console.log('token balance: ' + tokenBalance)
+            callback()
+          })
+          .catch((err) => {
+            callback(err)
+          }
+        )
+      }, (err) => {
+        next(err, markets)     
+      })
+    }    
+  ], (err, markets) => {
+    if (err) {      
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) })
+    }      
+    res.jsonp(markets)  
+  })  
+
+
+}
 
 /**
  * Market middleware

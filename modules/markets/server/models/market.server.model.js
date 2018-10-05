@@ -22,6 +22,9 @@ var MarketSchema = new Schema({
     required: 'Please fill Wallet',
     trim: true
   },  
+  tokenBalance: {
+    type: Number
+  },    
   created: {
     type: Date,
     default: Date.now
