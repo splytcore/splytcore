@@ -55,7 +55,7 @@ const walletPassword = config.ethereum.password
 
 const defaultGas = {
   from: masterWallet,
-  gasPrice: web3.utils.toHex(300000),   //maximum price per gas
+  gasPrice: web3.utils.toWei('1', 'gwei'),   //maximum price per gas
   gas: web3.utils.toHex(4700000) //max number of gas to be used  
 }
 

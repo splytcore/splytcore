@@ -33,14 +33,14 @@ exports.create = function(req, res) {
         }
       })
     })    
-    // .on('confirmation', function(confirmationNumber, receipt){
-    //     console.log('confirmation: ' + confirmationNumber)
-    //     console.log('receipt: ' + receipt)
-    // })
-    // .on('receipt', function(receipt) {
-    //   console.log('only receipt: ')
-    //   console.log(receipt)
-    // })
+    .on('confirmation', function(confirmationNumber, receipt){
+      console.log('confirmation: ' + confirmationNumber)
+      console.log('receipt: ' + receipt)
+    })
+    .on('receipt', function(receipt) {
+      console.log('only receipt: ')
+      console.log(receipt)
+    })
     .on('error', function (err) {
       console.log('error creating asset contract')
       console.log(err.toString())
@@ -202,7 +202,7 @@ exports.getAllAssetsFromContract = function(req, res, next) {
         console.log('index:' + index)
         EthService.getAssetInfoByIndex(index)
         .then((fields) => {
-          console.log(fields)
+          // console.log(fields)
           // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
           assets.push({
               assetAddress: fields[0],
@@ -273,11 +273,9 @@ exports.listPending = function(req, res) {
         if (asset.transactionHash) {
           EthService.getTransaction(asset.transactionHash)
           .then((result) => {
-            console.log('blockNunmber')
-            console.log(result.blockNumber)
             // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
-            let blockNumber = result.blockNumber ? parseInt(result.blockNumber) : 0
-            if (blockNumber === 0) {
+            let blockNumber = result && result.blockNumber ? parseInt(result.blockNumber) : 0
+            if (blockNumber === 0 || !result) {
               pendingAssets.push(asset)
             }
             callback()
@@ -307,6 +305,28 @@ exports.listAllMined = function(req, res) {
 
   res.jsonp(req.assets)
  
+}
+
+exports.bindTitleAndDescription = function(req, res, next) {
+
+  let assets = req.assets
+  async.each(assets, (asset, callback) => {
+    Asset.findById(asset._id)
+      .exec(function (err,  a) {
+        asset.title = a.title
+        asset.description = a.description
+        callback(err)
+      })
+
+  }, (err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    req.assets = assets 
+    next()
+  }) 
 }
 
 exports.listMyAssets = function(req, res) {

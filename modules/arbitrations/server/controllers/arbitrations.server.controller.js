@@ -287,7 +287,6 @@ exports.listAllMined = function(req, res) {
         callback(err)
       })  
     }, (err) => {
-      console.log('theres an error')
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)

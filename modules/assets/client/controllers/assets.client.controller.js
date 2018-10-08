@@ -49,7 +49,8 @@
       }
 
       function successCallback(asset) {  
-        $state.go('assets.listPending')              
+        // $state.go('assets.listPending')
+        alert(asset.transactionHash)              
           //EthService.createAsset(asset); //if you want to use metamask. Currently using backend to interact with contracts
       }
 
