@@ -270,7 +270,7 @@ exports.purchase = function(order) {
   return orderManager.methods.purchase(
     orderIdHex, 
     order.assetAddress, 
-    order.quantity, 
+    parseInt(order.quantity), 
     order.trxAmount
     ).send(trx)
   

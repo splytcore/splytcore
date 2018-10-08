@@ -18,7 +18,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Quantity</label>
-          <input name="quantity" type="text" ng-model="vm.order.quantity" id="quantity" class="form-control" placeholder="quantity" ng-disabled="vm.order._id">
+          <input name="quantity" type="text" ng-change="vm.updateTrxAmount()" ng-model="vm.order.quantity" id="quantity" class="form-control" placeholder="quantity" ng-disabled="vm.order._id">
         </div>
 
 

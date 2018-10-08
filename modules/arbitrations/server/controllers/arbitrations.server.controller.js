@@ -78,9 +78,7 @@ exports.read = function(req, res) {
  * Update a Arbitration
  */
 exports.update = function(req, res) {
-  console.log('updating arbitration')
-  console.log(req.query)
-  console.log(req.params)
+
   var arbitration = req.arbitration;
 
   arbitration = _.extend(arbitration, req.body);
@@ -380,7 +378,6 @@ exports.ListMyArbitrations = function(req, res) {
  */
 exports.arbitrationByID = function(req, res, next, id) {
 
-  console.log('this being called')
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({

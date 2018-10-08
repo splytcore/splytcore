@@ -18,17 +18,24 @@
     vm.remove = remove;
     vm.save = save;
 
+    vm.updateTrxAmount = updateTrxAmount;
+
     vm.etherscanURL = $cookies.etherscanURL
     
 
     if (!vm.order._id) {
-        order.buyerWallet = vm.user.publicKey
-        order.assetAddress = $stateParams.assetAddress
-        order.trxAmount = $stateParams.trxAmount   
-        order.quantity = 1
-        order.status = 0
+        vm.order.buyerWallet = vm.user.publicKey
+        vm.order.assetAddress = $stateParams.assetAddress
+        vm.order.trxAmount = $stateParams.trxAmount   
+        vm.order.quantity = 1
+        vm.order.status = 0
     }
 
+
+    // Remove existing Order
+    function updateTrxAmount() {
+      vm.order.trxAmount = $stateParams.trxAmount * vm.order.quantity
+    }
 
     // Remove existing Order
     function remove() {

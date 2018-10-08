@@ -153,10 +153,10 @@ exports.listPending = function(req, res) {
         if (order.transactionHash) {
           EthService.getTransaction(order.transactionHash)
           .then((result) => {
-            console.log('blockNunmber')
-            console.log(result.blockNumber)
-            // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
-            let blockNumber = result.blockNumber ? parseInt(result.blockNumber) : 0
+            // console.log('blockNunmber')
+            // console.log(result.blockNumber)
+            // // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
+            let blockNumber = result && result.blockNumber ? parseInt(result.blockNumber) : 0
             if (blockNumber === 0) {
               pendingOrders.push(order)
             }
