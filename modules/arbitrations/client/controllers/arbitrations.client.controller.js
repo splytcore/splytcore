@@ -77,6 +77,7 @@
     }
 
     function set2xStakeBySeller() {
+      console.log('this being called?')
       ArbitraitionsManagerService.set2xStakeBySeller(vm.arbitration._id)
         .success((result) => {
           alert(result)

@@ -2,6 +2,7 @@
 
 const Web3 = require('web3')
 const path = require('path')
+const async = require('async')
 const config = require(path.resolve('./config/config'))
 const host = config.ethereum.url
 const web3 = new Web3(new Web3.providers.HttpProvider(host))
@@ -55,8 +56,8 @@ const walletPassword = config.ethereum.password
 
 const defaultGas = {
   from: masterWallet,
-  gasPrice: web3.utils.toWei('1', 'gwei'),   //maximum price per gas
-  gas: web3.utils.toHex(4700000) //max number of gas to be used  
+  gasPrice: 2000000,   //maximum price per gas
+  gas: 4700000 //max number of gas to be used  
 }
 
 //check if connect to geth node
@@ -69,6 +70,7 @@ web3.eth.net.isListening()
 .then((blockNumber) => {  
     console.log('version: ' + web3.version)
     console.log('current block: ' + blockNumber)   
+    setGasPrice(blockNumber)
     return web3.eth.getAccounts()
 })
 .then((res_accounts) => {
@@ -228,6 +230,8 @@ exports.createAsset = function(asset) {
       gas: defaultGas.gas //max number of gas to be used      
   }
 
+  console.log('trx for gas')
+  console.log(trx)
 
   return assetManager.methods.createAsset(
     prepend0x(asset._id), 
@@ -610,4 +614,50 @@ exports.getSplytServiceInfo = function() {
     reputationManagerAddress: reputationManagerAddress,
     etherscanURL: config.ethereum.etherscanURL    
   })
+}
+
+//TODO: call this interval to update gas price
+function setGasPrice(blockNumber) {
+  
+  console.log('setting gas price from block number: ' + blockNumber)
+  let gasPrices = 0
+  let lastBlockAvg
+
+  let getBlock = new Promise((resolve, reject) => {
+      web3.eth.getBlock(blockNumber, (err, resBlock) => {
+        if(err) {
+          reject(err)
+        } else {
+          resolve(resBlock)
+        }
+      })
+  })
+  
+  getBlock
+    .then((block) => {
+      let length = parseInt(block.transactions.length)
+
+      async.times(length, (index, callback) => {    
+        console.log('index:' + index)
+        web3.eth.getTransaction(block.transactions[index], function(err, transaction) {
+          console.log(transaction.gasPrice)
+          gasPrices += parseInt(transaction.gasPrice)
+          callback(err)
+        })
+      }, (err) => {
+        if (err) {
+          console.log('error calculte gasPrice ')
+          console.log(err)
+        } else {
+          lastBlockAvg = parseInt(gasPrices / length)
+          defaultGas.gasPrice = lastBlockAvg < 20000000000 ? 20000000000 : lastBlockAvg   
+          console.log('finished calculate gasPrice: ' + defaultGas.gasPrice)     
+          console.log(defaultGas)
+        }      
+      })    
+    })
+    .catch((err) => {
+       console.log('error calculte gasPrice 2')
+    })
+
 }
