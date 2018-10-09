@@ -370,7 +370,7 @@ exports.setWinner = function(arbitrationId, arbitrator, winner) {
   let trx = {
       from: arbitrator,
       gasPrice: defaultGas.gasPrice,   //maximum price per gas
-      gas: defaultGas.gasPrice //max number of gas to be used      
+      gas: defaultGas.gas //max number of gas to be used      
   }
 
   let idHex = prepend0x(arbitrationId.toString())
