@@ -45,6 +45,16 @@ exports.getSplytServiceInfo = function(req, res) {
 }
 
 exports.unlockAccount = function(req, res, next) {
+
+  console.log('environment')
+  console.log(process.env.NODE_ENV)
+  console.log(config.env)
+
+  //no need to unlock if using local test rpc
+  if (config.env) {
+    return next()
+  }
+
   let user = req.user
   EthService.unlockAccount(user.publicKey, user.walletPassword)
     .then(() => {

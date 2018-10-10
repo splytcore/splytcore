@@ -45,6 +45,7 @@
         })
         .error((err) => {
           console.log(err)
+          vm.error = err.message          
         })
 
     }

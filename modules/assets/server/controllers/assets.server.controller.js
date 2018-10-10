@@ -33,17 +33,19 @@ exports.create = function(req, res) {
         }
       })
     })    
-    .on('confirmation', function(confirmationNumber, receipt){
-      console.log('confirmation: ' + confirmationNumber)
-      console.log('receipt: ' + receipt)
-    })
+    // .on('confirmation', function(confirmationNumber, receipt){
+    //   console.log('confirmation: ' + confirmationNumber)
+    //   console.log('receipt: ' + receipt)
+    // })
     .on('receipt', function(receipt) {
+      //after it's mined
       console.log('only receipt: ')
       console.log(receipt)
     })
     .on('error', function (err) {
       console.log('error creating asset contract')
       console.log(err.toString())
+      return res.status(400).send({ message : err.toString() });
     }
   )
 

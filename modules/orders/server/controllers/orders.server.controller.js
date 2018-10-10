@@ -37,6 +37,7 @@ exports.create = function(req, res) {
     .on('error', (err) => {
       console.log('error creating order')
       console.log(err)
+      return res.status(400).send({ message : err.toString() })      
     }
   )
 
@@ -58,6 +59,7 @@ exports.requestRefund = function(req, res) {
     .on('error', (err) => {
       console.log('error requesting refund')
       console.log(err)
+      return res.status(400).send({ message : err.toString() })      
     }
   )
 
@@ -79,6 +81,7 @@ exports.approveRefund = function(req, res) {
     .on('error', (err) => {
       console.log('error requesting refund')
       console.log(err)
+      return res.status(400).send({ message : err.toString() })      
     }
   )
 

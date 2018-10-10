@@ -35,6 +35,7 @@ exports.create = function(req, res) {
     .on('error', (err) => {
       console.log('error creating reputation')
       console.log(err)
+      return res.status(400).send({ message : err.toString() })      
     }
   )
 
@@ -178,9 +179,9 @@ exports.listPending = function(req, res) {
           EthService.getTransaction(rep.transactionHashes[length -1])
           .then((result) => {
             console.log('blockNunmber')
-            console.log(result.blockNumber)
+            console.log(result)
             // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
-            let blockNumber = result.blockNumber ? parseInt(result.blockNumber) : 0
+            let blockNumber = result && result.blockNumber ? parseInt(result.blockNumber) : 0
             if (blockNumber === 0) {
               pendingReputations.push(rep)
             }

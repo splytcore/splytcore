@@ -50,7 +50,7 @@
           console.log('success update')
         })
         .error((err) => {
-          console.log(err)
+          vm.error = err.message
         })
     }
 
@@ -62,6 +62,7 @@
         })
         .error((err) => {
           console.log(err)
+          vm.error = err.message
         })
     }
 
@@ -85,6 +86,7 @@
         })
         .error((err) => {
           console.log(err)
+          vm.error = err.message
         })
     }
 

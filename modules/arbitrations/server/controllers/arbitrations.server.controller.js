@@ -36,6 +36,7 @@ exports.create = function(req, res) {
     .on('error', (err) => {
       console.log('error creating arbitration contract')
       console.log(err)
+      return res.status(400).send({ message : err.toString() })      
     }
   )
 
@@ -105,8 +106,9 @@ exports.setArbitrator = function(req, res) {
       res.jsonp(hash);
     }) 
     .on('error', (err) => {
-      console.log('error creating arbitration contract')
+      console.log('error setting arbitrator')
       console.log(err)
+      return res.status(400).send({ message : err.toString() })
     }
   )
 }
@@ -123,6 +125,7 @@ exports.set2xStakeByReporter = function(req, res) {
     }) 
     .on('error', (err) => {
       console.log(err)
+      return res.status(400).send({ message : err.toString() })      
     }
   )
 
@@ -140,6 +143,7 @@ exports.set2xStakeBySeller = function(req, res) {
     }) 
     .on('error', (err) => {
       console.log(err)
+      return res.status(400).send({ message : err.toString() })      
     }
   )
 
@@ -158,6 +162,7 @@ exports.setWinner = function(req, res) {
     }) 
     .on('error', (err) => {
       console.log(err)
+      return res.status(400).send({ message : err.toString() })      
     }
   )
 
@@ -218,10 +223,10 @@ exports.listPending = function(req, res) {
         if (arbitration.transactionHash) {
           EthService.getTransaction(arbitration.transactionHash)
           .then((result) => {
-            console.log('blockNunmber')
-            console.log(result.blockNumber)
+            // console.log('blockNunmber')
+            // console.log(result.blockNumber)
             // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
-            let blockNumber = result.blockNumber ? parseInt(result.blockNumber) : 0
+            let blockNumber = result && result.blockNumber ? parseInt(result.blockNumber) : 0
             if (blockNumber === 0) {
               pendingArbitrations.push(arbitration)
             }
