@@ -48,7 +48,7 @@
         <div class="form-group" ng-show="!vm.asset._id" show-errors>
           <label class="control-label" for="marketPlaces">Market Place</label>          
           <select class="form-control" name="marketPlaces" ng-model="vm.selectedMarketPlace">            
-           <option ng-repeat="m in vm.marketPlaces track by $index" value="{{m.wallet}}">
+           <option ng-repeat="m in vm.marketPlaces track by $index" value="{{m.wallet}}" ng-selected="!vm.asset._id && $index == 0 ? true : false">
               {{m.name}} -> {{m.wallet}}            
             </option>          
           </select>

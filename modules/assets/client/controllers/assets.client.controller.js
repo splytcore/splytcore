@@ -27,6 +27,7 @@
           vm.asset.status = 0 
           vm.asset.inventoryCount = 1
           vm.asset.term = 0
+          vm.asset.totalCost = 10000
     }
 
     vm.marketPlaces = MarketsService.query()
