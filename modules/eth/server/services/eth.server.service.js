@@ -404,6 +404,37 @@ exports.createReputation = function(reputation) {
 }
 
 
+exports.requestRefund = function(orderId, buyer) {
+
+  let trx = {
+      from: buyer,
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
+  }
+
+
+  return orderManager.methods.requestRefund(
+    prepend0x(orderId) 
+    ).send(trx)
+  
+}
+
+
+exports.approveRefund = function(orderId, seller) {
+
+  let trx = {
+      from: seller,
+      gasPrice: defaultGas.gasPrice,   //maximum price per gas
+      gas: defaultGas.gas //max number of gas to be used      
+  }
+
+
+  return orderManager.methods.approveRefund(
+    prepend0x(orderId) 
+    ).send(trx)
+  
+}
+
 exports.addMarketPlace = function(assetId, marketPlace, wallet) {
 
   console.log("assetId: " + assetId)  

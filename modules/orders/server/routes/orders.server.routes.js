@@ -14,6 +14,13 @@ module.exports = function(app) {
     .get(orders.list)
     .post(Eth.unlockAccount, orders.create);
 
+  app.route('/api/orders/:orderId/requestRefund')
+    .post(orders.requestRefund)
+
+  app.route('/api/orders/:orderId/approveRefund')
+    .post(orders.approveRefund)
+
+
   app.route('/api/orders/:orderId')
     .get(orders.read)
     .put(orders.update)

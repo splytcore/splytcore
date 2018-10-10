@@ -31,7 +31,9 @@
     vm.getUserBalances = getUserBalances;
     vm.addMarketPlace = addMarketPlace;
     vm.createNewWallet = createNewWallet;
-
+    vm.requestRefund = requestRefund;
+    
+    vm.approveRefund = approveRefund;
 
     vm.web3 = new Web3($window.web3.currentProvider);
     
@@ -217,6 +219,14 @@
 
     function getSplytServiceInfo() {
       return $http.get('/api/eth/getSplytServiceInfo');
+    }
+
+    function requestRefund(orderId) {
+      return $http.post('/api/orders/' + orderId + '/requestRefund');
+    }
+
+    function approveRefund(orderId) {
+      return $http.post('/api/orders/' + orderId + '/approveRefund');
     }
 
 

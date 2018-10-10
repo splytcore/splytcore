@@ -22,6 +22,8 @@
 
     vm.etherscanURL = $cookies.etherscanURL
     
+    vm.requestRefund = requestRefund
+    vm.approveRefund = approveRefund
 
     if (!vm.order._id) {
         vm.order.buyerWallet = vm.user.publicKey
@@ -31,6 +33,36 @@
         vm.order.status = 0
     }
 
+
+
+    function requestRefund() {
+
+      EthService.requestRefund(vm.order._id)
+        .success((result) => {
+          console.log(result)
+          alert(result)
+          // $window.location.reload();          
+        })
+        .error((err) => {
+          console.log(err)
+        })
+
+    }
+
+
+    function approveRefund() {
+
+      EthService.approveRefund(vm.order._id)
+        .success((result) => {
+          console.log(result)
+          alert(result)
+          // $window.location.reload();          
+        })
+        .error((err) => {
+          console.log(err)
+        })
+
+    }
 
     // Remove existing Order
     function updateTrxAmount() {

@@ -42,6 +42,48 @@ exports.create = function(req, res) {
 
 }
 
+
+exports.requestRefund = function(req, res) {
+
+  console.log('requesting refund')
+
+  let order = req.order
+  let user = req.user
+
+  EthService.requestRefund(order._id, user.publicKey)
+    .on('transactionHash', (hash) => {
+      // order.transactionHash = hash
+      res.jsonp(hash);
+    }) 
+    .on('error', (err) => {
+      console.log('error requesting refund')
+      console.log(err)
+    }
+  )
+
+}
+
+
+exports.approveRefund = function(req, res) {
+
+  console.log('requesting refund')
+
+  let order = req.order
+  let user = req.user
+
+  EthService.approveRefund(order._id, user.publicKey)
+    .on('transactionHash', (hash) => {
+      // order.transactionHash = hash
+      res.jsonp(hash);
+    }) 
+    .on('error', (err) => {
+      console.log('error requesting refund')
+      console.log(err)
+    }
+  )
+
+}
+
 /**
  * Show the current Order
  */
