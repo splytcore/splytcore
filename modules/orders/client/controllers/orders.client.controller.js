@@ -84,6 +84,11 @@
         return false;
       }
 
+      if (parseInt($stateParams.status) != 1) {
+        alert('Asset must be in status 1 to purchase')
+        return false
+      }
+
       // TODO: move create/update logic to service
       if (vm.order._id) {
         vm.order.$update(successCallback, errorCallback);

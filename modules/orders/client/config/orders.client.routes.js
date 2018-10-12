@@ -42,7 +42,7 @@
         }
       })
       .state('orders.create', {
-        url: '/create/:assetAddress/:title/:trxAmount',
+        url: '/create/:assetAddress/:title/:trxAmount/:status',
         templateUrl: 'modules/orders/client/views/form-order.client.view.html',
         controller: 'OrdersController',
         controllerAs: 'vm',

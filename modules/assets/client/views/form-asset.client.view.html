@@ -44,11 +44,11 @@
           <input name="assetType" type="text" ng-model="vm.asset.type" id="assetType" class="form-control" placeholder="AssetType" disabled="">
         </div>
 
-        
-        <div class="form-group" ng-show="!vm.asset._id" show-errors>
+        <div class="form-group" ng-show="!vm.asset._id" show-errors>        
+
           <label class="control-label" for="marketPlaces">Market Place</label>          
           <select class="form-control" name="marketPlaces" ng-model="vm.selectedMarketPlace">            
-           <option ng-repeat="m in vm.marketPlaces track by $index" value="{{m.wallet}}" ng-selected="!vm.asset._id && $index == 0 ? true : false">
+           <option ng-repeat="m in vm.marketPlaces track by $index" value="{{m.wallet}}">
               {{m.name}} -> {{m.wallet}}            
             </option>          
           </select>
@@ -118,7 +118,7 @@
         <div class="form-group">
           <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>
 
-          <button ng-show="vm.asset._id"  ui-sref="orders.create({ assetAddress: vm.asset.address, title: vm.asset.title, trxAmount: vm.asset.totalCost })" type="button" class="btn btn-default">Purchase</button>
+          <button ng-show="vm.asset._id"  ui-sref="orders.create({ assetAddress: vm.asset.address, title: vm.asset.title, trxAmount: vm.asset.totalCost, status: vm.asset.status })" type="button" class="btn btn-default">Purchase</button>
 
           <button ng-show="vm.asset._id"  ui-sref="arbitrations.create({ assetAddress: vm.asset.address, title: vm.asset.title })" type="button" class="btn btn-default">Initial Arbitration</button>
 

@@ -20,6 +20,11 @@
     console.log('etherscanurl ' + $cookies.etherscanURL)
     
     vm.etherscanURL = $cookies.etherscanURL
+    
+    MarketsService.query((result) => {
+      vm.marketPlaces = result
+      vm.selectedMarketPlace = vm.asset._id ? '' : vm.marketPlaces[0].wallet
+    })
 
     if (!vm.asset._id) {
           vm.asset.seller = vm.user.publicKey
@@ -28,15 +33,27 @@
           vm.asset.inventoryCount = 1
           vm.asset.term = 0
           vm.asset.totalCost = 10000
+
     }
 
-    vm.marketPlaces = MarketsService.query()
+
 
     function save(isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.assetForm');
         return false;
       }
+
+      //check if user has minimum requirements for ether and tokens
+      console.log($cookies.etherBalance)
+      console.log($cookies.tokenBalance)
+
+      if (parseFloat($cookies.etherBalance) < .01 || parseInt($cookies.tokenBalance) < 1000) {
+        alert('you do not have enough ethers or tokens')
+        return false
+      }
+
+
       console.log(vm.asset)
       // TODO: move create/update logic to service
       vm.asset.marketPlaces = [vm.selectedMarketPlace]
