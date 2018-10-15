@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', 'EthService', '$cookies',
-  function ($q, $scope, Authentication, EthService, $cookies) {
+angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', 'EthService', '$cookies', '$rootScope',
+  function ($q, $scope, Authentication, EthService, $cookies, $rootScope) {
     // This provides Authentication context.
     $scope.authentication = Authentication
     $scope.user = $scope.authentication.user
@@ -21,6 +21,7 @@ angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentica
           console.log(balances)
           $scope.user.etherBalance = balances.etherBalance
           $scope.user.tokenBalance = balances.tokenBalance    
+          
           $cookies.tokenBalance = balances.tokenBalance
           $cookies.etherBalance = balances.etherBalance
 

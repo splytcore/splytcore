@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus', '$cookies',
-  function ($scope, $state, Authentication, Menus, $cookies) {
+angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus', '$cookies', '$rootScope',
+  function ($scope, $state, Authentication, Menus, $cookies, $rootScope) {
     // Expose view variables
     $scope.$state = $state;
     $scope.authentication = Authentication;
 
-    $scope.etherBalance = $cookies.etherBalance
-    $scope.tokenBalance = $cookies.tokenBalance
+    $rootScope.etherBalance = $cookies.etherBalance
+    $rootScope.tokenBalance = $cookies.tokenBalance
 
     // Get the topbar menu
     $scope.menu = Menus.getMenu('topbar');

@@ -1,9 +1,14 @@
 'use strict';
 
-angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication', 'EthService',
-  function ($scope, $http, $location, Users, Authentication, EthService) {
+angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication', 'EthService', '$rootScope',
+  function ($scope, $http, $location, Users, Authentication, EthService, $rootScope) {
     $scope.user = Authentication.user;
-      
+    
+    console.log('ether balance: ')
+    console.log($scope.user.etherBalance)
+
+    $rootScope.etherBalance = $scope.user.etherBalance
+    $rootScope.tokenBalance = $scope.user.tokenBalance
 
     // Update a user profile
     $scope.createNewWallet = function () {
@@ -30,6 +35,8 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
       }
 
       var user = new Users($scope.user);
+
+
 
       user.$update(function (response) {
         $scope.$broadcast('show-errors-reset', 'userForm');
