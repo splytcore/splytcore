@@ -10,18 +10,18 @@ const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.co
 
 module.exports = function(app) {
   // Orders Routes
-  app.route('/api/orders')
+  app.route('/api/orders').all(ordersPolicy.isAllowed)
     .get(orders.list)
     .post(Eth.unlockAccount, orders.create);
 
-  app.route('/api/orders/:orderId/requestRefund')
+  app.route('/api/orders/:orderId/requestRefund').all(ordersPolicy.isAllowed)
     .post(orders.requestRefund)
 
-  app.route('/api/orders/:orderId/approveRefund')
+  app.route('/api/orders/:orderId/approveRefund').all(ordersPolicy.isAllowed)
     .post(orders.approveRefund)
 
 
-  app.route('/api/orders/:orderId')
+  app.route('/api/orders/:orderId').all(ordersPolicy.isAllowed)
     .get(orders.read)
     .put(orders.update)
     .delete(orders.delete);

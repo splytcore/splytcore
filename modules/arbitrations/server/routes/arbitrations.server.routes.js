@@ -14,16 +14,16 @@ module.exports = function(app) {
     .get(arbitrations.list)
     .post(Eth.unlockAccount, arbitrations.create);
 
-  app.route('/api/arbitrations/:arbitrationId/setArbitrator')
+  app.route('/api/arbitrations/:arbitrationId/setArbitrator').all(arbitrationsPolicy.isAllowed)
     .post(Eth.unlockAccount, arbitrations.setArbitrator)
 
-  app.route('/api/arbitrations/:arbitrationId/set2xStakeByReporter')
+  app.route('/api/arbitrations/:arbitrationId/set2xStakeByReporter').all(arbitrationsPolicy.isAllowed)
     .post(Eth.unlockAccount, arbitrations.set2xStakeByReporter)
 
-  app.route('/api/arbitrations/:arbitrationId/set2xStakeBySeller')
+  app.route('/api/arbitrations/:arbitrationId/set2xStakeBySeller').all(arbitrationsPolicy.isAllowed)
     .post(Eth.unlockAccount, arbitrations.set2xStakeBySeller)
 
-  app.route('/api/arbitrations/:arbitrationId/setWinner')
+  app.route('/api/arbitrations/:arbitrationId/setWinner').all(arbitrationsPolicy.isAllowed)
     .post(Eth.unlockAccount, arbitrations.setWinner)
 
   app.route('/api/arbitrations/:arbitrationId').all(arbitrationsPolicy.isAllowed)
