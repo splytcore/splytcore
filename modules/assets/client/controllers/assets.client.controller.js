@@ -23,7 +23,7 @@
     
     MarketsService.query((result) => {
       vm.marketPlaces = result
-      vm.selectedMarketPlace = vm.asset._id ? '' : vm.marketPlaces[0].wallet
+      vm.selectedMarketPlace = vm.asset._id && result.length > 0 ? '' : vm.marketPlaces[0].wallet
     })
 
     if (!vm.asset._id) {
