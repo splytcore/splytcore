@@ -98,7 +98,6 @@ exports.list = function(req, res) {
     },    
     function bindTokenBalance(markets, next) {
       async.each(markets, (market, callback) => {  
-        console.log('market wallet: ' + market.wallet)
         if (market.wallet) {
           EthService.getTokenBalance(market.wallet)
             .then((tokenBalance) => {
@@ -107,7 +106,7 @@ exports.list = function(req, res) {
               callback()
             })
             .catch((err) => {
-              console.log(err)
+              console.log(err) //no need to exit loop
               callback()
             })
         } else {

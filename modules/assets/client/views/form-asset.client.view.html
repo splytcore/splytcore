@@ -115,21 +115,24 @@
         </div>
 
 
-        <div class="form-group">
-          <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>
-
-          <button ng-show="vm.asset._id"  ui-sref="orders.create({ assetAddress: vm.asset.address, title: vm.asset.title, trxAmount: vm.asset.totalCost, status: vm.asset.status })" type="button" class="btn btn-default">Purchase</button>
-
-          <button ng-show="vm.asset._id"  ui-sref="arbitrations.create({ assetAddress: vm.asset.address, title: vm.asset.title })" type="button" class="btn btn-default">Initial Arbitration</button>
-
-          <button ng-show="vm.asset._id"  ui-sref="reputations.create({ wallet: vm.asset.seller, title: vm.asset.title })" type="button" class="btn btn-default">Rate Seller</button>
-
-          <button ng-show="vm.asset._id"  ui-sref="reputations.create({ wallet: vm.asset.address, title: vm.asset.title })" type="button" class="btn btn-default">Rate Asset</button>          
-                   
-        </div>
+        <div class="form-group" ng-show="vm.asset._id">
+          {{vm.selectedAction}}
+          <label class="control-label" for="action">Choose Action</label>          
+          <select class="form-control" name="marketPlaces" ng-model="vm.selectedAction">            
+           <option ng-repeat="a in vm.actions" value="{{a.id}}">
+              {{a.name}}            
+            </option>          
+          </select>
+          <button type="button" ng-click="vm.applyAction()" ng-show="vm.asset._id" class="btn btn-default"> Go </button>
+      </div>
+     
+      <div class="form-group">
+        <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>                          
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>
         </div>
+      </div>
+      
       </fieldset>
     </form>
   </div>

@@ -16,11 +16,22 @@
     vm.user = Authentication.user
 
     vm.addMarketPlace = addMarketPlace
+    vm.applyAction = applyAction
 
     console.log('etherscanurl ' + $cookies.etherscanURL)
     
     vm.etherscanURL = $cookies.etherscanURL
     
+    vm.actions = [ 
+      // { id: 1,name: 'Add Market Place'},
+      { id: 2,name: 'Buy'},
+      { id: 3,name: 'Start Arbitration'},
+      { id: 4,name: 'Rate Buyer'},
+      { id: 5,name: 'Rate Seller'}
+    ]
+
+    vm.selectedAction = 1
+
     MarketsService.query((result) => {
       vm.marketPlaces = result
       vm.selectedMarketPlace = vm.asset._id && result.length > 0 ? '' : vm.marketPlaces[0].wallet
@@ -95,6 +106,27 @@
           vm.error = err.message
         })
 
+
+    }   
+
+
+    function applyAction() {
+      console.log(vm.selectedAction)
+      switch(parseInt(vm.selectedAction)) {
+          case 2:
+              $state.go('orders.create', { assetAddress: vm.asset.address, title: vm.asset.title, trxAmount: vm.asset.totalCost, status: vm.asset.status })              
+              break;
+          case 3:
+              $state.go('arbitrations.create', { assetAddress: vm.asset.address, title: vm.asset.title })
+              break;
+          case 4:
+              $state.go('reputations.create', { wallet: vm.asset.seller, title: vm.asset.title })
+              break;          
+          case 5:
+              $state.go('reputations.create', { wallet: vm.asset.address, title: vm.asset.title })
+              break;              
+          default:
+      }      
 
     }   
 
