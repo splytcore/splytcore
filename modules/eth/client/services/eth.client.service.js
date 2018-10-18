@@ -37,8 +37,8 @@
 
     vm.web3 = new Web3($window.web3.currentProvider);
     
-    console.log('is connected: ' + vm.web3.isConnected())
-    console.log('web3 accounts: ' + vm.web3.eth.accounts)
+    // console.log('is connected: ' + vm.web3.isConnected())
+    // console.log('web3 accounts: ' + vm.web3.eth.accounts)
     
     vm.splytManagerContract
     vm.orderManagerContract
