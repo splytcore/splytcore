@@ -17,6 +17,7 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.applyAction = applyAction;
 
     vm.updateTrxAmount = updateTrxAmount;
 
@@ -24,6 +25,13 @@
     
     vm.requestRefund = requestRefund
     vm.approveRefund = approveRefund
+    vm.applyAction = applyAction
+
+    //TODO: save actions in config file
+    vm.actions = [ 
+      { id: 1,name: 'Request Refund(You must be the buyer)'},
+      { id: 2,name: 'Approve Refund(You must be seller)'}
+    ]
 
     if (!vm.order._id) {
         vm.order.buyerWallet = vm.user.publicKey
@@ -32,7 +40,6 @@
         vm.order.quantity = 1
         vm.order.status = 0
     }
-
 
 
     function requestRefund() {
@@ -104,5 +111,22 @@
         vm.error = res.data.message
       }
     }
+    
+    function applyAction() {
+      console.log(vm.selectedAction)
+      switch(parseInt(vm.selectedAction)) {
+          case 1:
+              requestRefund()              
+              break;
+          case 2:
+              approveRefund()              
+              break;        
+          default:
+              alert('NOT VALID SELECTION')
+              break;
+      }      
+
+    }   
+
   }
 }());
