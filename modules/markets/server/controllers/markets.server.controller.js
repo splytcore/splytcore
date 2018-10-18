@@ -46,7 +46,6 @@ exports.read = function(req, res) {
     })
     .catch((err) => {
       return res.status(400).send({ message: err.toString() })
-
     })
 }
 
@@ -99,16 +98,21 @@ exports.list = function(req, res) {
     },    
     function bindTokenBalance(markets, next) {
       async.each(markets, (market, callback) => {  
-        EthService.getTokenBalance(market.wallet)
-          .then((tokenBalance) => {
-            market.tokenBalance = tokenBalance
-            console.log('token balance: ' + tokenBalance)
-            callback()
-          })
-          .catch((err) => {
-            callback(err)
-          }
-        )
+        console.log('market wallet: ' + market.wallet)
+        if (market.wallet) {
+          EthService.getTokenBalance(market.wallet)
+            .then((tokenBalance) => {
+              market.tokenBalance = tokenBalance
+              console.log('token balance: ' + tokenBalance)
+              callback()
+            })
+            .catch((err) => {
+              console.log(err)
+              callback()
+            })
+        } else {
+          callback()
+        }
       }, (err) => {
         next(err, markets)     
       })

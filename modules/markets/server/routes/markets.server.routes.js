@@ -8,7 +8,7 @@ var marketsPolicy = require('../policies/markets.server.policy'),
 
 module.exports = function(app) {
   // Markets Routes
-  app.route('/api/markets').all(marketsPolicy.isAllowed)
+  app.route('/api/markets')
     .get(markets.list)
     .post(markets.create);
 
