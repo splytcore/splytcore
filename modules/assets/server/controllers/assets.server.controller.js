@@ -315,8 +315,9 @@ exports.bindTitleAndDescription = function(req, res, next) {
   async.each(assets, (asset, callback) => {
     Asset.findById(asset._id)
       .exec(function (err,  a) {
-        asset.title = a.title
-        asset.description = a.description
+        
+        asset.title =  a ? a.title : 'NOT_FOUND_IN_DB'
+        asset.description = a ? a.description : 'NOT_FOUND_IN_DB'
         callback(err)
       })
 
