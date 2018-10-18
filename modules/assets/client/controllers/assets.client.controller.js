@@ -22,6 +22,7 @@
     
     vm.etherscanURL = $cookies.etherscanURL
     
+    //TODO: save it default config file
     vm.actions = [ 
       // { id: 1,name: 'Add Market Place'},
       { id: 2,name: 'Buy'},

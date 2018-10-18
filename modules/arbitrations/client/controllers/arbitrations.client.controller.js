@@ -23,12 +23,23 @@
     vm.remove = remove;
     vm.save = save;
 
+    vm.applyAction = applyAction
     vm.setArbitrator = setArbitrator
     vm.set2xStakeByReporter = set2xStakeByReporter
     vm.set2xStakeBySeller = set2xStakeBySeller
     vm.setWinner = setWinner
 
+
     vm.etherscanURL = $cookies.etherscanURL
+
+    //TODO: save actions in config file
+    vm.actions = [ 
+      { id: 1,name: 'Set2x Stake By Seller(You must be the seller)'},
+      { id: 2,name: 'Set2x Stake by Reporter(You must be original reporter)'},
+      { id: 3,name: 'Set Arbitrator as yourself'},
+      { id: 4,name: 'Set Winner'}
+    ]
+
 
     if (!arbitration._id) {
         arbitration.reporterWallet = vm.user.publicKey
@@ -113,5 +124,33 @@
         vm.error = res.data.message;
       }
     }
+
+
+      // { id: 2,name: 'Set2x Stake By Seller(You must be the seller)'},
+      // { id: 3,name: 'Set2x Stake by Reporter(You must be original reporter)'},
+      // { id: 4,name: 'Set Arbitrator as yourself'},
+      // { id: 5,name: 'Set Winner'}
+
+    function applyAction() {
+      console.log(vm.selectedAction)
+      switch(parseInt(vm.selectedAction)) {
+          case 1:
+              set2xStakeBySeller()              
+              break;
+          case 2:
+              set2xStakeByReporter()              
+              break;
+          case 3:
+              setArbitrator()              
+              break;
+          case 4:
+              setWinner()              
+              break;          
+          default:
+              alert('NOT VALID SELECTION')
+              break;
+      }      
+
+    }       
   }
 }());
