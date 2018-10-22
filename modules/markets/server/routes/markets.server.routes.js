@@ -3,8 +3,8 @@
 /**
  * Module dependencies
  */
-var marketsPolicy = require('../policies/markets.server.policy'),
-  markets = require('../controllers/markets.server.controller');
+const marketsPolicy = require('../policies/markets.server.policy')
+const markets = require('../controllers/markets.server.controller')
 
 module.exports = function(app) {
   // Markets Routes
@@ -15,8 +15,8 @@ module.exports = function(app) {
   app.route('/api/markets/:marketId').all(marketsPolicy.isAllowed)
     .get(markets.read)
     .put(markets.update)
-    .delete(markets.delete);
+    .delete(markets.delete)
 
   // Finish by binding the Market middleware
-  app.param('marketId', markets.marketByID);
+  app.param('marketId', markets.marketByID)
 };
