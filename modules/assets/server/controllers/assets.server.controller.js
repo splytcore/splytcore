@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  mongoose = require('mongoose'),
-  async = require('async'),
-  Asset = mongoose.model('Asset'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),
-  _ = require('lodash');
+const path = require('path')
+const mongoose = require('mongoose')
+const async = require('async')
+const Asset = mongoose.model('Asset')
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
+const  _ = require('lodash')
 
 /**
  * Create a asset
