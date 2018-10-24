@@ -6,9 +6,9 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService', '$cookies'];
+  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService', '$cookies', '$filter'];
 
-  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, MarketsService, $cookies) {
+  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, MarketsService, $cookies, $filter) {
     var vm = this
     vm.save = save   
     vm.asset = asset
@@ -30,7 +30,7 @@
       { id: 4,name: 'Rate Buyer'},
       { id: 5,name: 'Rate Seller'}
     ]
-
+    
     vm.selectedAction = 1
 
     MarketsService.query((result) => {
@@ -46,8 +46,12 @@
           vm.asset.term = 0
           vm.asset.totalCost = 10000
 
-    }
+    } else {
+      // vm.actions = $filter('filter')(vm.actions, filterByStatus)
+      // vm.actions = $filter('filter')(vm.actions, { id: [2,3] })
+      vm.actions = $filter('AssetActionsFilter')(vm.actions, vm.asset.status)
 
+    }
 
 
     function save(isValid) {
