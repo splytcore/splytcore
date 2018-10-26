@@ -45,7 +45,9 @@
         arbitration.reporterWallet = vm.user.publicKey
         arbitration.reason = 0
         arbitration.assetAddress = $stateParams.assetAddress
-  }
+    } else {
+      vm.actions = $filter('ArbitrationActionsFilter')(vm.actions, vm.arbitration.status)
+    }
     // Remove existing Arbitration
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
