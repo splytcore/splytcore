@@ -6,9 +6,9 @@
     .module('arbitrations')
     .controller('ArbitrationsController', ArbitrationsController);
 
-  ArbitrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arbitrationResolve', '$stateParams', 'EthService', 'ArbitraitionsManagerService', '$cookies'];
+  ArbitrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arbitrationResolve', '$stateParams', 'EthService', 'ArbitraitionsManagerService', '$cookies', '$filter'];
 
-  function ArbitrationsController ($scope, $state, $window, Authentication, arbitration, $stateParams, EthService, ArbitraitionsManagerService, $cookies) {
+  function ArbitrationsController ($scope, $state, $window, Authentication, arbitration, $stateParams, EthService, ArbitraitionsManagerService, $cookies, $filter) {
     
     console.log($stateParams)
 
@@ -51,7 +51,7 @@
     // Remove existing Arbitration
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
-        vm.arbitration.$remove($state.go('arbitrations.list'));
+        vm.arbitration.$remove($state.go('arbitrations.list'))
       }
     }
 
