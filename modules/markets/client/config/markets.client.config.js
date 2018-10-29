@@ -13,7 +13,7 @@
       title: 'Markets',
       state: 'markets',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['user', 'seller', 'admin']
     });
 
     // Add the dropdown list item

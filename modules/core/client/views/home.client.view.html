@@ -1,7 +1,7 @@
 <section ng-controller="HomeController">
   <div class="jumbotron text-center">
     <p>
-      <h1>SplytcoreUI DEV TOOL</h1>
+      <h1>Welcome to Splyt!</h1>
     </p>
   </div>
 
@@ -22,7 +22,7 @@
 
   	</ul>
 
-  	<ul class="list-group">
+  	<ul class="list-group" ng-show="user">
   		<li class="list-group-item active">My Balances</li>  		
   		<li class="list-group-item">My Wallet: {{user.publicKey}}</li>
   		<li class="list-group-item">My Token Balance: {{ user.tokenBalance }}</li>

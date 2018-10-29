@@ -13,7 +13,7 @@
       title: 'Assets',
       state: 'assets',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['user', 'seller', 'admin']
     });
 
 
