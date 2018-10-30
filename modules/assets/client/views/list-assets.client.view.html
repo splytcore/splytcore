@@ -4,15 +4,28 @@
   </div>
   
   <div class="list-group">
+    
     <a ng-repeat="asset in vm.assets"
        ui-sref="assets.edit({ assetId: asset._id })"
        class="list-group-item">
-      
-      <h4 class="list-group-item-heading">
+ 
+      <div class="list-group-item-heading">
+
+        <img ng-src="modules/assets/client/img/asset.jpeg" class="asset-picture-thumbnail">
+   
+        <div>
+          <h4>{{ asset.title }}</h4>       
+          <strong>{{ asset.description }}</strong> <br/>
+          <span>{{ asset.totalCost }}</span>
+        </div>
+      </div>
+<!--       <h4 class="list-group-item-heading">
        <img ng-src="modules/assets/client/img/asset.jpeg" class="asset-picture-thumbnail">
       {{asset}}
       </h4>
+ -->    
     </a>
+
   </div>
 
   <div class="alert alert-warning text-center" ng-if="vm.assets.$resolved && !vm.assets.length">
