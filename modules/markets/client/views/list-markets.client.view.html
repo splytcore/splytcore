@@ -6,16 +6,23 @@
     <a ng-repeat="market in vm.markets"
        ui-sref="markets.edit({ marketId: market._id })"
        class="list-group-item">
+
+        <h4>{{market.name}}</h4>       
+        <strong>Marketplace Wallet: {{ market.wallet }}</strong> <br/>
+        <span>Sat Balance: {{ market.tokenBalance }} </span>
+    
+
+<!-- 
       <small class="list-group-item-text">
         Posted on
         <span ng-bind="market.created | date:'mediumDate'"></span>
         by
         <span ng-if="market.user" ng-bind="market.user.displayName"></span>
         <span ng-if="!market.user">Deleted User</span>
-      </small>
+      </small> -->
 
-      {{ market }}
-      <h4 class="list-group-item-heading"> {{market.name }} =>  {{ market.wallet }}  ==> {{market.tokenBalance}} tokens</h4>
+      <!-- {{ market }} -->
+      <!-- <h4 class="list-group-item-heading"> {{market.name }} =>  {{ market.wallet }}  ==> {{market.tokenBalance}} tokens</h4> -->
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="vm.markets.$resolved && !vm.markets.length">

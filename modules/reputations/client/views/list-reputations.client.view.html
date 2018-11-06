@@ -6,7 +6,11 @@
     <a ng-repeat="reputation in vm.reputations"
        ui-sref="reputations.edit({ reputationId: reputation.wallet })"
        class="list-group-item">
-      <h4 class="list-group-item-heading">{{ reputation }}</h4>
+     
+        <h4>Address: {{reputation.wallet}}</h4>       
+        <span>Average: {{ reputation.average }} </span> <br/>
+        <span>Number of Reviews: {{ reputation.ratesCount }} </span>
+  
     </a>
   </div>
 

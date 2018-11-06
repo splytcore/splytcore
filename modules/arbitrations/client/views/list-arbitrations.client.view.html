@@ -7,7 +7,15 @@
     <a ng-repeat="arbitration in vm.arbitrations"
        ui-sref="arbitrations.edit({ arbitrationId: arbitration._id })"
        class="list-group-item">
-    <h4 class="list-group-item-heading"> {{arbitration}}</h4>       
+
+
+        <h4>Arbitration Id: {{arbitration._id}}</h4>       
+        <strong>Asset Address: {{ arbitration.assetAddress }}</strong> <br/>
+        <span>Reporter: {{ arbitration.reporter }} </span>
+        <span>Status: {{ arbitration.reporter }} </span>
+    
+
+    <!-- <h4 class="list-group-item-heading"> {{arbitration}}</h4>        -->
     </a>
   </div>
 </section>
