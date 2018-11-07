@@ -38,10 +38,10 @@ a:hover .header-profile-image {
 
 
 .footer {
-  background: #317194;
-    position: fixed;
+    background: #317194;
+    padding-top: 5px;
+    padding-bottom: 5px;
     left: 0;
-    bottom: 0;
     width: 100%;
     color: white;
     text-align: center;
