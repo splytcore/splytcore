@@ -3,20 +3,21 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash'),
-  defaultAssets = require('./config/assets/default'),
-  testAssets = require('./config/assets/test'),
-  gulp = require('gulp'),
-  gulpLoadPlugins = require('gulp-load-plugins'),
-  runSequence = require('run-sequence'),
-  plugins = gulpLoadPlugins({
+const _ = require('lodash')
+const defaultAssets = require('./config/assets/default')
+const testAssets = require('./config/assets/test')
+const gulp = require('gulp')
+const async = require('async')
+const gulpLoadPlugins = require('gulp-load-plugins')
+const runSequence = require('run-sequence')
+const plugins = gulpLoadPlugins({
     rename: {
       'gulp-angular-templatecache': 'templateCache'
     }
-  }),
-  path = require('path'),
-  endOfLine = require('os').EOL,
-  uglify = require('gulp-uglify-es').default;
+  })
+const path = require('path')
+const endOfLine = require('os').EOL
+const uglify = require('gulp-uglify-es').default;
 
 // Set NODE_ENV to 'test'
 gulp.task('env:test', function () {
@@ -207,6 +208,56 @@ gulp.task('dropdb', function (done) {
     db.connection.db.close(done)
   });
 });
+
+
+// drops all collection except users
+gulp.task('dropcollections', function (done) {
+  // Use mongoose configuration
+  var mongoose = require('./config/lib/mongoose.js');
+
+  async.waterfall([
+    function(cb) {
+      mongoose.connect(function (db) {
+        cb(null, db)
+      })
+    },
+    function(db, cb) {
+      console.log('dropping assets')
+      db.connection.db.dropCollection('assets', (err) => {
+        cb(null,db)
+      })        
+    },
+    function(db, cb) {
+      console.log('dropping orders')
+      db.connection.db.dropCollection('orders', (err) => {
+        cb(null,db)
+      })    
+    },
+    function(db, cb) {
+      console.log('dropping arbitrations')
+     db.connection.db.dropCollection('arbitrations', (err) => {
+        cb(null, db)
+      })
+    },
+    function(db, cb) {
+      console.log('dropping reputations')
+      db.connection.db.dropCollection('reputations', (err) => {
+        cb(null,db)
+      })
+    },
+    function(db, cb) {
+      console.log('dropping analytics')
+      db.connection.db.dropCollection('analytics', (err) => {
+        cb(null,db)
+      })
+    }
+  ], function (err, db) {
+    console.log(err)
+    db.connection.db.close(done);
+  })
+
+
+})
 
 // Lint project files and minify them into two production files.
 gulp.task('build', function (done) {
