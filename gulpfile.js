@@ -55,6 +55,9 @@ gulp.task('watch', function () {
   gulp.watch(defaultAssets.client.js, ['jshint']).on('change', plugins.livereload.changed);
   gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed);
 
+  gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed);
+  gulp.watch(defaultAssets.client.less, ['less', 'csslint']).on('change', plugins.livereload.changed);  
+
   if (process.env.NODE_ENV === 'production') {
     gulp.watch(defaultAssets.server.gulpConfig, ['templatecache', 'jshint']);
     gulp.watch(defaultAssets.client.views, ['templatecache', 'jshint']).on('change', plugins.livereload.changed);
@@ -95,6 +98,18 @@ gulp.task('eslint', function () {
   return gulp.src(assets)
     .pipe(plugins.eslint())
     .pipe(plugins.eslint.format());
+});
+
+// CSS linting task
+gulp.task('csslint', function (done) {
+  return gulp.src(defaultAssets.client.css)
+    .pipe(plugins.csslint('.csslintrc'))
+    .pipe(plugins.csslint.reporter())
+    .pipe(plugins.csslint.reporter(function (file) {
+      if (!file.csslint.errorCount) {
+        done();
+      }
+    }));
 });
 
 // JS minifying task
