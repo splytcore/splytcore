@@ -7,7 +7,8 @@
        ui-sref="reputations.edit({ reputationId: reputation.wallet })"
        class="list-group-item">
      
-        <h4>Address: {{reputation.wallet}}</h4>       
+        <h4>Reputation Address: {{reputation.contractAddress }}</h4>       
+        <strong>Address: {{reputation.wallet}}</strong>       
         <span>Average: {{ (reputation.average / 100)  | number: '2' }} </span> <br/>
         <span>Number of Reviews: {{ reputation.ratesCount }} </span>
   

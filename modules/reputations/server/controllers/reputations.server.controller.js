@@ -226,6 +226,7 @@ exports.listAllMined = function(req, res) {
           wallet: fields[0],
           average: fields[1],
           ratesCount: fields[2],
+          contractAddress: fields[3]
         })
         callback()
       })

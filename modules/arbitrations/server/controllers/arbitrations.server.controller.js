@@ -280,7 +280,8 @@ exports.listAllMined = function(req, res) {
           winner: fields[3],
           status: fields[4],
           assetAddress: fields[5],
-          arbitrator: fields[6]
+          arbitrator: fields[6],
+          contractAddress: fields[7]
           })
         callback()
       })

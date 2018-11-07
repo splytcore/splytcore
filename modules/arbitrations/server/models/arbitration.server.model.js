@@ -14,6 +14,10 @@ var ArbitrationSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  contractAddress: {
+    type: String,
+    default: ''
+  },      
   reporterWallet: {
     type: String,
     default: ''

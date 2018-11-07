@@ -24,6 +24,10 @@ var ReputationSchema = new Schema({
     type: String,
     default: ''
   }],  
+  contractAddress: {
+    type: String,
+    default: ''
+  },
   fromWallet: {
     type: String,
     default: ''
