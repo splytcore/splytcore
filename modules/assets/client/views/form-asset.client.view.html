@@ -1,6 +1,6 @@
 <section>
   <div class="page-header">
-    <h1>{{vm.asset._id ? 'Edit Asset' : 'New Asset'}}</h1>
+    <h1>{{vm.asset._id ? vm.asset.title : 'New Asset'}}</h1>
   </div>
   {{ vm.asset }}
 
@@ -12,6 +12,10 @@
           <img ng-src="modules/assets/client/img/asset.jpeg" class="img-thumbnail asset-picture-detail">
         </div>
 
+        <div class="form-group" show-errors>
+          <label class="control-label" for="id">ID</label>
+          <input name="id" type="text" ng-model="vm.asset._id" id="title" class="form-control" placeholder="Title" disabled>
+        </div>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="title">Title</label>

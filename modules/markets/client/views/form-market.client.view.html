@@ -5,6 +5,13 @@
   <div class="col-md-12">
     <form name="vm.form.marketForm" class="form-horizontal" ng-submit="vm.save(vm.form.marketForm.$valid)" novalidate>
       <fieldset>
+    
+        <div class="form-group" show-errors>
+          <label class="control-label" for="id">ID</label>
+          <input name="id" type="text" ng-model="vm.market._id" id="title" class="form-control" placeholder="Title" disabled>
+        </div>
+
+
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Name</label>
           <input name="name" type="text" ng-model="vm.market.name" id="name" class="form-control" placeholder="Name" required>

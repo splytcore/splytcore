@@ -6,7 +6,6 @@
     <h2>Create Rate for Address {{ vm.reputation.wallet }}</h2>
     <form name="vm.form.reputationForm" class="form-horizontal" ng-submit="vm.save(vm.form.reputationForm.$valid)" novalidate>
       <fieldset>
-        
         <div class="form-group" show-errors>
           <label class="control-label" for="wallet">Wallet to Rate</label>
           <input name="wallet" type="text" ng-model="vm.reputation.wallet" id="name" class="form-control" placeholder="Wallet" required>
@@ -42,16 +41,20 @@
     </form>
   </div>
 
+
+
   <div class="col-md-12" ng-show="vm.reputation.ratesCount">
     {{vm.reputation}}
-    <h2>Summary for Address {{vm.reputation.wallet}}</h2>
+    <div>
+      <h2>Summary for Address {{vm.reputation.wallet}}</h2>
+    </div>
 
     <form name="vm.form.reputationForm" class="form-horizontal">
       <fieldset>
   
-        <div class="form-group" show-errors>
-          <label class="control-label" for="wallet">Average Rating(decimal 2)</label>
-          <input name="rating" type="text" ng-model="vm.reputation.average" id="averageRating" class="form-control" placeholder="rating" disabled>
+        <div class="form-group">
+          <label class="control-label" for="wallet">Average Rating</label>
+          <span name="rating" class="form-control"> {{ (vm.reputation.average / 100) | number: '2' }} </span>
         </div>
 
 
@@ -64,19 +67,29 @@
           <strong ng-bind="vm.error"></strong>
         </div>
 
-
-        <div class="form-group">
-          <label class="control-label">Ratings from Users</label>
-          <ul ng-repeat="rate in vm.reputation.rates" class="list-group">
-            <li class="list-group-item">{{ rate }}</li>
-          </ul>
-        </div>
-
       </fieldset>
 
     </form>
 
-  </div>
+</div>
+
+<div class="container">
+  <h3>Ratings from Users</h3>
+  <ul class="list-group">
+      <li class="list-group-item height">
+        <h4>
+          <div class="col-sm-4">From</div>
+          <div class="col-sm-4">Rate</div>
+          <div class="col-sm-4">Date</div>
+        </h4>
+      </li>  
+      <li ng-repeat="rate in vm.reputation.rates" class="list-group-item height">
+        <span class="col-sm-4"> {{ rate.from }} </span>
+        <span class="col-sm-4"> {{ rate.rate }} </span>
+        <span class="col-sm-4"> {{ (rate.date * 1000) | date }} </span>
+      </li>
+  </ul>
+</div>
 
 
 </section>
