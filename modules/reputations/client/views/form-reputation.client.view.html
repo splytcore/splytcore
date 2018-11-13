@@ -51,11 +51,17 @@
 
       <fieldset>
         <div class="form-group">
-          <h2>Summary for Address {{vm.reputation.wallet}}</h2>
+          <h2>Summary</h2>
         </div>
 
         <div class="form-group">
-          <label class="control-label" for="wallet">Average Rating</label>
+          <label class="control-label" for="address">Address</label>
+          <span name="address" class="form-control"> {{ vm.reputation.wallet }} </span>
+        </div>
+
+
+        <div class="form-group">
+          <label class="control-label" for="rating">Average Rating</label>
           <span name="rating" class="form-control"> {{ (vm.reputation.average / 100) | number: '2' }} </span>
         </div>
 
