@@ -9,7 +9,7 @@
         <div class="form-group">
           <h2>Create Rate for Address {{ vm.reputation.wallet }}</h2>
         </div>
-              
+
         <div class="form-group" show-errors>
           <label class="control-label" for="wallet">Wallet to Rate</label>
           <input name="wallet" type="text" ng-model="vm.reputation.wallet" id="name" class="form-control" placeholder="Wallet" required>
@@ -44,8 +44,6 @@
       </fieldset>
     </form>
   </div>
-
-
 
   <div class="col-md-12" ng-show="vm.reputation.ratesCount">
     {{vm.reputation}}   
