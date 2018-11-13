@@ -63,14 +63,14 @@
         </div>
 
         <div class="form-group panel panel-default" ng-show="vm.asset._id">   
-         <div class="panel-heading" for="marketPlaces">Participating Market Places</div>                    
+         <div class="panel-heading" for="marketPlaces"><strong>Participating Market Places</strong></div>                    
           <div class="panel-body">
-            <ul class="" ng-repeat="m in vm.asset.marketPlaces">
-              <li> {{ m }} </li>
+            <ul class="list-group" ng-repeat="m in vm.asset.marketPlaces">
+              <li class="list-group-item"> {{ m }} </li>
             </ul>          
           </div>
           
-          <div class="panel-heading" for="marketPlaces">Add Market Place</div>       
+          <div class="panel-heading" for="marketPlaces"><strong>Add Market Place</strong></div>       
           
           <div class="panel-body">
             <select class="form-control" name="marketPlaces" ng-model="vm.selectedMarketPlace">            
@@ -78,7 +78,8 @@
                 {{m.name}} : {{m.wallet}}            
               </option>          
             </select>
-            <button type="button" ng-click="vm.addMarketPlace()" class="btn btn-default">Add</button>          
+            <br/>
+            <button type="button" ng-click="vm.addMarketPlace()" class="btn btn-default">Add</button>   
           </div>
         </div>
 
@@ -132,10 +133,12 @@
               {{a.name}}            
             </option>          
           </select>
+          <br/>
           <button type="button" ng-click="vm.applyAction()" ng-show="vm.asset._id" class="btn btn-default"> Go </button>
       </div>
      
       <div class="form-group">
+        <br/>
         <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>                          
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>
