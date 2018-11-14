@@ -167,7 +167,7 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
 
   let listType = req.query.listType ? req.query.listType.toUpperCase() : null
-
+  console.log(listType)
   switch(listType) {
       case 'ORDERS.LISTPENDING':
           exports.listPending(req,res)
@@ -227,6 +227,53 @@ exports.listPending = function(req, res) {
   })    
 }
 
+exports.getFromDB = function(req, res, next) {
+  
+  Order.find().populate('user', 'displayName').exec(function (err, orders) {
+    if (err) {
+      return next(err)
+    } else {
+      req.orders = orders;
+      next();
+    }
+  })  
+}
+
+exports.getFromContract = function(req, res) {
+  
+  let orders = req.orders
+
+  async.each(orders, (order, callback) => {    
+    EthService.getOrderInfoByOrderId(order._id)
+      .then((fields) => {
+
+        console.log(fields)
+
+        order.version = fields[0]
+        // _id: fields[1].substr(2),
+        order.assetAddress = fields[2]
+        order.buyerWallet = fields[3]
+        order.quantity = fields[4]
+        order.trxAmount = fields[5]
+        order.status = fields[6]        
+        callback()
+      })
+      .catch((err) => {
+        callback(err)
+      })
+  }, (err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(orders);
+    }      
+  })
+  
+}
+
+
 exports.listAllMined = function(req, res) {
 
   let orders = []
@@ -249,7 +296,7 @@ exports.listAllMined = function(req, res) {
         orders.push({
           version: fields[0],
           _id: fields[1].substr(2),
-          asset: fields[2],
+          assetAddress: fields[2],
           buyerWallet: fields[3],
           quantity: fields[4],
           totalAmount: fields[5],
@@ -307,7 +354,7 @@ exports.listMyOrders = function(req, res) {
           orders.push({
             version: fields[0],
             _id: fields[1].substr(2),
-            asset: fields[2],
+            assetAddress: fields[2],
             buyerWallet: fields[3],
             quantity: fields[4],
             totalAmount: fields[5],
