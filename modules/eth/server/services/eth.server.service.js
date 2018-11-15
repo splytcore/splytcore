@@ -503,6 +503,11 @@ exports.getAssetInfoByAddress = function(address) {
   return assetManager.methods.getAssetInfoByAddress(address).call()         
 }
 
+exports.isFractionalOrderExists = function(address) {
+  console.log('get asset info from contracts...')  
+  return orderManager.methods.isFractionalOrderExists(address).call()         
+}
+
 
 exports.getAssetInfoByIndex = function(index) {
   return assetManager.methods.getAssetInfoByIndex(index).call()         

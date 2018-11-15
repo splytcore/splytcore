@@ -23,18 +23,34 @@ exports.create = function(req, res) {
 
   console.log(order.assetAddress)
 
+
+
+
   EthService.purchase(order)
     .on('transactionHash', (hash) => {
       order.transactionHash = hash
-      order.save(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.jsonp(order);
-        }
-      })
+      
+      EthService.isFractionalOrderExists(order.assetAddress)
+        .then((exists) => {
+          if (exists.toString().indexOf('false') > -1) {
+            order.save(function(err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                res.jsonp(order);
+              }
+            })
+          } else {
+            return res.jsonp(order) 
+          }
+        })
+        .catch((err) => {
+          return res.status(400).send({ message : err.toString() }) 
+        })    
+
+    
     }) 
     .on('error', (err) => {
       console.log('error creating order')
