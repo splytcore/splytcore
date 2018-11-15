@@ -498,6 +498,12 @@ exports.getAssetInfoByAssetId = function(assetId) {
   return assetManager.methods.getAssetInfoByAssetId(assetIdHex).call()         
 }
 
+exports.getAssetInfoByAddress = function(address) {
+  console.log('get asset info from contracts...')  
+  return assetManager.methods.getAssetInfoByAddress(address).call()         
+}
+
+
 exports.getAssetInfoByIndex = function(index) {
   return assetManager.methods.getAssetInfoByIndex(index).call()         
 }

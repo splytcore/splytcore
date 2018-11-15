@@ -21,6 +21,8 @@ exports.create = function(req, res) {
   var order = new Order(req.body)
   order.user = req.user
 
+  console.log(order.assetAddress)
+
   EthService.purchase(order)
     .on('transactionHash', (hash) => {
       order.transactionHash = hash
