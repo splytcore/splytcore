@@ -222,7 +222,7 @@ exports.createAsset = function(asset) {
   // asset.marketPlaces.push(defaultMarketPlace) //hard code for now
   asset.marketPlacesAmount.push(2) //hard code for now
 
-  console.log(asset)  
+  // console.log(asset)  
 
   let trx = {
       from: asset.seller,
@@ -259,7 +259,7 @@ exports.createAsset = function(asset) {
 
 exports.purchase = function(order) {
 
-  console.log(order)  
+  // console.log(order)  
 
   let trx = {
       from: order.buyerWallet,
@@ -469,6 +469,11 @@ exports.getReputationsLength = function() {
   return reputationManager.methods.getReputationsLength().call()
 }
 
+exports.getContributorsLength = function(orderId) {
+  let orderIdHex = prepend0x(orderId)
+  return orderManager.methods.getContributorsLength(orderIdHex).call()
+}
+
 exports.getAssetContractById = function(assetId) {
   console.log('assetId: ' + assetId)
   let assetIdHex = prepend0x(assetId)
@@ -503,9 +508,9 @@ exports.getAssetInfoByAddress = function(address) {
   return assetManager.methods.getAssetInfoByAddress(address).call()         
 }
 
-exports.isFractionalOrderExists = function(address) {
-  console.log('get asset info from contracts...')  
-  return orderManager.methods.isFractionalOrderExists(address).call()         
+exports.isFractionalOrderExists = function(assetAddress) {
+  console.log('asset address: ' + assetAddress)  
+  return orderManager.methods.isFractionalOrderExists(assetAddress).call()         
 }
 
 

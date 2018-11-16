@@ -35,6 +35,7 @@
         
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.market._id ? 'Update' : 'Create'}}</button>
+          <button ng-show="vm.market._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>        
         </div>
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>

@@ -23,41 +23,53 @@ exports.create = function(req, res) {
 
   console.log(order.assetAddress)
 
-
-
-
-  EthService.purchase(order)
-    .on('transactionHash', (hash) => {
-      order.transactionHash = hash
-      
-      EthService.isFractionalOrderExists(order.assetAddress)
-        .then((exists) => {
-          if (exists.toString().indexOf('false') > -1) {
-            order.save(function(err) {
-              if (err) {
-                return res.status(400).send({
-                  message: errorHandler.getErrorMessage(err)
-                });
-              } else {
-                res.jsonp(order);
-              }
-            })
-          } else {
-            return res.jsonp(order) 
-          }
-        })
-        .catch((err) => {
-          return res.status(400).send({ message : err.toString() }) 
-        })    
-
-    
-    }) 
-    .on('error', (err) => {
-      console.log('error creating order')
-      console.log(err)
-      return res.status(400).send({ message : err.toString() })      
-    }
-  )
+  async.waterfall([
+      function fractionOrderExists(callback) {
+        EthService.isFractionalOrderExists(order.assetAddress)
+          .then((exists) => {
+            console.log('does a fractional order exist? ' + exists)
+            if (exists.toString().indexOf('false') > -1) {
+              callback(null, order, false)
+            } else {
+              callback(null, order, true)
+            }
+          })
+          .catch((err) => {
+            callback(err)
+          })    
+      },      
+      function purchase(order, fractionalOrderExists, callback) {
+        EthService.purchase(order)
+          .on('transactionHash', (hash) => {
+            order.transactionHash = hash
+            //If there's already an order, do no generate a new record in mongodb
+            callback(null, order, fractionalOrderExists)
+          }) 
+          .on('error', (err) => {
+            console.log('error creating order')
+            console.log(err)
+            callback(err)
+          })        
+      },      
+      //creates a new record only if a asset type is normal or there have been no contributions for fractional asset
+      function createDB(order, fractionalOrderExists, callback) {
+        if (fractionalOrderExists) {
+            callback(null, order)
+        } else {
+          order.save((err) => {
+            callback(err, order)
+          })
+        }
+      }
+  ], function (err, order) {
+    if (err) {
+      return res.status(400).send({
+        message: err.toString()
+      });
+    } else {
+      res.jsonp(order);
+    }         
+  })
 
 }
 
@@ -116,30 +128,75 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   // order.isCurrentUserOwner = req.user && order.user && order.user._id.toString() === req.user._id.toString();
 
-  EthService.getOrderInfoByOrderId(order._id)
-     .then((fields) => {
-      console.log('successful get order info')
-      console.log(fields)
 
-            // 0 orders[_orderId].version,    
-            // 1 orders[_orderId].orderId,
-            // 2 orders[_orderId].asset,    
-            // 3 orders[_orderId].buyer,
-            // 4 orders[_orderId].quantity,
-            // 5 orders[_orderId].paidAmount,
-            // 6 orders[_orderId].status);
-      order.version = fields[0]
-      // _id: fields[1].substr(2),
-      order.assetAddress = fields[2]
-      order.buyerWallet = fields[3]
-      order.quantity = fields[4]
-      order.trxAmount = fields[5]
-      order.status = fields[6]
-      res.jsonp(order)  
-    })
-    .catch((err) => {
-      res.jsonp(err)  
-    })  
+
+  async.waterfall([
+      function getOrderInfoByOrderId(callback) {
+        EthService.getOrderInfoByOrderId(order._id)
+           .then((fields) => {
+            console.log('successful get order info')
+            console.log(fields)
+
+                  // 0 orders[_orderId].version,    
+                  // 1 orders[_orderId].orderId,
+                  // 2 orders[_orderId].asset,    
+                  // 3 orders[_orderId].buyer,
+                  // 4 orders[_orderId].quantity,
+                  // 5 orders[_orderId].paidAmount,
+                  // 6 orders[_orderId].status);
+            order.version = fields[0]
+            // _id: fields[1].substr(2),
+            order.assetAddress = fields[2]
+            order.buyerWallet = fields[3]
+            order.quantity = fields[4]
+            order.trxAmount = fields[5]
+            order.status = fields[6]
+            callback(null, order)
+          })
+          .catch((err) => {
+            callback(err) 
+          })  
+      },      
+      //check if fractional or normal sale. 
+      function getContributorsLength(order, callback) {
+        EthService.getContributorsLength(order._id)
+           .then((length) => {
+            console.log(length)
+            callback(null, order, parseInt(length))  
+          })
+          .catch((err) => {
+            callback(err)
+          })  
+     
+      },      
+      //creates a new record only if a asset type is normal or there have been no contributions for fractional asset
+      function fetchContributionsIfFractional(contributorsLength, order, callback) {
+        if (parseInt(length) === 0)  {
+            callback(null, order)
+        } else {
+
+          //TODO: do async each
+          EthService.getContributionByOrderIdAndIndex(order._id, index)
+             .then((contribution) => {
+              console.log(length)
+              order.contributions.push({contributor: contribution.contributor, amount: contribution.amount, date: contribution.date })
+              callback(null, order, parseInt(length))  
+            })
+            .catch((err) => {
+              callback(err)
+            })          
+
+        }
+      }
+  ], function (err, order) {
+    if (err) {
+      return res.status(400).send({
+        message: err.toString()
+      });
+    } else {
+      res.jsonp(order);
+    }         
+  })
 
 }
 

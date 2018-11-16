@@ -47,6 +47,18 @@ var OrderSchema = new Schema({
     type: String,
     default: ''
   },  
+  contributions: [{
+    contributor: {
+      type: String
+    },
+    //contract returns date in seconds
+    date: {
+      type: Number
+    },
+    amount: {
+      type: Number
+    }    
+  }], 
   user: {
     type: Schema.ObjectId,
     ref: 'User'
