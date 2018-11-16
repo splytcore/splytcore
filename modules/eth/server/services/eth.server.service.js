@@ -469,9 +469,14 @@ exports.getReputationsLength = function() {
   return reputationManager.methods.getReputationsLength().call()
 }
 
-exports.getContributorsLength = function(orderId) {
+exports.getContributionsLength = function(orderId) {
   let orderIdHex = prepend0x(orderId)
-  return orderManager.methods.getContributorsLength(orderIdHex).call()
+  return orderManager.methods.getContributionsLength(orderIdHex).call()
+}
+
+exports.getContributionByOrderIdAndIndex = function(orderId, index) {
+  let orderIdHex = prepend0x(orderId)
+  return orderManager.methods.getContributionByOrderIdAndIndex(orderIdHex, index).call()
 }
 
 exports.getAssetContractById = function(assetId) {

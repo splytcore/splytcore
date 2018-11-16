@@ -128,8 +128,6 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   // order.isCurrentUserOwner = req.user && order.user && order.user._id.toString() === req.user._id.toString();
 
-
-
   async.waterfall([
       function getOrderInfoByOrderId(callback) {
         EthService.getOrderInfoByOrderId(order._id)
@@ -158,10 +156,10 @@ exports.read = function(req, res) {
           })  
       },      
       //check if fractional or normal sale. 
-      function getContributorsLength(order, callback) {
-        EthService.getContributorsLength(order._id)
+      function getContributionsLength(order, callback) {
+        EthService.getContributionsLength(order._id)
            .then((length) => {
-            console.log(length)
+            console.log('number of conributors: ' + length)
             callback(null, order, parseInt(length))  
           })
           .catch((err) => {
@@ -170,22 +168,14 @@ exports.read = function(req, res) {
      
       },      
       //creates a new record only if a asset type is normal or there have been no contributions for fractional asset
-      function fetchContributionsIfFractional(contributorsLength, order, callback) {
-        if (parseInt(length) === 0)  {
+      function fetchContributionsIfFractional(order, contributionsLength, callback) {
+        if (parseInt(contributionsLength) === 0)  {
             callback(null, order)
         } else {
-
-          //TODO: do async each
-          EthService.getContributionByOrderIdAndIndex(order._id, index)
-             .then((contribution) => {
-              console.log(length)
-              order.contributions.push({contributor: contribution.contributor, amount: contribution.amount, date: contribution.date })
-              callback(null, order, parseInt(length))  
-            })
-            .catch((err) => {
-              callback(err)
-            })          
-
+          getContributions(order._id, contributionsLength, (err, contributions) => {
+            order.contributions = contributions
+            callback(err, order)
+          })
         }
       }
   ], function (err, order) {
@@ -196,6 +186,28 @@ exports.read = function(req, res) {
     } else {
       res.jsonp(order);
     }         
+  })
+
+}
+
+function getContributions(orderId, length, done) {
+  console.log('lets get all contributions')  
+  let contributions = []
+
+  async.times(parseInt(length), (index, callback) => {    
+    console.log('index:' + index)
+    EthService.getContributionByOrderIdAndIndex(orderId, index)
+    .then((fields) => {
+      console.log(fields)
+      contributions.push({ contributor: fields[0], amount: fields[1], date: fields[3] })
+      callback()
+    })
+    .catch((err) => {
+      console.log(err)
+      callback(err)
+    })  
+  }, (err) => {
+    done(err, contributions)   
   })
 
 }
