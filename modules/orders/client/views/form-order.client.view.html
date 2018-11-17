@@ -1,6 +1,8 @@
 <section>
   <div class="page-header">
     <h1>Order ID#{{ vm.order._id }}</h1>
+    {{vm.order}}
+    {{vm.asset}}
   </div>
   <div class="col-md-12">
     <form name="vm.form.orderForm" class="form-horizontal" ng-submit="vm.save(vm.form.orderForm.$valid)" novalidate>
@@ -40,6 +42,42 @@
         <div class="form-group" ng-show="vm.order._id">
           <label class="control-label" for="trxHash">Transaction Hash</label> 
           <a target="_blank" href="{{vm.etherscanURL + vm.order.transactionHash}}"> {{vm.order.transactionHash}}</a>
+        </div>
+
+        <div class="form-group" ng-show="vm.order.contributions.length > 0">
+          <h3>Contributions</h3>
+          <ul class="list-group">
+              <li class="list-group-item height">
+                <h4>
+                  <div class="col-sm-4">From</div>
+                  <div class="col-sm-4">Amount</div>
+                  <div class="col-sm-4">Date</div>
+                </h4>
+              </li>  
+              <li ng-repeat="c in vm.order.contributions" class="list-group-item height">
+                <span class="col-sm-4"> {{ c.contributor }} </span>
+                <span class="col-sm-4"> {{ c.amount }} </span>
+                <span class="col-sm-4"> {{ (c.date * 1000) | date }} </span>
+              </li>
+          </ul>
+
+          <ul class="list-group">
+              <li class="list-group-item height">
+                <span class="col-sm-4"> Total Amount Cost </span>
+                <span class="col-sm-4"> {{ vm.asset.totalCost }} </span>
+              </li>  
+              <li class="list-group-item height">
+                <span class="col-sm-4"> Total Contributed Amount </span>
+                <span class="col-sm-4"> {{ vm.totalContributions }} </span>
+              </li>  
+              <li class="list-group-item height">
+                <strong>
+                  <span class="col-sm-4"> Balance </span>
+                  <span class="col-sm-4"> {{ vm.asset.totalCost - vm.totalContributions }} </span>
+                </strong>
+              </li>
+          </ul>
+
         </div>
 
 

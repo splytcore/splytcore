@@ -14,6 +14,9 @@ module.exports = function(app) {
     .get(assets.getAllAssetsFromContract, assets.bindTitleAndDescription, assets.list)
     .post(Eth.unlockAccount, assets.create)
 
+  app.route('/api/assetByAddress/:assetAddress').all(assetsPolicy.isAllowed)
+    .get(assets.returnAsset)
+
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
     .get(assets.read, assets.bindMarketPlaces)
     .put(assets.update)
@@ -21,4 +24,6 @@ module.exports = function(app) {
 
   // Finish by binding the asset middleware
   app.param('assetId', assets.assetByID)
+  app.param('assetAddress', assets.getAssetByAddress)
+
 }

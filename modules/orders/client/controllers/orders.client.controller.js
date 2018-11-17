@@ -6,20 +6,20 @@
     .module('orders')
     .controller('OrdersController', OrdersController);
 
-  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies'];
+  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies', 'AssetsManagerService'];
 
-  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies) {
-    var vm = this;
-    console.log($stateParams)
-    vm.user = Authentication.user;
-    vm.order = order;
-    vm.error = null;
-    vm.form = {};
-    vm.remove = remove;
-    vm.save = save;
-    vm.applyAction = applyAction;
+  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies, AssetsManagerService) {
+    var vm = this
+    // console.log($stateParams)
+    vm.user = Authentication.user
+    vm.order = order
+    vm.error = null
+    vm.form = {}
+    vm.remove = remove
+    vm.save = save
+    vm.applyAction = applyAction
 
-    vm.updateTrxAmount = updateTrxAmount;
+    vm.updateTrxAmount = updateTrxAmount
 
     vm.etherscanURL = $cookies.etherscanURL
     
@@ -33,12 +33,27 @@
       { id: 2,name: 'Approve Refund(You must be seller)'}
     ]
 
+
+    vm.totalContributions = 0
     if (!vm.order._id) {
         vm.order.buyerWallet = vm.user.publicKey
         vm.order.assetAddress = $stateParams.assetAddress
         vm.order.trxAmount = $stateParams.trxAmount   
         vm.order.quantity = 1
         vm.order.status = 0
+    } else {
+      AssetsManagerService.getAssetByAddress(vm.order.assetAddress)
+      .then((result) => {
+        vm.asset = result.data
+        console.log(vm.asset)
+      })
+
+      if (vm.order.contributions.length > 0) {
+        vm.totalContributions = 0
+        vm.order.contributions.forEach((c) => {
+          vm.totalContributions += parseInt(c.amount)
+        })
+      }
     }
 
 

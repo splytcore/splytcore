@@ -84,6 +84,20 @@ exports.read = function(req, res, next) {
 
 }
 
+
+/**
+ * Show the current asset
+ */
+exports.returnAsset = function(req, res) {
+
+  console.log('return asset detail')
+  let asset = req.asset
+  console.log(asset)
+  res.jsonp(asset)
+
+}
+
+
 exports.bindMarketPlaces = function(req, res) {
 
   let asset = req.asset
@@ -386,3 +400,32 @@ exports.assetByID = function(req, res, next, id) {
     next();
   });
 };
+
+
+exports.getAssetByAddress = function(req, res, next, address) {
+
+  console.log('address: ' + address)
+
+  let asset = {}
+  EthService.getAssetInfoByAddress(address)
+    .then((fields) => {
+
+      console.log('successful get asset info')
+      console.log(fields)
+      asset.address = fields[0]
+      asset._id = fields[1]
+      asset.status = fields[2]
+      asset.type = fields[3]         
+      asset.term = fields[4]
+      asset.inventoryCount = fields[5]
+      asset.seller = fields[6]
+      asset.totalCost = fields[7]
+      console.log(asset)
+      req.asset = asset
+      next()
+    })
+    .catch((err) => {
+      return next(err)  
+    })
+
+}

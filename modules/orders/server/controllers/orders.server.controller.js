@@ -199,7 +199,7 @@ function getContributions(orderId, length, done) {
     EthService.getContributionByOrderIdAndIndex(orderId, index)
     .then((fields) => {
       console.log(fields)
-      contributions.push({ contributor: fields[0], amount: fields[1], date: fields[3] })
+      contributions.push({ contributor: fields[0], amount: fields[1], date: fields[2] })
       callback()
     })
     .catch((err) => {

@@ -24,7 +24,7 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['user'],
     allows: [{
-      resources: '/api/assets',
+      resources: ['/api/assets', '/api/assetByAddress/:assetAddress'],
       permissions: ['get', 'post']
     }, {
       resources: '/api/assets/:assetId',

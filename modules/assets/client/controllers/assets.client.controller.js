@@ -12,6 +12,7 @@
     var vm = this
     vm.save = save   
     vm.asset = asset
+
     vm.remove = remove
     vm.user = Authentication.user
 

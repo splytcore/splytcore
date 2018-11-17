@@ -267,7 +267,9 @@ gulp.task('dropcollections', function (done) {
       })
     }
   ], function (err, db) {
-    console.log(err)
+    if (err) {
+      console.log(err)
+    } 
     db.connection.db.close(done);
   })
 
