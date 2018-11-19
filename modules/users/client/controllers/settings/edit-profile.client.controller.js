@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication', 'EthService', '$rootScope',
-  function ($scope, $http, $location, Users, Authentication, EthService, $rootScope) {
+angular.module('users').controller('EditProfileController', ['$cookies', '$scope', '$http', '$location', 'Users', 'Authentication', 'EthService', '$rootScope',
+  function ($cookies, $scope, $http, $location, Users, Authentication, EthService, $rootScope) {
     $scope.user = Authentication.user;
     
     console.log('ether balance: ')
@@ -36,16 +36,39 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
 
       var user = new Users($scope.user);
 
-
-
       user.$update(function (response) {
         $scope.$broadcast('show-errors-reset', 'userForm');
 
         $scope.success = true;
         Authentication.user = response;
+        
+        $scope.updateUserBalances()
+
       }, function (response) {
         $scope.error = response.data.message;
       });
+    }
+
+    $scope.updateUserBalances = function () {
+
+      EthService.getUserBalances()
+        .success((balances) => {
+          console.log(balances)
+          $rootScope.etherBalance = balances.etherBalance
+          $rootScope.tokenBalance = balances.tokenBalance    
+          
+          $cookies.tokenBalance = balances.tokenBalance
+          $cookies.etherBalance = balances.etherBalance
+
+          if (parseFloat(balances.etherBalance) < .10 ||  parseInt(balances.tokenBalance) < 1) {
+            alert('You do not have the minimium requirements of tokens or Ether to write to the blockchain!')
+          }
+
+        })
+        .error((err) => {
+
+        })
+
     }
 
     $scope.initUser = function () {

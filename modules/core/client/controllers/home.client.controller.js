@@ -19,8 +19,8 @@ angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentica
       EthService.getUserBalances()
         .success((balances) => {
           console.log(balances)
-          $scope.user.etherBalance = balances.etherBalance
-          $scope.user.tokenBalance = balances.tokenBalance    
+          $rootScope.etherBalance = balances.etherBalance
+          $rootScope.tokenBalance = balances.tokenBalance    
           
           $cookies.tokenBalance = balances.tokenBalance
           $cookies.etherBalance = balances.etherBalance

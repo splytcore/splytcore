@@ -613,6 +613,36 @@ exports.getEtherBalance = function(wallet) {
   })
 }
 
+exports.getEtherAndTokenBalance = function(wallet) { 
+
+  let balances = {}
+            console.log(1)
+            console.log(wallet)
+  return new Promise((resolve, reject) => {
+    web3.eth.getBalance(wallet)
+      .then((wei) => {
+        console.log(5)
+        console.log(wei)
+        let ether  = web3.utils.fromWei(wei)
+        balances.etherBalance = ether
+        splytManager.methods.getBalance(wallet).call()
+          .then((tokenBalance) => {
+            console.log(2)
+            balances.tokenBalance = tokenBalance
+            resolve(balances)
+          })  
+          .catch((err) => {
+            reject(err)
+          })
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+
+
 exports.lockWallet = function() {  
   return web3.eth.personal.lockAccount(wallet)
 }
