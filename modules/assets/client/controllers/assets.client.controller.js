@@ -62,10 +62,10 @@
       }
 
       //check if user has minimum requirements for ether and tokens
-      console.log($cookies.etherBalance)
-      console.log($cookies.tokenBalance)
+      console.log(vm.user.etherBalance)
+      console.log(vm.user.tokenBalance)
 
-      if (parseFloat($cookies.etherBalance) < .01 || parseInt($cookies.tokenBalance) < 1000) {
+      if (parseFloat(vm.user.etherBalance) < .01 || parseInt(vm.user.tokenBalance) < 1000) {
         alert('you do not have enough ethers or tokens')
         return false
       }
@@ -85,6 +85,7 @@
 
       function successCallback(asset) {  
         console.log(asset.transactionHash)              
+        EthService.updateUserBalances()
         $state.go('assets.listPending')
           //EthService.createAsset(asset); //if you want to use metamask. Currently using backend to interact with contracts
       }

@@ -58,6 +58,7 @@ exports.getBalances = function (req, res) {
   let etherBalance
   let tokenBalance
 
+  console.log('for wallet: ' + user.publicKey)
   EthService.getEtherBalance(user.publicKey)
   .then((balance) => {
     etherBalance = balance

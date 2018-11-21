@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', 'EthService', '$cookies', '$rootScope',
-  function ($q, $scope, Authentication, EthService, $cookies, $rootScope) {
+angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', 'EthService', '$cookies', '$rootScope', '$interval',
+  function ($q, $scope, Authentication, EthService, $cookies, $rootScope, $interval) {
     // This provides Authentication context.
     $scope.authentication = Authentication
     $scope.user = $scope.authentication.user
@@ -14,26 +14,17 @@ angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentica
         console.log(err)
       })
 
+    // let callAtInterval = function() {
+    //   console.log("Update User Balances");
+    //   EthService.updateUserBalances()
+    // }
 
-    if ($scope.user) {
-      EthService.getUserBalances()
-        .success((balances) => {
-          console.log(balances)
-          $rootScope.etherBalance = balances.etherBalance
-          $rootScope.tokenBalance = balances.tokenBalance    
-          
-          $cookies.tokenBalance = balances.tokenBalance
-          $cookies.etherBalance = balances.etherBalance
+    // if ($scope.user) {
+    //   $interval(callAtInterval, 5000)
 
-          if (parseFloat(balances.etherBalance) < .10 ||  parseInt(balances.tokenBalance) < 1) {
-            alert('You do not have the minimium requirements of tokens or Ether to write to the blockchain!')
-          }
+    // }
 
-        })
-        .error((err) => {
 
-        })
-      }
     //example of how simple async 
     // $q((resolve, reject) => {
     //   setTimeout(function() {            

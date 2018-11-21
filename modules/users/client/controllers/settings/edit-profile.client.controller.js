@@ -4,11 +4,11 @@ angular.module('users').controller('EditProfileController', ['$cookies', '$scope
   function ($cookies, $scope, $http, $location, Users, Authentication, EthService, $rootScope) {
     $scope.user = Authentication.user;
     
-    console.log('ether balance: ')
-    console.log($scope.user.etherBalance)
+    // console.log('ether balance: ')
+    // console.log($scope.user.etherBalance)
 
-    $rootScope.etherBalance = $scope.user.etherBalance
-    $rootScope.tokenBalance = $scope.user.tokenBalance
+    // $rootScope.etherBalance = $scope.user.etherBalance
+    // $rootScope.tokenBalance = $scope.user.tokenBalance
 
     // Update a user profile
     $scope.createNewWallet = function () {
@@ -42,34 +42,38 @@ angular.module('users').controller('EditProfileController', ['$cookies', '$scope
         $scope.success = true;
         Authentication.user = response;
         
-        $scope.updateUserBalances()
+        EthService.updateUserBalances()
 
       }, function (response) {
         $scope.error = response.data.message;
       });
     }
 
-    $scope.updateUserBalances = function () {
+    // $scope.updateUserBalances = function () {
 
-      EthService.getUserBalances()
-        .success((balances) => {
-          console.log(balances)
-          $rootScope.etherBalance = balances.etherBalance
-          $rootScope.tokenBalance = balances.tokenBalance    
+    //   EthService.getUserBalances()
+    //     .success((balances) => {
+    //       console.log(balances)
+    //       // $rootScope.etherBalance = balances.etherBalance
+    //       // $rootScope.tokenBalance = balances.tokenBalance    
           
-          $cookies.tokenBalance = balances.tokenBalance
-          $cookies.etherBalance = balances.etherBalance
+    //       Authentication.user.etherBalance = balances.etherBalance
+    //       Authentication.user.tokenBalance = balances.tokenBalance
+    //       $scope.user = Authentication.user
 
-          if (parseFloat(balances.etherBalance) < .10 ||  parseInt(balances.tokenBalance) < 1) {
-            alert('You do not have the minimium requirements of tokens or Ether to write to the blockchain!')
-          }
+    //       // $cookies.tokenBalance = balances.tokenBalance
+    //       // $cookies.etherBalance = balances.etherBalance
 
-        })
-        .error((err) => {
+    //       if (parseFloat(balances.etherBalance) < .10 ||  parseInt(balances.tokenBalance) < 1) {
+    //         alert('You do not have the minimium requirements of tokens or Ether to write to the blockchain!')
+    //       }
 
-        })
+    //     })
+    //     .error((err) => {
 
-    }
+    //     })
+
+    // }
 
     $scope.initUser = function () {
       $scope.success = $scope.error = null;

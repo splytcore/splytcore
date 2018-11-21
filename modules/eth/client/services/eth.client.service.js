@@ -6,9 +6,9 @@
     .module('eth')
     .service('EthService', EthService);
 
-  EthService.$inject = ['$http', '$window', '$q'];
+  EthService.$inject = ['$http', '$window', '$q', 'Authentication'];
 
-  function EthService($http, $window, $q) {
+  function EthService($http, $window, $q, Authentication) {
     let vm = this
   
     vm.getSplytServiceInfo = getSplytServiceInfo;
@@ -34,6 +34,8 @@
     vm.requestRefund = requestRefund;
     
     vm.approveRefund = approveRefund;
+    
+    vm.updateUserBalances = updateUserBalances
 
     vm.web3 = new Web3($window.web3.currentProvider);
     
@@ -212,6 +214,14 @@
       return $http.get('/api/users/balances');
     }
 
+    function updateUserBalances() {
+      $http.get('/api/users/balances')
+        .then((result) => {
+          console.log(result.data)
+          Authentication.user.etherBalance = result.data.etherBalance
+          Authentication.user.tokenBalance = result.data.tokenBalance          
+        })
+    }
 
     function getAllABI() {
       return $http.get('/api/abi/getAll');
