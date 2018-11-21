@@ -39,7 +39,7 @@ module.exports = {
     //Get this from testrpc for dev
     url: 'http://13.58.147.177:8555',
     //this has to be updated everytime you run truffle migrate
-    splytManagerAddress: '0xcad5db0cdc0e2ac3a03cec8219f26667cbb9a6c2',
+    splytManagerAddress: '0xc53b41e624a17fb1f19f621db231a538043e2a11',
     masterWallet: '0xf606a61e2fbc2db9b0b74f26c45469509dfb33ac',
     etherscanURL: 'https://ropsten.etherscan.io/tx/'
   },
