@@ -151,7 +151,8 @@
           default:
               alert('NOT VALID SELECTION')
               break;
-      }      
+      }
+      EthService.updateUserBalances()      
 
     }       
   }
