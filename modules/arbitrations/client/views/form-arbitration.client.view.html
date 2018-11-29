@@ -53,7 +53,7 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="winner">Winner of Arbitration by arbitrator(0: UNDECIED, 1:REPORTER 2:SELLER)</label>
+          <label class="control-label" for="winner">Winner of Arbitration by arbitrator(0: UNDECIED, 1:REPORTER 2:SELLER, 3:NEITHER, 4:SPLIT)</label>
           <input name="winner" type="text" ng-model="vm.arbitration.winner" id="winner" class="form-control" placeholder="winner" ng-disabled="!vm.arbitration._id">
 
           <div ng-messages="vm.form.arbitrationForm.winner.$error" role="alert">
@@ -62,7 +62,7 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="status">Status(0:REPORTED 1:SELLER_STAKED_2X 2:REPORTER_STAKED_2X 3:RESOLVED 4:UNRESOLVED)</label>
+          <label class="control-label" for="status">Status(0:REPORTED 1:SELLER_STAKED_2X 2:REPORTER_STAKED_2X 3:PENDING_ARBITRATOR_DECISION 4:RESOLVED 4:UNRESOLVED)</label>
           <input name="status" type="text" ng-model="vm.arbitration.status" id="status" class="form-control" placeholder="status" disabled>
         </div>
 
