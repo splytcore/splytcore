@@ -268,14 +268,14 @@ exports.purchase = function(order) {
   }
 
   let orderIdHex = prepend0x(order._id.toString())
-  
   console.log('orderIdHex: ' + orderIdHex)
 
   return orderManager.methods.purchase(
     orderIdHex, 
     order.assetAddress, 
     parseInt(order.quantity), 
-    order.trxAmount
+    order.trxAmount,
+    order.marketPlace
     ).send(trx)
   
 }
@@ -533,10 +533,21 @@ exports.getOrderInfoByOrderId = function(orderId) {
   return orderManager.methods.getOrderInfoByOrderId(orderIdHex).call()          
 }
 
+exports.getMarketPlaceByOrderId = function(orderId) {
+  console.log('get order market place from contract...')  
+  let orderIdHex = prepend0x(orderId)            
+  return orderManager.methods.getMarketPlaceByOrderId(orderIdHex).call()          
+}
+
 exports.getOrderInfoByIndex = function(index) {
   console.log('getting order for index ' + index)
   return orderManager.methods.getOrderInfoByIndex(parseInt(index)).call()         
 }
+exports.getMarketPlaceByIndex = function(index) {
+  console.log('getting order for index ' + index)
+  return orderManager.methods.getMarketPlaaceByIndex(parseInt(index)).call()         
+}
+
 
 exports.getArbitrationInfoByArbitrationId = function(arbitrationId) {
   console.log('getting arbitration for id ' + arbitrationId)

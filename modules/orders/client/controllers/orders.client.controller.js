@@ -6,9 +6,9 @@
     .module('orders')
     .controller('OrdersController', OrdersController);
 
-  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies', 'AssetsManagerService'];
+  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies', 'AssetsManagerService', 'MarketsService'];
 
-  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies, AssetsManagerService) {
+  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies, AssetsManagerService, MarketsService) {
     var vm = this
     // console.log($stateParams)
     vm.user = Authentication.user
@@ -33,7 +33,6 @@
       { id: 2,name: 'Approve Refund(You must be seller)'}
     ]
 
-
     vm.totalContributions = 0
     if (!vm.order._id) {
         vm.order.buyerWallet = vm.user.publicKey
@@ -41,7 +40,14 @@
         vm.order.trxAmount = $stateParams.trxAmount   
         vm.order.quantity = 1
         vm.order.status = 0
+        MarketsService.query((result) => {
+          vm.marketPlaces = result
+          vm.selectedMarketPlace = result.length > 0 ? '' : vm.marketPlaces[0].wallet
+        })
+
     } else {
+      console.log(vm.order.marketPlace)
+      vm.selectedMarketPlace = vm.order.marketPlace
       AssetsManagerService.getAssetByAddress(vm.order.assetAddress)
       .then((result) => {
         vm.asset = result.data
@@ -110,6 +116,8 @@
         alert('Asset must be in status 1 to purchase')
         return false
       }
+
+      vm.order.marketPlace = vm.selectedMarketPlace
 
       // TODO: move create/update logic to service
       if (vm.order._id) {

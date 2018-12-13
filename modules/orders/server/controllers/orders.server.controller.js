@@ -155,6 +155,18 @@ exports.read = function(req, res) {
             callback(err) 
           })  
       },      
+      function getMarketPlaceByOrderId(order, callback) {
+        EthService.getMarketPlaceByOrderId(order._id)
+           .then((marketPlace) => {
+            console.log('successful get market place by order id')
+            console.log(marketPlace)
+            order.marketPlace = marketPlace
+            callback(null, order)
+          })
+          .catch((err) => {
+            callback(err) 
+          })  
+      },      
       //check if fractional or normal sale. 
       function getContributionsLength(order, callback) {
         EthService.getContributionsLength(order._id)
@@ -180,6 +192,7 @@ exports.read = function(req, res) {
       }
   ], function (err, order) {
     if (err) {
+      console.log(err)
       return res.status(400).send({
         message: err.toString()
       });

@@ -43,6 +43,11 @@ var OrderSchema = new Schema({
     type: String,
     default: ''
   },
+  //market place wallet
+  marketPlace: {
+    type: String,
+    default: ''
+  },  
   transactionHash: {
     type: String,
     default: ''

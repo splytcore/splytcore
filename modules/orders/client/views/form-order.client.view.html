@@ -5,6 +5,7 @@
     {{vm.asset}}
   </div>
   <div class="col-md-12">
+
     <form name="vm.form.orderForm" class="form-horizontal" ng-submit="vm.save(vm.form.orderForm.$valid)" novalidate>
       <fieldset>
 
@@ -38,6 +39,28 @@
           <label class="control-label" for="buyerWallet">Status(0:NA, 1:PIF, 2:CLOSED, 3:REQUESTED_REFUND, 4:REFUNDED, 5:CONTRIBUTIONS_OPEN, 6:CONTRIBUTIONS_FULFILLED, 7:OTHER)</label>
           <input name="status" type="text" ng-model="vm.order.status" id="status" class="form-control" placeholder="Status" disabled>
         </div>
+
+        <div class="form-group" show-errors ng-show="!vm.order._id">        
+
+          <label class="control-label" for="marketPlaces">Market Place</label>          
+          <select class="form-control" name="marketPlaces" ng-model="vm.selectedMarketPlace">            
+           <option ng-repeat="m in vm.marketPlaces track by $index" value="{{m.wallet}}">
+              {{m.name}} -> {{m.wallet}}            
+            </option>          
+          </select>
+
+          <div ng-messages="vm.form.orderForm.order.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Market Place is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>        
+
+          <label class="control-label" for="marketPlaces">Market Place</label>          
+          <input name="markeetPlace" type="text" ng-model="vm.order.marketPlace" id="marketPlace" class="form-control" placeholder="MarketPlace" disabled>
+            
+        </div>
+
 
         <div class="form-group" ng-show="vm.order._id">
           <label class="control-label" for="trxHash">Transaction Hash</label> 

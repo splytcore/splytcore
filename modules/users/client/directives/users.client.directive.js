@@ -2,6 +2,7 @@
 
 // Users directive used to force lowercase input
 angular.module('users').directive('lowercase', function () {
+  console.log('this si isafsdf')
   return {
     require: 'ngModel',
     link: function (scope, element, attrs, modelCtrl) {
