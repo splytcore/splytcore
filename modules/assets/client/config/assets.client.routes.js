@@ -59,7 +59,7 @@
         controller: 'AssetsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['user', 'admin'],
+          roles: ['user', 'admin', 'seller'],
           pageTitle: 'assets List'
         }
       }) 
@@ -73,7 +73,7 @@
           assetResolve: newAsset
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['user', 'admin', 'seller'],
           pageTitle: 'assets Create'
         }
       })

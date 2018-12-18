@@ -13,7 +13,7 @@
       title: 'Analytics',
       state: 'analytics',
       type: 'dropdown',
-      roles: ['user', 'seller', 'admin']
+      roles: ['user', 'admin']
     });
 
     // Add the dropdown list item

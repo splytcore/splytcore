@@ -4,6 +4,7 @@ angular.module('users').controller('EditProfileController', ['$cookies', '$scope
   function ($cookies, $scope, $http, $location, Users, Authentication, EthService, $rootScope) {
     $scope.user = Authentication.user;
     
+    console.log($scope.user)
     // console.log('ether balance: ')
     // console.log($scope.user.etherBalance)
 
@@ -35,7 +36,13 @@ angular.module('users').controller('EditProfileController', ['$cookies', '$scope
       }
 
       var user = new Users($scope.user);
+      // console.log('role: ' + user.roles)
+      var roles = []
+      roles.push(user.roles)
 
+      user.roles = roles;
+      
+      console.log(user.roles)
       user.$update(function (response) {
         $scope.$broadcast('show-errors-reset', 'userForm');
 

@@ -13,7 +13,7 @@
       title: 'Orders',
       state: 'orders',
       type: 'dropdown',
-      roles: ['user', 'seller', 'admin']
+      roles: ['user', 'admin']
     })
 
     Menus.addSubMenuItem('topbar', 'orders', {

@@ -9,47 +9,47 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke assets Permissions
+ * Invoke Dashboards Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/assets',
+      resources: '/api/dashboards',
       permissions: '*'
     }, {
-      resources: '/api/assets/:assetId',
+      resources: '/api/dashboards/:dashboardId',
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'seller'],
+    roles: ['user'],
     allows: [{
-      resources: ['/api/assets', '/api/assetByAddress/:assetAddress'],
+      resources: '/api/dashboards',
       permissions: ['get', 'post']
     }, {
-      resources: '/api/assets/:assetId',
-      permissions: ['get', 'put']
+      resources: '/api/dashboards/:dashboardId',
+      permissions: ['get']
     }]
   }, {
     roles: ['guest'],
     allows: [{
-      resources: '/api/assets',
+      resources: '/api/dashboards',
       permissions: ['get']
     }, {
-      resources: '/api/assets/:assetId',
+      resources: '/api/dashboards/:dashboardId',
       permissions: ['get']
     }]
   }]);
 };
 
 /**
- * Check If assets Policy Allows
+ * Check If Dashboards Policy Allows
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
-  // If an asset is being processed and the current user created it then allow any manipulation
-  if (req.asset && req.user && req.asset.user && req.asset.user.id === req.user.id) {
+  // If an Dashboard is being processed and the current user created it then allow any manipulation
+  if (req.dashboard && req.user && req.dashboard.user && req.dashboard.user.id === req.user.id) {
     return next();
   }
 

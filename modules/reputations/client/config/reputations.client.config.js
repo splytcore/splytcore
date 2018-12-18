@@ -13,7 +13,7 @@
       title: 'Reputations',
       state: 'reputations',
       type: 'dropdown',
-      roles: ['user', 'seller', 'admin']
+      roles: ['user', 'admin']
     })
 
 

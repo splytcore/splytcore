@@ -4,7 +4,7 @@
 
   angular
     .module('orders')
-    .factory('OrdersManagerService', OrdersManagerService);
+    .service('OrdersManagerService', OrdersManagerService);
 
   OrdersManagerService.$inject = ['$http'];
 

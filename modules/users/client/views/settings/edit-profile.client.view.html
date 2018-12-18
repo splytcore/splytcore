@@ -18,6 +18,14 @@
         </div>
 
         <div class="form-group" show-errors>
+          <label for="role">Role</label>
+          <input type="text" id="role" name="role" class="form-control" ng-model="user.roles" placeholder="Role" required>
+          <div ng-messages="userForm.role.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Role is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
           <label for="publicKey">Public Key(wallet we generated ONLY!)</label>
           <input type="text" id="publicKey" name="publicKey" class="form-control" ng-model="user.publicKey" placeholder="Public Key" required>
           <div ng-messages="userForm.publicKey.$error" role="alert">

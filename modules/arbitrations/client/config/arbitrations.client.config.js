@@ -13,7 +13,7 @@
       title: 'Arbitrations',
       state: 'arbitrations',
       type: 'dropdown',
-      roles: ['user', 'seller', 'admin']
+      roles: ['user', 'admin']
     })
 
     Menus.addSubMenuItem('topbar', 'arbitrations', {
