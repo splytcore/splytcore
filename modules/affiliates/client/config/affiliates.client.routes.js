@@ -16,16 +16,16 @@
       })
       .state('affiliates.dashboard', {
         url: '/dashboard',
-        templateUrl: 'modules/affiliates/client/views/form-affiliate.client.view.html',
+        templateUrl: 'modules/affiliates/client/views/dashboard.client.view.html',
         controller: 'AffiliatesController',
         controllerAs: 'vm',
-        resolve: {
-          affiliateResolve: newAffiliate
-        },
-        data: {
-          roles: ['affiliate', 'admin'],
-          pageTitle: 'Affiliates Create'
-        }
+        // resolve: {
+        //   affiliateResolve: newAffiliate
+        // },
+        // data: {
+        //   roles: ['affiliate', 'admin'],
+        //   pageTitle: 'Affiliates Create'
+        // }
       })
   }
 
