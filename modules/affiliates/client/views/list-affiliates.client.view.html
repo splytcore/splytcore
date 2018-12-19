@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Affiliates</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="affiliate in vm.affiliates"
+       ui-sref="affiliates.view({ affiliateId: affiliate._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="affiliate.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="affiliate.user" ng-bind="affiliate.user.displayName"></span>
+        <span ng-if="!affiliate.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="affiliate.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.affiliates.$resolved && !vm.affiliates.length">
+    No Affiliates yet, why don't you <a ui-sref="affiliates.create">create one</a>?
+  </div>
+</section>
