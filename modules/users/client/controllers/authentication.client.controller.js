@@ -48,8 +48,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response.user;
         EthService.updateUserBalances()
         // And redirect to the previous or home page according to role
+        
         if ($scope.authentication.user.roles.indexOf('seller') > -1) {
-          $state.go('dashboards.seller')
+          $state.go('sellers.dashboard')
+        } else 
+        if ($scope.authentication.user.roles.indexOf('affiliate') > -1) {
+          $state.go('affilates.dashboard')
         } else {
           $state.go($state.previous.state.name || 'home', $state.previous.params);
         }
