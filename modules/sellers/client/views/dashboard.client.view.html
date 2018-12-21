@@ -11,8 +11,41 @@
 
 
   <div class="panel panel-primary">
-    <div class="panel-heading"><h4>List New Asset</h4></div>
-    <div class="panel-body">Body Panel</div>
+    <div class="panel-heading"><h4>New Asset</h4></div>
+    <div class="panel-body">
+      <form name="vm.form.assetForm"  ng-submit="vm.create(vm.form.assetForm.$valid)" novalidate>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="title">Title</label>
+          <input name="title" type="text" ng-model="vm.asset.title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="vm.form.assetForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset title is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="description">Description</label>
+          <input name="description" type="text" ng-model="vm.asset.description" id="description" class="form-control" placeholder="Description" required>
+          <div ng-messages="vm.form.assetForm.description.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset description is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="ether">Total Cost</label>
+          <input name="totalCost" type="text" ng-model="vm.asset.totalCost" id="totalCost" class="form-control" placeholder="total cost in tokens" required>
+          <div ng-messages="vm.form.assetForm.totalCost.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Total cost is required.</p>
+          </div>       
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="asset">Inventory</label>       
+          <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required ng-disabled="vm.asset._id">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
     <div class="panel panel-footer">Panel Footer</div>
   </div>
 
@@ -24,26 +57,16 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
+            <th>ID</th>
+            <th>Address</th>
+            <th>Title</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody ng-repeat="asset in vm.assets">
           <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-          </tr>
-          <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>mary@example.com</td>
-          </tr>
-          <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>july@example.com</td>
+            <td>{{ asset._id }}</td>
+            <td>{{ asset.contractAddress }}</td>
+            <td>{{ asset.title }}</td>
           </tr>
         </tbody>
       </table>

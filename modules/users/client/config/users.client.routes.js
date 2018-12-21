@@ -10,7 +10,7 @@ angular.module('users').config(['$stateProvider',
         url: '/settings',
         templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
         data: {
-          roles: ['user', 'admin', 'seller', 'affiliate']
+          roles: ['user', 'admin', 'seller', 'affiliate', 'buyer']
         }
       })
       .state('settings.profile', {

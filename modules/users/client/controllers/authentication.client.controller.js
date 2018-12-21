@@ -44,7 +44,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
       $http.post('/api/auth/signin', $scope.credentials).success(function (response) {
         // If successful we assign the response to the global user model
-        console.log(response)
         $scope.authentication.user = response.user;
         EthService.updateUserBalances()
         // And redirect to the previous or home page according to role
