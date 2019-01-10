@@ -5,8 +5,8 @@ UI to demonstrate contract's functionality
 Tools required  
 NPM 6.4.1  
 Node version 8.12.0
-gulp  3.9.1   
-bower 1.8.3   
+Gulp  3.9.1   
+Bower 1.8.3   
 
 
 git clone https://github.com/splytcore/splytcoreui.git

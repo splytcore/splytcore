@@ -8,6 +8,17 @@
   <div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4">
     <form name="userForm" ng-submit="signup(userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
+
+        <div class="form-group" show-errors>
+          <label for="role">Role</label>
+          <select class="form-control" name="roles" ng-model="credentials.roles" ng-options="x for x in ['seller','affiliate', 'customer', 'admin', 'staff', 'user']" required>
+          </select>
+          <div ng-messages="userForm.roles.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Role is required.</p>
+          </div>
+        </div>
+
+        
         <div class="form-group" show-errors>
           <label for="firstName">First Name</label>
           <input type="text" id="firstName" name="firstName" class="form-control" ng-model="credentials.firstName" placeholder="First Name" required>
@@ -15,6 +26,7 @@
             <p class="help-block error-text" ng-message="required">First name is required.</p>
           </div>
         </div>
+
         <div class="form-group" show-errors>
           <label for="lastName">Last Name</label>
           <input type="text" id="lastName" name="lastName" class="form-control" ng-model="credentials.lastName" placeholder="Last Name" required>

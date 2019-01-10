@@ -101,7 +101,7 @@ var UserSchema = new Schema({
       type: String,
       enum: ['user', 'admin', 'seller', 'buyer', 'marketPlace', 'arbitrator', 'affiliate']
     }],
-    default: ['user'],
+    default: ['seller'],
     required: 'Please provide at least one role'
   },
   updated: {

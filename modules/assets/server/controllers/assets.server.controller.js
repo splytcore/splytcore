@@ -221,7 +221,7 @@ exports.getAllAssetsFromContract = function(req, res, next) {
           // console.log(fields)
           // return (address(asset), asset.assetId(), asset.status(), asset.term(), asset.inventoryCount(), asset.seller(), asset.totalCost());
           assets.push({
-              assetAddress: fields[0],
+              address: fields[0],
               _id: fields[1].substr(2),
               status: fields[2],
               type: fields[3],
