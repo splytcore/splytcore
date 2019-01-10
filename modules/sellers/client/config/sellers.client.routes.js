@@ -27,6 +27,20 @@
           pageTitle: 'Sellers Create'
         }
       })
+      .state('sellers.ordersByAssetId', {
+        url: '/orders/:assetId',
+        templateUrl: 'modules/sellers/client/views/seller-orders.client.view.html',
+        controller: 'SellerOrdersController',
+        controllerAs: 'vm',
+        // resolve: {
+        //   sellerResolve: newSeller
+        // },
+        data: {
+          roles: ['seller', 'admin'],
+          pageTitle: 'Sellers Create'
+        }
+      })
+
   }
 
   // getSeller.$inject = ['$stateParams', 'SellersService'];

@@ -17,4 +17,4 @@
   
     vm.etherscanURL = $cookies.etherscanURL
   }
-}());
+}())

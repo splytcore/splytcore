@@ -277,7 +277,10 @@ exports.list = function(req, res) {
           break
       case 'ORDERS.LISTMYORDERS':
            exports.listMyOrders(req,res)
-          break                       
+          break
+      case 'ORDERS.LISTBYASSETID':
+           exports.listByAssetId(req,res)
+          break                                 
       default:
            exports.listAllMined(req,res)
   }
@@ -481,6 +484,50 @@ exports.listMyOrders = function(req, res) {
   .catch((err) => {
     res.jsonp(err)
   })  
+
+}
+
+exports.listByAssetId = function(req, res) {
+
+  console.log('assetId: ' + req.body.assetId)
+
+  let assetId = req.body.assetId
+
+  Order.find({ asset: assetId }).sort('-created').populate('user', 'displayName').exec(function(err, orders) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    async.each(orders, (order, callback) => {    
+     
+      EthService.getOrderInfoByOrderId(order._id)
+        .then((fields) => {
+
+          console.log(fields)
+
+          order.version = fields[0]
+          // _id: fields[1].substr(2),
+          order.assetAddress = fields[2]
+          order.buyerWallet = fields[3]
+          order.quantity = fields[4]
+          order.trxAmount = fields[5]
+          order.status = fields[6]        
+          callback()
+        })
+        .catch((err) => {
+          callback(err)
+        })
+    }, (err) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(orders);
+      }      
+    })
+  })
 
 }
 /**
