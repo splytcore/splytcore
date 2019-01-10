@@ -490,7 +490,7 @@ exports.listMyOrders = function(req, res) {
 exports.listByAssetId = function(req, res) {
 
   console.log('assetId: ' + req.body.assetId)
-
+    
   let assetId = req.body.assetId
 
   Order.find({ asset: assetId }).sort('-created').populate('user', 'displayName').exec(function(err, orders) {

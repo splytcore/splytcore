@@ -26,7 +26,7 @@
             <td><a ui-sref="assets.edit({ assetId: asset._id })">{{ order._id }}</a></td>
             <td>{{ order.buyer }}</td>
             <td>{{ order.qty }}</td>
-            <td><a ui-sref="assets.edit({ assetId: asset._id })">View Orders</a></td>            
+            <td><a ui-sref="sellers.ordersByAssetId({ assetId: order.asset._id })">View Orders</a></td>            
           </tr>
         </tbody>
       </table>
