@@ -19,7 +19,6 @@
     vm.updateMyCategories = updateMyCategories
     vm.selectCategory = selectCategory
 
-
     vm.categories = CategoriesService.query()
     console.log(vm.categories)
 
@@ -42,8 +41,8 @@
         $scope.$broadcast('show-errors-reset', 'userForm')
 
         $scope.success = true;
-        Authentication.user = response
-        console.log('successful update')      
+        vm.user = response
+        alert('success!')      
   
       }, function (response) {
         $scope.error = response.data.message

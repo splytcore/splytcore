@@ -3,12 +3,15 @@
     <h1>Select Categories</h1>
   </div>
 
+  <div class="row">
+    <div class="col-sm-12"> 
+      <button type="button" ng-click="vm.updateMyCategories()" class="pull-right btn btn-warning">Apply</button>
+    </div>
+  </div>
+
+  <br/>  
 
   <div class="list-group">
-    <span class="list-group-item">
-      <button type="button" ng-click="vm.updateMyCategories()" class="btn btn-warning">Apply</button>
-    </span>
-
     <span ng-repeat="category in vm.categories"
        class="list-group-item">
       <small class="list-group-item-text">
