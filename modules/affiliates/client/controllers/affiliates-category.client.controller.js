@@ -1,43 +1,55 @@
 (function () {
-  'use strict';
+  'use strict'
 
   // Affiliates controller
   angular
     .module('affiliates')
-    .controller('AffiliatesCategoryController', AffiliatesCategoryController);
+    .controller('AffiliatesCategoryController', AffiliatesCategoryController)
 
-  AffiliatesCategoryController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CategoriesService', 'Users'];
+  AffiliatesCategoryController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CategoriesService', 'Users']
 
   function AffiliatesCategoryController ($scope, $state, $window, Authentication, CategoriesService, Users) {
-    var vm = this;
+    var vm = this
 
-    vm.authentication = Authentication;
-    vm.user = vm.authentication.user;
-    vm.updateMyCategory = updateMyCategory
+    vm.authentication = Authentication
+    vm.user = vm.authentication.user
+    
+    console.log(vm.user.categories)
+
+    vm.updateMyCategories = updateMyCategories
+    vm.selectCategory = selectCategory
+
 
     vm.categories = CategoriesService.query()
     console.log(vm.categories)
 
     // update affiliate category setting
-    function updateMyCategory() {
-      console.log('updaging my category')
-  
-      var user = new Users(vm.user);
+    function selectCategory(categoryId) {
+      let indexOf = vm.user.categories.indexOf(categoryId)
+      if (indexOf > -1) {
+        vm.user.categories.splice(indexOf, 1)
+      } else {
+        vm.user.categories.push(categoryId)
+      }
+    }
+
+    // update affiliate category setting
+    function updateMyCategories() {
+      console.log('updaging my category')  
+      var user = new Users(vm.user)
 
       user.$update(function (response) {
-        $scope.$broadcast('show-errors-reset', 'userForm');
+        $scope.$broadcast('show-errors-reset', 'userForm')
 
         $scope.success = true;
-        Authentication.user = response;
+        Authentication.user = response
         console.log('successful update')      
   
       }, function (response) {
-        $scope.error = response.data.message;
-      });
-
+        $scope.error = response.data.message
+      })
 
     }
-
 
   }
 }());

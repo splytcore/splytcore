@@ -2,7 +2,13 @@
   <div class="page-header">
     <h1>Select Categories</h1>
   </div>
+
+
   <div class="list-group">
+    <span class="list-group-item">
+      <button type="button" ng-click="vm.updateMyCategories()" class="btn btn-warning">Apply</button>
+    </span>
+
     <span ng-repeat="category in vm.categories"
        class="list-group-item">
       <small class="list-group-item-text">
@@ -12,11 +18,11 @@
         <span ng-if="category.user" ng-bind="category.user.displayName"></span>
         <span ng-if="!category.user">Deleted User</span>
       </small>
-      <input class="pull-right" type="checkbox" ng-click="vm.updateMyCategory()" ng-checked="">
+      <input class="pull-right" type="checkbox" ng-click="vm.selectCategory(category._id)" ng-checked="vm.user.categories.indexOf(category._id) > -1 ? true : false">
       <h4 class="list-group-item-heading" ng-bind="category.name"></h4>
-
-  </span>
+    </span>
   </div>
+
 
 
 </section>
