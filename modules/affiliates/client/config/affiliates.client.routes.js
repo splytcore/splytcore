@@ -22,11 +22,24 @@
         // resolve: {
         //   affiliateResolve: newAffiliate
         // },
-        // data: {
-        //   roles: ['affiliate', 'admin'],
-        //   pageTitle: 'Affiliates Create'
-        // }
+        data: {
+          roles: ['affiliate', 'admin'],
+          pageTitle: 'Affiliates Create'
+        }
       })
+      .state('affiliates.categories', {
+        url: '/dashboard/categories',
+        templateUrl: 'modules/affiliates/client/views/categories.client.view.html',
+        controller: 'AffiliatesCategoryController',
+        controllerAs: 'vm',
+        // resolve: {
+        //   affiliateResolve: newAffiliate
+        // },
+        data: {
+          roles: ['affiliate', 'admin'],
+          pageTitle: 'Affiliates Category Create'
+        }
+      })      
   }
 
   getAffiliate.$inject = ['$stateParams', 'AffiliatesService'];

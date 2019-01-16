@@ -20,7 +20,7 @@
         controller: 'SellersController',
         controllerAs: 'vm',
         // resolve: {
-        //   sellerResolve: newSeller
+        //   assetResolve: newAsset
         // },
         data: {
           roles: ['seller', 'admin'],
@@ -43,17 +43,17 @@
 
   }
 
-  // getSeller.$inject = ['$stateParams', 'SellersService'];
+  // getAssets.$inject = ['$stateParams', 'AssetsService'];
 
-  // function getSeller($stateParams, SellersService) {
-  //   return SellersService.get({
-  //     sellerId: $stateParams.sellerId
+  // function getAssets($stateParams, AssetsService) {
+  //   return AssetsService.get({
+  //     assetId: $stateParams.sellerId
   //   }).$promise;
   // }
 
-  // newSeller.$inject = ['SellersService'];
+  // newAsset.$inject = ['AssetsService'];
 
-  // function newSeller(SellersService) {
-  //   return new SellersService();
+  // function newAsset(AssetssService) {
+  //   return new AssetsService();
   // }
 }());

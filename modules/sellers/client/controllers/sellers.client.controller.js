@@ -6,19 +6,25 @@
     .module('sellers')
     .controller('SellersController', SellersController);
 
-  SellersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AssetsService'];
+  SellersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AssetsService', 'CategoriesService'];
 
-  function SellersController ($scope, $state, $window, Authentication, AssetsService) {
+  function SellersController ($scope, $state, $window, Authentication, AssetsService, CategoriesService) {
     var vm = this;
 
-    vm.authentication = Authentication;
-    vm.error = null;
-    vm.form = {};
-    vm.remove = remove;
+    vm.user = Authentication.user;
+    vm.error = null
+    vm.form = {}
+    vm.remove = remove
     vm.create = create
 
-    vm.assets = AssetsService.query({ listType: 'ASSETS.LIST' })
+    vm.assets = AssetsService.query({ listType: 'ASSETS.LISTMYASSETS' })
     vm.asset = new AssetsService()
+
+    vm.categories = CategoriesService.query().$promise
+
+
+    console.log('categories: ' + vm.categories)
+
 
     // Remove existing Seller
     function remove() {
@@ -44,6 +50,7 @@
 
       function successCallback(res) {
         alert('Successfull!')
+        vm.assets = AssetsService.query({ listType: 'ASSETS.LISTMYASSETS' })
       }
 
       function errorCallback(res) {

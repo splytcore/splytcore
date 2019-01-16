@@ -22,5 +22,10 @@
       state: 'affiliates.dashboard',
       roles: ['affiliate']
     });
+    Menus.addSubMenuItem('topbar', 'affiliates', {
+      title: 'Categories',
+      state: 'affiliates.categories',
+      roles: ['affiliate']
+    });    
   }
 }());

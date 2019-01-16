@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Categories</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="category in vm.categories"
+       ui-sref="categories.view({ categoryId: category._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="category.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="category.user" ng-bind="category.user.displayName"></span>
+        <span ng-if="!category.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="category.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.categories.$resolved && !vm.categories.length">
+    No Categories yet, why don't you <a ui-sref="categories.create">create one</a>?
+  </div>
+</section>

@@ -77,6 +77,10 @@ var AssetSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  category: {
+    type: Schema.ObjectId,
+    ref: 'Category'
   }
 });
 

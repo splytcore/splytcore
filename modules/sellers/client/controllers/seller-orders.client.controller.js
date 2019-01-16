@@ -7,7 +7,7 @@
 
   SellerOrdersController.$inject = ['OrdersService', '$state'];
 
-  function SellersListController(OrdersService, $tate) {
+  function SellerOrdersController(OrdersService, $state) {
     var vm = this;
 
     vm.orders = OrdersService.query({listType: 'ORDERS.LISTBYASSETID', assetId: $state.params.assetId });

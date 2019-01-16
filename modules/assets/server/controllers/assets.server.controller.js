@@ -18,38 +18,16 @@ exports.create = function(req, res) {
 
   let asset = new Asset(req.body)
   console.log('assetId: ' + asset._id)
-  EthService.createAsset(asset)
-    .on('transactionHash', function(hash){
-      console.log('transactionHash: ' + hash)
-      asset.transactionHash = hash
-      asset.user = req.user
-      asset.save(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.jsonp(asset);
-        }
-      })
-    })    
-    // .on('confirmation', function(confirmationNumber, receipt){
-    //   console.log('confirmation: ' + confirmationNumber)
-    //   console.log('receipt: ' + receipt)
-    // })
-    .on('receipt', function(receipt) {
-      //after it's mined
-      console.log('only receipt: ')
-      console.log(receipt)
-    })
-    .on('error', function (err) {
-      console.log('error creating asset contract')
-      console.log(err.toString())
-      return res.status(400).send({ message : err.toString() });
+  asset.user = req.user
+  asset.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(asset);
     }
-  )
-
-
+  })
 }
 
 
@@ -61,26 +39,10 @@ exports.read = function(req, res, next) {
   console.log('gettign asset detail')
   // convert mongoose document to JSON
   let asset = req.asset ? req.asset.toJSON() : {}
-  // asset.isCurrentUserOwner = req.user && asset.user && asset.user._id.toString() === req.user._id.toString() 
+  
+  asset.isCurrentUserOwner = req.user && asset.user && asset.user._id.toString() === req.user._id.toString() 
 
-  EthService.getAssetInfoByAssetId(asset._id)
-    .then((fields) => {
-      console.log('successful get asset info')
-      console.log(fields)
-      asset.address = fields[0]
-      asset.status = fields[2]
-      asset.type = fields[3]         
-      asset.term = fields[4]
-      asset.inventoryCount = fields[5]
-      asset.seller = fields[6]
-      asset.totalCost = fields[7]
-      console.log(asset)
-      req.asset = asset
-      next()
-    })
-    .catch((err) => {
-      return res.jsonp(err)  
-    })
+  return res.jsonp(asset)  
 
 }
 
@@ -348,27 +310,15 @@ exports.bindTitleAndDescription = function(req, res, next) {
 
 exports.listMyAssets = function(req, res) {
 
-  let wallet = req.user.publicKey.toUpperCase()
-  
-  console.log('wallet: ' + wallet)
-
-  let assets = []
-
-  async.each(req.assets, (asset, callback) => {    
-    
-    if (asset.seller.toUpperCase().indexOf(wallet) > -1) {
-      assets.push(asset)
-    }    
-    callback()
-  }, (err) => {
+  Asset.find({ user : req.user }).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.jsonp(assets);
-    }      
+    }
+    res.jsonp(assets);
   })
+
 }
 /**
  * asset middleware

@@ -104,6 +104,12 @@ var UserSchema = new Schema({
     default: ['seller'],
     required: 'Please provide at least one role'
   },
+  categories: {
+    type: [{
+      type: Schema.ObjectId,
+      ref: 'Category'
+    }]
+  },  
   updated: {
     type: Date
   },

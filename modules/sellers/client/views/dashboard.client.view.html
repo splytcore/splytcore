@@ -58,14 +58,13 @@
           <tr>
             <th>ID</th>
             <th>Title</th>
-            <th>Address</th>
+            <th>Orders</th>
           </tr>
         </thead>
         <tbody ng-repeat="asset in vm.assets">
           <tr>
             <td><a ui-sref="assets.edit({ assetId: asset._id })">{{ asset._id }}</a></td>
             <td>{{ asset.title }}</td>
-            <td>{{ asset.address }}</td>
             <td><a ui-sref="assets.edit({ assetId: asset._id })">View Orders</a></td>            
           </tr>
         </tbody>

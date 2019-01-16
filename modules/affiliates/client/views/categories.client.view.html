@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Select Categories</h1>
+  </div>
+  <div class="list-group">
+    <span ng-repeat="category in vm.categories"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="category.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="category.user" ng-bind="category.user.displayName"></span>
+        <span ng-if="!category.user">Deleted User</span>
+      </small>
+      <input class="pull-right" type="checkbox" ng-click="vm.updateMyCategory()" ng-checked="">
+      <h4 class="list-group-item-heading" ng-bind="category.name"></h4>
+
+  </span>
+  </div>
+
+
+</section>
