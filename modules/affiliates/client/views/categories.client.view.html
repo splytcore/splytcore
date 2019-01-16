@@ -3,6 +3,14 @@
     <h1>Select Categories</h1>
   </div>
 
+  <div ng-show="vm.error" class="text-danger">
+    <strong ng-bind="vm.error"></strong>
+  </div>
+
+  <div ng-show="vm.success" class="text-success">
+    <strong>Success!</strong>
+  </div>
+
   <div class="row">
     <div class="col-sm-12"> 
       <button type="button" ng-click="vm.updateMyCategories()" class="pull-right btn btn-warning">Apply</button>

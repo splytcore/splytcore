@@ -34,18 +34,19 @@
 
     // update affiliate category setting
     function updateMyCategories() {
+      vm.success = false
+
       console.log('updaging my category')  
       var user = new Users(vm.user)
 
       user.$update(function (response) {
         $scope.$broadcast('show-errors-reset', 'userForm')
 
-        $scope.success = true;
+        vm.success = true;
         vm.user = response
-        alert('success!')      
   
       }, function (response) {
-        $scope.error = response.data.message
+        vm.error = response.data.message
       })
 
     }
