@@ -6,13 +6,14 @@
     .module('stores')
     .controller('StoresController', StoresController);
 
-  StoresController.$inject = ['$scope', '$state', '$window', 'Authentication', 'storeResolve'];
+  StoresController.$inject = ['$scope', '$state', '$window', 'Authentication', 'storeResolve', 'CategoriesService'];
 
-  function StoresController ($scope, $state, $window, Authentication, store) {
+  function StoresController ($scope, $state, $window, Authentication, store, CategoriesService) {
     var vm = this;
 
     vm.authentication = Authentication;
     vm.store = store;
+    console.log(vm.store.categories)
     vm.error = null;
     vm.form = {};
     vm.remove = remove;

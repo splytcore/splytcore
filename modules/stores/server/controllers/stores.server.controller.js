@@ -13,8 +13,8 @@ var path = require('path'),
  * Create a Store
  */
 exports.create = function(req, res) {
-  var store = new Store(req.body);
-  store.user = req.user;
+  let store = new Store(req.body);
+  store.affiliate = req.user;
 
   store.save(function(err) {
     if (err) {
@@ -32,14 +32,10 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  var store = req.store ? req.store.toJSON() : {};
-
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  store.isCurrentUserOwner = req.user && store.user && store.user._id.toString() === req.user._id.toString();
+  let store = req.store ? req.store.toJSON() : {};
 
   res.jsonp(store);
-};
+}
 
 /**
  * Update a Store
@@ -81,7 +77,7 @@ exports.delete = function(req, res) {
  * List of Stores
  */
 exports.list = function(req, res) {
-  Store.find().sort('-created').populate('user', 'displayName').exec(function(err, stores) {
+  Store.find().sort('-created').populate('affiliate', 'displayName').exec(function(err, stores) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -90,7 +86,7 @@ exports.list = function(req, res) {
       res.jsonp(stores);
     }
   });
-};
+}
 
 /**
  * Store middleware
@@ -103,7 +99,7 @@ exports.storeByID = function(req, res, next, id) {
     });
   }
 
-  Store.findById(id).populate('user', 'displayName').exec(function (err, store) {
+  Store.findById(id).populate('affiliate', 'displayName').populate('categories').exec(function (err, store) {
     if (err) {
       return next(err);
     } else if (!store) {

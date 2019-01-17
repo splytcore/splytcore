@@ -32,7 +32,7 @@
           storeResolve: newStore
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['user', 'admin', 'affiliate'],
           pageTitle: 'Stores Create'
         }
       })

@@ -13,10 +13,9 @@
 
   <div class="row">
     <div class="col-sm-12"> 
-      <button type="button" ng-click="vm.updateMyCategories()" class="pull-right btn btn-warning">Apply</button>
+      <button type="button" ng-click="vm.updateMyStoreCategories()" class="pull-right btn btn-warning">Apply</button>
     </div>
   </div>
-
   <br/>  
 
   <div class="list-group">
@@ -25,15 +24,10 @@
       <small class="list-group-item-text">
         Posted on
         <span ng-bind="category.created | date:'mediumDate'"></span>
-        by
-        <span ng-if="category.user" ng-bind="category.user.displayName"></span>
-        <span ng-if="!category.user">Deleted User</span>
       </small>
-      <input class="pull-right" type="checkbox" ng-click="vm.selectCategory(category._id)" ng-checked="vm.user.categories.indexOf(category._id) > -1 ? true : false">
+      <input class="pull-right" type="checkbox" ng-click="vm.selectCategory(category._id)" ng-checked="vm.store.categories.indexOf(category._id) > -1 ? true : false">
       <h4 class="list-group-item-heading" ng-bind="category.name"></h4>
     </span>
   </div>
-
-
 
 </section>

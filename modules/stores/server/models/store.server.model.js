@@ -20,10 +20,18 @@ var StoreSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  user: {
+  categories: [{
+    type: Schema.ObjectId,
+    ref: 'Category'
+  }],   
+  affiliate: {
     type: Schema.ObjectId,
     ref: 'User'
   }
-});
+})
 
-mongoose.model('Store', StoreSchema);
+
+mongoose.model('Store', StoreSchema)
+
+
+

@@ -28,7 +28,7 @@
         }
       })
       .state('affiliates.categories', {
-        url: '/dashboard/categories',
+        url: '/categories',
         templateUrl: 'modules/affiliates/client/views/categories.client.view.html',
         controller: 'AffiliatesCategoryController',
         controllerAs: 'vm',

@@ -3,7 +3,7 @@
 
   angular
     .module('affiliates')
-    .run(menuConfig);
+    .run(menuConfig)
 
   menuConfig.$inject = ['Menus'];
 
@@ -14,18 +14,18 @@
       state: 'affiliates',
       type: 'dropdown',
       roles: ['affiliate']
-    });
+    })
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'affiliates', {
       title: 'Affiliate Dashboard',
       state: 'affiliates.dashboard',
       roles: ['affiliate']
-    });
+    })
     Menus.addSubMenuItem('topbar', 'affiliates', {
-      title: 'Categories',
+      title: 'Categories Settings',
       state: 'affiliates.categories',
       roles: ['affiliate']
-    });    
+    })    
   }
-}());
+}())

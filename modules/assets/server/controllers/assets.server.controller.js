@@ -158,6 +158,9 @@ exports.list = function(req, res) {
       case 'ASSETS.LISTMYASSETS':
            exports.listMyAssets(req,res)
           break                       
+      case 'ASSETS.LISTBYCATEGORY':
+           exports.listByCategory(req,res)
+          break    
       default:
            exports.listAllMined(req,res)
   }
@@ -308,6 +311,10 @@ exports.bindTitleAndDescription = function(req, res, next) {
   }) 
 }
 
+/**
+ * List assets for signed in seller
+ */
+
 exports.listMyAssets = function(req, res) {
 
   Asset.find({ user : req.user }).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
@@ -320,6 +327,27 @@ exports.listMyAssets = function(req, res) {
   })
 
 }
+
+/**
+ * List Assets Category
+ */
+
+exports.listByCategory = function(req, res) {
+
+  let category = req.body.category
+
+  Asset.find({ category : category }).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.jsonp(assets)
+  })
+
+}
+
+
 /**
  * asset middleware
  */

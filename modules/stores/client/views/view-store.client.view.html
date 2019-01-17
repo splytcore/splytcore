@@ -2,25 +2,18 @@
   <div class="page-header">
     <h1 ng-bind="vm.store.name"></h1>
   </div>
-  <div class="pull-right"
-       ng-show="vm.store.isCurrentUserOwner">
-    <a class="btn btn-primary"
-       ui-sref="stores.edit({ storeId: vm.store._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
+
+
+  <div class="list-group">
+    <span ng-repeat="category in vm.store.categories"
+       class="list-group-item">
+         
+	    <div class="form-group text-left">
+	      <img ng-src="modules/users/client/img/profile/default.png" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
+	    </div>
+      	<h4 class="list-group-item-heading" ng-bind="category.name"></h4>
+    </span>
   </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.store.created | date:'mediumDate'"></span>
-      by
-      <span ng-if="vm.store.user"
-            ng-bind="vm.store.user.displayName"></span>
-      <span ng-if="!vm.store.user">Deleted User</span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="vm.store.content"></p>
+
+
 </section>

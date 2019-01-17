@@ -26,7 +26,7 @@
     Menus.addSubMenuItem('topbar', 'stores', {
       title: 'Create Store',
       state: 'stores.create',
-      roles: ['user']
+      roles: ['affiliate', 'user']
     });
   }
 }());
