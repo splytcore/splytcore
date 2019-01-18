@@ -5,14 +5,14 @@ angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentica
     // This provides Authentication context.
     $scope.authentication = Authentication
     $scope.user = $scope.authentication.user
-    EthService.getSplytServiceInfo()
-      .success((result) => {
-        $scope.splyt = result
-        $cookies.etherscanURL = result.etherscanURL
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    // EthService.getSplytServiceInfo()
+    //   .success((result) => {
+    //     $scope.splyt = result
+    //     $cookies.etherscanURL = result.etherscanURL
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
 
     // let callAtInterval = function() {
     //   console.log("Update User Balances");

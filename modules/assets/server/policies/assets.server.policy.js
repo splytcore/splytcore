@@ -22,9 +22,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'seller'],
+    roles: ['user', 'seller', 'affiliate'],
     allows: [{
-      resources: ['/api/assets', '/api/assetByAddress/:assetAddress'],
+      resources: ['/api/assets'],
       permissions: ['get', 'post']
     }, {
       resources: '/api/assets/:assetId',

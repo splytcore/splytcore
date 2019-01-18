@@ -19,7 +19,7 @@
 
         <div class="form-group" show-errors>
           <label for="role">Role</label> 
-          <select class="form-control" name="role" ng-model="user.roles[0]" ng-options="x for x in ['seller','affiliate']" required>
+          <select class="form-control" name="role" ng-model="user.roles[0]" ng-options="x for x in ['seller','affiliate', 'user']" required>
           </select>          
           <div ng-messages="userForm.role.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Role is required.</p>
@@ -33,7 +33,7 @@
         </div>
 
 
-        <div class="form-group" show-errors>
+<!--         <div class="form-group" show-errors>
           <label for="publicKey">Public Key(wallet we generated ONLY!)</label>
           <input type="text" id="publicKey" name="publicKey" class="form-control" ng-model="user.publicKey" placeholder="Public Key" required>
           <div ng-messages="userForm.publicKey.$error" role="alert">
@@ -64,7 +64,7 @@
           <button type="button" ng-click="initUser()" class="btn btn-default">Init Tokens</button>
         </div>
                         
-
+ -->
         <div class="form-group" show-errors>
           <label for="email">Email</label>
           <input type="email" id="email" name="email" class="form-control" ng-model="user.email" placeholder="Email" lowercase required>

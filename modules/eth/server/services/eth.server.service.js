@@ -132,7 +132,7 @@ web3.eth.net.isListening()
     }
   }).catch((err) => {
     console.log('error connecting to web3')
-    console.log(err)
+    // console.log(err)
   })  
 
   return
@@ -149,7 +149,7 @@ web3.eth.net.isListening()
   return
 }).catch((err) => {
   console.log('error connecting to web3')
-  console.log(err)
+  // console.log(err)
 })
 
 //by default unlock for 1 hour

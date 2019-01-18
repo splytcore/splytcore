@@ -55,8 +55,8 @@ gulp.task('watch', function () {
   gulp.watch(defaultAssets.client.js, ['jshint']).on('change', plugins.livereload.changed)
   gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed)
 
-  gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed)
-  gulp.watch(defaultAssets.client.less, ['less', 'csslint']).on('change', plugins.livereload.changed)
+  // gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed)
+  // gulp.watch(defaultAssets.client.less, ['less', 'csslint']).on('change', plugins.livereload.changed)
 
   if (process.env.NODE_ENV === 'production') {
     gulp.watch(defaultAssets.server.gulpConfig, ['templatecache', 'jshint'])
@@ -135,26 +135,26 @@ gulp.task('cssmin', function () {
 })
 
 // Sass task
-gulp.task('sass', function () {
-  return gulp.src(defaultAssets.client.sass)
-    .pipe(plugins.sass())
-    .pipe(plugins.autoprefixer())
-    .pipe(plugins.rename(function (file) {
-      file.dirname = file.dirname.replace(path.sep + 'scss', path.sep + 'css')
-    }))
-    .pipe(gulp.dest('./modules/'))
-})
+// gulp.task('sass', function () {
+//   return gulp.src(defaultAssets.client.sass)
+//     .pipe(plugins.sass())
+//     .pipe(plugins.autoprefixer())
+//     .pipe(plugins.rename(function (file) {
+//       file.dirname = file.dirname.replace(path.sep + 'scss', path.sep + 'css')
+//     }))
+//     .pipe(gulp.dest('./modules/'))
+// })
 
 // Less task
-gulp.task('less', function () {
-  return gulp.src(defaultAssets.client.less)
-    .pipe(plugins.less())
-    .pipe(plugins.autoprefixer())
-    .pipe(plugins.rename(function (file) {
-      file.dirname = file.dirname.replace(path.sep + 'less', path.sep + 'css')
-    }))
-    .pipe(gulp.dest('./modules/'));
-})
+// gulp.task('less', function () {
+//   return gulp.src(defaultAssets.client.less)
+//     .pipe(plugins.less())
+//     .pipe(plugins.autoprefixer())
+//     .pipe(plugins.rename(function (file) {
+//       file.dirname = file.dirname.replace(path.sep + 'less', path.sep + 'css')
+//     }))
+//     .pipe(gulp.dest('./modules/'));
+// })
 
 // Angular template cache task
 gulp.task('templatecache', function () {

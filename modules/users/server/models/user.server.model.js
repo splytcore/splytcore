@@ -32,8 +32,8 @@ var validateLocalStrategyEmail = function (email) {
  */
 var validateInstagramStrategyProperty = function () {
   
-  console.log(this.roles)
-  console.log(this.instagram.length)
+  // console.log(this.roles)
+  // console.log(this.instagram.length)
 
   return ((this.roles.indexOf('affiliate') > -1 && !this.instagram.length) ? false : true)
 }

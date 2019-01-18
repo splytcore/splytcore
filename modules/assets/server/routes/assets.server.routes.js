@@ -11,19 +11,15 @@ const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.co
 module.exports = function(app) {
   // assets Routes
   app.route('/api/assets').all(assetsPolicy.isAllowed)
-    .get(assets.getAllAssetsFromContract, assets.bindTitleAndDescription, assets.list)
-    .post(Eth.unlockAccount, assets.create)
-
-  app.route('/api/assetByAddress/:assetAddress').all(assetsPolicy.isAllowed)
-    .get(assets.returnAsset)
+    .get(assets.list)
+    .post(assets.create)
 
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
-    .get(assets.read, assets.bindMarketPlaces)
+    .get(assets.read)
     .put(assets.update)
     .delete(assets.delete)
 
   // Finish by binding the asset middleware
   app.param('assetId', assets.assetByID)
-  app.param('assetAddress', assets.getAssetByAddress)
 
 }
