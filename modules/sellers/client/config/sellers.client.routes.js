@@ -40,7 +40,19 @@
           pageTitle: 'Sellers Create'
         }
       })
-
+      .state('sellers.assets', {
+        url: '/assets',
+        templateUrl: 'modules/sellers/client/views/seller-assets.client.view.html',
+        controller: 'SellerAssetsController',
+        controllerAs: 'vm',
+        // resolve: {
+        //   sellerResolve: newSeller
+        // },
+        data: {
+          roles: ['seller', 'admin'],
+          pageTitle: 'Sellers Create'
+        }
+      })
   }
 
   // getAssets.$inject = ['$stateParams', 'AssetsService'];

@@ -1,11 +1,11 @@
 (function () {
-  'use strict';
+  'use strict'
 
   angular
     .module('sellers')
-    .run(menuConfig);
+    .run(menuConfig)
 
-  menuConfig.$inject = ['Menus'];
+  menuConfig.$inject = ['Menus']
 
   function menuConfig(Menus) {
     // Set top bar menu items
@@ -14,13 +14,18 @@
       state: 'sellers',
       type: 'dropdown',
       roles: ['seller']
-    });
+    })
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'sellers', {
       title: 'Dashboard',
       state: 'sellers.dashboard',
       roles: ['seller']
-    });
+    })
+    Menus.addSubMenuItem('topbar', 'sellers', {
+      title: 'Assets',
+      state: 'sellers.assets',
+      roles: ['seller']
+    })
   }
-}());
+}())

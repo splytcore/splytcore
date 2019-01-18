@@ -16,6 +16,10 @@ var StoreSchema = new Schema({
     required: 'Please fill Store name',
     trim: true
   },
+  description: {
+    type: String,
+    default: ''
+  },  
   created: {
     type: Date,
     default: Date.now

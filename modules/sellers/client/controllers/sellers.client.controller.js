@@ -41,11 +41,6 @@
         return false;
       }
       console.log(vm.asset)
-      //se default values
-      vm.asset.term = 0
-      vm.asset.marketPlaces = '0x2A8F9942129897019C5Ba80B1F1326AF7f814bC3'
-      vm.asset.seller = vm.authentication.user.publicKey
-
       vm.asset.$save(successCallback, errorCallback);
 
       function successCallback(res) {
