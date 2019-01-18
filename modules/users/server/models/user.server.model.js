@@ -28,6 +28,17 @@ var validateLocalStrategyEmail = function (email) {
 };
 
 /**
+ * A Validation function for instagram signup
+ */
+var validateInstagramStrategyProperty = function () {
+  
+  console.log(this.roles)
+  console.log(this.instagram.length)
+
+  return ((this.roles.indexOf('affiliate') > -1 && !this.instagram.length) ? false : true)
+}
+
+/**
  * User Schema
  */
 var UserSchema = new Schema({
@@ -67,11 +78,6 @@ var UserSchema = new Schema({
     type: String,
     trim: true
   },   
-  type: {
-    type: String,
-    default: 'SELLER',
-    enum: ['SELLER', 'BUYER', 'MARKET_PLACE', 'ARBITRAITOR']
-  },
   email: {
     type: String,
     unique: true,
@@ -85,6 +91,11 @@ var UserSchema = new Schema({
     required: 'Provider is required',
     default: 'local'
   },  
+  instagram: {
+    type: String,
+    default: '',
+    validate: [validateInstagramStrategyProperty, 'Please fill in your Instagram Username']
+  },
   password: {
     type: String,
     default: ''

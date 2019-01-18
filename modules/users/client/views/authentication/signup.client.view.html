@@ -18,6 +18,15 @@
           </div>
         </div>
 
+
+        <div class="form-group" ng-show="credentials.roles.indexOf('affiliate') > -1" show-errors>
+          <label for="instagram">Instagram Username</label>          
+          <input type="text" id="instagram" name="instagram" class="form-control" ng-model="credentials.instagram" placeholder="Instagram Username">
+          <div ng-messages="userForm.instagram.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Instagram Username is required.</p>
+          </div>
+        </div>
+
         
         <div class="form-group" show-errors>
           <label for="firstName">First Name</label>

@@ -32,46 +32,26 @@ exports.signup = function (req, res) {
   // Add missing user fields
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName
-  EthService.createAccount2(user.password)
-    .then((wallet) => {
-    console.log('account')
-    console.log(wallet)
-    EthService.initUser(wallet) //give default number of tokens for DEV ONLY
-      .on('transactionHash', (hash) => {
-        console.log('trx for giving tokens: ' + hash)
-      }) 
-      .on('error', (err) => {
-        console.log('error giving tokens')
-        console.log(err)
-      }
-    )  
+  user.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      // Remove sensitive data before login
+      user.password = undefined
+      user.salt = undefined
 
-    user.publicKey = wallet
-    user.walletPassword = user.password
-    user.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        // Remove sensitive data before login
-        user.password = undefined
-        user.salt = undefined
-
-        req.login(user, function (err) {
-          if (err) {
-            res.status(400).send(err)
-          } else {
-            res.json(user)
-          }
-        })
-      }
-    })
-
+      req.login(user, function (err) {
+        if (err) {
+          res.status(400).send(err)
+        } else {
+          res.json(user)
+        }
+      })
+    }
   })
-  .catch((err) => {
-    res.status(400).send(err)
-  })
+
 
 
 }
