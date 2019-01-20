@@ -15,7 +15,7 @@ var AssetSchema = new Schema({
     default: 'Fake Asset #' + Date.now,
     required: 'Please fill title',
     trim: true
-  },  
+  },   
   description: {
     type: String,
     default: '',
@@ -36,7 +36,8 @@ var AssetSchema = new Schema({
   },
   status: {
     type: String,
-    default: '0'
+    default: 'active',
+    enum: [ 'active', 'in_arbitration', 'expired', 'sold_out', 'closed', 'other']
   },
   imageURL: {
     type: String,
@@ -53,7 +54,12 @@ var AssetSchema = new Schema({
   category: {
     type: Schema.ObjectId,
     ref: 'Category'
-  }
-});
+  },
+  brand: {
+    type: String,
+    required: 'Please fill brand',
+    trim: true
+  }  
+})
 
 mongoose.model('Asset', AssetSchema);

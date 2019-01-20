@@ -183,6 +183,7 @@ exports.assetByID = function(req, res, next, id) {
 
   Asset.findById(id)
   .populate('user', 'displayName')
+  .populate('category', 'name')  
   .exec(function (err, asset) {
 
     if (err) {

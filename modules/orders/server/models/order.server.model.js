@@ -14,60 +14,28 @@ var OrderSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  asset: {
-    type: Schema.ObjectId,
-    ref: 'Asset'
-  },
-  assetAddress: {
-    type: String,
-    default: ''
-  },
   status: {
-    type: Number,
-    default: 0
+    type: String,
+    enum: ['pending', 'paid', 'refunded'],
+    default: 'pending' 
   },    
-  type: {
+  productCount: {
     type: Number,
     default: 0
-  },  
-  quantity: {
-    type: Number,
-    default: 1
   },
-  trxAmount: {
+  totalCost: {
     type: Number,
     default: 0
-  },  
-  //buyer wallet
-  buyerWallet: {
-    type: String,
-    default: ''
-  },
-  //market place wallet
-  marketPlace: {
-    type: String,
-    default: ''
-  },  
-  transactionHash: {
-    type: String,
-    default: ''
-  },  
-  contributions: [{
-    contributor: {
-      type: String
-    },
-    //contract returns date in seconds
-    date: {
-      type: Number
-    },
-    amount: {
-      type: Number
-    }    
-  }], 
-  user: {
+  },   
+  //customer
+  customer: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  items: {
+    type: Schema.ObjectId,
+    ref: 'OrderItem'
   }
-});
+})
 
 mongoose.model('Order', OrderSchema);

@@ -35,11 +35,28 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="ether">Status(0:NOT_MINED, 1:ACTIVE, 2:IN_ARBITRATION, 3:EXPIRED, 4:SOLD_OUT, 5:CLOSED, 6:OTHER)</label>
+          <label class="control-label" for="category">Category</label>
+          <input name="category" type="text" ng-model="vm.asset.category.name" id="description" class="form-control" placeholder="Category" required>
+          <div ng-messages="vm.form.assetForm.category.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset category is required.</p>
+          </div>
+        </div>
 
-          <span name="status" id="status" class="form-control">
-            {{ vm.asset.status }}
-          </span>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="brand">Brand</label>
+          <input name="brand" type="text" ng-model="vm.asset.brand" id="brand" class="form-control" placeholder="Description" required>
+          <div ng-messages="vm.form.assetForm.brand.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset brand is required.</p>
+          </div>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="ether">Status</label>
+          <input name="status" type="text" ng-model="vm.asset.status" id="status" class="form-control" placeholder="Status" required>
+            <div ng-messages="vm.form.assetForm.status.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Status is required.</p>
+          </div>  
         </div>
 
         <div class="form-group" show-errors>
@@ -58,7 +75,8 @@
 
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.asset._id ? 'Update' : 'Create'}}</button>
-          <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>        
+          <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>    
+          <button type="button" class="btn btn-default" ng-click="vm.addToCart(vm._asset._id, 3)">Add To Cart</button>                         
         </div>
      
       <div class="form-group">

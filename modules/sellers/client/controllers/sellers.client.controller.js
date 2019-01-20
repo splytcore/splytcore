@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  // Sellers controller
+  // Sellers Dashboard controller
   angular
     .module('sellers')
     .controller('SellersController', SellersController);
@@ -20,10 +20,9 @@
     vm.assets = AssetsService.query({ listType: 'ASSETS.LISTMYASSETS' })
     vm.asset = new AssetsService()
 
-    vm.categories = CategoriesService.query().$promise
+    vm.categories = CategoriesService.query()
 
-
-    console.log('categories: ' + vm.categories)
+    console.log(vm.categories)
 
 
     // Remove existing Seller

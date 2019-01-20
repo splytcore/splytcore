@@ -6,15 +6,37 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService', '$cookies', '$filter'];
+  AssetsController.$inject = ['CartsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService', '$cookies', '$filter', 'CategoriesService'];
 
-  function AssetsController ($scope, $state, $window, Authentication, asset, $q, EthService, MarketsService, $cookies, $filter) {
+  function AssetsController (CartsService, $scope, $state, $window, Authentication, asset, $q, EthService, MarketsService, $cookies, $filter, CategoriesService) {
     var vm = this
     vm.save = save   
     vm.asset = asset
 
+    vm.categories = CategoriesService.query()
+
     vm.remove = remove
     vm.user = Authentication.user
+    vm.addToCart = addToCart
+
+    function addToCart(assetId, count) {
+      let cart = new CartsService()
+      
+      // vm.store.$update((response) => {
+      //   vm.success = true;
+      // }, (error) => {
+      //   vm.error = error.data.message
+      // })
+
+
+      cart.$save((result) => {
+        console.log('success')
+      }, (error) => {
+        console.log('error')
+      })
+
+    }
+
 
     function save(isValid) {
       if (!isValid) {
@@ -35,10 +57,7 @@
       }
 
       function successCallback(asset) {  
-        console.log(asset.transactionHash)              
-        EthService.updateUserBalances()
-        $state.go('assets.listPending')
-          //EthService.createAsset(asset); //if you want to use metamask. Currently using backend to interact with contracts
+        alert('updated!')
       }
 
       function errorCallback(res) {

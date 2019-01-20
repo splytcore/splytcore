@@ -18,17 +18,36 @@ exports.create = function(req, res) {
 
   console.log('creating order')
 
-  var order = new Order(req.body)
-  order.user = req.user
-  order.save((err) => {
-    if (err) {
-      return res.status(400).send({
-        message: err.toString()
-      })
-    } else {
-      res.jsonp(order)
-    }         
+  let createOrder = new Promise((resolve, reject) => {
+    let order = new Order(req.body)
+    order.user = req.user
+    order.save((err) => {
+      
+      if (err) {
+        reject(err)
+      } else {
+        resolve(order)
+      }         
+    })
   })
+
+
+  createOrder.then((order) => {
+    var item = new OrderItem(req.body)
+    item.save((err) => {
+      if (err) {
+        return res.status(400).send({
+          message: err.toString()
+        })
+      } else {
+        res.jsonp(order)
+      }         
+    })
+  })
+  .error((err) => {
+    console.log(err)    
+  })
+
 
 }
 
