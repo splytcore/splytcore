@@ -18,8 +18,11 @@
     vm.remove = remove
     vm.user = Authentication.user
     vm.addToCart = addToCart
+    vm.createCart = createCart
 
-    function addToCart(assetId, count) {
+    console.log('cart id: ' + $cookies.cartId)
+
+    function createCart(assetId, count) {
       let cart = new CartsService()
       
       // vm.store.$update((response) => {
@@ -37,6 +40,27 @@
 
     }
 
+
+    function addToCart(assetId, count) {
+
+      let cart = new CartsService()
+      
+      // vm.store.$update((response) => {
+      //   vm.success = true;
+      // }, (error) => {
+      //   vm.error = error.data.message
+      // })
+
+
+      cart.$save((result) => {
+        console.log('success')
+        console.log(result)
+        $cookies.cartId = result._id
+      }, (error) => {
+        console.log('error')
+      })
+
+    }
 
     function save(isValid) {
       if (!isValid) {

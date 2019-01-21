@@ -17,14 +17,14 @@
     })
 
     // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'carts', {
-      title: 'Carts',
-      state: 'carts.list',
-      roles: ['affiliate', 'customer', 'seller']
-    })
+    // Menus.addSubMenuItem('topbar', 'carts', {
+    //   title: 'Carts',
+    //   state: 'carts.list',
+    //   roles: ['affiliate', 'customer', 'seller']
+    // })
     Menus.addSubMenuItem('topbar', 'carts', {
       title: 'My Shopping Cart',
-      state: 'carts.create',
+      state: 'carts.checkout',
       roles: ['affiliate', 'customer', 'seller']
     })    
   }

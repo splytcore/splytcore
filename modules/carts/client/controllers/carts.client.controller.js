@@ -6,13 +6,23 @@
     .module('carts')
     .controller('CartsController', CartsController);
 
-  CartsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'cartResolve'];
+  CartsController.$inject = ['$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsService'];
 
-  function CartsController ($scope, $state, $window, Authentication, cart) {
+  function CartsController ($cookies, $scope, $state, $window, Authentication, CartsService) {
     var vm = this;
 
     vm.authentication = Authentication;
-    vm.cart = cart;
+    
+    console.log('cart id: ' + $cookies.cartId)
+
+    if ($cookies.cartId) {
+      vm.cart = CartsService.get({ cartId: $cookies.cartId })
+    } else {
+      vm.cart = new CartsService()
+    }
+
+    console.log(vm.cart)
+
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
@@ -21,7 +31,8 @@
     // Remove existing Cart
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
-        vm.cart.$remove($state.go('carts.list'));
+        vm.cart.$remove($state.go('carts.checkout'));
+        delete $cookies.cartId
       }
     }
 
@@ -40,7 +51,9 @@
       }
 
       function successCallback(res) {
-        $state.go('carts.view', {
+        $cookies.cartId = res._id
+
+        $state.go('carts.checkout', {
           cartId: res._id
         });
       }

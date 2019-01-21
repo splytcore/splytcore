@@ -28,7 +28,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'post']
     }, {
       resources: '/api/carts/:cartId',
-      permissions: ['get']
+      permissions: ['get', 'post', 'put', 'delete']
     }]
   }, {
     roles: ['guest'],
