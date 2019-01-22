@@ -10,11 +10,15 @@ var mongoose = require('mongoose'),
  * Cart Item Schema
  */
 var CartItemSchema = new Schema({
+  cart: {
+    type: Schema.ObjectId,
+    ref: 'Cart'
+  },  
   asset: {
     type: Schema.ObjectId,
     ref: 'Asset'
   },
-  count: {
+  quantity: {
     type: Number,
     default: 1
   }  

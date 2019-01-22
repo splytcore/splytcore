@@ -13,7 +13,7 @@
         <span ng-if="cart.user" ng-bind="cart.user.displayName"></span>
         <span ng-if="!cart.user">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="cart.name"></h4>
+      <h4 class="list-group-item-heading" ng-bind="cart._id"></h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="vm.carts.$resolved && !vm.carts.length">

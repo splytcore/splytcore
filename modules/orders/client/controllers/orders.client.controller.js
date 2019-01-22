@@ -33,36 +33,6 @@
       { id: 2,name: 'Approve Refund(You must be seller)'}
     ]
 
-    vm.totalContributions = 0
-    if (!vm.order._id) {
-        vm.order.buyerWallet = vm.user.publicKey
-        vm.order.assetAddress = $stateParams.assetAddress
-        vm.order.trxAmount = $stateParams.trxAmount   
-        vm.order.quantity = 1
-        vm.order.status = 0
-        MarketsService.query((result) => {
-          vm.marketPlaces = result
-          vm.selectedMarketPlace = result.length > 0 ? '' : vm.marketPlaces[0].wallet
-        })
-
-    } else {
-      console.log(vm.order.marketPlace)
-      vm.selectedMarketPlace = vm.order.marketPlace
-      AssetsManagerService.getAssetByAddress(vm.order.assetAddress)
-      .then((result) => {
-        vm.asset = result.data
-        console.log(vm.asset)
-      })
-
-      if (vm.order.contributions.length > 0) {
-        vm.totalContributions = 0
-        vm.order.contributions.forEach((c) => {
-          vm.totalContributions += parseInt(c.amount)
-        })
-      }
-    }
-
-
     function requestRefund() {
 
       EthService.requestRefund(vm.order._id)

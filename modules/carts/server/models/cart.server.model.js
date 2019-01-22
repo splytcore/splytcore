@@ -11,11 +11,6 @@ const Schema = mongoose.Schema
  */
 
 var CartSchema = new Schema({
-  name: {
-    type: String,
-    default: 'My Shopping Cart',
-    trim: true
-  },
   created: {
     type: Date,
     default: Date.now

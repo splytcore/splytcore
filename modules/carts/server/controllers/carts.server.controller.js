@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Cart = mongoose.model('Cart'),
+  CartItem = mongoose.model('CartItem'),  
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -14,7 +15,7 @@ var path = require('path'),
  */
 exports.create = function(req, res) {
   var cart = new Cart(req.body);
-  cart.customer = req.user;
+  // cart.customer = req.user;
 
   cart.save(function(err) {
     if (err) {
@@ -32,14 +33,20 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  var cart = req.cart ? req.cart.toJSON() : {};
+  var cart = req.cart ? req.cart.toJSON() : {}
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  cart.isCurrentUserOwner = req.user && cart.user && cart.user._id.toString() === req.user._id.toString();
+  CartItem.find({cart: cart._id}).sort('-created').populate('asset').exec(function(err, cartItems) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } else {
+      cart.cartItems = cartItems
+      res.jsonp(cart)
+    }
+  })
 
-  res.jsonp(cart);
-};
+}
 
 /**
  * Update a Cart
@@ -96,7 +103,7 @@ exports.list = function(req, res) {
  * Cart middleware
  */
 exports.cartByID = function(req, res, next, id) {
-
+  console.log('cartId ' + id)
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Cart is invalid'

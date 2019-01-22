@@ -12,13 +12,13 @@ module.exports = function(app) {
   // Orders Routes
   app.route('/api/orders').all(ordersPolicy.isAllowed)
     .get(orders.list)
-    .post(Eth.unlockAccount, orders.create);
+    .post(orders.create);
 
-  app.route('/api/orders/:orderId/requestRefund').all(ordersPolicy.isAllowed)
-    .post(orders.requestRefund)
+  // app.route('/api/orders/:orderId/requestRefund').all(ordersPolicy.isAllowed)
+  //   .post(orders.requestRefund)
 
-  app.route('/api/orders/:orderId/approveRefund').all(ordersPolicy.isAllowed)
-    .post(orders.approveRefund)
+  // app.route('/api/orders/:orderId/approveRefund').all(ordersPolicy.isAllowed)
+  //   .post(orders.approveRefund)
 
 
   app.route('/api/orders/:orderId').all(ordersPolicy.isAllowed)

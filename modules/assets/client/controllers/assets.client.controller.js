@@ -6,9 +6,9 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['CartsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService', '$cookies', '$filter', 'CategoriesService'];
+  AssetsController.$inject = ['CartsService', 'CartsItemsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService', '$cookies', '$filter', 'CategoriesService'];
 
-  function AssetsController (CartsService, $scope, $state, $window, Authentication, asset, $q, EthService, MarketsService, $cookies, $filter, CategoriesService) {
+  function AssetsController (CartsService, CartsItemsService,  $scope, $state, $window, Authentication, asset, $q, EthService, MarketsService, $cookies, $filter, CategoriesService) {
     var vm = this
     vm.save = save   
     vm.asset = asset
@@ -22,18 +22,17 @@
 
     console.log('cart id: ' + $cookies.cartId)
 
-    function createCart(assetId, count) {
+
+    if (!$cookies.cartId) {
+      createCart()
+    }
+
+    function createCart() {
       let cart = new CartsService()
-      
-      // vm.store.$update((response) => {
-      //   vm.success = true;
-      // }, (error) => {
-      //   vm.error = error.data.message
-      // })
-
-
+    
       cart.$save((result) => {
-        console.log('success')
+        console.log('new cart created successful!')
+        $cookies.cartId = result._id
       }, (error) => {
         console.log('error')
       })
@@ -41,21 +40,16 @@
     }
 
 
-    function addToCart(assetId, count) {
+    function addToCart(assetId, quantity) {
 
-      let cart = new CartsService()
-      
-      // vm.store.$update((response) => {
-      //   vm.success = true;
-      // }, (error) => {
-      //   vm.error = error.data.message
-      // })
+      let cartItem = new CartsItemsService()
+      cartItem.cart = $cookies.cartId
+      cartItem.asset = assetId
+      cartItem.quantity = quantity
 
-
-      cart.$save((result) => {
+      cartItem.$save((result) => {
         console.log('success')
         console.log(result)
-        $cookies.cartId = result._id
       }, (error) => {
         console.log('error')
       })

@@ -19,7 +19,7 @@ var OrderSchema = new Schema({
     enum: ['pending', 'paid', 'refunded'],
     default: 'pending' 
   },    
-  productCount: {
+  totalQuantity: {
     type: Number,
     default: 0
   },
@@ -32,6 +32,10 @@ var OrderSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  cart: {
+    type: Schema.ObjectId,
+    ref: 'Cart'
+  },  
   items: {
     type: Schema.ObjectId,
     ref: 'OrderItem'

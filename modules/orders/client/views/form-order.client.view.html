@@ -14,111 +14,55 @@
           <input name="id" type="text" ng-model="vm.order._id" id="title" class="form-control" placeholder="Order Id" disabled>
         </div>
 
+
         <div class="form-group" show-errors>
-          <label class="control-label" for="asset">Asset Address</label>
-          <input name="asset" type="text" ng-model="vm.order.assetAddress" id="asset" class="form-control" placeholder="Asset" disabled>
+          <label class="control-label" for="name">Total Cost</label>
+          <input name="name" type="text" ng-model="vm.order.totalCost" id="trxAmount" class="form-control" placeholder="Trx Amount" disabled>
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="name">Trx Amount</label>
-          <input name="name" type="text" ng-model="vm.order.trxAmount" id="trxAmount" class="form-control" placeholder="Trx Amount" ng-disabled="vm.order._id">
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="name">Quantity</label>
-          <input name="quantity" type="text" ng-change="vm.updateTrxAmount()" ng-model="vm.order.quantity" id="quantity" class="form-control" placeholder="quantity" ng-disabled="vm.order._id">
+          <label class="control-label" for="name">totalCount</label>
+          <input name="quantity" type="text" ng-model="vm.order.totalCount" id="totalCount" class="form-control" placeholder="totalCount" disabled>
         </div>
 
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="buyerWallet">BuyerWallet</label>
-          <input name="buyerWallet" type="text" ng-model="vm.order.buyerWallet" id="quanitty" class="form-control" placeholder="Buyer Wallet" disabled>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="buyerWallet">Status(0:NA, 1:PIF, 2:CLOSED, 3:REQUESTED_REFUND, 4:REFUNDED, 5:CONTRIBUTIONS_OPEN, 6:CONTRIBUTIONS_FULFILLED, 7:OTHER)</label>
+          <label class="control-label" for="buyerWallet">Status</label>
           <input name="status" type="text" ng-model="vm.order.status" id="status" class="form-control" placeholder="Status" disabled>
         </div>
 
-        <div class="form-group" show-errors ng-show="!vm.order._id">        
 
-          <label class="control-label" for="marketPlaces">Market Place</label>          
-          <select class="form-control" name="marketPlaces" ng-model="vm.selectedMarketPlace">            
-           <option ng-repeat="m in vm.marketPlaces track by $index" value="{{m.wallet}}">
-              {{m.name}} -> {{m.wallet}}            
-            </option>          
-          </select>
-
-          <div ng-messages="vm.form.orderForm.order.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Market Place is required.</p>
-          </div>
-        </div>
-
-        <div class="form-group" show-errors>        
-
-          <label class="control-label" for="marketPlaces">Market Place</label>          
-          <input name="markeetPlace" type="text" ng-model="vm.order.marketPlace" id="marketPlace" class="form-control" placeholder="MarketPlace" disabled>
-            
-        </div>
-
-
-        <div class="form-group" ng-show="vm.order._id">
-          <label class="control-label" for="trxHash">Transaction Hash</label> 
-          <a target="_blank" href="{{vm.etherscanURL + vm.order.transactionHash}}"> {{vm.order.transactionHash}}</a>
-        </div>
-
-        <div class="form-group" ng-show="vm.order.contributions.length > 0">
-          <h3>Contributions</h3>
+        <div class="form-group">
+          <h3>Items</h3>
           <ul class="list-group">
               <li class="list-group-item height">
                 <h4>
-                  <div class="col-sm-4">From</div>
-                  <div class="col-sm-4">Amount</div>
-                  <div class="col-sm-4">Date</div>
+                  <div class="col-sm-4">ID</div>
+                  <div class="col-sm-4">Title</div>
+                  <div class="col-sm-1">Price</div>
+                  <div class="col-sm-1">Quantity</div>
+                  <div class="col-sm-1">Total</div>
                 </h4>
               </li>  
-              <li ng-repeat="c in vm.order.contributions" class="list-group-item height">
-                <span class="col-sm-4"> {{ c.contributor }} </span>
-                <span class="col-sm-4"> {{ c.amount }} </span>
-                <span class="col-sm-4"> {{ (c.date * 1000) | date }} </span>
+              <li ng-repeat="i in vm.order.items" class="list-group-item height">
+                <span class="col-sm-4"> {{i._id }} </span>
+                <span class="col-sm-4"> {{ i.asset.title }} </span>
+                <span class="col-sm-1"> {{ i.asset.price | currency }} </span>
+                <span class="col-sm-1"> {{ i.quantity }} </span>
+                <span class="col-sm-1"> {{ i.quantity * i.asset.price | currency }} </span>          
               </li>
-          </ul>
-
-          <ul class="list-group">
               <li class="list-group-item height">
-                <span class="col-sm-4"> Total Amount Cost </span>
-                <span class="col-sm-4"> {{ vm.asset.totalCost }} </span>
+                <span class="col-sm-9"> Summary </span>
+                <span class="col-sm-1"> {{ vm.order.totalQuantity }} </span>
+                <span class="col-sm-1"> {{ vm.order.totalCost }} </span>                
               </li>  
-              <li class="list-group-item height">
-                <span class="col-sm-4"> Total Contributed Amount </span>
-                <span class="col-sm-4"> {{ vm.totalContributions }} </span>
-              </li>  
-              <li class="list-group-item height">
-                <strong>
-                  <span class="col-sm-4"> Balance </span>
-                  <span class="col-sm-4"> {{ vm.asset.totalCost - vm.totalContributions }} </span>
-                </strong>
-              </li>
           </ul>
 
         </div>
 
-
-        <div class="form-group" ng-show="!vm.order._id">
-          <button type="submit" class="btn btn-default"> Create </button>
-        </div>
-
-
-        <div class="form-group" ng-show="vm.order._id">
-          {{vm.selectedAction}}
-          <label class="control-label" for="actions">Choose Action</label>          
-          <select class="form-control" name="actions" ng-model="vm.selectedAction">            
-            <option ng-repeat="a in vm.actions" value="{{a.id}}">
-              {{a.name}}            
-            </option>          
-          </select>
+        <div class="form-group">
           <br/>
-          <button type="button" ng-click="vm.applyAction()" class="btn btn-default"> Apply </button>
+          <button type="button" ng-click="vm.remove()" class="btn btn-default"> Delete </button>
         </div>
 
         <div ng-show="vm.error" class="text-danger">

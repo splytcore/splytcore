@@ -6,6 +6,13 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Order = mongoose.model('Order'),
+  OrderItem = mongoose.model('OrderItem'),
+
+  Cart = mongoose.model('Cart'),
+  CartItem = mongoose.model('CartItem'),
+
+  Promise = require("bluebird"),
+
   async = require('async'),  
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
@@ -17,39 +24,42 @@ var path = require('path'),
 exports.create = function(req, res) {
 
   console.log('creating order')
-
-  let createOrder = new Promise((resolve, reject) => {
-    let order = new Order(req.body)
-    order.user = req.user
-    order.save((err) => {
-      
-      if (err) {
-        reject(err)
-      } else {
-        resolve(order)
-      }         
-    })
-  })
-
-
-  createOrder.then((order) => {
-    var item = new OrderItem(req.body)
-    item.save((err) => {
-      if (err) {
-        return res.status(400).send({
-          message: err.toString()
+  console.log(req.body)
+  
+  async.waterfall([
+    function createOrder(callback) {
+        let order = new Order(req.body)
+        order.user = req.user
+        order.save((err) => {
+          callback(err, order)
         })
-      } else {
-        res.jsonp(order)
-      }         
-    })
-  })
-  .error((err) => {
-    console.log(err)    
-  })
+    },
+    function getItems(order, callback) {
+      CartItem.find({ cart: order.cart }).exec(function(err, items) {
+        callback(err, order, items)
+      })        
+    },
+    function createOrderDetails(order, cartItems, callback) {
+        async.each(cartItems, function(cartItem, cb) {
+          let orderItem = new OrderItem()
+          orderItem.order = order
+          orderItem.asset = cartItem.asset
+          orderItem.quantity = cartItem.quantity
+          orderItem.save((err) => {
+            cb(err)
+          })
+        }, function(err) {
+          callback(order)
+        });
+    }
+  ], function (err, order) {
+    res.jsonp(order)
+  });
 
-
+  
 }
+
+
 
 
 exports.requestRefund = function(req, res) {
@@ -101,11 +111,17 @@ exports.approveRefund = function(req, res) {
 exports.read = function(req, res) {
   // convert mongoose document to JSON
   let order = req.order ? req.order.toJSON() : {}
-
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  // order.isCurrentUserOwner = req.user && order.user && order.user._id.toString() === req.user._id.toString()
-  return  res.jsonp(order)
+  console.log(order)
+  OrderItem.find({ order: order._id }).sort('-created').populate('asset').exec(function(err, items) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } 
+    console.log('number of items: ' + items.length)
+    order.items = items
+    res.jsonp(order)
+  })
 
 }
 

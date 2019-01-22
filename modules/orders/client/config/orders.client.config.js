@@ -13,24 +13,19 @@
       title: 'Orders',
       state: 'orders',
       type: 'dropdown',
-      roles: ['user', 'admin']
-    })
-
-    Menus.addSubMenuItem('topbar', 'orders', {
-      title: 'List Pending Orders',
-      state: 'orders.listPending'
+      roles: ['user', 'admin', 'seller', 'affiliate', 'customer']
     })
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'orders', {
       title: 'List My Orders',
-      roles: ['user'],
+      roles: ['user', 'customer'],
       state: 'orders.listMyOrders'
     })
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'orders', {
-      title: 'List All Mined Orders',
+      title: 'List All Orders',
       state: 'orders.list'
     })
 

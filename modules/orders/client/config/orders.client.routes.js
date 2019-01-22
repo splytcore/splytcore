@@ -63,7 +63,7 @@
           orderResolve: getOrder
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['user', 'admin', 'seller', 'customer', 'affiliate'],
           pageTitle: 'Edit Order {{ orderResolve.name }}'
         }
       })
