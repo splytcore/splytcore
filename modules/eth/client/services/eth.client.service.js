@@ -37,7 +37,7 @@
     
     vm.updateUserBalances = updateUserBalances
 
-    vm.web3 = new Web3($window.web3.currentProvider);
+    //vm.web3 = new Web3($window.web3.currentProvider);
     
     // console.log('is connected: ' + vm.web3.isConnected())
     // console.log('web3 accounts: ' + vm.web3.eth.accounts)
@@ -91,11 +91,11 @@
       //   console.log(err)
       // })
 
-    vm.gas = {
-      // from: vm.publicKey,
-      gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
-      gas: vm.web3.toHex(4600000) //max number of gas to be used  
-    }
+    // vm.gas = {
+    //   // from: vm.publicKey,
+    //   gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
+    //   gas: vm.web3.toHex(4600000) //max number of gas to be used  
+    // }
 
     function createNewWallet(walletPassword) {    
       return $http.post('/api/eth/createNewAccount', { walletPassword: walletPassword })

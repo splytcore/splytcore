@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Stripes</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="stripe in vm.stripes"
+       ui-sref="stripes.view({ stripeId: stripe._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="stripe.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="stripe.user" ng-bind="stripe.user.displayName"></span>
+        <span ng-if="!stripe.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="stripe.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.stripes.$resolved && !vm.stripes.length">
+    No Stripes yet, why don't you <a ui-sref="stripes.create">create one</a>?
+  </div>
+</section>
