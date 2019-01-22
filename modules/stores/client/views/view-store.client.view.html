@@ -4,15 +4,32 @@
   </div>
 
 
-  <div class="list-group">
-    <span ng-repeat="category in vm.store.categories"
+<!--   <div class="list-group">
+    <a ng-repeat="cart in vm.carts"
+       ui-sref="carts.view({ cartId: cart._id })"
        class="list-group-item">
-         
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="cart.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="cart.user" ng-bind="cart.user.displayName"></span>
+        <span ng-if="!cart.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="cart._id"></h4>
+    </a>
+  </div>
+ -->
+
+  <div class="list-group">
+    <a ng-repeat="category in vm.store.categories"
+       ui-sref="assets.list({ category: category._id })"
+       class="list-group-item">
+           
 	    <div class="form-group text-left">
 	      <img ng-src="modules/users/client/img/profile/default.png" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
 	    </div>
       	<h4 class="list-group-item-heading" ng-bind="category.name"></h4>
-    </span>
+    </a>
   </div>
 
 
