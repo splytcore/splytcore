@@ -10,7 +10,7 @@ module.exports = function (app) {
   app.route('/api/users/password').post(users.changePassword)
   app.route('/api/users/picture').post(users.changeProfilePicture)
   
-  app.route('/api/users/balances').get(users.getBalances)
+  //app.route('/api/users/balances').get(users.getBalances)
 
   app.route('/api/users/newAccount').get(users.createAccount)
 

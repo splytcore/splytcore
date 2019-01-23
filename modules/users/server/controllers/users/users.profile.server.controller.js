@@ -53,31 +53,31 @@ exports.update = function (req, res) {
 };
 
 
-exports.getBalances = function (req, res) {
-  // Init Variables
-  var user = req.user
+// exports.getBalances = function (req, res) {
+//   // Init Variables
+//   var user = req.user
 
-  let etherBalance
-  let tokenBalance
+//   let etherBalance
+//   let tokenBalance
 
-  console.log('for wallet: ' + user.publicKey)
-  EthService.getEtherBalance(user.publicKey)
-  .then((balance) => {
-    etherBalance = balance
-    EthService.getTokenBalance(user.publicKey) 
-    .then((balance) => {
-      tokenBalance = balance
-      res.json({ etherBalance: etherBalance, tokenBalance: tokenBalance })
-    })
-    .catch((err) => {
-      res.json(err)
-    })
-  })
-  .catch((err) => {
-    res.json(err)
-  })    
+//   console.log('for wallet: ' + user.publicKey)
+//   EthService.getEtherBalance(user.publicKey)
+//   .then((balance) => {
+//     etherBalance = balance
+//     EthService.getTokenBalance(user.publicKey) 
+//     .then((balance) => {
+//       tokenBalance = balance
+//       res.json({ etherBalance: etherBalance, tokenBalance: tokenBalance })
+//     })
+//     .catch((err) => {
+//       res.json(err)
+//     })
+//   })
+//   .catch((err) => {
+//     res.json(err)
+//   })    
 
-}
+// }
 
 exports.createAccount = function (req, res) {
   // Init Variables
