@@ -6,15 +6,24 @@
     .module('carts')
     .controller('CheckoutController', CheckoutController);
 
-  CheckoutController.$inject = ['$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
+  CheckoutController.$inject = ['StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
 
-  function CheckoutController ($location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
+  function CheckoutController (StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     var vm = this;
 
     vm.authentication = Authentication
-    vm.addAssetFromHashtag = addAssetFromHashtag
+
+    //NOTE: future we'll only haver the storeId
+    vm.addAssetFromStoreIdAndHashtag = addAssetFromStoreIdAndHashtag 
 
     vm.hashtag = $location.search()['hashtag']
+    vm.storeId = $location.search()['storeId']
+
+    console.log('storeId:' + vm.storeId)
+
+    vm.store =  vm.storeId ? StoresService.get({ storeId: vm.storeId }) : {}
+    
+    console.log(vm.store.name)
     
     console.log('hashtag:' + vm.hashtag)
     console.log('cart id: ' + $cookies.cartId)
@@ -24,7 +33,7 @@
      }
 
     if (vm.hashtag) {
-      addAssetFromHashtag(vm.hashtag)
+      addAssetFromStoreIdAndHashtag(vm.storeId, vm.hashtag)
     } 
 
     vm.error = null
@@ -34,10 +43,11 @@
     vm.order = order
 
    // add asset if there's a hashtag
-    function addAssetFromHashtag(hashtag) {
+    function addAssetFromStoreIdAndHashtag(storeId, hashtag) {
         
       let cartItem = new CartsItemsService()
       cartItem.cart = $cookies.cartId
+      cartItem.store = storeId
       cartItem.hashtag = hashtag
       cartItem.quantity = 1
       cartItem.$save((result) => {

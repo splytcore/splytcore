@@ -18,9 +18,10 @@ exports.create = function(req, res) {
 
   console.log(req.body)
 
-  let cart = null
+  let cart = req.body.cart
+  let store = req.body.store
 
-  getCart(req.body.cart)
+  getCart(cart, cart)
     .then((res_cart)=> {
       // console.log('cart')
       // console.log(res_cart)
@@ -33,6 +34,7 @@ exports.create = function(req, res) {
       var cartItem = new CartItem(req.body)
       cartItem.cart = cart
       cartItem.asset = asset ? asset : cartItem.asset
+      cartItem.store = store
       cartItem.save(function(err) {
         if (err) {
           return res.status(400).send({

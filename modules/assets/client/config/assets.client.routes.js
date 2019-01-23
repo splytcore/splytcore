@@ -57,7 +57,7 @@
           assetResolve: getAsset
         },        
         data: {
-          roles: ['user', 'admin', 'seller', 'buyer'],
+          roles: ['user', 'admin', 'seller', 'buyer', 'affiliate'],
           pageTitle: 'Edit Asset {{ assetResolve.name }}'
         }
       })
