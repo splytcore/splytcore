@@ -101,19 +101,32 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
 
 
-  let listType = req.query.listType ? req.query.listType.toUpperCase() : null
-  console.log(listType)
+  // let listType = req.query.listType ? req.query.listType.toUpperCase() : null
+  // console.log(listType)
 
-  switch(listType) {
-      case 'ASSETS.LISTMYASSETS':
-           exports.listMyAssets(req,res)
-          break                       
-      case 'ASSETS.LISTBYCATEGORY':
-           exports.listByCategory(req,res)
-          break    
-      default:
-           exports.listAll(req,res)
-  }
+  console.log(req.query)
+  Asset.find(req.query).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    console.log(assets)
+    res.jsonp(assets)
+  })
+
+
+
+  // switch(listType) {
+  //     case 'ASSETS.LISTMYASSETS':
+  //          exports.listMyAssets(req,res)
+  //         break                       
+  //     case 'ASSETS.LISTBYCATEGORY':
+  //          exports.listByCategory(req,res)
+  //         break    
+  //     default:
+  //          exports.listAll(req,res)
+  // }
 
 }
 

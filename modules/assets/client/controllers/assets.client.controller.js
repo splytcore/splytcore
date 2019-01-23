@@ -18,27 +18,8 @@
     vm.remove = remove
     vm.user = Authentication.user
     vm.addToCart = addToCart
-    vm.createCart = createCart
 
     console.log('cart id: ' + $cookies.cartId)
-
-
-    if (!$cookies.cartId) {
-      createCart()
-    }
-
-    function createCart() {
-      let cart = new CartsService()
-    
-      cart.$save((result) => {
-        console.log('new cart created successful!')
-        $cookies.cartId = result._id
-      }, (error) => {
-        console.log('error')
-      })
-
-    }
-
 
     function addToCart(assetId, quantity) {
 
@@ -50,6 +31,8 @@
       cartItem.$save((result) => {
         console.log('success')
         console.log(result)
+        $cookies.cartId = result.cart._id
+
       }, (error) => {
         console.log('error')
       })

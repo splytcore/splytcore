@@ -21,7 +21,7 @@ module.exports = function (app) {
     .delete(adminPolicy.isAllowed, admin.delete);
 
   // only only admin to fetch system info
-  app.route('/api/systems').all(adminPolicy.isAllowed)
+  app.route('/api/systems')
     .get(admin.settings)
 
   // Finish by binding the user middleware

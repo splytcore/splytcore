@@ -6,9 +6,9 @@
     .module('affiliates')
     .controller('AffiliatesCategoryController', AffiliatesCategoryController)
 
-  AffiliatesCategoryController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CategoriesService', 'Users', 'StoresService']
+  AffiliatesCategoryController.$inject = ['$scope', '$state', '$window', 'Authentication', 'CategoriesService', 'Users', 'StoresService', 'AssetsService']
 
-  function AffiliatesCategoryController ($scope, $state, $window, Authentication, CategoriesService, Users, StoresService) {
+  function AffiliatesCategoryController ($scope, $state, $window, Authentication, CategoriesService, Users, StoresService, AssetsService) {
     var vm = this
 
     vm.authentication = Authentication
@@ -20,6 +20,7 @@
     vm.selectCategory = selectCategory
 
     vm.categories = CategoriesService.query()
+    vm.assets = AssetsService.query()
 
     StoresService.query({ affiliate: vm.user._id }).$promise.then(function(data){
       vm.store = data[0]

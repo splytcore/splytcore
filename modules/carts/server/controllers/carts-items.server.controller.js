@@ -3,25 +3,94 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  mongoose = require('mongoose'),
-  CartItem = mongoose.model('CartItem'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+const path = require('path')
+const mongoose = require('mongoose')
+const Asset = mongoose.model('Asset')
+const Cart = mongoose.model('Cart')
+const CartItem = mongoose.model('CartItem')
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const  _ = require('lodash')
 
 /**
  * Create a Item
  */
 exports.create = function(req, res) {
-  var cartItem = new CartItem(req.body);
 
-  cartItem.save(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(cartItem);
+  console.log(req.body)
+
+  let cart = null
+
+  getCart(req.body.cart)
+    .then((res_cart)=> {
+      // console.log('cart')
+      // console.log(res_cart)
+      cart = res_cart
+      return getAssetByHashtag(req.body.hashtag)
+    })
+    .then((asset)=> {
+      // console.log(cart)
+      // console.log(asset)
+      var cartItem = new CartItem(req.body)
+      cartItem.cart = cart
+      cartItem.asset = asset ? asset : cartItem.asset
+      cartItem.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          })
+        } else {
+          console.log(cartItem)
+          res.jsonp(cartItem)
+        }
+      })
+    })
+}
+
+function getCart(cartId) {
+
+  return new Promise ((resolve, reject) => {
+    if (!cartId) {
+      // console.log('create new cart')
+      let cart = new Cart()
+      cart.save((err) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(cart)
+        }
+      })
+    } else  {
+      // console.log('cart exist already')
+      Cart.findById(cartId).exec(function(err, cart) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(cart)
+        }
+      })
+    }
+  })
+}
+
+
+
+function getAssetByHashtag (hashtag) {
+
+  return new Promise ((resolve, reject) => {
+    if (!hashtag) {
+        console.log('no hashtag included')
+        resolve(null)
+    } else  {
+      Asset.findOne({ hashtag: hashtag }).exec(function(err, asset) {
+        if (err) {
+          reject(err)
+        } else {
+          console.log('hashtag result form query ')
+          console.log(asset)
+          resolve(asset)
+        }
+
+      })
     }
   })
 }

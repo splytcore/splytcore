@@ -6,35 +6,51 @@
     .module('carts')
     .controller('CheckoutController', CheckoutController);
 
-  CheckoutController.$inject = ['$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsService', 'OrdersService'];
+  CheckoutController.$inject = ['$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
 
-  function CheckoutController ($cookies, $scope, $state, $window, Authentication, CartsService, OrdersService) {
+  function CheckoutController ($location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     var vm = this;
 
-    vm.authentication = Authentication;
+    vm.authentication = Authentication
+    vm.addAssetFromHashtag = addAssetFromHashtag
+
+    vm.hashtag = $location.search()['hashtag']
     
+    console.log('hashtag:' + vm.hashtag)
     console.log('cart id: ' + $cookies.cartId)
 
     if ($cookies.cartId) {
       vm.cart = CartsService.get({ cartId: $cookies.cartId })
-    } else {
-      vm.cart = new CartsService()
-      vm.cart.$save((result) => {
-        console.log('new cart created successful!')
-        $cookies.cartId = result._id
-        vm.cart = result
-      }, (error) => {
-        console.log('error')
-      })
-    }
+     }
 
-    console.log(vm.cart)
+    if (vm.hashtag) {
+      addAssetFromHashtag(vm.hashtag)
+    } 
 
     vm.error = null
     vm.form = {}
     vm.remove = remove
     vm.save = save
     vm.order = order
+
+   // add asset if there's a hashtag
+    function addAssetFromHashtag(hashtag) {
+        
+      let cartItem = new CartsItemsService()
+      cartItem.cart = $cookies.cartId
+      cartItem.hashtag = hashtag
+      cartItem.quantity = 1
+      cartItem.$save((result) => {
+         console.log(result)
+         vm.cart = CartsService.get({ cartId: result.cart._id })
+         console.log('updated card')
+         $cookies.cartId = result.cart._id
+         console.log(vm.cart)
+      }, (error) => {
+        console.log('error')
+      })
+
+    }
 
     // CreateOrder
     function order() {

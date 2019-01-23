@@ -44,7 +44,8 @@ var AssetSchema = new Schema({
     default: 'modules/assets/client/img/asset.jpeg'
   },     
   price: {
-    type: Number
+    type: Number,
+    required: 'Please fill price'
   },  
   //seller     
   user: {
@@ -59,7 +60,13 @@ var AssetSchema = new Schema({
     type: String,
     required: 'Please fill brand',
     trim: true
-  }  
+  },
+  //TODO: create collection instead
+  hashtag: {
+    type: String,
+    trim: true,
+    unique: true
+  }      
 })
 
 mongoose.model('Asset', AssetSchema);

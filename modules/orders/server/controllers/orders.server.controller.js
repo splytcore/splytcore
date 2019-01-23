@@ -150,6 +150,15 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   var order = req.order
 
+  Order.remove({ order : order._id }, function(err) {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log('successful delete order items')
+    }
+  })
+
+
   order.remove(function(err) {
     if (err) {
       return res.status(400).send({

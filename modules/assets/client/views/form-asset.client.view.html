@@ -1,8 +1,12 @@
 <section>
+
+  <div ng-show="env.indexOf('dev') > -1">
+  {{ vm.asset }}
+  </div>
+
   <div class="page-header">
     <h1>{{vm.asset._id ? vm.asset.title : 'New Asset'}}</h1>
   </div>
-  {{ vm.asset }}
 
   <div class="col-md-12">
     <form name="vm.form.assetForm" class="form-horizontal" ng-submit="vm.save(vm.form.assetForm.$valid)" novalidate>
@@ -65,6 +69,11 @@
           <div ng-messages="vm.form.assetForm.price.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Price is required.</p>
           </div>       
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="hashtag">Hashtag</label>
+          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="hashtag" class="form-control" placeholder="hashtag">   
         </div>
 
         <div class="form-group" show-errors>
