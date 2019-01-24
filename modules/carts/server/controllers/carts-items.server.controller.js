@@ -86,7 +86,7 @@ function createCheckoutFromSocialAccount(req, res) {
       // console.log(asset)
       var cartItem = new CartItem(req.body)
       cartItem.cart = res_cart
-      cartItem.asset = asset ? asset : cartItem.asset
+      cartItem.asset = asset
       cartItem.store = store
       cartItem.save(function(err) {
         if (err) {
@@ -132,7 +132,10 @@ function getHashtagByInstagram(affiliate) {
 
 }
 
-
+/*
+* Finds current existing cart header
+* Creates new one if it doesn't exist
+*/
 function getCart(cartId) {
 
   return new Promise ((resolve, reject) => {
@@ -160,7 +163,7 @@ function getCart(cartId) {
 }
 
 
-
+// Find Asset by hashtag
 function getAssetByHashtag (hashtag) {
 
   return new Promise ((resolve, reject) => {

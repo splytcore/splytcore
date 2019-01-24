@@ -27,10 +27,10 @@
           pageTitle: 'Affiliates Create'
         }
       })
-      .state('affiliates.store', {
-        url: '/store',
-        templateUrl: 'modules/affiliates/client/views/categories.client.view.html',
-        controller: 'AffiliatesCategoryController',
+      .state('affiliates.stores', {
+        url: '/stores',
+        templateUrl: 'modules/affiliates/client/views/stores.client.view.html',
+        controller: 'AffiliatesStoreController',
         controllerAs: 'vm',
         // resolve: {
         //   affiliateResolve: newAffiliate
