@@ -40,7 +40,14 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="category">Category</label>
+<!--           
           <input name="category" type="text" ng-model="vm.asset.category.name" id="description" class="form-control" placeholder="Category" required>
+ -->
+          {{vm.asset.category.name}}
+          <select name="category" class="form-control" ng-model="vm.asset.category" ng-options="c._id for c in vm.categories">
+          </select>
+
+
           <div ng-messages="vm.form.assetForm.category.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset category is required.</p>
           </div>

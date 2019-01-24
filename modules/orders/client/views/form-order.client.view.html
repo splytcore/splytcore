@@ -17,12 +17,12 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Total Cost</label>
-          <input name="name" type="text" ng-model="vm.order.totalCost" id="trxAmount" class="form-control" placeholder="Trx Amount" disabled>
+          <input name="name" type="text" ng-model="vm.totalCost" id="trxAmount" class="form-control" placeholder="Trx Amount" disabled>
         </div>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="name">totalCount</label>
-          <input name="quantity" type="text" ng-model="vm.order.totalCount" id="totalCount" class="form-control" placeholder="totalCount" disabled>
+          <input name="quantity" type="text" ng-model="vm.totalQuantity" id="totalCount" class="form-control" placeholder="totalCount" disabled>
         </div>
 
 
@@ -49,12 +49,16 @@
                 <span class="col-sm-4"> {{ i.asset.title }} </span>
                 <span class="col-sm-1"> {{ i.asset.price | currency }} </span>
                 <span class="col-sm-1"> {{ i.quantity }} </span>
-                <span class="col-sm-1"> {{ i.quantity * i.asset.price | currency }} </span>          
+                <span class="col-sm-1"> {{ i.quantity * i.asset.price | currency }} </span> 
+                
+                <span ng-init="vm.totalQuantity = vm.totalQuantity + i.quantity"> </span> 
+                <span ng-init="vm.totalCost = vm.totalCost + (i.quantity * i.asset.price)"> </span>          
+              
               </li>
               <li class="list-group-item height">
                 <span class="col-sm-9"> Summary </span>
-                <span class="col-sm-1"> {{ vm.order.totalQuantity }} </span>
-                <span class="col-sm-1"> {{ vm.order.totalCost }} </span>                
+                <span class="col-sm-1"> {{ vm.totalQuantity }} </span>
+                <span class="col-sm-1"> {{ vm.totalCost | currency }} </span>                
               </li>  
           </ul>
 

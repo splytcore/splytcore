@@ -14,9 +14,8 @@
     vm.authentication = Authentication
 
     //NOTE: future we'll only haver the storeId
-    vm.addAssetFromStoreIdAndHashtag = addAssetFromStoreIdAndHashtag 
+    vm.addAssetFromStoreId = addAssetFromStoreId
 
-    vm.hashtag = $location.search()['hashtag']
     vm.storeId = $location.search()['storeId']
 
     console.log('storeId:' + vm.storeId)
@@ -25,15 +24,14 @@
     
     console.log(vm.store.name)
     
-    console.log('hashtag:' + vm.hashtag)
     console.log('cart id: ' + $cookies.cartId)
 
     if ($cookies.cartId) {
       vm.cart = CartsService.get({ cartId: $cookies.cartId })
      }
 
-    if (vm.hashtag) {
-      addAssetFromStoreIdAndHashtag(vm.storeId, vm.hashtag)
+    if (vm.storeId) {
+      addAssetFromStoreId(vm.storeId)
     } 
 
     vm.error = null
@@ -43,12 +41,11 @@
     vm.order = order
 
    // add asset if there's a hashtag
-    function addAssetFromStoreIdAndHashtag(storeId, hashtag) {
+    function addAssetFromStoreId(storeId) {
         
       let cartItem = new CartsItemsService()
       cartItem.cart = $cookies.cartId
       cartItem.store = storeId
-      cartItem.hashtag = hashtag
       cartItem.quantity = 1
       cartItem.$save((result) => {
          console.log(result)

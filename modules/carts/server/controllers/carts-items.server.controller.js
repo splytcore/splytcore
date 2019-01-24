@@ -6,33 +6,86 @@
 const path = require('path')
 const mongoose = require('mongoose')
 const Asset = mongoose.model('Asset')
+const Store = mongoose.model('Store')
 const Cart = mongoose.model('Cart')
 const CartItem = mongoose.model('CartItem')
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const  _ = require('lodash')
 
 /**
- * Create a Item
+ * Create a Shopping Cart if there's none assigned
+ * Then adds an item
  */
 exports.create = function(req, res) {
 
+  let storeId = req.body.store
+  if (storeId) {
+    createCheckoutFromSocialAccount(req, res)
+  } else {
+    addToCart(req, res)
+  }
+
+}
+
+
+function addToCart (req, res) {
+
+  let cartId = req.body.cart
+
+  getCart(cartId)
+    .then((cart) => {
+      let cartItem = new CartItem(req.body)
+      cartItem.cart = cart
+      cartItem.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          })
+        } else {
+          console.log(cartItem)
+          res.jsonp(cartItem)
+        }
+      })
+    })
+    .catch((err) => {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })                
+    })
+}
+
+
+function createCheckoutFromSocialAccount(req, res) {
+
   console.log(req.body)
 
-  let cart = req.body.cart
-  let store = req.body.store
+  let cartId = req.body.cart
+  let storeId = req.body.store
+  
+  let cart
+  let store
+  let asset
 
-  getCart(cart, cart)
-    .then((res_cart)=> {
-      // console.log('cart')
-      // console.log(res_cart)
-      cart = res_cart
-      return getAssetByHashtag(req.body.hashtag)
+
+  getAffiliateFromStore(storeId)
+    .then((affiliate)=> {
+      console.log(affiliate)
+      return getHashtagByInstagram(affiliate)
     })
-    .then((asset)=> {
+    .then((hashtag)=> {
+      console.log('hashtag ' + hashtag)
+      return getAssetByHashtag(hashtag)
+      
+    })
+    .then((res_asset)=> {
+      asset = res_asset
+      return getCart(cartId) 
+    })
+    .then((res_cart)=> {
       // console.log(cart)
       // console.log(asset)
       var cartItem = new CartItem(req.body)
-      cartItem.cart = cart
+      cartItem.cart = res_cart
       cartItem.asset = asset ? asset : cartItem.asset
       cartItem.store = store
       cartItem.save(function(err) {
@@ -46,7 +99,39 @@ exports.create = function(req, res) {
         }
       })
     })
+    .catch((err) => {
+      return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })
+    })
 }
+
+function getAffiliateFromStore(storeId) {
+
+  return new Promise ((resolve, reject) => {
+    if (storeId) {
+      Store.findById(storeId).populate('affiliate', 'instagram').exec(function(err, store) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(store.affiliate)
+        }
+      })
+    } else {
+      resolve()
+    }
+  })
+
+}
+//TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
+//JOSH THIS IS FOR YOU
+function getHashtagByInstagram(affiliate) {
+  console.log('get instgram from affiliate and grabi hashtag from the feed')
+  console.log(affiliate)
+  return Promise.resolve('redshoes')
+
+}
+
 
 function getCart(cartId) {
 
