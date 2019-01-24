@@ -20,6 +20,7 @@
         controller: 'StripesListController',
         controllerAs: 'vm',
         data: {
+          roles: ['affiliate'],
           pageTitle: 'Stripes List'
         }
       })
@@ -32,7 +33,6 @@
           stripeResolve: newStripe
         },
         data: {
-          roles: ['affiliate', 'admin'],
           pageTitle: 'Stripes Create'
         }
       })

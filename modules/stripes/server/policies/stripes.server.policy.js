@@ -39,6 +39,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/stripes/:stripeId',
       permissions: ['get']
     }]
+  }, {
+    roles: ['affiliate'],
+    allows: [{
+      resources: '/api/stripes/saveIgCode',
+      permissions: '*'
+    }]
   }]);
 };
 

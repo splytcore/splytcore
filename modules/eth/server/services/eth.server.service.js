@@ -75,53 +75,61 @@ web3.eth.net.isListening()
 })
 .then((res_accounts) => {
   accounts = res_accounts
-  console.log(accounts)
-
+  console.log('accounts length', accounts.length)
   splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
-  return 
-}).then(() => {
-  
- splytManager.methods.assetManager().call()
+})
+.then(() => {
+  splytManager.methods.assetManager().call()
   .then((address) => {
     console.log('assetManager address: ' + address)  
     assetManagerAddress = address  
-    assetManager = new web3.eth.Contract(AssetManager.abi, address)    
+    assetManager = new web3.eth.Contract(AssetManager.abi, address)
+    return
   })
+  .catch(e => {console.log(e)})
  
   splytManager.methods.orderManager().call()
   .then((address) => {
     console.log('orderManager address: ' + address)
     orderManagerAddress = address
-    orderManager = new web3.eth.Contract(OrderManager.abi, address)    
+    orderManager = new web3.eth.Contract(OrderManager.abi, address)
+    return
   })
+  .catch(e => {console.log(e)})
 
  splytManager.methods.arbitrationManager().call()
   .then((address) => {
     console.log('arbitrationManager address: ' + address) 
     arbitrationManagerAddress = address    
     arbitrationManager = new web3.eth.Contract(ArbitrationManager.abi, address)    
+    return
   })
+  .catch(e => {console.log(e)})
   
   splytManager.methods.reputationManager().call()
   .then((address) => {
     console.log('reputationManager address: ' + address) 
     reputationManagerAddress = address   
     reputationManager = new web3.eth.Contract(ReputationManager.abi, address)   
-  })  
+    return
+  })
+  .catch(e => {console.log(e)})
 
   splytManager.methods.stake().call()
   .then((address) => {
     console.log('stake address: ' + address) 
     stakeAddress = address
+    return
   })  
-
+  .catch(e => {console.log(e)})
 
   splytManager.methods.satToken().call()
   .then((address) => {
     console.log('satToken address: ' + address)
     satTokenAddress = address   
     satToken = new web3.eth.Contract(SatToken.abi, address)  
-  })  
+  }) 
+  .catch(e => {console.log(e)}) 
 
   // get master token balance
   splytManager.methods.getBalance(masterWallet).call()  
@@ -732,9 +740,9 @@ function setGasPrice(blockNumber) {
       let length = parseInt(block.transactions.length)
 
       async.times(length, (index, callback) => {    
-        console.log('index:' + index)
+        // console.log('index:' + index)
         web3.eth.getTransaction(block.transactions[index], function(err, transaction) {
-          console.log(transaction.gasPrice)
+          // console.log(transaction.gasPrice)
           gasPrices += parseInt(transaction.gasPrice)
           callback(err)
         })
@@ -745,8 +753,8 @@ function setGasPrice(blockNumber) {
         } else {
           lastBlockAvg = parseInt(gasPrices / length)
           defaultGas.gasPrice = lastBlockAvg < 20000000000 ? 20000000000 : lastBlockAvg   
-          console.log('finished calculate gasPrice: ' + defaultGas.gasPrice)     
-          console.log(defaultGas)
+          // console.log('finished calculate gasPrice: ' + defaultGas.gasPrice)     
+          // console.log(defaultGas)
         }      
       })    
     })

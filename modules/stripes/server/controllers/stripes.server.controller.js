@@ -3,12 +3,14 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  mongoose = require('mongoose'),
-  Stripe = mongoose.model('Stripe'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash'),
-  stripe = require('stripe')('pk_test_tZPTIhuELHzFYOV3STXQ34dv');
+const path = require('path')
+const mongoose = require('mongoose')
+const Stripe = mongoose.model('Stripe')
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const _ = require('lodash')
+const stripe = require('stripe')('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+const curl = new (require('curl-request'))()
+const userController = require(path.resolve('./modules/users/server/controllers/users/users.profile.server.controller'))
 
 /**
  * Create a Stripe
@@ -92,6 +94,37 @@ exports.list = function(req, res) {
     }
   });
 };
+
+
+exports.saveIgCode = (req, res, next) => {
+  console.log(req.body.igCode)
+  let clientId = '09156f2dbd264bdb8652cff79b354b36'
+  let clientSecret = 'ebde362954ba4ee2814e2778d78ef146'
+  let redirectUri = 'http://www.localhost:3000/stripes'
+
+  curl.setHeaders([
+    'Content-Type: application/x-www-form-urlencoded'
+  ])
+  curl.setBody({
+    'client_id': clientId,
+    'client_secret':clientSecret,
+    'grant_type':'authorization_code',
+    'redirect_uri':redirectUri,
+    'code': req.body.igCode
+  }).post('https://api.instagram.com/oauth/access_token').then(({statusCode, body, headers}) => {
+    if(statusCode = 200) {
+      let igInfo = JSON.parse(body)
+      console.log(igInfo)
+      req.body.igAccessToken = igInfo.access_token
+      req.body.profileImageURL = igInfo.user.profile_picture
+      req.body.firstName = igInfo.user.full_name
+      next()
+    }
+  }).catch(e => {
+    console.log(e)
+    next()
+  })
+}
 
 /**
  * Stripe middleware

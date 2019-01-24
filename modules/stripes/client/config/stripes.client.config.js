@@ -10,7 +10,7 @@
   function menuConfig(Menus) {
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
-      title: 'Stripes',
+      title: 'Stripe IG',
       state: 'stripes',
       type: 'dropdown',
       roles: ['*']
@@ -18,15 +18,16 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'stripes', {
-      title: 'List Stripes',
-      state: 'stripes.list'
+      title: 'Authenticate IGram',
+      state: 'stripes.list',
+      roles: ['affiliate']
     });
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'stripes', {
-      title: 'Create Stripe',
+      title: 'Stripe',
       state: 'stripes.create',
-      roles: ['affiliate']
+      roles: ['*']
     });
   }
 }());
