@@ -21,14 +21,30 @@
  -->
 
   <div class="list-group">
-    <a ng-repeat="category in vm.store.categories"
-       ui-sref="assets.list({ category: category._id })"
+    <h4>Categories</h4>
+    
+    <div ng-repeat="category in vm.store.categories"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="category.created | date:'mediumDate'"></span>
+      </small>
+      <input class="pull-right" type="checkbox" ng-click="vm.apply(category._id)" ng-checked="vm.store.categories.indexOf(category._id) > -1 ? true : false">
+      <h4 class="list-group-item-heading" ng-bind="category.name"></h4>
+    </div>
+
+  </div>
+
+  <div class="list-group">
+    <h4>Assets</h4>
+    <a ng-repeat="asset in vm.assets"
+       ui-sref="assets.edit({ assetId: asset._id })"
        class="list-group-item">
            
-	    <div class="form-group text-left">
-	      <img ng-src="modules/users/client/img/profile/default.png" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture">
-	    </div>
-      	<h4 class="list-group-item-heading" ng-bind="category.name"></h4>
+      <div class="form-group text-left">
+        <!-- <img ng-src="modules/users/client/img/profile/default.png" alt="{{user.displayName}}" class="img-thumbnail user-profile-picture"> -->
+      </div>
+      <h4 class="list-group-item-heading" ng-bind="asset.title"></h4>
     </a>
   </div>
 

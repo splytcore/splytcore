@@ -6,35 +6,58 @@
     .module('carts')
     .controller('CheckoutController', CheckoutController);
 
-  CheckoutController.$inject = ['$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsService', 'OrdersService'];
+  CheckoutController.$inject = ['StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
 
-  function CheckoutController ($cookies, $scope, $state, $window, Authentication, CartsService, OrdersService) {
+  function CheckoutController (StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     var vm = this;
 
-    vm.authentication = Authentication;
+    vm.authentication = Authentication
+
+    //NOTE: future we'll only haver the storeId
+    vm.addAssetFromStoreId = addAssetFromStoreId
+
+    vm.storeId = $location.search()['storeId']
+
+    console.log('storeId:' + vm.storeId)
+
+    vm.store =  vm.storeId ? StoresService.get({ storeId: vm.storeId }) : {}
+    
+    console.log(vm.store.name)
     
     console.log('cart id: ' + $cookies.cartId)
 
     if ($cookies.cartId) {
       vm.cart = CartsService.get({ cartId: $cookies.cartId })
-    } else {
-      vm.cart = new CartsService()
-      vm.cart.$save((result) => {
-        console.log('new cart created successful!')
-        $cookies.cartId = result._id
-        vm.cart = result
-      }, (error) => {
-        console.log('error')
-      })
-    }
+     }
 
-    console.log(vm.cart)
+    if (vm.storeId) {
+      addAssetFromStoreId(vm.storeId)
+    } 
 
     vm.error = null
     vm.form = {}
     vm.remove = remove
     vm.save = save
     vm.order = order
+
+   // add asset if there's a hashtag
+    function addAssetFromStoreId(storeId) {
+        
+      let cartItem = new CartsItemsService()
+      cartItem.cart = $cookies.cartId
+      cartItem.store = storeId
+      cartItem.quantity = 1
+      cartItem.$save((result) => {
+         console.log(result)
+         vm.cart = CartsService.get({ cartId: result.cart._id })
+         console.log('updated card')
+         $cookies.cartId = result.cart._id
+         console.log(vm.cart)
+      }, (error) => {
+        console.log('error')
+      })
+
+    }
 
     // CreateOrder
     function order() {

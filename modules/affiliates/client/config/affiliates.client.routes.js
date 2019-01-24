@@ -27,6 +27,19 @@
           pageTitle: 'Affiliates Create'
         }
       })
+      .state('affiliates.stores', {
+        url: '/stores',
+        templateUrl: 'modules/affiliates/client/views/stores.client.view.html',
+        controller: 'AffiliatesStoreController',
+        controllerAs: 'vm',
+        // resolve: {
+        //   affiliateResolve: newAffiliate
+        // },
+        data: {
+          roles: ['affiliate', 'admin'],
+          pageTitle: 'Affiliates Category Create'
+        }
+      })     
       .state('affiliates.categories', {
         url: '/categories',
         templateUrl: 'modules/affiliates/client/views/categories.client.view.html',

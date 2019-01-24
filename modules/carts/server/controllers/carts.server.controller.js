@@ -35,7 +35,7 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   var cart = req.cart ? req.cart.toJSON() : {}
 
-  CartItem.find({cart: cart._id}).sort('-created').populate('asset').exec(function(err, cartItems) {
+  CartItem.find({ cart: cart._id }).sort('-created').populate('asset').exec(function(err, cartItems) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -73,6 +73,16 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   var cart = req.cart;
 
+  //removes all items
+  CartItem.remove({ cart : cart._id }, function(err) {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log('successful delete cart item')
+    }
+  })
+
+  //remove the header
   cart.remove(function(err) {
     if (err) {
       return res.status(400).send({

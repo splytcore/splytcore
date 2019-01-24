@@ -1,24 +1,41 @@
 <section>
+  <div ng-show="env.indexOf('dev') > -1">
+  {{ vm.cart.cartItems }}
+  </div>
+
   <div class="page-header">
-    <h1>My Cart</h1>
+    <h1> {{ vm.store.name }} </h1>
+    <H4> My Cart </H4>
   </div>
   <div class="list-group">
-
     <a ng-repeat="item in vm.cart.cartItems"
        ui-sref="assets.edit({ assetId: item.asset._id })"
        class="list-group-item">
 
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="vm.cart.created | date:'mediumDate'"></span>
-      </small>
-      <h4 class="list-group-item-heading">
-        {{item.asset.title}}({{item.quantity}}) {{ item.asset.price | currency }}
+      <h4 class="list-group-item-heading row">
+        <span class="col-xs-3" ng-bind="item.asset.title"></span>
+        <span class="col-xs-3" ng-bind="item.asset.price | currency"></span>
+        <span class="col-xs-3" ng-bind="item.quantity"></span>
+        <span class="col-xs-3" ng-bind="item.quantity * item.asset.price | currency"></span>
+        <span ng-init="vm.totalCost = vm.totalCost + (item.quantity * item.asset.price)"> </span>     
+        <span ng-init="vm.totalQuantity = vm.totalQuantity + item.quantity"> </span>        
       </h4>
-
+      <p class="list-group-item-text row">
+        <span class="col-xs-3" ng-bind="item.asset.description"></span>
+      </p>
     </a>
-  </div>
 
+    <div class="list-group-item">    
+      <h3 class="list-group-item-heading row">
+        <span class="col-xs-6">Totals</span>
+        <span class="col-xs-3" ng-bind="vm.totalQuantity"></span>
+        <span class="col-xs-3" ng-bind="vm.totalCost | currency"></span>
+      </h3>
+      <br/>
+    </div>
+  
+
+  </div>
 
 
   <div class="col-md-12">
@@ -44,4 +61,7 @@
       </fieldset>
     </form>
   </div>
+
+
+
 </section>

@@ -13,13 +13,13 @@
       title: 'Carts',
       state: 'carts',
       type: 'dropdown',
-      roles: ['user', 'admin', 'seller', 'affiliate']
+      roles: ['user', 'admin']
     })
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'carts', {
       title: 'List Carts',
-      roles: ['user', 'user', 'seller', 'affiliate'],
+      roles: ['user', 'admin'],
       state: 'carts.list'
     })
   }

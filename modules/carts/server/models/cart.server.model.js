@@ -15,10 +15,6 @@ var CartSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  affiliate: {
-    type: Schema.ObjectId,
-    ref: 'User'
-  },
   customer: {
     type: Schema.ObjectId,
     ref: 'User'

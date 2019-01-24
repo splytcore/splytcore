@@ -45,7 +45,7 @@
           storeResolve: getStore
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['user', 'admin' ,'affiliate'],
           pageTitle: 'Edit Store {{ storeResolve.name }}'
         }
       })

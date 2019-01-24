@@ -1,18 +1,21 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus', '$cookies', 'EthService',
-  function ($scope, $state, Authentication, Menus, $cookies, EthService) {
+angular.module('core').controller('HeaderController', ['$rootScope', '$scope', '$state', 'Authentication', 'Menus', '$cookies', 'SystemsService',
+  function ($rootScope, $scope, $state, Authentication, Menus, $cookies, SystemsService) {
     // Expose view variables
     $scope.$state = $state;
 
-    if (Authentication.user) {    
-      EthService.updateUserBalances()
-    }
-    
     $scope.authentication = Authentication
 
     // Get the topbar menu
     $scope.menu = Menus.getMenu('topbar');
+
+  
+    SystemsService.getSettings()
+      .then((result) => {
+        console.log(result.data)
+        $rootScope.env = result.data.env
+      })    
 
     // Toggle the menu items
     $scope.isCollapsed = false;

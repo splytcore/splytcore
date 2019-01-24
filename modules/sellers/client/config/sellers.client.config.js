@@ -23,7 +23,7 @@
       roles: ['seller']
     })
     Menus.addSubMenuItem('topbar', 'sellers', {
-      title: 'Assets',
+      title: 'My Assets',
       state: 'sellers.assets',
       roles: ['seller']
     })

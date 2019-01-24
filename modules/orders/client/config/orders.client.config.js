@@ -13,7 +13,7 @@
       title: 'Orders',
       state: 'orders',
       type: 'dropdown',
-      roles: ['user', 'admin', 'seller', 'affiliate', 'customer']
+      roles: ['user', 'admin']
     })
 
     // Add the dropdown list item

@@ -17,7 +17,7 @@
     vm.remove = remove
     vm.create = create
 
-    vm.assets = AssetsService.query({ listType: 'ASSETS.LISTMYASSETS' })
+    vm.assets = AssetsService.query({ user: vm.user._id })
     vm.asset = new AssetsService()
 
     vm.categories = CategoriesService.query()

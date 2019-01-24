@@ -27,6 +27,7 @@
           pageTitle: 'Edit Cart {{ cartResolve.name }}'
         }
       })
+      // .stat      
       // .state('carts.checkout', {
       //   url: '/:cartId',
       //   templateUrl: 'modules/carts/client/views/view-cart.client.view.html',

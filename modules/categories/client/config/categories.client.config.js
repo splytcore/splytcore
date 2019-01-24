@@ -13,7 +13,7 @@
       title: 'Categories',
       state: 'categories',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['user', 'admin']
     });
 
     // Add the dropdown list item

@@ -17,8 +17,8 @@ const config = require(path.resolve('./config/config'))
  */
 
 exports.settings = function(req, res) {  
-
-  let settings = { db: config.db.uri }
+  console.log('env: ' + process.env.NODE_ENV)
+  let settings = { db: config.db.uri, env: process.env.NODE_ENV }
   res.json(settings)
 }
 
