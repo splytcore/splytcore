@@ -21,12 +21,12 @@
 
     console.log('cart id: ' + $cookies.cartId)
 
-    function addToCart(assetId, quantity) {
+    function addToCart(assetId) {
 
       let cartItem = new CartsItemsService()
       cartItem.cart = $cookies.cartId
       cartItem.asset = assetId
-      cartItem.quantity = quantity
+      cartItem.quantity = vm.qty
 
       cartItem.$save((result) => {
         console.log('success')

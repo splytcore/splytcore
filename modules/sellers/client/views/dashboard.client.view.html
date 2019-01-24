@@ -33,8 +33,8 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="category">Category</label>
-          {{ vm.categories }}
-          <select class="form-control" name="role" ng-model="vm.asset.category" ng-options="x.name for x in vm.categories" required>
+          {{ vm.asset.category }}
+          <select class="form-control" name="category" ng-model="vm.asset.category" ng-options="c._id as c.name for c in vm.categories" required>
           </select>   
           <div ng-messages="vm.form.assetForm.category.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset category is required.</p>
@@ -52,7 +52,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="price">Price</label>
-          <input name="price" type="text" ng-model="vm.asset.totalCost" id="totalCost" class="form-control" placeholder="price" required>
+          <input name="price" type="text" ng-model="vm.asset.price" id="price" class="form-control" placeholder="price" required>
           <div ng-messages="vm.form.assetForm.price.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Price is required.</p>
           </div>       

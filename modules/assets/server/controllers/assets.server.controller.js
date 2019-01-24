@@ -16,11 +16,14 @@ const  _ = require('lodash')
  */
 exports.create = function(req, res) {
 
+  console.log(req.body)
+
   let asset = new Asset(req.body)
   console.log('assetId: ' + asset._id)
   asset.user = req.user
   asset.save(function(err) {
     if (err) {
+      console.log(err)
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
