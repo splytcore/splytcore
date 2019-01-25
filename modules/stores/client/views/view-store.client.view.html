@@ -21,7 +21,7 @@
  -->
 
   <div class="list-group">
-    <h4>Categories</h4>
+    <h4>Categories Filter</h4>
     
     <div ng-repeat="category in vm.store.categories"
        class="list-group-item">
@@ -40,7 +40,7 @@
 
   
   <div class="list-group">
-    
+    <h4>Assets</h4>    
     <a ng-repeat="asset in vm.assets"       
        ui-sref="assets.view({ assetId: asset._id })"
        class="list-group-item">
