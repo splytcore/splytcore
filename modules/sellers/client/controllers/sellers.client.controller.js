@@ -24,7 +24,6 @@
 
     console.log(vm.categories)
 
-
     // Remove existing Seller
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {

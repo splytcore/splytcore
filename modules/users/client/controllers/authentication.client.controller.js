@@ -26,8 +26,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // If successful we assign the response to the global user model
         $scope.authentication.user = response;
 
-        // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        if ($scope.authentication.user.roles.indexOf('affiliate') > -1) {
+          $state.go('stripes.list')
+        } else {
+          // And redirect to the previous or home page
+          $state.go($state.previous.state.name || 'home', $state.previous.params);
+        }
       }).error(function (response) {
         $scope.error = response.message;
       });
