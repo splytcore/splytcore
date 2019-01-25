@@ -24,7 +24,6 @@
 
     StoresService.query({ affiliate: vm.user._id }).$promise.then(function(data){
       vm.store = data[0]
-      console.log(vm.store)
     })
 
   

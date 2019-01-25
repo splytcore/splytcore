@@ -13,7 +13,6 @@ angular.module('core').controller('HeaderController', ['$rootScope', '$scope', '
   
     SystemsService.getSettings()
       .then((result) => {
-        console.log(result.data)
         $rootScope.env = result.data.env
       })    
 
