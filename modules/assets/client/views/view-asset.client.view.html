@@ -1,26 +1,106 @@
 <section>
   <div class="page-header">
-    <h1 ng-bind="vm.asset.name"></h1>
+    <h1 ng-bind="vm.asset.title"></h1>
   </div>
-  <div class="pull-right"
-       ng-show="vm.asset.isCurrentUserOwner">
-    <a class="btn btn-primary"
-       ui-sref="assets.edit({ assetId: vm.asset._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
+  
+  <div class="col-md-12">
+    <form name="vm.form.assetForm" class="form-horizontal" novalidate>
+      <fieldset>
+
+        <div class="form-group">
+          <img ng-src="modules/assets/client/img/asset.jpeg" class="img-thumbnail asset-picture-detail">
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="id">ID</label>
+          <input name="id" type="text" ng-model="vm.asset._id" id="title" class="form-control" placeholder="ID" disabled>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="title">Title</label>
+          <input name="title" type="text" ng-model="vm.asset.title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="vm.form.assetForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset title is required.</p>
+          </div>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="description">Description</label>
+          <input name="description" type="text" ng-model="vm.asset.description" id="description" class="form-control" placeholder="Description" required>
+          <div ng-messages="vm.form.assetForm.description.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset description is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="category">Category</label>
+<!--           
+          <input name="category" type="text" ng-model="vm.asset.category.name" id="description" class="form-control" placeholder="Category" required>
+ -->
+          <!-- {{vm.asset.category}} -->
+          <select name="category" class="form-control" ng-model="vm.asset.category._id" ng-options="c._id as c.name for c in vm.categories">
+          </select>
+
+
+          <div ng-messages="vm.form.assetForm.category.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset category is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="brand">Brand</label>
+          <input name="brand" type="text" ng-model="vm.asset.brand" id="brand" class="form-control" placeholder="Description" required>
+          <div ng-messages="vm.form.assetForm.brand.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Asset brand is required.</p>
+          </div>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="ether">Status</label>
+          <input name="status" type="text" ng-model="vm.asset.status" id="status" class="form-control" placeholder="Status" required>
+            <div ng-messages="vm.form.assetForm.status.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Status is required.</p>
+          </div>  
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="price">Price</label>
+          <input name="price" type="text" ng-model="vm.asset.price" id="price" class="form-control" placeholder="price" required>
+          <div ng-messages="vm.form.assetForm.price.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Price is required.</p>
+          </div>       
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="hashtag">Hashtag</label>
+          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="hashtag" class="form-control" placeholder="hashtag">   
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="asset">Inventory</label>       
+          <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required>
+        </div>
+
+
+        <div class="form-group">
+          <button type="button" class="btn btn-default" ng-click="vm.addToCart(vm.asset._id, 3)">Add To Cart</button>    
+           Qty:  
+           <select name="qty" ng-model="vm.qty" ng-init="vm.qty = 1" ng-options="x for x in [1,2,3,4]">
+          </select>                     
+        </div>
+     
+      <div class="form-group">
+        <br/>
+        <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>                          
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </div>
+      
+      </fieldset>
+    </form>
   </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.asset.created | date:'mediumDate'"></span>
-      by
-      <span ng-if="vm.asset.user"
-            ng-bind="vm.asset.user.displayName"></span>
-      <span ng-if="!vm.asset.user">Deleted User</span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="vm.asset.content"></p>
+
 </section>

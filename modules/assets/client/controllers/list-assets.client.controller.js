@@ -11,7 +11,7 @@
     
     var vm = this;
     vm.listType = $state.current.name.toString()
-    vm.assets = AssetsService.query({ listType: vm.listType })
+    vm.assets = AssetsService.query()
     vm.etherscanURL = $cookies.etherscanURL
  
   }

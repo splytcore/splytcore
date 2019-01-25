@@ -6,9 +6,9 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['CartsService', 'CartsItemsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', 'EthService', 'MarketsService', '$cookies', '$filter', 'CategoriesService'];
+  AssetsController.$inject = ['CartsService', 'CartsItemsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', '$cookies', '$filter', 'CategoriesService'];
 
-  function AssetsController (CartsService, CartsItemsService,  $scope, $state, $window, Authentication, asset, $q, EthService, MarketsService, $cookies, $filter, CategoriesService) {
+  function AssetsController (CartsService, CartsItemsService,  $scope, $state, $window, Authentication, asset, $q, $cookies, $filter, CategoriesService) {
     var vm = this
     vm.save = save   
     vm.asset = asset
@@ -32,9 +32,10 @@
         console.log('success')
         console.log(result)
         $cookies.cartId = result.cart._id
-
+        alert('added to cart!')
       }, (error) => {
         console.log('error')
+        vm.error = error
       })
 
     }
@@ -47,8 +48,7 @@
 
       console.log(vm.asset)
       // TODO: move create/update logic to service
-      vm.asset.marketPlaces = [vm.selectedMarketPlace]
-
+   
       console.log(vm.asset)
 
       if (vm.asset._id) {

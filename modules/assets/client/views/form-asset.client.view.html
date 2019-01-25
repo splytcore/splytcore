@@ -88,16 +88,10 @@
           <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required>
         </div>
 
-
+        <!-- TODO: only allow seller who created -->
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.asset._id ? 'Update' : 'Create'}}</button>
-          <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>    
-       
-          <button type="button" class="btn btn-default" ng-click="vm.addToCart(vm.asset._id, 3)">Add To Cart</button>    
-           Qty:  
-           <select name="qty" ng-model="vm.qty" ng-init="vm.qty = 1" ng-options="x for x in [1,2,3,4]">
-          </select>
-                     
+          <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>                         
         </div>
      
       <div class="form-group">

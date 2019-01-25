@@ -13,15 +13,15 @@
       title: 'Assets',
       state: 'assets',
       type: 'dropdown',
-      roles: ['user', 'admin']
+      roles: ['user', 'admin', 'seller']
     });
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'assets', {
-      title: 'List My Assets',
-      roles: ['user'],
-      state: 'assets.listMyAssets'
-    });
+    // Menus.addSubMenuItem('topbar', 'assets', {
+    //   title: 'List My Assets',
+    //   roles: ['user'],
+    //   state: 'assets.listMyAssets'
+    // });
 
 
     Menus.addSubMenuItem('topbar', 'assets', {
@@ -34,7 +34,7 @@
     Menus.addSubMenuItem('topbar', 'assets', {
       title: 'Create Asset',
       state: 'assets.create',
-      roles: ['user']
+      roles: ['user', 'seller']
     });
   }
 }());
