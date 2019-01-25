@@ -60,7 +60,7 @@
         data: {
           pageTitle: 'Store {{ storeResolve.name }}'
         }
-      });
+      })    
   }
 
   getStore.$inject = ['$stateParams', 'StoresService'];

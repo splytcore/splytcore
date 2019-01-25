@@ -14,7 +14,9 @@
     vm.authentication = Authentication
     vm.store = store
 
+    //TODO: only list assets for this store
     vm.assets = AssetsService.query()
+
     console.log(vm.store.categories)
     vm.error = null
     vm.form = {};

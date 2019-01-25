@@ -6,7 +6,7 @@
   <div class="list-group">
     
     <a ng-repeat="asset in vm.assets"
-       ui-sref="assets.edit({ assetId: asset._id })"
+       ui-sref="assets.view({ assetId: asset._id })"
        class="list-group-item">
  
       <div class="list-group-item-heading">
@@ -16,7 +16,7 @@
         <div>
           <h4>{{ asset.title }}</h4>       
           <strong>{{ asset.description }}</strong> <br/>
-          <span>{{ asset.totalCost }} tokens</span>
+          <span>{{ asset.price | currency }} </span>
         </div>
       </div>
 <!--       <h4 class="list-group-item-heading">

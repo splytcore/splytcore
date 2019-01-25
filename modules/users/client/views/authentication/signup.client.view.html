@@ -11,7 +11,7 @@
 
         <div class="form-group" show-errors>
           <label for="role">Role</label>
-          <select class="form-control" name="roles" ng-model="credentials.roles" ng-options="x for x in ['seller','affiliate']" required>
+          <select class="form-control" name="roles" ng-model="credentials.roles" ng-options="x for x in ['seller','affiliate', 'customer']" ng-init="credentials.roles='customer'" required>
           </select>
           <div ng-messages="userForm.roles.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Role is required.</p>

@@ -66,7 +66,11 @@ var AssetSchema = new Schema({
     type: String,
     trim: true,
     unique: true
-  }      
+  },
+  sku: {
+    type: String,
+    trim: true
+  }           
 })
 
 mongoose.model('Asset', AssetSchema);

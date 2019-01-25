@@ -28,7 +28,7 @@
       roles: ['affiliate']
     })    
     Menus.addSubMenuItem('topbar', 'affiliates', {
-      title: 'Categories Settings',
+      title: 'My Store Filters',
       state: 'affiliates.categories',
       roles: ['affiliate']
     })    

@@ -49,7 +49,7 @@ angular.module('users').controller('EditProfileController', ['$cookies', '$scope
         $scope.success = true;
         Authentication.user = response;
         
-        EthService.updateUserBalances()
+        // EthService.updateUserBalances()
 
       }, function (response) {
         $scope.error = response.data.message;

@@ -1,6 +1,6 @@
 <section>
   <div class="page-header">
-    <h1>Select Categories</h1>
+    <h1>Filter Settings for Your Store</h1>
   </div>
 
   <div ng-show="vm.error" class="text-danger">
@@ -13,6 +13,7 @@
 
   <div class="row">
     <div class="col-sm-12"> 
+       Select Categories to hide/show to customers
       <button type="button" ng-click="vm.updateMyStoreCategories()" class="pull-right btn btn-warning">Apply</button>
     </div>
   </div>
@@ -29,6 +30,14 @@
       <h4 class="list-group-item-heading" ng-bind="category.name"></h4>
     </span>
   </div>  
+
+  <div class="row">
+    <div class="col-sm-12"> 
+      Select Assets to hide/show to customers. View each Asset to enter hashcode
+      <button type="button" ng-click="vm.updateMyStoreCategories()" class="pull-right btn btn-warning">Apply</button>
+    </div>
+  </div>
+  <br/>  
 
   <div class="list-group">
     <h4>Assets</h4>

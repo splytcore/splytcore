@@ -79,6 +79,8 @@
       if ($window.confirm('Are you sure you want to delete?')) {
         vm.cart.$remove($state.go('cart.checkout'));
         delete $cookies.cartId
+        vm.totalQuantity = 0
+        vm.totalCost = 0
       }
     }
 
