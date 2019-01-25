@@ -42,6 +42,7 @@
         vm.store.$update(successCallback, errorCallback);
       } else {
         vm.store.$save(successCallback, errorCallback);
+        vm.assets = AssetsService.query()
       }
 
       function successCallback(res) {

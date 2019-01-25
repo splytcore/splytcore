@@ -9,6 +9,7 @@
     <div class="panel panel-footer">Panel Footer</div>
   </div>
 
+
   <!-- Create new asset form -->
   <div class="panel panel-primary">
     <div class="panel-heading"><h4>New Asset</h4></div>
@@ -59,13 +60,31 @@
         </div>
 
         <div class="form-group" show-errors>
+          <label class="control-label" for="hashtag">Hashtag</label>
+          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="price" class="form-control" placeholder="hashtag" required>
+          <div ng-messages="vm.form.assetForm.hashtag.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Hashtag is required.</p>
+          </div>       
+        </div>
+
+
+        <div class="form-group" show-errors>
           <label class="control-label" for="asset">Inventory</label>       
           <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required ng-disabled="vm.asset._id">
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
     </div>
-    <div class="panel panel-footer">Panel Footer</div>
+
+    <div class="panel panel-footer">
+        <alert type="danger" ng-show="vm.error" class="text-center text-danger">
+          <span ng-bind="vm.error"></span>
+        </alert>
+        <div ng-show="vm.success" class="text-center text-success">
+          <strong ng-bind="vm.success"></strong>
+        </div>
+
+    </div>
   </div>
   
   <!-- list all assets from this seller -->

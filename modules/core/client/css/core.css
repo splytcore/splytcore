@@ -16,11 +16,11 @@ body {
 }
 
 
-input {
+/*input {
   background-color: var(--splyt-white) !important;
   border-radius: 30px !important;
 }
-
+*/
 a {
   text-shadow: none !important;
 }

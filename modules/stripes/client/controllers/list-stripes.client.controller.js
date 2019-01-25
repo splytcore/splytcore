@@ -16,7 +16,7 @@
 
     function igLogin() {
       let clientId = '09156f2dbd264bdb8652cff79b354b36'
-      let redirectUrl = 'http://www.localhost:3000/stripes'
+      let redirectUrl = 'http://localhost:3000/stripes'
       window.location.replace('https://api.instagram.com/oauth/authorize/?client_id=' + clientId + '&redirect_uri=' + redirectUrl + '&response_type=code')
     }
     

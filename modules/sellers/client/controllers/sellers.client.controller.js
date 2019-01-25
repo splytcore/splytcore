@@ -43,8 +43,10 @@
       vm.asset.$save(successCallback, errorCallback);
 
       function successCallback(res) {
-        alert('Successfull!')
-        vm.assets = AssetsService.query({ listType: 'ASSETS.LISTMYASSETS' })
+        // alert('Successfull!')
+        vm.success = 'Asset has been listed!'
+        vm.asset = new AssetsService()
+        vm.assets = AssetsService.query({ user: vm.user._id })
       }
 
       function errorCallback(res) {
