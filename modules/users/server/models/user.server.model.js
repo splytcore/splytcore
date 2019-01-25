@@ -97,7 +97,8 @@ var UserSchema = new Schema({
     validate: [validateInstagramStrategyProperty, 'Please fill in your Instagram Username']
   },
   igAccessToken: {
-    type: String
+    type: String,
+    default: ''
   },
   password: {
     type: String,

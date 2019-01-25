@@ -5,9 +5,9 @@
     .module('stripes')
     .controller('StripesListController', StripesListController);
 
-  StripesListController.$inject = ['StripesService', 'StripesManagerService', 'Authentication', '$scope'];
+  StripesListController.$inject = ['StripesService', 'StripesManagerService', 'Authentication', '$scope', '$rootElement'];
 
-  function StripesListController(StripesService, StripesManagerService, Authentication, $scope) {
+  function StripesListController(StripesService, StripesManagerService, Authentication, $scope, $rootElement) {
     
     var vm = this
     vm.igLogin = igLogin
@@ -16,7 +16,7 @@
 
     function igLogin() {
       let clientId = '09156f2dbd264bdb8652cff79b354b36'
-      let redirectUrl = 'http://www.localhost:3000/stripes'
+      let redirectUrl = 'http://' + window.location.host + window.location.pathname
       window.location.replace('https://api.instagram.com/oauth/authorize/?client_id=' + clientId + '&redirect_uri=' + redirectUrl + '&response_type=code')
     }
     
