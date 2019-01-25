@@ -9,7 +9,7 @@ const Stripe = mongoose.model('Stripe')
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 const stripe = require('stripe')('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
-// const curl = new (require('curl-request'))()
+const curl = new (require('curl-request'))()
 const userController = require(path.resolve('./modules/users/server/controllers/users/users.profile.server.controller'))
 
 /**

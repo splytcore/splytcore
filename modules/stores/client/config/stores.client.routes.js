@@ -20,7 +20,6 @@
         controller: 'StoresListController',
         controllerAs: 'vm',
         data: {
-          roles: ['user', 'admin', 'affiliate', 'customer'],
           pageTitle: 'Stores List'
         }
       })
@@ -59,7 +58,6 @@
           storeResolve: getStore
         },
         data: {
-          roles: ['user', 'admin' ,'affiliate', 'customer'],
           pageTitle: 'Store {{ storeResolve.name }}'
         }
       })    
