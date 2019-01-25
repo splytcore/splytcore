@@ -55,17 +55,17 @@
       })
   }
 
-  // getAssets.$inject = ['$stateParams', 'AssetsService'];
+  // getAssets.$inject = ['$stateParams', 'SellersService'];
 
-  // function getAssets($stateParams, AssetsService) {
-  //   return AssetsService.get({
+  // function getAssets($stateParams, SellersService) {
+  //   return SellersService.get({
   //     assetId: $stateParams.sellerId
   //   }).$promise;
   // }
 
-  // newAsset.$inject = ['AssetsService'];
+  // newAsset.$inject = ['SellersService'];
 
-  // function newAsset(AssetssService) {
-  //   return new AssetsService();
+  // function newAsset(SellersService) {
+  //   return new SellersService();
   // }
 }());
