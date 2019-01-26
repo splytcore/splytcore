@@ -94,13 +94,12 @@
           <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>                         
         </div>
      
-      <div class="form-group">
-        <br/>
-        <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>                          
-        <div ng-show="vm.error" class="text-danger">
-          <strong ng-bind="vm.error"></strong>
+        <div class="form-group">
+          <br/>                     
+          <div ng-show="vm.error" class="text-danger">
+            <strong ng-bind="vm.error"></strong>
+          </div>
         </div>
-      </div>
       
       </fieldset>
     </form>
