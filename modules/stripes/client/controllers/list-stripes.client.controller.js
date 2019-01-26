@@ -18,6 +18,7 @@
 
     function igLogin() {
       let clientId = '09156f2dbd264bdb8652cff79b354b36'
+      console.log(redirectUri)
       window.location.replace('https://api.instagram.com/oauth/authorize/?client_id=' + clientId + '&redirect_uri=' + redirectUri + '&response_type=code')
     }
     
