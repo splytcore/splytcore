@@ -28,7 +28,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'post']
     }, {
       resources: '/api/categories/:categoryId',
-      permissions: ['get']
+      permissions: ['get', 'put']  
     }]
   }, {
     roles: ['guest', 'customer'],
