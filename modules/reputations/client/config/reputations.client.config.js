@@ -9,31 +9,31 @@
 
   function menuConfig(Menus) {
     // Set top bar menu items
-    Menus.addMenuItem('topbar', {
-      title: 'Reputations',
-      state: 'reputations',
-      type: 'dropdown',
-      roles: ['user', 'admin']
-    })
+    // Menus.addMenuItem('topbar', {
+    //   title: 'Reputations',
+    //   state: 'reputations',
+    //   type: 'dropdown',
+    //   roles: ['user', 'admin']
+    // })
 
 
-    Menus.addSubMenuItem('topbar', 'reputations', {
-      title: 'List Pending Reputations',
-      state: 'reputations.listPending'
-    })
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'reputations', {
-      title: 'List My Reputations',
-      roles: ['user'],
-      state: 'reputations.listMyReputations'
-    })
+    // Menus.addSubMenuItem('topbar', 'reputations', {
+    //   title: 'List Pending Reputations',
+    //   state: 'reputations.listPending'
+    // })
+    // // Add the dropdown list item
+    // Menus.addSubMenuItem('topbar', 'reputations', {
+    //   title: 'List My Reputations',
+    //   roles: ['user'],
+    //   state: 'reputations.listMyReputations'
+    // })
 
 
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'reputations', {
-      title: 'List All Mined Reputations',
-      state: 'reputations.list'
-    })
+    // // Add the dropdown list item
+    // Menus.addSubMenuItem('topbar', 'reputations', {
+    //   title: 'List All Mined Reputations',
+    //   state: 'reputations.list'
+    // })
 
   }
 }());
