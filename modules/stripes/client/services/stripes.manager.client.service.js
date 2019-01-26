@@ -13,9 +13,10 @@
       vm.instagramBaseURL = 'api/instagram/'
       vm.saveIgCode = saveIgCode
       
-      function saveIgCode(igCode) {
+      function saveIgCode(igCode, redirectUri) {
           return $http.post(vm.instagramBaseURL + 'saveIgCode', {
-              igCode: igCode
+              igCode: igCode,
+              redirectUri: redirectUri
           })
       }
     }

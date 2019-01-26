@@ -11,6 +11,7 @@ const Cart = mongoose.model('Cart')
 const CartItem = mongoose.model('CartItem')
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const  _ = require('lodash')
+const curl = new (require('curl-request'))()
 
 /**
  * Create a Shopping Cart if there's none assigned
@@ -110,7 +111,7 @@ function getAffiliateFromStore(storeId) {
 
   return new Promise ((resolve, reject) => {
     if (storeId) {
-      Store.findById(storeId).populate('affiliate', 'instagram').exec(function(err, store) {
+      Store.findById(storeId).populate('affiliate', 'igAccessToken').exec(function(err, store) {
         if (err) {
           reject(err)
         } else {
@@ -126,10 +127,29 @@ function getAffiliateFromStore(storeId) {
 //TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
 //JOSH THIS IS FOR YOU
 function getHashtagByInstagram(affiliate) {
-  console.log('get instgram from affiliate and grabi hashtag from the feed')
-  console.log(affiliate)
-  return Promise.resolve('redshoes')
+  return new Promise((resolve, reject) => {
+    if(!affiliate.igAccessToken){
+      reject()
+    }
+    let getProfileUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
 
+    curl.get(getProfileUrl)
+    .then(({statusCode, body}) => {
+      if(statusCode === 200) {
+        let tag = JSON.parse(body).data[0].tags[0]
+        console.log(tag)
+        resolve(tag)
+      } else {
+        console.log(statusCode, body)
+      }
+    })
+    .catch(e => {
+      console.log(e)
+      reject()
+    })
+  })
+  
+  
 }
 
 /*
