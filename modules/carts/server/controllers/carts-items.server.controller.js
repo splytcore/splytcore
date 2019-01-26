@@ -43,7 +43,7 @@ function addToCart (req, res) {
             message: errorHandler.getErrorMessage(err)
           })
         } else {
-          console.log(cartItem)
+          // console.log(cartItem)
           res.jsonp(cartItem)
         }
       })

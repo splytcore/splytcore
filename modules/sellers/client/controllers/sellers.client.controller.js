@@ -24,7 +24,6 @@
 
     console.log(vm.categories)
 
-
     // Remove existing Seller
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
@@ -43,8 +42,10 @@
       vm.asset.$save(successCallback, errorCallback);
 
       function successCallback(res) {
-        alert('Successfull!')
-        vm.assets = AssetsService.query({ listType: 'ASSETS.LISTMYASSETS' })
+        // alert('Successfull!')
+        vm.success = 'Asset has been listed!'
+        // vm.assets = AssetsService.query({ user: vm.user._id })
+        $state.go('assets.edit', { assetId: res._id })
       }
 
       function errorCallback(res) {

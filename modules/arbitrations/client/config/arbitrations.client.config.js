@@ -9,29 +9,29 @@
 
   function menuConfig(Menus) {
     // Set top bar menu items
-    Menus.addMenuItem('topbar', {
-      title: 'Arbitrations',
-      state: 'arbitrations',
-      type: 'dropdown',
-      roles: ['user', 'admin']
-    })
+    // Menus.addMenuItem('topbar', {
+    //   title: 'Arbitrations',
+    //   state: 'arbitrations',
+    //   type: 'dropdown',
+    //   roles: ['user', 'admin']
+    // })
 
-    Menus.addSubMenuItem('topbar', 'arbitrations', {
-      title: 'List Pending Arbitrations',
-      state: 'arbitrations.listPending'
-    })
+    // Menus.addSubMenuItem('topbar', 'arbitrations', {
+    //   title: 'List Pending Arbitrations',
+    //   state: 'arbitrations.listPending'
+    // })
 
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'arbitrations', {
-      title: 'List My Arbitrations',
-      roles: ['user'],
-      state: 'arbitrations.listMyArbitrations'
-    })
+    // // Add the dropdown list item
+    // Menus.addSubMenuItem('topbar', 'arbitrations', {
+    //   title: 'List My Arbitrations',
+    //   roles: ['user'],
+    //   state: 'arbitrations.listMyArbitrations'
+    // })
 
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'arbitrations', {
-      title: 'List All Mined Arbitrations',
-      state: 'arbitrations.list'
-    })
+    // // Add the dropdown list item
+    // Menus.addSubMenuItem('topbar', 'arbitrations', {
+    //   title: 'List All Mined Arbitrations',
+    //   state: 'arbitrations.list'
+    // })
   }
 }());

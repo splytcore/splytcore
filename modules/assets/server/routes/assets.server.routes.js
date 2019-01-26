@@ -6,7 +6,7 @@
 const assetsPolicy = require('../policies/assets.server.policy')
 const assets = require('../controllers/assets.server.controller')
 const path = require('path')
-const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))  
+// const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))  
 
 module.exports = function(app) {
   // assets Routes

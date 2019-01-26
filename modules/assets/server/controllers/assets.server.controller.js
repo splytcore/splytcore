@@ -51,19 +51,6 @@ exports.read = function(req, res, next) {
 
 
 /**
- * Show the current asset
- */
-exports.returnAsset = function(req, res) {
-
-  console.log('return asset detail')
-  let asset = req.asset
-  console.log(asset)
-  res.jsonp(asset)
-
-}
-
-
-/**
  * Update a asset
  */
 exports.update = function(req, res) {
@@ -103,10 +90,6 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-
-  // let listType = req.query.listType ? req.query.listType.toUpperCase() : null
-  // console.log(listType)
-
   console.log(req.query)
   Asset.find(req.query).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
     if (err) {
@@ -114,7 +97,7 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     }
-    console.log(assets)
+    // console.log(assets)
     res.jsonp(assets)
   })
 
