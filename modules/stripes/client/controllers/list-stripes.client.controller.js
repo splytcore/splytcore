@@ -12,7 +12,8 @@
     var vm = this
     vm.igLogin = igLogin
     $scope.authentication = Authentication
-    let redirectUri = 'http://' + window.location.host + '/stripes'
+    let redirectUri = window.location.origin + '/stripes'
+    console.log(window.location)
 
 
 
