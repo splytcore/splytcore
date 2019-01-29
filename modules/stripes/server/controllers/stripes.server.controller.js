@@ -99,7 +99,6 @@ exports.list = function(req, res) {
 exports.saveIgCode = (req, res, next) => {
   let clientId = '09156f2dbd264bdb8652cff79b354b36'
   let clientSecret = 'ebde362954ba4ee2814e2778d78ef146'
-  let redirectUri = 'http://www.localhost:3000/stripes'
 
   curl.setHeaders([
     'Content-Type: application/x-www-form-urlencoded'
@@ -108,9 +107,14 @@ exports.saveIgCode = (req, res, next) => {
     'client_id': clientId,
     'client_secret':clientSecret,
     'grant_type':'authorization_code',
-    'redirect_uri':redirectUri,
+    'redirect_uri':req.body.redirectUri,
     'code': req.body.igCode
   }).post('https://api.instagram.com/oauth/access_token').then(({statusCode, body, headers}) => {
+    console.log('after curl execute')
+    console.log(statusCode)
+    if(statusCode === 400) {
+      console.log(body)
+    }
     if(statusCode === 200) {
       let igInfo = JSON.parse(body)
       console.log(igInfo)
@@ -121,7 +125,9 @@ exports.saveIgCode = (req, res, next) => {
     }
   }).catch(e => {
     console.log(e)
-    next()
+    return res.status(400).send({
+      e
+    })
   })
 }
 
