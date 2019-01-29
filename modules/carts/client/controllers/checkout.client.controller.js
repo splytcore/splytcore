@@ -28,12 +28,10 @@
 
     //BUG HERE. Calculating incorrectly 
     if ($cookies.cartId) {
-      CartsService.get({ cartId: $cookies.cartId }, (err, result) => {
-        vm.cart = result
-        if (vm.storeId) {
-          addAssetFromStoreId(vm.storeId)
-        } 
-      })
+      vm.cart = CartsService.get({ cartId: $cookies.cartId })
+      if (vm.storeId) {
+        addAssetFromStoreId(vm.storeId)
+      } 
     } else if (vm.storeId){
       addAssetFromStoreId(vm.storeId)
     }
@@ -82,8 +80,9 @@
     // Remove existing Cart
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
-        vm.cart.$remove($state.go('cart.checkout'));
         delete $cookies.cartId
+        vm.cart.$remove($state.go('cart.checkout'))
+        vm.cart = {}
         vm.totalQuantity = 0
         vm.totalCost = 0
       }
