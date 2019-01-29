@@ -1,0 +1,12 @@
+<section class="row" ng-controller="AuthenticateInstagramController">
+<div class="col-xs-offset-1 col-xs-10 col-md-offset-4 col-md-4">
+    <p>We need read permission to your Instagram profile so we can extract post hashtags for spl.yt</p>
+    </br>
+    <button class="btn" ng-click="igLogin()" ng-hide="{{isIgAuthenticated}}">Give Permissions</button>
+    <button class="btn" ng-click="igLogout()" ng-show="{{isIgAuthenticated}}">Revoke Access</button>
+    </br>
+    <span  style="color: red" ng-show="{{isIgErrored}}">Aww snap. We need your account permission to proceed.</span>
+    <span  style="color: green" ng-show="{{isIgAuthenticated}}">Contrats! your Instagram account is now linked with spl.yt</span>
+
+</div>
+</section>

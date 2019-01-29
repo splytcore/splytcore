@@ -100,7 +100,6 @@ exports.saveIgCode = (req, res, next) => {
   let clientId = '09156f2dbd264bdb8652cff79b354b36'
   let clientSecret = 'ebde362954ba4ee2814e2778d78ef146'
 
-  console.log('made it here')
   curl.setHeaders([
     'Content-Type: application/x-www-form-urlencoded'
   ])
