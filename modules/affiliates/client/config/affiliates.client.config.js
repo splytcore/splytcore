@@ -27,10 +27,5 @@
       state: 'affiliates.stores',
       roles: ['affiliate']
     })    
-    Menus.addSubMenuItem('topbar', 'affiliates', {
-      title: 'My Store Filters',
-      state: 'affiliates.categories',
-      roles: ['affiliate']
-    })    
   }
 }())

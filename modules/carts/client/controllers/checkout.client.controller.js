@@ -26,13 +26,18 @@
     
     console.log('cart id: ' + $cookies.cartId)
 
+    //BUG HERE. Calculating incorrectly 
     if ($cookies.cartId) {
-      vm.cart = CartsService.get({ cartId: $cookies.cartId })
-     }
-
-    if (vm.storeId) {
+      CartsService.get({ cartId: $cookies.cartId }, (err, result) => {
+        vm.cart = result
+        if (vm.storeId) {
+          addAssetFromStoreId(vm.storeId)
+        } 
+      })
+    } else if (vm.storeId){
       addAssetFromStoreId(vm.storeId)
-    } 
+    }
+
 
     vm.error = null
     vm.form = {}

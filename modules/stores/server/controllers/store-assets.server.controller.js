@@ -16,16 +16,15 @@ const _ = require('lodash')
  * Create a Store
  */
 exports.create = function(req, res) {
-  let store = new Store(req.body);
-  store.affiliate = req.user;
 
-  store.save(function(err) {
+  let storeAsset = new StoreAsset(req.body)
+  storeAsset.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(store);
+      res.jsonp(storeAsset);
     }
   });
 };
@@ -35,37 +34,26 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  let store = req.store ? req.store.toJSON() : {};
-  
-  console.log('binding assets')
-  StoreAsset.find({ store: store._id }).sort('-created').populate('asset').exec(function(err, storeAssets) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      store.storeAssets = storeAssets
-      res.jsonp(store);
-    }
-  });
+  let storeAsset = req.storeAsset ? req.storeAsset.toJSON() : {};
 
+  res.jsonp(storeAsset);
 }
 
 /**
  * Update a Store
  */
 exports.update = function(req, res) {
-  var store = req.store;
+  var storeAsset = req.storeAsset;
 
-  store = _.extend(store, req.body);
+  storeAsset = _.extend(storeAsset, req.body);
 
-  store.save(function(err) {
+  storeAsset.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(store);
+      res.jsonp(storeAsset)
     }
   });
 };
@@ -74,15 +62,15 @@ exports.update = function(req, res) {
  * Delete an Store
  */
 exports.delete = function(req, res) {
-  var store = req.store;
+  var storeAsset = req.storeAsset;
 
-  store.remove(function(err) {
+  storeAsset.remove(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(store);
+      res.jsonp(storeAsset);
     }
   });
 };
@@ -91,21 +79,24 @@ exports.delete = function(req, res) {
  * List of Stores
  */
 exports.list = function(req, res) {
-  Store.find().sort('-created').populate('affiliate', 'displayName').exec(function(err, stores) {
+  
+  console.log(req.query)
+
+  StoreAsset.find().sort('-created').populate('affiliate', 'displayName').exec(function(err, storeAssets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
-      res.jsonp(stores);
+      res.jsonp(storeAssets);
     }
-  });
+  })
 }
 
 /**
  * Store middleware
  */
-exports.storeByID = function(req, res, next, id) {
+exports.storeAssetByID = function(req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
@@ -113,15 +104,15 @@ exports.storeByID = function(req, res, next, id) {
     });
   }
 
-  Store.findById(id).populate('affiliate', 'displayName').populate('categories').exec(function (err, store) {
+  StoreAsset.findById(id).populate('asset').exec(function (err, storeAsset) {
     if (err) {
       return next(err);
-    } else if (!store) {
+    } else if (!storeAsset) {
       return res.status(404).send({
         message: 'No Store with that identifier has been found'
       });
     }
-    req.store = store;
+    req.storeAsset = storeAsset;
     next();
   });
 };

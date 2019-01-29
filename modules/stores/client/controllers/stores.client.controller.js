@@ -6,18 +6,16 @@
     .module('stores')
     .controller('StoresController', StoresController);
 
-  StoresController.$inject = ['$scope', '$state', '$window', 'Authentication', 'storeResolve', 'CategoriesService', 'AssetsService'];
+  StoresController.$inject = ['$scope', '$state', '$window', 'Authentication', 'storeResolve', 'CategoriesService', 'AssetsService', 'StoreAssetsService'];
 
-  function StoresController ($scope, $state, $window, Authentication, store, CategoriesService, AssetsService) {
+  function StoresController ($scope, $state, $window, Authentication, store, CategoriesService, AssetsService, StoreAssetsService) {
     var vm = this
 
     vm.authentication = Authentication
     vm.store = store
+    vm.assets = vm.store.storeAssets.map(storeAsset => storeAsset.asset) 
+    console.log(vm.assets)    
 
-    //TODO: only list assets for this store
-    vm.assets = AssetsService.query()
-
-    console.log(vm.store.categories)
     vm.error = null
     vm.form = {};
     vm.remove = remove;
