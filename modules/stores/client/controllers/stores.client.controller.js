@@ -13,7 +13,8 @@
 
     vm.authentication = Authentication
     vm.store = store
-    vm.assets = vm.store.storeAssets.map(storeAsset => storeAsset.asset) 
+    console.log(store)
+    vm.assets = vm.store._id ? vm.store.storeAssets.map(storeAsset => storeAsset.asset) : []
     console.log(vm.assets)    
 
     vm.error = null
