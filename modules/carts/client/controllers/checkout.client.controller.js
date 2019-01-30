@@ -15,9 +15,9 @@
   function CheckoutController (StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     let vm = this
     // Test stripe API key
-    //let stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+    let stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
     // Live stripe API key
-    let stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
+    // let stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
 
     vm.authentication = Authentication
 
