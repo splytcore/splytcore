@@ -69,8 +69,12 @@
       vm.order.cart = vm.cart._id
 
       vm.order.$save((result) => {
-        console.log('new order created successful!')
+        alert('new order created successful!')
         delete $cookies.cartId
+        vm.cart = null
+        vm.totalQuantity = 0
+        vm.totalCost = 0
+        
       }, (error) => {
         console.log('error')
       })
@@ -82,7 +86,7 @@
       if ($window.confirm('Are you sure you want to delete?')) {
         delete $cookies.cartId
         vm.cart.$remove($state.go('cart.checkout'))
-        vm.cart = {}
+        vm.cart = null
         vm.totalQuantity = 0
         vm.totalCost = 0
       }
