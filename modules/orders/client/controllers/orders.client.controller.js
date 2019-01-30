@@ -6,9 +6,9 @@
     .module('orders')
     .controller('OrdersController', OrdersController);
 
-  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies', 'AssetsManagerService', 'MarketsService'];
+  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies'];
 
-  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies, AssetsManagerService, MarketsService) {
+  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies) {
     var vm = this
     // console.log($stateParams)
     vm.user = Authentication.user
@@ -17,15 +17,13 @@
     vm.form = {}
     vm.remove = remove
     vm.save = save
-    vm.applyAction = applyAction
-
     vm.updateTrxAmount = updateTrxAmount
 
     vm.etherscanURL = $cookies.etherscanURL
     
     vm.requestRefund = requestRefund
     vm.approveRefund = approveRefund
-    vm.applyAction = applyAction
+
 
     //TODO: save actions in config file
     vm.actions = [ 
@@ -104,22 +102,6 @@
         vm.error = res.data.message
       }
     }
-    
-    function applyAction() {
-      console.log(vm.selectedAction)
-      switch(parseInt(vm.selectedAction)) {
-          case 1:
-              requestRefund()              
-              break;
-          case 2:
-              approveRefund()              
-              break;        
-          default:
-              alert('NOT VALID SELECTION')
-              break;
-      } 
-      EthService.updateUserBalances()     
-    }   
 
   }
 }());

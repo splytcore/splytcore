@@ -13,7 +13,7 @@
     vm.user = Authentication.user
 
     vm.listType = $state.current.name
-    vm.orders = OrdersService.query({ listType: vm.listType })
+    vm.orders = OrdersService.query()
   
     vm.etherscanURL = $cookies.etherscanURL
   }
