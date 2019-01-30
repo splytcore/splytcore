@@ -17,11 +17,11 @@
     })
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'orders', {
-      title: 'List My Orders',
-      roles: ['user', 'customer'],
-      state: 'orders.listMyOrders'
-    })
+    // Menus.addSubMenuItem('topbar', 'orders', {
+    //   title: 'List My Orders',
+    //   roles: ['user', 'customer'],
+    //   state: 'orders.listMyOrders'
+    // })
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'orders', {
