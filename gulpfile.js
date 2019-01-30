@@ -53,7 +53,7 @@ gulp.task('watch', function () {
   gulp.watch(defaultAssets.server.views).on('change', plugins.livereload.changed)
   gulp.watch(defaultAssets.server.allJS, ['jshint']).on('change', plugins.livereload.changed)
   gulp.watch(defaultAssets.client.js, ['jshint']).on('change', plugins.livereload.changed)
-  //gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed)
+  gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed)
 
   // gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed)
   // gulp.watch(defaultAssets.client.less, ['less', 'csslint']).on('change', plugins.livereload.changed)
@@ -72,7 +72,7 @@ gulp.task('jshint', function () {
   var assets = _.union(
     defaultAssets.server.gulpConfig,
     defaultAssets.server.allJS,
-    // defaultAssets.client.js,
+    defaultAssets.client.js,
     testAssets.tests.server
     // testAssets.tests.client,
     // testAssets.tests.e2e
@@ -89,7 +89,7 @@ gulp.task('eslint', function () {
   var assets = _.union(
     defaultAssets.server.gulpConfig,
     defaultAssets.server.allJS,
-    // defaultAssets.client.js,
+    defaultAssets.client.js,
     testAssets.tests.server
     // testAssets.tests.client,
     // testAssets.tests.e2e
@@ -276,9 +276,14 @@ gulp.task('dropcollections', function (done) {
 
 })
 
+// Lint CSS and JavaScript files.
+gulp.task('lint', function (done) {
+  runSequence(['eslint', 'jshint'], done);
+});
+
 // Lint project files and minify them into two production files.
 gulp.task('build', function (done) {
-  runSequence('env:dev', ['uglify'], done)
+  runSequence('env:dev', ['uglify', 'cssmin'], done)
 })
 
 
@@ -299,5 +304,5 @@ gulp.task('debug', function (done) {
 
 // Run the project in production mode
 gulp.task('prod', function (done) {
-  runSequence('templatecache', 'build', 'env:prod', ['nodemon', 'watch'], done)
+  runSequence('templatecache', 'build', 'env:prod', 'lint', ['nodemon', 'watch'], done)
 })

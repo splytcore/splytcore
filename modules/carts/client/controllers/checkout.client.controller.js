@@ -17,14 +17,19 @@
     // Test stripe API key
     //let stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
     // Live stripe API key
-    let stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
+    let stripe
+    /* jshint ignore:start */
+    stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
+    /* jshint ignore:end */
+
+    let card
 
     vm.authentication = Authentication
 
     //NOTE: future we'll only haver the storeId
     vm.addAssetFromStoreId = addAssetFromStoreId
 
-    vm.storeId = $location.search()['storeId']
+    vm.storeId = $location.search().storeId
 
     console.log('storeId:' + vm.storeId)
 
@@ -162,7 +167,7 @@
     };
 
     // Create an instance of the card Element.
-    var card = elements.create('card', {style: style});
+    card = elements.create('card', {style: style});
 
     // Add an instance of the card Element into the `card-element` <div>.
     card.mount('#card-element');
