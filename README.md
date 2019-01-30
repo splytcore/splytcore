@@ -50,8 +50,13 @@ sudo pm2 stop SPLYT
 
 ## Initlization of this repo (for new devs)
 git clone this repo
+
 cd splytcoreui
+
 npm install
+
 sudo bower install -g
+
 bower install --allow-root
+
 npm start
