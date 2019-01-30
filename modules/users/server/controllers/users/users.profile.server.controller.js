@@ -151,21 +151,18 @@ exports.saveIgCode = (req, res, next) => {
     next()
   }
 
-  let clientId = '09156f2dbd264bdb8652cff79b354b36'
-  let clientSecret = 'ebde362954ba4ee2814e2778d78ef146'
-
   curl.setHeaders([
     'Content-Type: application/x-www-form-urlencoded'
   ])
   curl.setBody({
-    'client_id': clientId,
-    'client_secret':clientSecret,
+    'client_id': config.instagram.clientId,
+    'client_secret':config.instagram.clientSecret,
     'grant_type':'authorization_code',
     'redirect_uri':req.body.redirectUri,
     'code': req.body.igCode
-  }).post('https://api.instagram.com/oauth/access_token').then(({statusCode, body, headers}) => {
-    console.log('after curl execute')
-    console.log(statusCode)
+  }).post('https://api.instagram.com/oauth/access_token')
+  .then(({statusCode, body, headers}) => {
+
     if(statusCode === 400) {
       console.log(body)
     }
@@ -179,9 +176,7 @@ exports.saveIgCode = (req, res, next) => {
     }
   }).catch(e => {
     console.log(e)
-    return res.status(400).send({
-      e
-    })
+    return res.status(400).send({ e })
   })
 }
 

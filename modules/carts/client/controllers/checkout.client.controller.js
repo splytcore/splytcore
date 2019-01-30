@@ -1,3 +1,7 @@
+// card number: 4242 4242 4242 4242
+// exp month: 12
+// exp year: 2020
+// cvc: 123
 (function () {
   'use strict';
 
@@ -9,7 +13,11 @@
   CheckoutController.$inject = ['StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
 
   function CheckoutController (StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
-    var vm = this;
+    let vm = this
+    // Test stripe API key
+    //let stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+    // Live stripe API key
+    let stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
 
     vm.authentication = Authentication
 
@@ -68,16 +76,28 @@
       vm.order = new OrdersService()
       vm.order.cart = vm.cart._id
 
-      vm.order.$save((result) => {
-        alert('new order created successful!')
-        delete $cookies.cartId
-        vm.cart = null
-        vm.totalQuantity = 0
-        vm.totalCost = 0
-        
-      }, (error) => {
-        console.log('error')
-      })
+      stripe.createToken(card)
+      .then(res => {
+        if (res.error) {
+          // Inform the user if there was an error.
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = res.error.message;
+        } else {
+          // Send the token to your server.
+          vm.order.stripeToken = res.token.id
+          vm.order.totalCost = vm.totalCost
+          console.log(res.token)
+          vm.order.$save(res => {
+            alert('new order created successful!')
+            delete $cookies.cartId
+            vm.cart = null
+            vm.totalQuantity = 0
+            vm.totalCost = 0
+          }, (error) => {
+            console.log('error')
+          })
+        }
+      });
 
     }
 
@@ -118,9 +138,6 @@
         vm.error = res.data.message;
       }
     }
-
-    // Create a Stripe client.
-    var stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv');
 
     // Create an instance of Elements.
     var elements = stripe.elements();
