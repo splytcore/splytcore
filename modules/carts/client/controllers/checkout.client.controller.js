@@ -81,7 +81,7 @@
         if (res.error) {
           // Inform the user if there was an error.
           var errorElement = document.getElementById('card-errors');
-          errorElement.textContent = result.error.message;
+          errorElement.textContent = res.error.message;
         } else {
           // Send the token to your server.
           vm.order.stripeToken = res.token.id
@@ -98,7 +98,7 @@
           })
         }
       });
-      
+
     }
 
     // Remove existing Cart
