@@ -1,3 +1,7 @@
+// card number: 4242 4242 4242 4242
+// exp month: 12
+// exp year: 2020
+// cvc: 123
 (function () {
   'use strict';
 
@@ -9,7 +13,11 @@
   CheckoutController.$inject = ['StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
 
   function CheckoutController (StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
-    var vm = this;
+    let vm = this
+    // Test stripe API key
+    let stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+    // Live stripe API key
+    //let stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
 
     vm.authentication = Authentication
 
@@ -110,9 +118,6 @@
         vm.error = res.data.message;
       }
     }
-
-    // Create a Stripe client.
-    var stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv');
 
     // Create an instance of Elements.
     var elements = stripe.elements();

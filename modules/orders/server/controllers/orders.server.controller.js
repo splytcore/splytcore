@@ -186,6 +186,15 @@ exports.list = function(req, res) {
 
 }
 
+/**
+ * Charge client for the given amount
+ */
+
+exports.charge = (req, res, next) => {
+  console.log('charge customer here please')
+  next()
+}
+
 
 /**
  * Order middleware
