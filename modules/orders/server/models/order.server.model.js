@@ -39,7 +39,12 @@ var OrderSchema = new Schema({
   items: {
     type: Schema.ObjectId,
     ref: 'OrderItem'
+  },
+  stripeToken: {
+    type: String,
+    default: ''
   }
+
 })
 
 mongoose.model('Order', OrderSchema);

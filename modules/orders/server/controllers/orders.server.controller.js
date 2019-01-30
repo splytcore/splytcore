@@ -18,6 +18,10 @@ var path = require('path'),
   EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
   _ = require('lodash')
 
+  const curl = new (require('curl-request'))()
+  const config = require(path.resolve('./config/config'))
+
+
 /**
  * Create a Order
  */
@@ -192,7 +196,38 @@ exports.list = function(req, res) {
 
 exports.charge = (req, res, next) => {
   console.log('charge customer here please')
-  next()
+  console.log(req.body)
+  if(!req.body.stripeToken) {
+    next()
+  }
+
+  curl.setHeaders([
+    'Authorization: Bearer ' + config.stripe.secretKey
+  ])
+  curl.setBody({
+    'amount': req.body.totalCost * 100,
+    'currency':'USD',
+    'source': req.body.stripeToken,
+    'description': req.body.cart,
+  }).post('https://api.stripe.com/v1/charges')
+  .then((error, response) => {
+    console.log(error)
+    console.log(response)
+    // if(statusCode === 400) {
+    //   console.log(body)
+    // }
+    // if(statusCode === 200) {
+    //   let igInfo = JSON.parse(body)
+    //   console.log(igInfo)
+    //   req.body.igAccessToken = igInfo.access_token
+    //   req.body.profileImageURL = igInfo.user.profile_picture
+    //   req.body.firstName = igInfo.user.full_name
+      next()
+    // }
+  }).catch(e => {
+    console.log(e)
+    return res.status(400).send({ e })
+  })
 }
 
 

@@ -15,9 +15,9 @@
   function CheckoutController (StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     let vm = this
     // Test stripe API key
-    let stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+    //let stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
     // Live stripe API key
-    //let stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
+    let stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
 
     vm.authentication = Authentication
 
@@ -75,13 +75,26 @@
 
       vm.order = new OrdersService()
       vm.order.cart = vm.cart._id
-
-      vm.order.$save((result) => {
-        console.log('new order created successful!')
-        delete $cookies.cartId
-      }, (error) => {
-        console.log('error')
-      })
+      stripe.createToken(card)
+      .then(res => {
+        if (res.error) {
+          // Inform the user if there was an error.
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+        } else {
+          // Send the token to your server.
+          vm.order.stripeToken = res.token.id
+          vm.order.totalCost = vm.totalCost
+          console.log(res.token)
+          vm.order.$save(res => {
+            console.log('new order created successful!')
+            delete $cookies.cartId
+          }, (error) => {
+            console.log('error')
+          })
+        }
+      });
+      
 
     }
 
