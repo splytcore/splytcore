@@ -23,10 +23,10 @@
     });
 
     // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'stores', {
-      title: 'Create Store',
-      state: 'stores.create',
-      roles: ['affiliate', 'user']
-    });
+    // Menus.addSubMenuItem('topbar', 'stores', {
+    //   title: 'Create Store',
+    //   state: 'stores.create',
+    //   roles: ['affiliate', 'user']
+    // });
   }
 }());

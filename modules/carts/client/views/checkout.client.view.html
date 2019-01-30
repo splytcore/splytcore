@@ -7,6 +7,7 @@
     <h1> {{ vm.store.name }} </h1>
     <h3> My Cart </h3>
   </div>
+
   <div class="list-group">
     <a ng-repeat="item in vm.cart.cartItems"
        ui-sref="assets.view({ assetId: item.asset._id })"
