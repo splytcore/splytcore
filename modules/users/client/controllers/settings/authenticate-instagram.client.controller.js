@@ -51,11 +51,14 @@
       $scope.isIgAuthenticated = false
     }
 
-    try{
+    try {
+      
       if(window.location.search.substring(1).split('&')[1].split('=')[0] === 'error') {
         $scope.isIgErrored = true
       }
-    } catch {}
+    } catch (err) {
+
+    }
 
     if(Authentication.user.igAccessToken !== '') {
       $scope.isIgAuthenticated = true 

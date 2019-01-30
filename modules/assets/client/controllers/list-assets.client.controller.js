@@ -5,9 +5,9 @@
     .module('assets')
     .controller('AssetsListController', AssetsListController);
 
-  AssetsListController.$inject = ['AssetsService', 'EthService', '$state', 'Authentication', '$cookies'];
+  AssetsListController.$inject = ['AssetsService', '$state', 'Authentication', '$cookies'];
 
-  function AssetsListController(AssetsService, EthService, $state, Authentication, $cookies) {
+  function AssetsListController(AssetsService, $state, Authentication, $cookies) {
     
     var vm = this;
     vm.listType = $state.current.name.toString()

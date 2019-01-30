@@ -6,9 +6,9 @@
     .module('orders')
     .controller('OrdersController', OrdersController);
 
-  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies'];
+  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', '$cookies'];
 
-  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies) {
+  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, $cookies) {
     var vm = this
     // console.log($stateParams)
     vm.user = Authentication.user
@@ -33,31 +33,31 @@
 
     function requestRefund() {
 
-      EthService.requestRefund(vm.order._id)
-        .success((result) => {
-          console.log(result)
-          alert(result)
-          // $window.location.reload();          
-        })
-        .error((err) => {
-          console.log(err)
-          vm.error = err.message          
-        })
+      // EthService.requestRefund(vm.order._id)
+      //   .success((result) => {
+      //     console.log(result)
+      //     alert(result)
+      //     // $window.location.reload();          
+      //   })
+      //   .error((err) => {
+      //     console.log(err)
+      //     vm.error = err.message          
+      //   })
 
     }
 
 
     function approveRefund() {
 
-      EthService.approveRefund(vm.order._id)
-        .success((result) => {
-          console.log(result)
-          alert(result)
-          // $window.location.reload();          
-        })
-        .error((err) => {
-          console.log(err)
-        })
+      // EthService.approveRefund(vm.order._id)
+      //   .success((result) => {
+      //     console.log(result)
+      //     alert(result)
+      //     // $window.location.reload();          
+      //   })
+      //   .error((err) => {
+      //     console.log(err)
+      //   })
 
     }
 

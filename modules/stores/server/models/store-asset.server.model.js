@@ -26,7 +26,7 @@ let StoreAssetSchema = new Schema({
   }  
 })
 
-
+StoreAssetSchema.index({ store: 1, asset: 1 }, { unique: true })
 mongoose.model('StoreAsset', StoreAssetSchema)
 
 
