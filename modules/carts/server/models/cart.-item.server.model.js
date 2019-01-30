@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 /**
  * Cart Item Schema
  */
-var CartItemSchema = new Schema({
+let CartItemSchema = new Schema({
   cart: {
     type: Schema.ObjectId,
     ref: 'Cart'
@@ -24,4 +24,5 @@ var CartItemSchema = new Schema({
   }  
 })
 
-mongoose.model('CartItem', CartItemSchema);
+CartItemSchema.index({ cart: 1, asset: 1 }, { unique: true })
+mongoose.model('CartItem', CartItemSchema)
