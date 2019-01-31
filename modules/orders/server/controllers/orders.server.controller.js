@@ -11,7 +11,7 @@ var path = require('path'),
   Cart = mongoose.model('Cart'),
   CartItem = mongoose.model('CartItem'),
 
-  Promise = require("bluebird"),
+  Promise = require('bluebird'),
 
   async = require('async'),  
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -57,6 +57,12 @@ exports.create = function(req, res) {
         });
     }
   ], function (err, order) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.clearCookie('cartId')
     res.jsonp(order)
   });
 

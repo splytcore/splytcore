@@ -19,6 +19,8 @@ const curl = new (require('curl-request'))()
  */
 exports.create = function(req, res) {
 
+  console.log('cartId: ' + req.cookies.cartId)
+
   let storeId = req.body.store
   if (storeId) {
     createCheckoutFromSocialAccount(req, res)
@@ -31,13 +33,14 @@ exports.create = function(req, res) {
 
 function addToCart (req, res) {
 
-  let cartId = req.body.cart
+  let cartId = req.cookies ? req.cookies.cartId  : null
 
   getCart(cartId)
     .then((cart) => {
-      let cartItem = new CartItem(req.body)
-      cartItem.cart = cart
-      cartItem.save(function(err) {
+      res.cookie('cartId', cart._id.toString())
+      req.body.cart = cart
+      console.log(req.body)
+      CartItem.findOneAndUpdate({ cart: cart._id, asset: req.body.asset }, req.body, { upsert:true }, (err, cartItem) => {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
@@ -58,15 +61,16 @@ function addToCart (req, res) {
 
 function createCheckoutFromSocialAccount(req, res) {
 
-  console.log(req.body)
+  // console.log(req.body)
 
-  let cartId = req.body.cart
+  console.log(req.cookies)
+
+  let cartId = req.cookies ? req.cookies.cartId : null
   let storeId = req.body.store
   
   let cart
   let store
   let asset
-
 
   getAffiliateFromStore(storeId)
     .then((affiliate)=> {
@@ -85,6 +89,8 @@ function createCheckoutFromSocialAccount(req, res) {
     .then((res_cart)=> {
       // console.log(cart)
       // console.log(asset)
+      res.cookie('cartId', res_cart._id.toString())
+
       var cartItem = new CartItem(req.body)
       cartItem.cart = res_cart
       cartItem.asset = asset

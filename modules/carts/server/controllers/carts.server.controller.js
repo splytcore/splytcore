@@ -71,6 +71,9 @@ exports.update = function(req, res) {
  * Delete an Cart
  */
 exports.delete = function(req, res) {
+  
+  res.clearCookie('cartId')
+  
   var cart = req.cart;
 
   //removes all items

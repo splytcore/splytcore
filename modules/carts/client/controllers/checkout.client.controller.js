@@ -14,17 +14,27 @@
 
   function CheckoutController (StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     let vm = this
+  
+    let stripe
+
     // Test stripe API key
-    let stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+    /* jshint ignore:start */
+    stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+    /* jshint ignore:end */
+
     // Live stripe API key
-    // let stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
+    /* jshint ignore:start */
+    // stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
+    /* jshint ignore:end */
+
+    let card
 
     vm.authentication = Authentication
 
     //NOTE: future we'll only haver the storeId
     vm.addAssetFromStoreId = addAssetFromStoreId
 
-    vm.storeId = $location.search()['storeId']
+    vm.storeId = $location.search().storeId
 
     console.log('storeId:' + vm.storeId)
 
@@ -62,7 +72,6 @@
          console.log(result)
          vm.cart = CartsService.get({ cartId: result.cart._id })
          console.log('updated card')
-         $cookies.cartId = result.cart._id
          console.log(vm.cart)
       }, (error) => {
         console.log('error')
@@ -89,7 +98,6 @@
           console.log(res.token)
           vm.order.$save(res => {
             alert('new order created successful!')
-            delete $cookies.cartId
             vm.cart = null
             vm.totalQuantity = 0
             vm.totalCost = 0
@@ -104,7 +112,6 @@
     // Remove existing Cart
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
-        delete $cookies.cartId
         vm.cart.$remove($state.go('cart.checkout'))
         vm.cart = null
         vm.totalQuantity = 0
@@ -127,8 +134,6 @@
       }
 
       function successCallback(res) {
-        $cookies.cartId = res._id
-
         $state.go('carts.checkout', {
           cartId: res._id
         });
@@ -162,7 +167,7 @@
     };
 
     // Create an instance of the card Element.
-    var card = elements.create('card', {style: style});
+    card = elements.create('card', {style: style});
 
     // Add an instance of the card Element into the `card-element` <div>.
     card.mount('#card-element');

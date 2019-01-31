@@ -221,7 +221,7 @@ exports.getReputationManagerABI = function() {
 }
 
 function prepend0x(value) {
-  return "0x" + value
+  return '0x' + value
 }
 
 exports.createAsset = function(asset) {
@@ -445,8 +445,8 @@ exports.approveRefund = function(orderId, seller) {
 
 exports.addMarketPlace = function(assetId, marketPlace, wallet) {
 
-  console.log("assetId: " + assetId)  
-  console.log("marketPlace: " + marketPlace)  
+  console.log('assetId: ' + assetId)  
+  console.log('marketPlace: ' + marketPlace)  
 
   let trx = {
       from: wallet,
