@@ -32,7 +32,7 @@ var AssetSchema = new Schema({
   },  
   inventoryCount: {
     type: Number,
-    default: 2
+    default: 1
   },
   status: {
     type: String,
@@ -45,7 +45,7 @@ var AssetSchema = new Schema({
   },     
   price: {
     type: Number,
-    required: 'Please fill price'
+    default: 0
   },  
   //seller     
   user: {
@@ -58,7 +58,6 @@ var AssetSchema = new Schema({
   },
   brand: {
     type: String,
-    required: 'Please fill brand',
     trim: true
   },
   //TODO: create collection instead
