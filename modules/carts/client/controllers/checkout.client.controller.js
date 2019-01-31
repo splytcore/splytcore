@@ -19,12 +19,12 @@
 
     // Test stripe API key
     /* jshint ignore:start */
-    stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+    //stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
     /* jshint ignore:end */
 
     // Live stripe API key
     /* jshint ignore:start */
-    // stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
+    stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
     /* jshint ignore:end */
 
     let card

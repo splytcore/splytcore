@@ -11,6 +11,8 @@
     function SellerBatchUploadAssetsController ($scope, $state, $window, Authentication, AssetsService, CategoriesService, FileUploader) {
       var vm = this;
       let progressBarDenomination
+      /* jshint ignore:start */
+
       $scope.countTo, $scope.progressValue = 0
 
       $scope.uploader = new FileUploader({
@@ -26,42 +28,8 @@
           return '|csv|'.indexOf(type) !== -1;
         }
       });
+      /* jshint ignore:end */
 
-  
-      // Called after the user selected a new csv file
-      $scope.uploader.onAfterAddingFile = function (fileItem) {
-        if ($window.FileReader) {
-          var fileReader = new FileReader();
-          fileReader.readAsText(fileItem._file);
-  
-          fileReader.onload = function (fileReaderEvent) {
-            let csvParsed = Papa.parse(fileReaderEvent.target.result, {})
-            if(!csvParsed.errors[0]) {
-              csvParsed.data.splice(csvParsed.data.length - 1, 1)
-              removeExtraFields(csvParsed.data)
-
-            }
-          }
-        }
-      }
-
-      // Send individual assets to backend
-      $scope.upload = () => {
-
-        for(let x = 0; x < $scope.uploadedData.length; x++) {
-          let asset = new AssetsService($scope.uploadedData[x])
-          asset.$save(successCallback, errorCallback)
-        }
-  
-        function successCallback(asset) {  
-          $scope.countTo += progressBarDenomination
-          $scope.progressValue += progressBarDenomination
-        }
-  
-        function errorCallback(res) {
-          vm.error = res.data.message;
-        }
-      }
 
       // Convert parsed CSV file from array to object format for display and saving purposes
       let removeExtraFields = dataArray => {
@@ -98,6 +66,47 @@
           }
         }  
       }
+
+      // Called after the user selected a new csv file
+      $scope.uploader.onAfterAddingFile = function (fileItem) {
+        if ($window.FileReader) {
+          var fileReader = new FileReader();
+          fileReader.readAsText(fileItem._file);
+  
+          fileReader.onload = function (fileReaderEvent) {
+            let csvParsed
+            /* jshint ignore:start */
+            csvParsed = Papa.parse(fileReaderEvent.target.result, {})
+            /* jshint ignore:end */
+
+            if(!csvParsed.errors[0]) {
+              csvParsed.data.splice(csvParsed.data.length - 1, 1)
+              removeExtraFields(csvParsed.data)
+
+            }
+          }
+        }
+      }
+
+      // Send individual assets to backend
+      $scope.upload = () => {
+
+        for(let x = 0; x < $scope.uploadedData.length; x++) {
+          let asset = new AssetsService($scope.uploadedData[x])
+          asset.$save(successCallback, errorCallback)
+        }
+  
+        function successCallback(asset) {  
+          $scope.countTo += progressBarDenomination
+          $scope.progressValue += progressBarDenomination
+        }
+  
+        function errorCallback(res) {
+          vm.error = res.data.message;
+        }
+      }
+
+      
     }
   }());
   
