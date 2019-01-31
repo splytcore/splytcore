@@ -73,8 +73,8 @@ module.exports = {
   },
   stripe: {
     // Test secret key
-    //secretKey: 'sk_test_W2U93hsqzkoPTsk6ZNyNkWza'
+    secretKey: 'sk_test_W2U93hsqzkoPTsk6ZNyNkWza'
     // Live secret key
-    secretKey: 'sk_live_yKzwUTAPUFOvO8YstDg2N90e'
+    //secretKey: 'sk_live_yKzwUTAPUFOvO8YstDg2N90e'
   }
 };
