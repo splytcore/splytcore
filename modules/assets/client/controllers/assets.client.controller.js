@@ -19,7 +19,8 @@
     vm.user = Authentication.user
     vm.addToCart = addToCart
 
-    console.log('cart id: ' + $cookies.cartId)
+    console.log($cookies)
+   // console.log('scott: ' + $cookies.scott)
 
     function addToCart(assetId) {
 
@@ -31,7 +32,6 @@
       cartItem.$save((result) => {
         console.log('success')
         console.log(result)
-        $cookies.cartId = result.cart._id
         alert('added to cart!')
       }, (error) => {
         console.log('error')

@@ -57,6 +57,12 @@ exports.create = function(req, res) {
         });
     }
   ], function (err, order) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.clearCookie('cartId')
     res.jsonp(order)
   });
 

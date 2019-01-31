@@ -72,7 +72,6 @@
          console.log(result)
          vm.cart = CartsService.get({ cartId: result.cart._id })
          console.log('updated card')
-         $cookies.cartId = result.cart._id
          console.log(vm.cart)
       }, (error) => {
         console.log('error')
@@ -99,7 +98,6 @@
           console.log(res.token)
           vm.order.$save(res => {
             alert('new order created successful!')
-            delete $cookies.cartId
             vm.cart = null
             vm.totalQuantity = 0
             vm.totalCost = 0
@@ -114,7 +112,6 @@
     // Remove existing Cart
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
-        delete $cookies.cartId
         vm.cart.$remove($state.go('cart.checkout'))
         vm.cart = null
         vm.totalQuantity = 0
@@ -137,8 +134,6 @@
       }
 
       function successCallback(res) {
-        $cookies.cartId = res._id
-
         $state.go('carts.checkout', {
           cartId: res._id
         });

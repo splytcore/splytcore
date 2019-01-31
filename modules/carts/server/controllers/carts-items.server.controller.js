@@ -19,6 +19,8 @@ const curl = new (require('curl-request'))()
  */
 exports.create = function(req, res) {
 
+  console.log('cartId: ' + req.cookies.cartId)
+
   let storeId = req.body.store
   if (storeId) {
     createCheckoutFromSocialAccount(req, res)
@@ -31,10 +33,12 @@ exports.create = function(req, res) {
 
 function addToCart (req, res) {
 
-  let cartId = req.body.cart
+  let cartId = req.cookies ? req.cookies.cartId  : null
 
   getCart(cartId)
     .then((cart) => {
+      res.cookie('cartId', cart._id.toString())
+
       let cartItem = new CartItem(req.body)
       cartItem.cart = cart
       cartItem.save(function(err) {
@@ -58,15 +62,16 @@ function addToCart (req, res) {
 
 function createCheckoutFromSocialAccount(req, res) {
 
-  console.log(req.body)
+  // console.log(req.body)
 
-  let cartId = req.body.cart
+  console.log(req.cookies)
+
+  let cartId = req.cookies ? req.cookies.cartId : null
   let storeId = req.body.store
   
   let cart
   let store
   let asset
-
 
   getAffiliateFromStore(storeId)
     .then((affiliate)=> {
@@ -85,6 +90,8 @@ function createCheckoutFromSocialAccount(req, res) {
     .then((res_cart)=> {
       // console.log(cart)
       // console.log(asset)
+      res.cookie('cartId', res_cart._id.toString())
+
       var cartItem = new CartItem(req.body)
       cartItem.cart = res_cart
       cartItem.asset = asset
