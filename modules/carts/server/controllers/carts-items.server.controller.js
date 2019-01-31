@@ -38,10 +38,9 @@ function addToCart (req, res) {
   getCart(cartId)
     .then((cart) => {
       res.cookie('cartId', cart._id.toString())
-
-      let cartItem = new CartItem(req.body)
-      cartItem.cart = cart
-      cartItem.save(function(err) {
+      req.body.cart = cart
+      console.log(req.body)
+      CartItem.findOneAndUpdate({ cart: cart._id, asset: req.body.asset }, req.body, { upsert:true }, (err, cartItem) => {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
