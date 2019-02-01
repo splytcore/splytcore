@@ -52,8 +52,8 @@
           // Append more fields here as asset DB model changes to reflect
           let asset = {
             title : dataArray[x][keepColumns[0]] === '' ? dataArray[x][0] : dataArray[x][keepColumns[0]],
-            description: dataArray[x][keepColumns[1]] === '' ? "Description" : dataArray[x][keepColumns[1]],
-            sku : dataArray[x][keepColumns[2]] === '' ? "SKU" : dataArray[x][keepColumns[2]],
+            description: dataArray[x][keepColumns[1]] === '' ? 'Description' : dataArray[x][keepColumns[1]],
+            sku : dataArray[x][keepColumns[2]] === '' ? 'SKU' : dataArray[x][keepColumns[2]],
             inventoryCount : dataArray[x][keepColumns[3]],
             price: parseFloat(dataArray[x][keepColumns[4]]),
             imageURL: dataArray[x][keepColumns[5]],
