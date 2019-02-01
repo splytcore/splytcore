@@ -6,23 +6,19 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['HashtagsService', 'CartsService', 'CartsItemsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', '$cookies', '$filter', 'CategoriesService'];
+  AssetsController.$inject = ['CartsService', 'CartsItemsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', '$cookies', '$filter', 'CategoriesService'];
 
-  function AssetsController (HashtagsService, CartsService, CartsItemsService,  $scope, $state, $window, Authentication, asset, $q, $cookies, $filter, CategoriesService) {
+  function AssetsController (CartsService, CartsItemsService,  $scope, $state, $window, Authentication, asset, $q, $cookies, $filter, CategoriesService) {
     var vm = this
     vm.save = save   
     vm.asset = asset
-
+    console.log(vm.asset.hashtags)
     vm.categories = CategoriesService.query()
 
     vm.remove = remove
     vm.user = Authentication.user
     vm.addToCart = addToCart
 
-    vm.hashtags = HashtagsService.query({ asset: vm.asset._id })
-
-    console.log(vm.hashtags)
-   // console.log('scott: ' + $cookies.scott)
 
     function addToCart(assetId) {
 
@@ -47,11 +43,6 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.assetForm');
         return false;
       }
-
-      console.log(vm.asset)
-      // TODO: move create/update logic to service
-   
-      console.log(vm.asset)
 
       if (vm.asset._id) {
         vm.asset.$update(successCallback, errorCallback);

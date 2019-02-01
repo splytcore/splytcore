@@ -21,8 +21,6 @@ const curl = new (require('curl-request'))()
  */
 exports.create = function(req, res) {
 
-  console.log('cartId: ' + req.cookies.cartId)
-
   let storeId = req.body.store
   if (storeId) {
     createCheckoutFromSocialAccount(req, res)
@@ -210,17 +208,6 @@ function getAssetByHashtag (hashtag) {
         }
 
       })
-
-      
-      // Asset.findOne({ hashtag: hashtag }).exec(function(err, asset) {
-      //   if (err) {
-      //     reject(err)
-      //   } else {
-      //     console.log('hashtag result form query ')
-      //     console.log(asset)
-      //     resolve(asset)
-      //   }
-      // })
     }
   })
 }

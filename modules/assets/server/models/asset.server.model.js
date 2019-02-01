@@ -60,6 +60,11 @@ var AssetSchema = new Schema({
     type: String,
     trim: true
   },
+  //transient
+  hashtags: [{
+    type: Schema.ObjectId,
+    ref: 'Hashtag'
+  }],
   hashtag: {
     type: String,
     trim: true,
