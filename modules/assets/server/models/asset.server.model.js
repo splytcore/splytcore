@@ -60,7 +60,6 @@ var AssetSchema = new Schema({
     type: String,
     trim: true
   },
-  //TODO: create collection instead
   hashtag: {
     type: String,
     trim: true,

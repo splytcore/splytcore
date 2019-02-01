@@ -6,9 +6,9 @@
     .module('assets')
     .controller('AssetsController', AssetsController);
 
-  AssetsController.$inject = ['CartsService', 'CartsItemsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', '$cookies', '$filter', 'CategoriesService'];
+  AssetsController.$inject = ['HashtagsService', 'CartsService', 'CartsItemsService', '$scope', '$state', '$window', 'Authentication', 'assetResolve', '$q', '$cookies', '$filter', 'CategoriesService'];
 
-  function AssetsController (CartsService, CartsItemsService,  $scope, $state, $window, Authentication, asset, $q, $cookies, $filter, CategoriesService) {
+  function AssetsController (HashtagsService, CartsService, CartsItemsService,  $scope, $state, $window, Authentication, asset, $q, $cookies, $filter, CategoriesService) {
     var vm = this
     vm.save = save   
     vm.asset = asset
@@ -19,7 +19,9 @@
     vm.user = Authentication.user
     vm.addToCart = addToCart
 
-    console.log($cookies)
+    vm.hashtags = HashtagsService.query({asset: vm.asset._id})
+
+    console.log(vm.hashtags)
    // console.log('scott: ' + $cookies.scott)
 
     function addToCart(assetId) {

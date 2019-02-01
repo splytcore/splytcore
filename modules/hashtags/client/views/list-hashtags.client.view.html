@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Hashtags</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="hashtag in vm.hashtags"
+       ui-sref="hashtags.view({ hashtagId: hashtag._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="hashtag.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="hashtag.user" ng-bind="hashtag.user.displayName"></span>
+        <span ng-if="!hashtag.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="hashtag.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.hashtags.$resolved && !vm.hashtags.length">
+    No Hashtags yet, why don't you <a ui-sref="hashtags.create">create one</a>?
+  </div>
+</section>
