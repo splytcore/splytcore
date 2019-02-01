@@ -81,7 +81,10 @@ exports.delete = function(req, res) {
  * List of Hashtags
  */
 exports.list = function(req, res) {
-  Hashtag.find().sort('-created').populate('affiliate', 'displayName').populate('asset', 'title').exec(function(err, hashtags) {
+
+  let q = req.query
+  
+  Hashtag.find(q).sort('-created').populate('affiliate', 'displayName').populate('asset', 'title').exec(function(err, hashtags) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

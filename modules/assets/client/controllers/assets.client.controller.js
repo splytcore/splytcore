@@ -19,7 +19,7 @@
     vm.user = Authentication.user
     vm.addToCart = addToCart
 
-    vm.hashtags = HashtagsService.query({asset: vm.asset._id})
+    vm.hashtags = HashtagsService.query({ asset: vm.asset._id })
 
     console.log(vm.hashtags)
    // console.log('scott: ' + $cookies.scott)

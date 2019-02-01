@@ -17,9 +17,9 @@
       Posted on
       <span ng-bind="vm.hashtag.created | date:'mediumDate'"></span>
       by
-      <span ng-if="vm.hashtag.user"
-            ng-bind="vm.hashtag.user.displayName"></span>
-      <span ng-if="!vm.hashtag.user">Deleted User</span>
+      <span ng-if="vm.hashtag.affiliate"
+            ng-bind="vm.hashtag.affiliate.displayName"></span>
+      <span ng-if="!vm.hashtag.affiliate">Deleted User</span>
     </em>
   </small>
   <p class="lead" ng-bind="vm.hashtag.content"></p>

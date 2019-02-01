@@ -13,7 +13,7 @@
       title: 'Hashtags',
       state: 'hashtags',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['affiliate']
     })
 
     // Add the dropdown list item

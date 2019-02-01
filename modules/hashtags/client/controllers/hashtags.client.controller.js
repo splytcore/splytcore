@@ -21,7 +21,7 @@
 
     if (!vm.hashtag._id) {
       vm.hashtag.asset = AssetsService.get({ assetId: $stateParams.assetId })
-      console.log(vm.hashtag)
+      console.log(vm.hashtag.asset)
     }
 
     // Remove existing Hashtag
@@ -47,8 +47,9 @@
       }
 
       function successCallback(res) {
-        $state.go('hashtags.view', {
-          hashtagId: res._id
+        console.log(res)
+        $state.go('assets.edit', {
+          assetId: res.asset
         });
       }
 

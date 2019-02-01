@@ -9,6 +9,8 @@ const Asset = mongoose.model('Asset')
 const Store = mongoose.model('Store')
 const Cart = mongoose.model('Cart')
 const CartItem = mongoose.model('CartItem')
+const Hashtag = mongoose.model('Hashtag')
+
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const  _ = require('lodash')
 const curl = new (require('curl-request'))()
@@ -197,16 +199,28 @@ function getAssetByHashtag (hashtag) {
         console.log('no hashtag included')
         resolve(null)
     } else  {
-      Asset.findOne({ hashtag: hashtag }).exec(function(err, asset) {
+
+      Hashtag.findOne({ name: hashtag }).populate('asset').exec(function(err, hashtag) {
         if (err) {
           reject(err)
         } else {
           console.log('hashtag result form query ')
-          console.log(asset)
-          resolve(asset)
+          console.log(hashtag.asset)
+          resolve(hashtag.asset)
         }
 
       })
+
+      
+      // Asset.findOne({ hashtag: hashtag }).exec(function(err, asset) {
+      //   if (err) {
+      //     reject(err)
+      //   } else {
+      //     console.log('hashtag result form query ')
+      //     console.log(asset)
+      //     resolve(asset)
+      //   }
+      // })
     }
   })
 }

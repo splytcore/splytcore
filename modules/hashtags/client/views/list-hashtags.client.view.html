@@ -10,13 +10,11 @@
         Posted on
         <span ng-bind="hashtag.created | date:'mediumDate'"></span>
         by
-        <span ng-if="hashtag.user" ng-bind="hashtag.user.displayName"></span>
-        <span ng-if="!hashtag.user">Deleted User</span>
+        <span ng-if="hashtag.affiliate" ng-bind="hashtag.user.displayName"></span>
+        <span ng-if="!hashtag.affiliate">Deleted User</span>
       </small>
       <h4 class="list-group-item-heading" ng-bind="hashtag.name"></h4>
     </a>
   </div>
-  <div class="alert alert-warning text-center" ng-if="vm.hashtags.$resolved && !vm.hashtags.length">
-    No Hashtags yet, why don't you <a ui-sref="hashtags.create">create one</a>?
-  </div>
+
 </section>
