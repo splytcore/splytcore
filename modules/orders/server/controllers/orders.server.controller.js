@@ -33,7 +33,7 @@ exports.create = function(req, res) {
   async.waterfall([
     function createOrder(callback) {
         let order = new Order(req.body)
-        order.user = req.user
+        order.customer = req.user
         order.save((err) => {
           callback(err, order)
         })
@@ -185,7 +185,7 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  Order.find().sort('-created').populate('user', 'displayName').exec(function(err, orders) {
+  Order.find().sort('-created').populate('customer', 'displayName').exec(function(err, orders) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -248,7 +248,7 @@ exports.orderByID = function(req, res, next, id) {
     })
   }
 
-  Order.findById(id).populate('user', 'displayName').exec(function (err, order) {
+  Order.findById(id).populate('customer', 'displayName').exec(function (err, order) {
     if (err) {
       return next(err)
     } else if (!order) {
