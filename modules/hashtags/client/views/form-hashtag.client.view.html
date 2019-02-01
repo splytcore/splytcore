@@ -7,6 +7,12 @@
   <div class="col-md-12">
     <form name="vm.form.hashtagForm" class="form-horizontal" ng-submit="vm.save(vm.form.hashtagForm.$valid)" novalidate>
       <fieldset>
+
+        <div class="form-group" show-errors ng-show="vm.hashtag._id">
+          <label class="control-label" for="id">ID</label>
+          <input name="id" type="text" ng-model="vm.hashtag._id" id="id" class="form-control" placeholder="ID" disabled>
+        </div>
+
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Name</label>
           <input name="name" type="text" ng-model="vm.hashtag.name" id="name" class="form-control" placeholder="Name" required>
@@ -14,6 +20,12 @@
             <p class="help-block error-text" ng-message="required">Hashtag name is required.</p>
           </div>
         </div>
+
+        <div class="form-group" ng-show="vm.hashtag._id">
+          <label class="control-label" for="affiliate">Affiliate</label>
+          <input name="affiliate" type="text" ng-model="vm.hashtag.affiliate.displayName" id="id" class="form-control" placeholder="affiliate" disabled>
+        </div>
+
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.hashtag._id ? 'Update' : 'Create'}}</button>
         </div>

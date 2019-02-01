@@ -22,10 +22,7 @@
     if (!vm.hashtag._id) {
       vm.hashtag.asset = AssetsService.get({ assetId: $stateParams.assetId })
       console.log(vm.hashtag)
-    } else {
-
     }
-
 
     // Remove existing Hashtag
     function remove() {

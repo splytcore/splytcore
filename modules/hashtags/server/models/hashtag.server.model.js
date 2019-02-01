@@ -33,5 +33,5 @@ var HashtagSchema = new Schema({
   }
 });
 
-// HashtagSchema.index({ name: 1, asset: 1, affiliate: 1 }, { unique: true })
+HashtagSchema.index({ asset: 1, affiliate: 1 }, { unique: true })
 mongoose.model('Hashtag', HashtagSchema);
