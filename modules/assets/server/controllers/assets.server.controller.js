@@ -103,8 +103,10 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
 
   let q = req.query
-
-  Asset.find(q).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
+  
+  console.log(q)
+  delete q.sort
+  Asset.find(q).sort(q.sort).populate('user', 'displayName').exec(function(err, assets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
