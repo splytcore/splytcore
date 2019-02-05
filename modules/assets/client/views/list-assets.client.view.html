@@ -3,27 +3,27 @@
     <h1>Listings</h1>
   </div>
   
-  <div class="list-group">
-    
-    <a ng-repeat="asset in vm.assets"
-       ui-sref="assets.view({ assetId: asset._id })"
-       class="list-group-item">
- 
-      <div class="list-group-item-heading">
+  <div class="list-group row row-wrap-content">
 
-        <img ng-src="modules/assets/client/img/asset.jpeg" class="asset-picture-thumbnail">
-   
-        <div>
-          <h4>{{ asset.title }}</h4>       
-          <strong>{{ asset.description }}</strong> <br/>
-          <span>{{ asset.price | currency }} </span>
-        </div>
-      </div>
-<!--       <h4 class="list-group-item-heading">
-       <img ng-src="modules/assets/client/img/asset.jpeg" class="asset-picture-thumbnail">
-      {{asset}}
-      </h4>
- -->    
+    <a ng-repeat="asset in vm.assets"       
+        ui-sref="assets.view({ assetId: asset._id })"
+        class="list-group-item">
+
+      <table class="table-view">
+        <tr>
+          <td>        
+            <img src="{{asset.imageURL}}" ng-hide="{{asset.imageURL === ''}}" class="asset-picture-thumbnail">
+            <td>
+              <div>
+              <h4>{{ asset.title }}</h4>       
+              <strong>{{ asset.description }}</strong> <br/>
+              <span>{{ asset.price | currency }} </span>
+              </div>
+            </td>
+
+          </td>
+        </tr>
+      </table> 
     </a>
 
   </div>
