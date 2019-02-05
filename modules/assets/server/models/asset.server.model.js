@@ -65,11 +65,6 @@ var AssetSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Hashtag'
   }],
-  hashtag: {
-    type: String,
-    trim: true,
-    unique: true
-  },
   sku: {
     type: String,
     trim: true

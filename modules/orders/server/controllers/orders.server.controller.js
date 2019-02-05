@@ -165,7 +165,7 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
       var mailOptions = {
         to: asset.user.email,
         from: config.mailer.from,
-        subject: 'Order Fullfilment',
+        subject: 'Order Fulfillment',
         html: emailHTML
       }
       smtpTransport.sendMail(mailOptions, function (err) {

@@ -36,12 +36,12 @@
   
   </div>
 
-  <div class="page-header">
-    <h3>Enter Billing Address</h3>
-  </div>
 
-  <div class="col-md-12">
-    <form name="vm.form.orderForm" class="form-horizontal" novalidate>
+  <div class="panel panel-primary">
+    <div class="panel-heading"><h4>Enter Billing Address</h4></div>
+    <div class="panel-body">
+
+    <form name="vm.form.orderForm" class="" novalidate>
       <fieldset>        
 
         <div class="form-group" show-errors>
@@ -86,63 +86,59 @@
       </fieldset>
     </form>
   </div>
+</div>
 
 
-  <br/>
-  <br/>
+  <div class="panel panel-primary">
+    <div class="panel-heading"><h4>Enter Shipping Address</h4></div>
+    <div class="panel-body">
+      <form name="vm.form.orderForm" class="" novalidate>
+        <fieldset>        
 
-  <div class="page-header">
-    <h3>Enter Shipping Address</h3>
+          <div class="form-group" show-errors>
+            <label class="control-label" for="shippingAddress1">Address 1</label>
+            <input name="shippingAddress1" type="text" ng-model="vm.order.shipping.address1" id="shippingAddress1" class="form-control" placeholder="address">
+            <div ng-messages="vm.form.orderForm.shippingAddress1.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Address is required.</p>
+            </div>        
+          </div>
+
+
+          <div class="form-group" show-errors>
+            <label class="control-label" for="shippingAddress2">Address 2</label>
+            <input name="shippingAddress2" type="text" ng-model="vm.order.shipping.address2" id="shippingAddress2" class="form-control" placeholder="address2">  
+          </div>
+
+          <div class="form-group" show-errors>
+            <label class="control-label" for="shippingCity">City</label>
+            <input name="shippingCity" type="text" ng-model="vm.order.shipping.city" id="shippingCity" class="form-control" placeholder="city">
+            <div ng-messages="vm.form.orderForm.shippingCity.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">City is required.</p>
+            </div>        
+          </div>
+
+          <div class="form-group" show-errors>
+            <label class="control-label" for="shippingState">State</label>
+            <input name="shippingState" type="text" ng-model="vm.order.shipping.state" id="shippingState" class="form-control" placeholder="state">
+            <div ng-messages="vm.form.orderForm.shippingState.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">State is required.</p>
+            </div>        
+          </div>
+
+
+          <div class="form-group" show-errors>
+            <label class="control-label" for="shippingZip">Zip</label>
+            <input name="shippingZip" type="text" ng-model="vm.order.shipping.zip" id="shippingZip" class="form-control" placeholder="zip">
+            <div ng-messages="vm.form.orderForm.shippingZip.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Zip is required.</p>
+            </div>        
+          </div>
+
+        </fieldset>
+      </form>
   </div>
+</div>
 
-  <div class="col-md-12">
-    <form name="vm.form.orderForm" class="form-horizontal" novalidate>
-      <fieldset>        
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="shippingAddress1">Address 1</label>
-          <input name="shippingAddress1" type="text" ng-model="vm.order.shipping.address1" id="shippingAddress1" class="form-control" placeholder="address">
-          <div ng-messages="vm.form.orderForm.shippingAddress1.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Address is required.</p>
-          </div>        
-        </div>
-
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="shippingAddress2">Address 2</label>
-          <input name="shippingAddress2" type="text" ng-model="vm.order.shipping.address2" id="shippingAddress2" class="form-control" placeholder="address2">  
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="shippingCity">City</label>
-          <input name="shippingCity" type="text" ng-model="vm.order.shipping.city" id="shippingCity" class="form-control" placeholder="city">
-          <div ng-messages="vm.form.orderForm.shippingCity.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">City is required.</p>
-          </div>        
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="shippingState">State</label>
-          <input name="shippingState" type="text" ng-model="vm.order.shipping.state" id="shippingState" class="form-control" placeholder="state">
-          <div ng-messages="vm.form.orderForm.shippingState.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">State is required.</p>
-          </div>        
-        </div>
-
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="shippingZip">Zip</label>
-          <input name="shippingZip" type="text" ng-model="vm.order.shipping.zip" id="shippingZip" class="form-control" placeholder="zip">
-          <div ng-messages="vm.form.orderForm.shippingZip.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Zip is required.</p>
-          </div>        
-        </div>
-
-      </fieldset>
-    </form>
-  </div>
-
-  <br/>
 
   <div class="page-header">
     <h3>Payment Information</h3>
@@ -168,14 +164,12 @@
 
 
 
-
-
   <div class="col-md-12">
     <form name="vm.form.cartForm" class="form-horizontal" ng-submit="vm.save(vm.form.cartForm.$valid)" novalidate>
       <fieldset>
         
         <div class="form-group">
-          <a class="btn btn-primary" ng-click="vm.order()">
+          <a class="btn btn-primary" ng-click="vm.submitOrder()">
             Submit Order
           </a>
           <a class="btn btn-primary" ng-click="vm.remove()">
