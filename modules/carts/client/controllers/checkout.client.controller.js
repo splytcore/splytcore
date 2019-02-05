@@ -98,7 +98,6 @@
       $rootScope.billing = vm.order.billing
       $rootScope.shipping = vm.order.shipping
 
-
       stripe.createToken(card)
       .then(res => {
         if (res.error) {
@@ -232,9 +231,6 @@
       save()
     }
   }
-
-
-
 
 
 }());

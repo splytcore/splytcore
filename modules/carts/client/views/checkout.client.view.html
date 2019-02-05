@@ -1,10 +1,8 @@
 <section>
   <div ng-show="env.indexOf('dev') > -1">
-  {{ vm.cart.cartItems }}
   </div>
 
   <div class="page-header">
-    <h1> {{ vm.store.name }} </h1>
     <h3> My Cart </h3>
   </div>
 
@@ -14,10 +12,11 @@
        class="list-group-item">
 
       <h4 class="list-group-item-heading row">
-        <span class="col-xs-3" ng-bind="item.asset.title"></span>
-        <span class="col-xs-3" ng-bind="item.asset.price | currency"></span>
+        <img class="img-thumb col-xs-2" ng-src="{{item.asset.imageURL}}"></img>
+        <span class="col-xs-2" ng-bind="item.asset.title"></span>
         <span class="col-xs-3" ng-bind="item.quantity"></span>
-        <span class="col-xs-3" ng-bind="item.quantity * item.asset.price | currency"></span>
+        <span class="col-xs-3" ng-bind="item.asset.price | currency"></span>
+        <span class="col-xs-2" ng-bind="item.quantity * item.asset.price | currency"></span>
         <span ng-init="vm.totalCost = vm.totalCost + (item.quantity * item.asset.price)"> </span>     
         <span ng-init="vm.totalQuantity = vm.totalQuantity + item.quantity"> </span>        
       </h4>

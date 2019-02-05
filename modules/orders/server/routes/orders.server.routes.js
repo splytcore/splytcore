@@ -14,8 +14,8 @@ module.exports = function(app) {
     .get(orders.list)
 
     // comment out for dev
-    // .post(orders.charge, orders.create);
-    .post(orders.create);
+    .post(orders.charge, orders.create);
+    // .post(orders.create);
 
   // app.route('/api/orders/:orderId/requestRefund').all(ordersPolicy.isAllowed)
   //   .post(orders.requestRefund)

@@ -12,7 +12,6 @@ const mongoose = require('mongoose')
 const multer = require('multer')
 const config = require(path.resolve('./config/config'))
 const User = mongoose.model('User')
-const stripe = require('stripe')('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
 const curl = new (require('curl-request'))()
 
 /**

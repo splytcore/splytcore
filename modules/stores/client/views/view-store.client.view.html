@@ -1,42 +1,29 @@
 <section>
   <div class="page-header">
-    <h1 ng-bind="vm.store.name"></h1>
+    <h1 ng-bind="vm.store.name"></h1>    
   </div>
 
-<!-- 
-  <div class="list-group">
-    <h4>Categories Filter</h4>
-    
-    <div ng-repeat="category in vm.store.categories"
-       class="list-group-item">
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="category.created | date:'mediumDate'"></span>
-      </small>
-      <input class="pull-right" type="checkbox" ng-click="vm.apply(category._id)" ng-checked="vm.store.categories.indexOf(category._id) > -1 ? true : false">
-      <h4 class="list-group-item-heading" ng-bind="category.name"></h4>
-    </div>
-
-  </div>
-
- -->
-
-
-  
   <div class="list-group">
     <h4>Assets</h4>    
     <a ng-repeat="asset in vm.assets"       
        ui-sref="assets.view({ assetId: asset._id })"
        class="list-group-item">
-      <div class="list-group-item-heading">
-        <img ng-src="modules/assets/client/img/asset.jpeg" class="asset-picture-thumbnail">
-        <div>
-          <h4>{{ asset.title }}</h4>       
-          <strong>{{ asset.description }}</strong> <br/>
-          <span>{{ asset.price | currency }} </span>
-        </div>
-      </div>
 
+      <table class="table-view">
+        <tr>
+          <td>        
+            <img src="{{asset.imageURL}}" ng-hide="{{asset.imageURL === ''}}" class="asset-picture-thumbnail">
+            <td>
+              <div>
+              <h4>{{ asset.title }}</h4>       
+              <strong>{{ asset.description }}</strong> <br/>
+              <span>{{ asset.price | currency }} </span>
+              </div>
+            </td>
+
+          </td>
+        </tr>
+      </table> 
     </a>
 
   </div>
