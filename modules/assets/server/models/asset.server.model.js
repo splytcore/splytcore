@@ -76,4 +76,9 @@ var AssetSchema = new Schema({
   }           
 })
 
+AssetSchema.post('init', function(asset, next) {
+  console.log('TODO: bind asset transients here')
+  next()
+})
+
 mongoose.model('Asset', AssetSchema);

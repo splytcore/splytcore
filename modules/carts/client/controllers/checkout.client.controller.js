@@ -69,12 +69,11 @@
       cartItem.store = storeId
       cartItem.quantity = 1
       cartItem.$save((result) => {
-         console.log(result)
-         vm.cart = CartsService.get({ cartId: result.cart._id })
+         vm.cart = CartsService.get({ cartId: $cookies.cartId })
          console.log('updated card')
          console.log(vm.cart)
       }, (error) => {
-        console.log('error')
+        console.log(error)
       })
 
     }
@@ -105,7 +104,7 @@
             console.log('error')
           })
         }
-      });
+      })
 
     }
 

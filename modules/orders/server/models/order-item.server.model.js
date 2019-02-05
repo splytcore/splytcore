@@ -18,10 +18,18 @@ const OrderItemSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  affiliate: {
+    type: Schema.ObjectId,
+    ref: 'Affiliate'
+  },
   asset: {
     type: Schema.ObjectId,
     ref: 'Asset'
   },
+  hashtag: {
+    type: Schema.ObjectId,
+    ref: 'Hashtag'
+  },  
   quantity: {
     type: Number,
     default: 1

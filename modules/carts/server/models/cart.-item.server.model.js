@@ -18,6 +18,10 @@ let CartItemSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Asset'
   },
+  hashtag: {
+    type: Schema.ObjectId,
+    ref: 'Hashtag'
+  },  
   quantity: {
     type: Number,
     default: 1
