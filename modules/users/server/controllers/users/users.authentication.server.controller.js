@@ -3,12 +3,16 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
-  mongoose = require('mongoose'),
-  passport = require('passport'),  
-  User = mongoose.model('User')
+const path = require('path')
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
+const mongoose = require('mongoose')
+const passport = require('passport') 
+const User = mongoose.model('User')
+const config = require(path.resolve('./config/config'))
+const nodemailer = require('nodemailer')
+const smtpTransport = nodemailer.createTransport(config.mailer.options)
+const async = require('async') 
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -41,7 +45,9 @@ exports.signup = function (req, res) {
       // Remove sensitive data before login
       user.password = undefined
       user.salt = undefined
-
+      
+      emailSignup(res, user)
+      
       req.login(user, function (err) {
         if (err) {
           res.status(400).send(err)
@@ -52,7 +58,39 @@ exports.signup = function (req, res) {
     }
   })
 
+}
 
+function emailSignup(res, user) {
+
+  async.waterfall([
+    function prepEmail(done) {
+      var httpTransport = 'http://'
+      if (config.secure && config.secure.ssl === true) {
+        httpTransport = 'https://'
+      }
+      res.render(path.resolve('modules/users/server/templates/signup-email'), {
+        name: user.displayName,
+        appName: config.app.title
+      }, function (err, emailHTML) {
+        done(err, emailHTML);
+      });
+    },
+    function sendIt(emailHTML, done) {
+      var mailOptions = {
+        to: user.email,
+        from: config.mailer.from,
+        subject: 'Splyt - Successful Signup!',
+        html: emailHTML
+      }
+      smtpTransport.sendMail(mailOptions, function (err) {
+        done(err);
+      });
+    }
+  ], function (err) {
+    if (err) {
+      console.log(err)
+    }
+  })
 
 }
 
