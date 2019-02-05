@@ -22,6 +22,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         return false;
       }
 
+
       $http.post('/api/auth/signup', $scope.credentials).success(function (response) {
         // If successful we assign the response to the global user model
         $scope.authentication.user = response;
@@ -50,12 +51,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // If successful we assign the response to the global user model
         $scope.authentication.user = response.user;
         // And redirect to the previous or home page according to role
-        
+
         if ($scope.authentication.user.roles.indexOf('seller') > -1) {
-          $state.go('sellers.dashboard')
+          $state.go($state.previous.state.name || 'sellers.dashboard', $state.previous.params)
         } else 
         if ($scope.authentication.user.roles.indexOf('affiliate') > -1) {
-          $state.go('affiliates.dashboard')
+          $state.go($state.previous.state.name || 'affiliates.dashboard', $state.previous.params)
         } else {
           $state.go($state.previous.state.name || 'home', $state.previous.params);
         }

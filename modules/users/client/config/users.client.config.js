@@ -12,12 +12,14 @@ angular.module('users').config(['$httpProvider',
               case 401:
                 // Deauthenticate the global user
                 Authentication.user = null;
-
+                console.log('intercepter signin')
                 // Redirect to signin page
-                $location.path('signin');
+                $location.path('authentication/signin');
                 break;
               case 403:
+                console.log('intercepter signup')
                 // Add unauthorized behaviour
+                $location.path('authentication/signup');
                 break;
             }
 

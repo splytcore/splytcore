@@ -60,15 +60,6 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="hashtag">Hashtag</label>
-          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="price" class="form-control" placeholder="hashtag" required>
-          <div ng-messages="vm.form.assetForm.hashtag.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Hashtag is required.</p>
-          </div>       
-        </div>
-
-
-        <div class="form-group" show-errors>
           <label class="control-label" for="asset">Inventory</label>       
           <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required ng-disabled="vm.asset._id">
         </div>

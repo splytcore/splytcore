@@ -10,9 +10,9 @@
     .module('carts')
     .controller('CheckoutController', CheckoutController);
 
-  CheckoutController.$inject = ['StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
+  CheckoutController.$inject = ['$rootScope','StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
 
-  function CheckoutController (StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
+  function CheckoutController ($rootScope, StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     let vm = this
   
     let stripe
@@ -28,6 +28,16 @@
     /* jshint ignore:end */
 
     let card
+
+
+    vm.order = {}
+
+    vm.order.billing = $rootScope.billing
+    vm.order.shipping = $rootScope.shipping
+
+    console.log(vm.order)
+
+
 
     vm.authentication = Authentication
 
@@ -59,7 +69,7 @@
     vm.form = {}
     vm.remove = remove
     vm.save = save
-    vm.order = order
+    vm.submitOrder = submitOrder
 
    // add asset if there's a hashtag
     function addAssetFromStoreId(storeId) {
@@ -79,32 +89,40 @@
     }
 
     // CreateOrder
-    function order() {
+    function submitOrder() {
 
       vm.order = new OrdersService(vm.order)
       vm.order.cart = vm.cart._id
 
-      // stripe.createToken(card)
-      // .then(res => {
-      //   if (res.error) {
-      //     // Inform the user if there was an error.
-      //     var errorElement = document.getElementById('card-errors');
-      //     errorElement.textContent = res.error.message;
-      //   } else {
-      //     // Send the token to your server.
-      //     vm.order.stripeToken = res.token.id
-      //     vm.order.totalCost = vm.totalCost
-      //     console.log(res.token)
+      //save address in rootscope for now
+      $rootScope.billing = vm.order.billing
+      $rootScope.shipping = vm.order.shipping
+
+
+      stripe.createToken(card)
+      .then(res => {
+        if (res.error) {
+          // Inform the user if there was an error.
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = res.error.message;
+        } else {
+          // Send the token to your server.
+          vm.order.stripeToken = res.token.id
+          vm.order.totalCost = vm.totalCost
+          console.log(res.token)
           vm.order.$save(res => {
             alert('new order created successful!')
-            vm.cart = null
-            vm.totalQuantity = 0
-            vm.totalCost = 0
+            // vm.cart = null
+            // vm.totalQuantity = 0
+            // vm.totalCost = 0
+            $state.go('orders.view', { orderId: res._id })
           }, (error) => {
             console.log('error')
+            console.log(error)
+            vm.error = error.toString()
           })
-        // }
-      // })
+        }
+      })
 
     }
 
