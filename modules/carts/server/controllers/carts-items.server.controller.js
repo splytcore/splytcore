@@ -112,7 +112,7 @@ function createCheckoutFromSocialAccount(req, res) {
     })
     .catch((err) => {
       return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+          message: err.toString()
         })
     })
 }
@@ -141,7 +141,7 @@ function getAffiliateFromStore(storeId) {
 function getHashtagByInstagram(affiliate) {
   return new Promise((resolve, reject) => {
     if(!affiliate.igAccessToken){
-      reject()
+      reject(new Error("Instagram access token not found!"))
     }
     let getProfileUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
 
@@ -157,7 +157,7 @@ function getHashtagByInstagram(affiliate) {
     })
     .catch(e => {
       console.log(e)
-      reject()
+      reject(e)
     })
   })
   
@@ -204,13 +204,16 @@ function getAssetByHashtag (hashtag) {
         resolve(null)
     } else  {
 
-      Hashtag.findOne({ name: hashtag }).populate('asset').exec(function(err, hashtag) {
+      Hashtag.findOne({ name: hashtag }).populate('asset').exec(function(err, res_hashtag) {
         if (err) {
           reject(err)
-        } else {
+        } else if (!res_hashtag) {
+          console.log('not hashtag found')
+          reject(new Error('No Hashtag found in system for ' + hashtag))
+        } else {          
           // console.log('hashtag result form query ')
           // console.log(hashtag)
-          resolve(hashtag)
+          resolve(res_hashtag)
         }
 
       })

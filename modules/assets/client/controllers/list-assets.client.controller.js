@@ -10,7 +10,7 @@
   function AssetsListController(AssetsService, $state, Authentication, $cookies) {
     
     var vm = this;
-    vm.assets = AssetsService.query({ sort: '-created'})
+    vm.assets = AssetsService.query()
  
   }
 }());

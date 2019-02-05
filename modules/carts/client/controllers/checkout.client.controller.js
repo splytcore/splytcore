@@ -73,7 +73,7 @@
          console.log('updated card')
          console.log(vm.cart)
       }, (error) => {
-        console.log(error)
+        vm.error = error.data.message
       })
 
     }
