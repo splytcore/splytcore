@@ -141,7 +141,7 @@ function getAffiliateFromStore(storeId) {
 function getHashtagByInstagram(affiliate) {
   return new Promise((resolve, reject) => {
     if(!affiliate.igAccessToken){
-      reject(new Error("Instagram access token not found!"))
+      reject(new Error('Instagram access token not found!'))
     }
     let getProfileUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
 
