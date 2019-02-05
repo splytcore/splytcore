@@ -48,15 +48,15 @@ Stop
 sudo pm2 stop SPLYT
 
 
+## Initlization of this repo (for new devs)
+git clone this repo
 
------------
-Oracle price data api
+cd splytcoreui
 
-GET @ pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=1027
+npm install
 
-headers -->  X-CMC_PRO_API_KEY: 9ee3f9be-fc7a-4b0f-8843-df2e01195d25
+sudo bower install -g
 
-price = parseInt(res.data[1027].quote.USD.price) // is your price we need in contract
+bower install --allow-root
 
-
-
+npm start
