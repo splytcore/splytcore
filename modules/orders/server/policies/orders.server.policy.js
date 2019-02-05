@@ -22,7 +22,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'seller', 'affiliate', 'customer'],
+    roles: ['user', 'seller', 'affiliate', 'customer', 'guest'],
     allows: [{
       resources: '/api/orders',
       permissions: ['get', 'post']
