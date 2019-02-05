@@ -35,8 +35,115 @@
       <br/>
     </div>
   
-
   </div>
+
+  <div class="page-header">
+    <h3>Enter Billing Address</h3>
+  </div>
+
+  <div class="col-md-12">
+    <form name="vm.form.orderForm" class="form-horizontal" novalidate>
+      <fieldset>        
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="billingAddress1">Address 1</label>
+          <input name="billingAddress1" type="text" ng-model="vm.order.billing.address1" id="billingAddress1" class="form-control" placeholder="address">
+          <div ng-messages="vm.form.orderForm.billingAddress1.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Address is required.</p>
+          </div>        
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="billingAddress2">Address 2</label>
+          <input name="billingAddress2" type="text" ng-model="vm.order.billing.address2" id="billingAddress2" class="form-control" placeholder="address2">  
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="billingCity">City</label>
+          <input name="billingCity" type="text" ng-model="vm.order.billing.city" id="billingCity" class="form-control" placeholder="city">
+          <div ng-messages="vm.form.orderForm.billingCity.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">City is required.</p>
+          </div>        
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="billingState">State</label>
+          <input name="billingState" type="text" ng-model="vm.order.billing.state" id="billingState" class="form-control" placeholder="state">
+          <div ng-messages="vm.form.orderForm.billingState.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">State is required.</p>
+          </div>        
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="billingZip">Zip</label>
+          <input name="billingZip" type="text" ng-model="vm.order.billing.zip" id="billingZip" class="form-control" placeholder="zip">
+          <div ng-messages="vm.form.orderForm.billingZip.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Zip is required.</p>
+          </div>        
+        </div>
+
+      </fieldset>
+    </form>
+  </div>
+
+
+  <br/>
+  <br/>
+
+  <div class="page-header">
+    <h3>Enter Shipping Address</h3>
+  </div>
+
+  <div class="col-md-12">
+    <form name="vm.form.orderForm" class="form-horizontal" novalidate>
+      <fieldset>        
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="shippingAddress1">Address 1</label>
+          <input name="shippingAddress1" type="text" ng-model="vm.order.shipping.address1" id="shippingAddress1" class="form-control" placeholder="address">
+          <div ng-messages="vm.form.orderForm.shippingAddress1.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Address is required.</p>
+          </div>        
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="shippingAddress2">Address 2</label>
+          <input name="shippingAddress2" type="text" ng-model="vm.order.shipping.address2" id="shippingAddress2" class="form-control" placeholder="address2">  
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="shippingCity">City</label>
+          <input name="shippingCity" type="text" ng-model="vm.order.shipping.city" id="shippingCity" class="form-control" placeholder="city">
+          <div ng-messages="vm.form.orderForm.shippingCity.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">City is required.</p>
+          </div>        
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="shippingState">State</label>
+          <input name="shippingState" type="text" ng-model="vm.order.shipping.state" id="shippingState" class="form-control" placeholder="state">
+          <div ng-messages="vm.form.orderForm.shippingState.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">State is required.</p>
+          </div>        
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="shippingZip">Zip</label>
+          <input name="shippingZip" type="text" ng-model="vm.order.shipping.zip" id="shippingZip" class="form-control" placeholder="zip">
+          <div ng-messages="vm.form.orderForm.shippingZip.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Zip is required.</p>
+          </div>        
+        </div>
+
+      </fieldset>
+    </form>
+  </div>
+
+  <br/>
 
   <div class="page-header">
     <h3>Payment Information</h3>
@@ -58,6 +165,9 @@
         <button class="btn btn-success" style="margin-top:10px; float:right">Submit Payment</button>
       </form>
   </div>
+
+
+
 
 
   <div class="col-md-12">

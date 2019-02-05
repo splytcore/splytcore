@@ -41,7 +41,49 @@ let OrderSchema = new Schema({
   cart: {
     type: Schema.ObjectId,
     ref: 'Cart'
-  },  
+  }, 
+  billing: {   
+    address1: {
+      type: String,
+      required: 'Address 1 is required'
+    },    
+    address2: {
+      type: String
+    },   
+    city: {
+      type: String,
+      required: 'City is required'
+    },   
+    state: {
+      type: String,
+      required: 'State is required'
+    },   
+    zip: {
+      type: String,
+      required: 'Zip is required'
+    } 
+  },   
+  shipping: {
+    address1: {
+      type: String,
+      required: 'Address 1 is required'
+    },    
+    address2: {
+      type: String
+    },   
+    city: {
+      type: String,
+      required: 'City is required'
+    },   
+    state: {
+      type: String,
+      required: 'State is required'
+    },   
+    zip: {
+      type: String,
+      required: 'Zip is required'
+    } 
+  },   
   items: [{
     type: Schema.ObjectId,
     ref: 'OrderItem'
@@ -50,8 +92,10 @@ let OrderSchema = new Schema({
     type: String,
     default: ''
   }
-
 })
+
+
+
 //Bind order items
 OrderSchema.post('init', function(order, next) {
   OrderItem.find({ order: order.id }).populate('asset').exec((err, items) => {
@@ -61,3 +105,4 @@ OrderSchema.post('init', function(order, next) {
 })
 
 mongoose.model('Order', OrderSchema);
+
