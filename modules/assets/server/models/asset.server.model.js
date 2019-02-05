@@ -39,10 +39,10 @@ var AssetSchema = new Schema({
     default: 'active',
     enum: [ 'active', 'in_arbitration', 'expired', 'sold_out', 'closed', 'other']
   },
-  imageURL: {
+  imageURL: [{
     type: String,
     default: 'modules/assets/client/img/asset.jpeg'
-  },     
+  }],     
   price: {
     type: Number,
     default: 0

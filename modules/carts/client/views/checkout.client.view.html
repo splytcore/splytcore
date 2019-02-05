@@ -12,7 +12,7 @@
        class="list-group-item">
 
       <h4 class="list-group-item-heading row">
-        <img class="img-thumb col-xs-2" ng-src="{{item.asset.imageURL}}"></img>
+        <img class="img-thumb col-xs-2" ng-src="{{item.asset.imageURL[0]}}"></img>
         <span class="col-xs-2" ng-bind="item.asset.title"></span>
         <span class="col-xs-3" ng-bind="item.quantity"></span>
         <span class="col-xs-3" ng-bind="item.asset.price | currency"></span>
@@ -148,21 +148,22 @@
     <h3>Payment Information</h3>
   </div>
   <div class="col-md-12">
-      <form action="/charge" method="post" id="payment-form">
-        <div class="form-row">
-          <label for="card-element">
-            Credit or debit card
-          </label>
-          <div id="card-element">
-            <!-- A Stripe Element will be inserted here. -->
-          </div>
-      
-          <!-- Used to display form errors. -->
-          <div id="card-errors" role="alert"></div>
+    <button class="btn" ng-click="vm.copyToClipboard()" >copy test credit card #</button>
+    <form action="/charge" method="post" id="payment-form">
+      <div class="form-row">
+        <label for="card-element">
+          Credit or debit card
+        </label>
+        <div id="card-element">
+          <!-- A Stripe Element will be inserted here. -->
         </div>
-      
-        <button class="btn btn-success" style="margin-top:10px; float:right">Submit Payment</button>
-      </form>
+    
+        <!-- Used to display form errors. -->
+        <div id="card-errors" role="alert"></div>
+      </div>
+    
+      <button class="btn btn-success" style="margin-top:10px; float:right">Submit Payment</button>
+    </form>
   </div>
 
 

@@ -60,6 +60,7 @@
     vm.remove = remove
     vm.save = save
     vm.order = order
+    vm.copyToClipboard = copyToClipboard
 
    // add asset if there's a hashtag
     function addAssetFromStoreId(storeId) {
@@ -212,6 +213,15 @@
       // Submit the form
       vm.stripe = form
       save()
+    }
+
+    function copyToClipboard() {
+      const el = document.createElement('textarea')
+      el.value = '4242 4242 4242 4242'
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
     }
   }
 

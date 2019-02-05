@@ -12,7 +12,7 @@
       <table class="table-view">
         <tr>
           <td>        
-            <img src="{{asset.imageURL}}" ng-hide="{{asset.imageURL === ''}}" class="asset-picture-thumbnail">
+            <img src="{{asset.imageURL[0]}}" ng-hide="{{asset.imageURL[0] === ''}}" class="asset-picture-thumbnail">
             <td>
               <div>
               <h4>{{ asset.title }}</h4>       
