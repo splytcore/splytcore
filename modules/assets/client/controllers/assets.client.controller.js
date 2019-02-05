@@ -12,15 +12,13 @@
     var vm = this
     vm.save = save   
     vm.asset = asset
-
+    console.log(vm.asset.hashtags)
     vm.categories = CategoriesService.query()
 
     vm.remove = remove
     vm.user = Authentication.user
     vm.addToCart = addToCart
 
-    console.log($cookies)
-   // console.log('scott: ' + $cookies.scott)
 
     function addToCart(assetId) {
 
@@ -45,11 +43,6 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.assetForm');
         return false;
       }
-
-      console.log(vm.asset)
-      // TODO: move create/update logic to service
-   
-      console.log(vm.asset)
 
       if (vm.asset._id) {
         vm.asset.$update(successCallback, errorCallback);

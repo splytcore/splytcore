@@ -78,10 +78,13 @@
           </div>       
         </div>
 
-        <div class="form-group" show-errors>
-          <label class="control-label" for="hashtag">Hashtag</label>
-          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="hashtag" class="form-control" placeholder="hashtag">   
-        </div>
+<!--         <div class="form-group" show-errors>
+          <label class="control-label" for="hashtag">Hashtag
+            <a ui-sref="hashtags.edit({ hashtagId: vm.hashtag._id })">(edit)</a>
+            <a ui-sref="hashtags.create({ assetId: vm.asset._id })">(create)</a>
+          </label>
+          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="hashtag" class="form-control" placeholder="hashtag" disabled>   
+        </div> -->
 
         <div class="form-group" show-errors>
           <label class="control-label" for="asset">Inventory</label>       
@@ -104,4 +107,26 @@
       </fieldset>
     </form>
   </div>
+
+
+  <div>
+    <h4>Hashtags</h4>
+    <div class="list-group">
+    <a ng-repeat="hashtag in vm.asset.hashtags"
+       ui-sref="hashtags.edit({ hashtagId: hashtag._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="hashtag.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="hashtag.affiliate" ng-bind="hashtag.affiliate.displayName"></span>
+        <span ng-if="!hashtag.affiliate">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="hashtag.name"></h4>
+    </a>
+    <div class="list-group-item">
+      <button type="button" class="btn btn-default" ui-sref="hashtags.create({assetId: vm.asset._id })">Create</button>     
+    </div>
+  </div>
+
 </section>

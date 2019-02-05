@@ -87,6 +87,12 @@
         </div>
 
 
+        <div class="form-group" show-errors>
+          <label class="control-label" for="seller">Seller</label>       
+          <input name="seller" type="text" ng-model="vm.asset.user.displayName" id="seller" class="form-control" placeholder="seller" required>
+        </div>
+
+
         <div class="form-group">
           <button type="button" class="btn btn-default" ng-click="vm.addToCart(vm.asset._id, 3)">Add To Cart</button>    
            Qty:  
@@ -94,16 +100,17 @@
           </select>                     
         </div>
      
-      <div class="form-group">
-        <br/>
-        <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>                          
-        <div ng-show="vm.error" class="text-danger">
-          <strong ng-bind="vm.error"></strong>
-        </div>
-      </div>
+        <div class="form-group">
+          <br/>
+          <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>                          
+          <div ng-show="vm.error" class="text-danger">
+            <strong ng-bind="vm.error"></strong>
+          </div>
+        </div>        
       
       </fieldset>
     </form>
   </div>
+
 
 </section>

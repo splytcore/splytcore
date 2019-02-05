@@ -10,9 +10,7 @@
   function AssetsListController(AssetsService, $state, Authentication, $cookies) {
     
     var vm = this;
-    vm.listType = $state.current.name.toString()
     vm.assets = AssetsService.query()
-    vm.etherscanURL = $cookies.etherscanURL
  
   }
 }());

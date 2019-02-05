@@ -36,7 +36,7 @@
     <h4>Assets</h4>    
     <div ng-repeat="asset in vm.assets" class="list-group-item"> 
       <div class="list-group-item-heading">
-        <img ui-sref="assets.view({ assetId: asset._id })" ng-src="modules/assets/client/img/asset.jpeg" class="asset-picture-thumbnail">
+        <img ui-sref="assets.edit({ assetId: asset._id })" ng-src="modules/assets/client/img/asset.jpeg" class="asset-picture-thumbnail">
         <h4><span ui-sref="assets.view({ assetId: asset._id })"> {{ asset.title }}  </span>
           <input class="pull-right" type="checkbox" ng-click="vm.selectAsset(asset._id)" ng-checked="vm.storeAssetIds.indexOf(asset._id) > -1 ? true : false"> 
         </h4>

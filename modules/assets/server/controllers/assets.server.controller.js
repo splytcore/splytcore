@@ -7,6 +7,8 @@ const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
 const Asset = mongoose.model('Asset')
+const Hashtag = mongoose.model('Hashtag')
+
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
 const  _ = require('lodash')
@@ -45,7 +47,17 @@ exports.read = function(req, res, next) {
   
   asset.isCurrentUserOwner = req.user && asset.user && asset.user._id.toString() === req.user._id.toString() 
 
-  return res.jsonp(asset)  
+  Hashtag.find({asset: asset._id}).sort('-created').exec(function(err, hashtags) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    // console.log(assets)
+    asset.hashtags = hashtags
+    res.jsonp(asset)  
+  })
+
 
 }
 
@@ -90,8 +102,11 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  console.log(req.query)
-  Asset.find(req.query).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
+  let q = req.query
+  
+  console.log(q)
+  delete q.sort
+  Asset.find(q).sort(q.sort).populate('user', 'displayName').exec(function(err, assets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -100,19 +115,6 @@ exports.list = function(req, res) {
     // console.log(assets)
     res.jsonp(assets)
   })
-
-
-
-  // switch(listType) {
-  //     case 'ASSETS.LISTMYASSETS':
-  //          exports.listMyAssets(req,res)
-  //         break                       
-  //     case 'ASSETS.LISTBYCATEGORY':
-  //          exports.listByCategory(req,res)
-  //         break    
-  //     default:
-  //          exports.listAll(req,res)
-  // }
 
 }
 

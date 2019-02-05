@@ -60,7 +60,11 @@ var AssetSchema = new Schema({
     type: String,
     trim: true
   },
-  //TODO: create collection instead
+  //transient
+  hashtags: [{
+    type: Schema.ObjectId,
+    ref: 'Hashtag'
+  }],
   hashtag: {
     type: String,
     trim: true,
@@ -70,6 +74,11 @@ var AssetSchema = new Schema({
     type: String,
     trim: true
   }           
+})
+
+AssetSchema.post('init', function(asset, next) {
+  console.log('TODO: bind asset transients here')
+  next()
 })
 
 mongoose.model('Asset', AssetSchema);

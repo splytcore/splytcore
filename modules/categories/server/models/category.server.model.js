@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
 var CategorySchema = new Schema({
   name: {
     type: String,
+    uppercase: true,
     default: '',
     required: 'Please fill Category name',
     trim: true

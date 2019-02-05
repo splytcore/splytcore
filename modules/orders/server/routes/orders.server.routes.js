@@ -12,7 +12,10 @@ module.exports = function(app) {
   // Orders Routes
   app.route('/api/orders').all(ordersPolicy.isAllowed)
     .get(orders.list)
-    .post(orders.charge, orders.create);
+
+    // comment out for dev
+    // .post(orders.charge, orders.create);
+    .post(orders.create);
 
   // app.route('/api/orders/:orderId/requestRefund').all(ordersPolicy.isAllowed)
   //   .post(orders.requestRefund)
