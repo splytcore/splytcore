@@ -28,24 +28,29 @@ const smtpTransport = nodemailer.createTransport(config.mailer.options)
 /**
  * Create a Order
  */
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
 
   console.log('creating order')
   console.log(req.body)
   
   async.waterfall([
+
     function createOrder(callback) {
-        let order = new Order(req.body)
-        order.customer = req.user
-        order.save((err) => {
-          callback(err, order)
-        })
+      let order = new Order(req.body)
+      order.customer = req.user
+      order.save((err) => {
+        req.orderItems = []
+        req.order = order
+        callback(err, order)
+      })
     },
+
     function getItems(order, callback) {
       CartItem.find({ cart: order.cart }).populate('hashtag').exec(function(err, items) {
         callback(err, order, items)
       })        
     },
+
     function createOrderDetails(order, cartItems, callback) {
       async.each(cartItems, function(cartItem, cb) {
         let orderItem = new OrderItem(cartItem)
@@ -59,6 +64,7 @@ exports.create = function(req, res) {
           } else {
             //send fulfill email order to each seller
             emailOrderReceiptToSeller(req, res, orderItem)
+            req.orderItems.push(orderItem)
             if (orderItem.hashtag) {
             //notifiy affiliate 
               emailOrderNotificationToAffiliate(req, res, orderItem)              
@@ -70,6 +76,7 @@ exports.create = function(req, res) {
         callback(err, order)
       });
     },
+    
     function sendEmailReceiptCustomer(order, callback) {
       //emailOrderReceiptToCustomer(req, res, order)   
       callback(null, order)
@@ -83,11 +90,11 @@ exports.create = function(req, res) {
       })
     }
     res.clearCookie('cartId')
-    res.jsonp(order)
-  });
-
+    next()
+  })
   
 }
+
 
 /*
 * Send Order to Customer

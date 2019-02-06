@@ -46,7 +46,7 @@ let OrderSchema = new Schema({
     address1: {
       type: String,
       required: 'Address 1 is required'
-    },    
+    },
     address2: {
       type: String
     },   
@@ -94,6 +94,10 @@ let OrderSchema = new Schema({
   }
 })
 
+
+OrderSchema.index({
+  created: -1
+})
 
 
 //Bind order items
