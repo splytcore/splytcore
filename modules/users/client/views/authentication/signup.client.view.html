@@ -63,13 +63,24 @@
           </div>
         </div>
 
+        <div class="form-group" show-errors>
+          <div class="form-group text-center">
+            <input type="checkbox" id="acceptConditions" name="termsAndConditions" ng-model="credentials.termsAndConditions" required>
+            <a ui-sref="authentication.termsAndConditions">I agree to the terms and conditions </a>
+          </div>
+
+          <div ng-messages="userForm.termsAndConditions.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">You must accept terms and conditions to continue</p>
+          </div>
+        </div>
+
 <!--         <div class="form-group" ng-show="!userForm.password.$error.required">
           <label>Password Requirements</label>
           
           <progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></progressbar>
 
         </div>
- -->        <div class="text-center form-group">
+ -->    <div class="text-center form-group">
           <button type="submit" class="btn btn-primary">Sign up</button>
           &nbsp; or&nbsp;
           <a ui-sref="authentication.signin" class="show-signup">Sign in</a>

@@ -132,7 +132,12 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  termsAndConditions: {
+    type: Boolean,
+    required: true
   }
+
 });
 
 /**
