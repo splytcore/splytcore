@@ -29,15 +29,10 @@
 
     let card
 
-
     vm.order = {}
 
     vm.order.billing = $rootScope.billing
     vm.order.shipping = $rootScope.shipping
-
-    console.log(vm.order)
-
-
 
     vm.authentication = Authentication
 
@@ -115,7 +110,7 @@
             alert('new order created successful!')
             // vm.cart = null
             // vm.totalQuantity = 0
-            // vm.totalCost = 0
+            // vm.totalCost = 0      
             $state.go('orders.view', { orderId: res._id })
           }, (error) => {
             console.log('error')
