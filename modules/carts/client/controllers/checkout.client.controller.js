@@ -65,6 +65,8 @@
     vm.remove = remove
     vm.save = save
     vm.submitOrder = submitOrder
+    vm.copyToClipboard = copyToClipboard
+
 
    // add asset if there's a hashtag
     function addAssetFromStoreId(storeId) {
@@ -224,6 +226,16 @@
       // Submit the form
       vm.stripe = form
       save()
+    }
+
+    // Dev only - copies fake cc number to be used on test stripe UI
+    function copyToClipboard() {
+      const el = document.createElement('textarea')
+      el.value = '4242 4242 4242 4242'
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
     }
   }
 

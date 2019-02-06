@@ -8,6 +8,8 @@ const mongoose = require('mongoose')
 const async = require('async')
 const Asset = mongoose.model('Asset')
 const Hashtag = mongoose.model('Hashtag')
+const multer = require('multer')
+const config = require(path.resolve('./config/config'))
 
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
@@ -166,6 +168,26 @@ exports.listAll = function(req, res) {
     res.jsonp(assets)
   })
 
+}
+
+exports.uploadAssetImage = function(req, res) {
+
+  var upload = multer(config.uploads.assetUpload).single('newAssetImage');
+  var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+  
+  // Filtering to upload only images
+  upload.fileFilter = profileUploadFileFilter;
+
+  upload(req, res, function (uploadError) {
+    if(uploadError) {
+      console.log(uploadError)
+      return res.status(400).send({
+        message: 'Error occurred while uploading profile picture'
+      })
+    } else {
+      res.jsonp({ imageURL: config.uploads.assetUpload.dest + req.file.filename })
+    }
+  })
 }
 
 

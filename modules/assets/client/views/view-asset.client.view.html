@@ -7,10 +7,10 @@
     <form name="vm.form.assetForm" class="form-horizontal" novalidate>
       <fieldset>
 
-        <div class="form-group" ng-show="{{vm.asset.imageURL !== ''}}">
-          <img  src="{{vm.asset.imageURL}}" class="img-thumbnail asset-picture-detail">
+        <div class="form-group" ng-show="{{vm.asset.imageURL[0] !== ''}}">
+          <img  src="{{vm.asset.imageURL[0]}}" class="img-thumbnail asset-picture-detail">
         </div>
-        <div class="form-group" ng-hide="{{vm.asset.imageURL !== ''}}">
+        <div class="form-group" ng-hide="{{vm.asset.imageURL[0] !== ''}}">
           <img  ng-src="modules/assets/client/img/asset.jpeg" class="img-thumbnail asset-picture-detail">
         </div>
 
