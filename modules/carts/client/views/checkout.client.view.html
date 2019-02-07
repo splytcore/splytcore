@@ -190,5 +190,22 @@
   </div>
 
 
+<br/>
+<br/>
+<br/>
+
+  <div class="list-group">
+     <h3> Most Recent Hashtag Items From This Affiliate </h3>
+    <a ng-repeat="h in vm.hashtagAssets"
+       ui-sref="assets.view({ assetId: h.asset._id })"
+       class="list-group-item">
+      <h4 class="list-group-item-heading row">
+        <img class="img-thumb col-xs-2" src="modules/assets/client/img/asset.jpeg"></img>
+        <span class="col-xs-2" ng-bind="h.asset.title"></span>
+        <span class="col-xs-3" ng-bind="h.asset.price | currency"></span>
+      </h4>
+    </a>
+  
+  </div>
 
 </section>

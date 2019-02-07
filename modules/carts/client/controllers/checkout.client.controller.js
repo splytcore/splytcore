@@ -10,9 +10,9 @@
     .module('carts')
     .controller('CheckoutController', CheckoutController);
 
-  CheckoutController.$inject = ['$rootScope','StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
+  CheckoutController.$inject = ['HashtagsService', '$rootScope','StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
 
-  function CheckoutController ($rootScope, StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
+  function CheckoutController (HashtagsService, $rootScope, StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     let vm = this
   
     let stripe
@@ -43,18 +43,42 @@
 
     console.log('storeId:' + vm.storeId)
 
-    vm.store =  vm.storeId ? StoresService.get({ storeId: vm.storeId }) : {}
+    //Get store information and assets by hashtag
+    if (vm.storeId) {
+      StoresService.get({ storeId: vm.storeId }).$promise
+        .then((store) => {
+          vm.store = store
+          console.log(vm.store)
+          console.log('store name: ' + vm.store.name)
+          return HashtagsService.query({ affiliate: vm.store.affiliate._id }).$promise
+        })
+        .then((hashtags) => {
+          console.log('hashtags asset: ')
+          vm.hashtagAssets = hashtags
+          console.log(vm.hashtagAssets)
+        })
+    } 
     
-    console.log(vm.store.name)
+
     
     console.log('cart id: ' + $cookies.cartId)
 
+    // vm.hashtagAssets = HashtagsService.query({ affiliate: vm.authentication.user._id })
+    // console.log('hashtags asset: ')
+    // console.log(vm.hashtagAssets)
+
+
     //BUG HERE. Calculating incorrectly 
+    //Get cart items.
+    //If theres storeId, we find asset by hashtag then add it to cart
     if ($cookies.cartId) {
-      vm.cart = CartsService.get({ cartId: $cookies.cartId })
-      if (vm.storeId) {
-        addAssetFromStoreId(vm.storeId)
-      } 
+      CartsService.get({ cartId: $cookies.cartId }).$promise
+        .then((cart)=> {
+          vm.cart = cart
+          if (vm.storeId) {
+            addAssetFromStoreId(vm.storeId)            
+          }
+        })
     } else if (vm.storeId){
       addAssetFromStoreId(vm.storeId)
     }
@@ -104,7 +128,6 @@
         } else {
           // Send the token to your server.
           vm.order.stripeToken = res.token.id
-          vm.order.totalCost = vm.totalCost
           console.log(res.token)
           vm.order.$save(res => {
             alert('new order created successful!')
