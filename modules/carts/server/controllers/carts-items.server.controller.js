@@ -99,14 +99,14 @@ function createCheckoutFromSocialAccount(req, res) {
       cartItem.hashtag = hashtag
       cartItem.store = store
 
-      CartItem.findOneAndUpdate({ cart: cartId, asset: cartItem.asset.id }, cartItem, { upsert:true }, (err, cartItem) => {
+      CartItem.findOneAndUpdate({ cart: cartId, asset: cartItem.asset.id }, cartItem, { new: true, upsert:true }, (err, result_cartItem) => {
         if (err) {
           console.log(err)
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           })
         } else {
-          res.jsonp(cartItem)
+          res.jsonp(result_cartItem)
         }
       })
     })
