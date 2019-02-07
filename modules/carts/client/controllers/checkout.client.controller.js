@@ -99,14 +99,20 @@
       cartItem.cart = $cookies.cartId
       cartItem.store = storeId
       cartItem.quantity = 1
-      cartItem.$save((result) => {
-         vm.cart = CartsService.get({ cartId: $cookies.cartId })
-         console.log('updated card')
-         console.log(vm.cart)
-      }, (error) => {
+      cartItem.$save()
+        .then((result) => {
+          console.log(result)
+          console.log('cartId: ' + result.cart)
+          CartsService.get({ cartId: result.cart }).$promise
+            .then((cart) => {
+              console.log('updated card')
+              console.log(vm.cart)
+              vm.cart = cart
+           })
+      })
+      .catch((error) => {
         vm.error = error.data.message
       })
-
     }
 
     // CreateOrder
@@ -148,6 +154,8 @@
     // Remove existing Cart
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
+        console.log('cart info')
+        console.log(vm.cart)
         vm.cart.$remove($state.go('cart.checkout'))
         vm.cart = null
         vm.totalQuantity = 0
