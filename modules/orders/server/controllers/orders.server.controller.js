@@ -367,32 +367,52 @@ exports.charge = (req, res, next) => {
     next()
   }
 
-  curl.setHeaders([
-    'Authorization: Bearer ' + config.stripe.secretKey
-  ])
-  curl.setBody({
-    'amount': req.body.totalCost * 100,
-    'currency':'USD',
-    'source': req.body.stripeToken,
-    'description': req.body.cart,
-  }).post('https://api.stripe.com/v1/charges')
-  .then((error, response) => {
-    console.log(error)
-    console.log(response)
-    // if(statusCode === 400) {
-    //   console.log(body)
-    // }
-    // if(statusCode === 200) {
-    //   let igInfo = JSON.parse(body)
-    //   console.log(igInfo)
-    //   req.body.igAccessToken = igInfo.access_token
-    //   req.body.profileImageURL = igInfo.user.profile_picture
-    //   req.body.firstName = igInfo.user.full_name
-      next()
-    // }
-  }).catch(e => {
-    console.log(e)
-    return res.status(400).send({ e })
+  async.waterfall([
+    function getTotalCost(callback) {
+      //TODO: go to cart and get totalCost forward it to next func
+      callback(null, 100)
+    },
+    function postToStripe(totalCost, callback) {
+
+      curl.setHeaders([
+        'Authorization: Bearer ' + config.stripe.secretKey
+      ])
+      curl.setBody({
+        'amount': totalCost ? totalCost : 100,
+        'currency':'USD',
+        'source': req.body.stripeToken,
+        'description': req.body.cart,
+      }).post('https://api.stripe.com/v1/charges')
+      .then((error, response) => {
+        console.log(error)
+        console.log(response)
+        // if(statusCode === 400) {
+        //   console.log(body)
+        // }
+        // if(statusCode === 200) {
+        //   let igInfo = JSON.parse(body)
+        //   console.log(igInfo)
+        //   req.body.igAccessToken = igInfo.access_token
+        //   req.body.profileImageURL = igInfo.user.profile_picture
+        //   req.body.firstName = igInfo.user.full_name
+          next()
+        // }
+      }).catch(err => {
+        console.log(err)
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })
+      })
+
+    }
+  ], (err) => {
+    if(err) {
+      console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    next()
   })
 }
 

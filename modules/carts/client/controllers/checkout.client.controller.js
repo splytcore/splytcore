@@ -19,12 +19,12 @@
 
     // Test stripe API key
     /* jshint ignore:start */
-    stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
+    //stripe = Stripe('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
     /* jshint ignore:end */
 
     // Live stripe API key
     /* jshint ignore:start */
-    //stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
+    stripe = Stripe('pk_live_XxKvyPSzR7smz8stVkL1xc59')
     /* jshint ignore:end */
 
     let card
@@ -134,7 +134,6 @@
         } else {
           // Send the token to your server.
           vm.order.stripeToken = res.token.id
-          console.log(res.token)
           vm.order.$save(res => {
             alert('new order created successful!')
             // vm.cart = null
