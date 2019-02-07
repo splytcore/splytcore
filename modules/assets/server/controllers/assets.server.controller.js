@@ -190,6 +190,41 @@ exports.uploadAssetImage = function(req, res) {
   })
 }
 
+exports.incrementView = function(req, res, next) {
+
+  if(!req.asset || req.user) {
+    console.log('asset not found in db or to increment view count you have to be guest role')
+    return next()
+  }
+
+  Asset.findByIdAndUpdate(req.asset._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
+    if(!err && asset) {
+      req.asset = asset
+    }
+    next()
+  })
+}
+
+exports.incrementBuy = function(req, res, next) {
+
+  if(!req.orderItems) {
+    console.log('orders are not present, skipping incrementing buy count for assets')
+    return res.jsonp(req.order)
+  }
+
+  async.each(req.orderItems, (orderItem, callback) => {
+    Asset.findByIdAndUpdate(orderItem.asset, { $inc: { buys: 1 }}, function(err, asset) {
+      callback()
+    })
+  }, (err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    res.jsonp(req.order);      
+  })
+}
 
 /**
  * asset middleware

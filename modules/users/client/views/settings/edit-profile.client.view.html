@@ -72,7 +72,13 @@
             <p class="help-block error-text" ng-message="required">Email address is required.</p>
             <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
           </div>
+
         </div>
+        <div class="form-group">
+          <label for="instagram">Accept terms and conditions</label> 
+          <input type="checkbox" id="instagram" name="instagram" class="form-control" ng-model="user.termsAndConditions" placeholder="Instagram">      
+        </div>
+
         <div class="text-center form-group">
           <button type="submit" class="btn btn-primary">Save Profile</button>
         </div>

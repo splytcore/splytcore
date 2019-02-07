@@ -68,7 +68,15 @@ var AssetSchema = new Schema({
   sku: {
     type: String,
     trim: true
-  }           
+  },
+  views: {
+    type: Number,
+    default: 0
+  },
+  buys: {
+    type: Number,
+    default: 0
+  }       
 })
 
 AssetSchema.post('init', function(asset, next) {

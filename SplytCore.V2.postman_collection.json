@@ -1,0 +1,152 @@
+{
+	"info": {
+		"_postman_id": "1128304c-a5e5-4356-ae5c-cd48fab9cefb",
+		"name": "SplytCore.V2",
+		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "role",
+							"value": "affiliate",
+							"description": "required: affiliate, seller",
+							"type": "text"
+						},
+						{
+							"key": "firstName",
+							"value": "first name here",
+							"description": "required",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "last name here",
+							"description": "required",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "hello@spl.yt",
+							"description": "required, unique",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "splytcore2017!",
+							"description": "required, 1 special char, 1 number 8+ length total",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{ipLocal}}/api/auth/signup",
+					"host": [
+						"{{ipLocal}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				},
+				"description": "Signup first then sign in"
+			},
+			"response": []
+		},
+		{
+			"name": "Sign in",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "hello@spl.yt",
+							"description": "required",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "splytcore2017!",
+							"description": "required",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{ipLocal}}/api/auth/signin",
+					"host": [
+						"{{ipLocal}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"signin"
+					]
+				},
+				"description": "Sign in after signing up"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0993d26c-796b-4c1f-8110-2a15a29822af",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "38c651ff-f47a-4a02-a688-121b35e6ff5d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "1b440e56-a0b0-4fcd-aad6-2f78be8fe71d",
+			"key": "localip",
+			"value": "localhost:3000",
+			"type": "string"
+		},
+		{
+			"id": "0b50855e-328c-41f2-b849-dd7a8ec4dd50",
+			"key": "qaip",
+			"value": "qa.spl.yt",
+			"type": "string"
+		}
+	]
+}
