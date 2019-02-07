@@ -145,8 +145,7 @@ exports.changeProfilePicture = function (req, res) {
  * Get Access token from code for Instagram
  */
 exports.saveIgCode = (req, res, next) => {
-  console.log('route save ig code------------')
-  console.log(req.user)
+  
   if(!req.body.igCode || req.user.igAccessToken !== '') {
     next()
   }
@@ -165,7 +164,7 @@ exports.saveIgCode = (req, res, next) => {
 
     if(statusCode === 400) {
       return res.status(400).send({
-        message: body.error_message
+        message: JSON.parse(body).error_message
       });
     }
     if(statusCode === 200) {
