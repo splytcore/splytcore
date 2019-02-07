@@ -84,6 +84,8 @@ exports.list = function(req, res) {
 
   let q = req.query
   
+  console.log(q)
+
   Hashtag.find(q).sort('-created').populate('affiliate', 'displayName').populate('asset', 'title').exec(function(err, hashtags) {
     if (err) {
       return res.status(400).send({

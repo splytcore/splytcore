@@ -58,6 +58,7 @@ exports.create = function(req, res, next) {
         // orderItem.asset = cartItem.asset
         // orderItem.hashtag = cartItem.hashtag
         // orderItem.quantity = cartItem.quantity
+        
         orderItem.save((err) => {
           if (err) {
             cb(err)
