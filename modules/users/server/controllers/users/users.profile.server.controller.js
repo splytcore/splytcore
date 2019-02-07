@@ -145,7 +145,7 @@ exports.changeProfilePicture = function (req, res) {
  * Get Access token from code for Instagram
  */
 exports.saveIgCode = (req, res, next) => {
-  
+
   if(!req.body.igCode || req.user.igAccessToken !== '') {
     next()
   }
@@ -172,7 +172,7 @@ exports.saveIgCode = (req, res, next) => {
       console.log(igInfo)
       req.body.igAccessToken = igInfo.access_token
       req.body.profileImageURL = igInfo.user.profile_picture
-      req.body.firstName = igInfo.user.full_name
+      req.body.firstName = igInfo.user.full_name.length > 0 ? igInfo.user.full_name : req.user.firstName
       next()
     }
   }).catch(e => {
