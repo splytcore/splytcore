@@ -57,7 +57,9 @@ exports.read = function(req, res, next) {
     }
     // console.log(assets)
     asset.hashtags = hashtags
-    res.jsonp(asset)  
+    req.asset = asset
+    next()
+    // res.jsonp(asset)  
   })
 
 
@@ -191,17 +193,18 @@ exports.uploadAssetImage = function(req, res) {
 }
 
 exports.incrementView = function(req, res, next) {
-
+  console.log('asset coming up for incrementing view')
+  console.log(req.asset)
   if(!req.asset || req.user) {
-    console.log('asset not found in db or to increment view count you have to be guest role')
-    return next()
+    console.log('asset not found in db or to increment view count or you have to be guest role')
+    return res.jsonp(req.asset)
   }
 
   Asset.findByIdAndUpdate(req.asset._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
-    if(!err && asset) {
-      req.asset = asset
+    if(err || !asset) {
+      console.log('asset not found to update its view count')
     }
-    next()
+    res.jsonp(asset)
   })
 }
 

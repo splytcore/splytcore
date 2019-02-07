@@ -19,7 +19,7 @@ module.exports = function(app) {
 
 
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
-    .get(assets.incrementView, assets.read)
+    .get(assets.read, assets.incrementView)
     .put(assets.update)
     .delete(assets.delete)
 

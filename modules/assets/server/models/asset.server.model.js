@@ -12,7 +12,7 @@ var mongoose = require('mongoose'),
 var AssetSchema = new Schema({
   title: {
     type: String,
-    default: 'Fake Asset #' + Date.now,
+    default: '',
     required: 'Please fill title',
     trim: true
   },   
