@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Reward Schema
+ * Asset Schema
  */
 var AssetSchema = new Schema({
   title: {
@@ -76,6 +76,12 @@ var AssetSchema = new Schema({
   buys: {
     type: Number,
     default: 0
+  },
+  reward: {
+    type: Number,
+    required: "Reward is required, 0-100",
+    min: 0,
+    max: 100
   }       
 })
 

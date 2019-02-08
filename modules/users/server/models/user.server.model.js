@@ -131,6 +131,10 @@ var UserSchema = new Schema({
   termsAndConditions: {
     type: Boolean,
     required: true
+  },
+  instagramUsername: {
+    type: String,
+    default: ''
   }
 
 });

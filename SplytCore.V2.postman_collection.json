@@ -7,353 +7,560 @@
 	},
 	"item": [
 		{
-			"name": "Signup",
-			"event": [
+			"name": "Affiliate",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "6c5783e3-2db7-4494-8b6b-d61b9221fa16",
-						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"pm.globals.set(\"userEmail\", data.email);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "Affiliate create a storefront",
+					"event": [
 						{
-							"key": "roles",
-							"value": "affiliate",
-							"description": "required: affiliate, seller",
-							"type": "text"
-						},
-						{
-							"key": "firstName",
-							"value": "first name here",
-							"description": "required",
-							"type": "text"
-						},
-						{
-							"key": "lastName",
-							"value": "last name here",
-							"description": "required",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "hi8@spl.yt",
-							"description": "required, unique",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "splytcore2017!",
-							"description": "required, 1 special char, 1 number 8+ length total",
-							"type": "text"
-						},
-						{
-							"key": "termsAndConditions",
-							"value": "true",
-							"description": "required: true or false",
-							"type": "text"
-						},
-						{
-							"key": "instagram",
-							"value": "asdf",
-							"description": "required: any string",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"id": "e60b3a43-9c39-41f6-a2f3-fa41a6ba8b5f",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"storeId\", data._id);",
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "{{local}}/api/auth/signup",
-					"host": [
-						"{{local}}"
 					],
-					"path": [
-						"api",
-						"auth",
-						"signup"
-					]
-				},
-				"description": "Signup first then sign in"
-			},
-			"response": []
-		},
-		{
-			"name": "Sign in",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "49c54557-c352-4523-b6e4-608a5b932965",
-						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"pm.globals.set(\"sessionId\", data.sessionId);",
-							""
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
 						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "email",
-							"value": "{{userEmail}}",
-							"description": "required",
-							"type": "text"
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "my own store",
+									"description": "required: any string",
+									"type": "text"
+								}
+							]
 						},
-						{
-							"key": "password",
-							"value": "splytcore2017!",
-							"description": "required",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{local}}/api/auth/signin",
-					"host": [
-						"{{local}}"
-					],
-					"path": [
-						"api",
-						"auth",
-						"signin"
-					]
-				},
-				"description": "Sign in after signing up"
-			},
-			"response": []
-		},
-		{
-			"name": "Affiliate create a storefront",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "e60b3a43-9c39-41f6-a2f3-fa41a6ba8b5f",
-						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"pm.globals.set(\"storeId\", data._id);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
+						"url": {
+							"raw": "{{qa}}/api/stores",
+							"host": [
+								"{{qa}}"
+							],
+							"path": [
+								"api",
+								"stores"
+							]
+						},
+						"description": "Affiliate create a storefront for my followers to refer to"
 					},
-					{
-						"key": "Cookie",
-						"value": "sessionId={{sessionId}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "name",
-							"value": "my own store",
-							"description": "required: any string",
-							"type": "text"
-						}
-					]
+					"response": []
 				},
-				"url": {
-					"raw": "{{local}}/api/stores",
-					"host": [
-						"{{local}}"
-					],
-					"path": [
-						"api",
-						"stores"
-					]
-				},
-				"description": "Affiliate create a storefront for my followers to refer to"
-			},
-			"response": []
-		},
-		{
-			"name": "Affiliate list products to select for my store",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "439fd094-79e2-4a03-a160-65e66d4ca86c",
-						"exec": [
-							"var data = JSON.parse(responseBody);",
-							"var index = _.random(0, data.length);",
-							"pm.globals.set(\"assetId\", data[index]._id);",
-							"pm.globals.set(\"asset\", JSON.stringify(data[index]));",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{local}}/api/assets",
-					"host": [
-						"{{local}}"
+					"name": "Affiliate list products to select for my store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "439fd094-79e2-4a03-a160-65e66d4ca86c",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"var index = _.random(0, data.length);",
+									"pm.globals.set(\"assetId\", data[index]._id);",
+									"pm.globals.set(\"asset\", JSON.stringify(data[index]));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
 					],
-					"path": [
-						"api",
-						"assets"
-					]
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/assets",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"assets"
+							]
+						},
+						"description": "List all products so i can choose what to choose to represent as an affiliate"
+					},
+					"response": []
 				},
-				"description": "List all products so i can choose what to choose to represent as an affiliate"
-			},
-			"response": []
-		},
-		{
-			"name": "Affiliate select item for store",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "cc7e0c84-a1c6-40af-bfaf-bebd4eb14448",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					},
-					{
-						"key": "Cookie",
-						"value": "sessionId={{sessionId}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "Affiliate select item for store",
+					"event": [
 						{
-							"key": "store",
-							"value": "{{storeId}}",
-							"description": "required",
-							"type": "text"
-						},
-						{
-							"key": "asset",
-							"value": "{{assetId}}",
-							"description": "required",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"id": "cc7e0c84-a1c6-40af-bfaf-bebd4eb14448",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "{{local}}/api/storeassets",
-					"host": [
-						"{{local}}"
 					],
-					"path": [
-						"api",
-						"storeassets"
-					]
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "store",
+									"value": "{{storeId}}",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "asset",
+									"value": "{{assetId}}",
+									"description": "required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/storeassets",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"storeassets"
+							]
+						},
+						"description": "Affiliate can select this item to be displayed in their store"
+					},
+					"response": []
 				},
-				"description": "Affiliate can select this item to be displayed in their store"
-			},
-			"response": []
+				{
+					"name": "Affiliate set custom hashtag for an item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "asset",
+									"value": "{{asset}}",
+									"description": "required: asset object",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "redveloster",
+									"description": "required: any string",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/hashtags",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"hashtags"
+							]
+						},
+						"description": "Affiliate can set custom hashtag for all the items they have selected for their store"
+					},
+					"response": []
+				},
+				{
+					"name": "Save instagram code to user object",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "igCode",
+									"value": "71a53126986b43adaaeec84176dbb424",
+									"type": "text"
+								},
+								{
+									"key": "redirectUri",
+									"value": "http://localhost:3000/influencer/insta/save",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Save this code thus giving splyt access to your instagram profile"
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "Affiliate set custom hashtag for an item",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					},
-					{
-						"key": "Cookie",
-						"value": "sessionId={{sessionId}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+			"name": "Users",
+			"item": [
+				{
+					"name": "Signup",
+					"event": [
 						{
-							"key": "asset",
-							"value": "{{asset}}",
-							"description": "required: asset object",
-							"type": "text"
-						},
-						{
-							"key": "name",
-							"value": "redveloster",
-							"description": "required: any string",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"id": "6c5783e3-2db7-4494-8b6b-d61b9221fa16",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"userEmail\", data.email);",
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "{{local}}/api/hashtags",
-					"host": [
-						"{{local}}"
 					],
-					"path": [
-						"api",
-						"hashtags"
-					]
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "roles",
+									"value": "seller",
+									"description": "required: affiliate, seller",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "first name here",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "last name here",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "hi9999@spl.yt",
+									"description": "required, unique",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "splytcore2017!",
+									"description": "required, 1 special char, 1 number 8+ length total",
+									"type": "text"
+								},
+								{
+									"key": "termsAndConditions",
+									"value": "true",
+									"description": "required: true or false",
+									"type": "text"
+								},
+								{
+									"key": "instagram",
+									"value": "asdf",
+									"description": "required: any string",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/signup",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "Signup first then sign in"
+					},
+					"response": []
 				},
-				"description": "Affiliate can set custom hashtag for all the items they have selected for their store"
-			},
-			"response": []
+				{
+					"name": "Sign in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "49c54557-c352-4523-b6e4-608a5b932965",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"sessionId\", data.sessionId);",
+									"if(data.user.roles.indexOf('seller') > -1) {",
+									"    pm.globals.set(\"sellerId\", data.user._id);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{userEmail}}",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "splytcore2017!",
+									"description": "required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/signin",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						},
+						"description": "Sign in after signing up"
+					},
+					"response": []
+				},
+				{
+					"name": "Affiliate get latest post instagram image",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{qa}}/api/users/background",
+							"host": [
+								"{{qa}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"background"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Seller",
+			"item": [
+				{
+					"name": "Seller create asset",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Title goes here",
+									"description": "required: any title string",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Product's description goes here",
+									"description": "required: any description string",
+									"type": "text"
+								},
+								{
+									"key": "inventoryCount",
+									"value": "5",
+									"description": "any number above 0",
+									"type": "text"
+								},
+								{
+									"key": "imageURL",
+									"value": "[ \"./modules/assets/client/img/uploads/5615f844b9594944b286108cfac1c56c\" ]",
+									"description": "!required: full image url or partial url",
+									"type": "text"
+								},
+								{
+									"key": "reward",
+									"value": "2",
+									"description": "required: 0-100",
+									"type": "text"
+								},
+								{
+									"key": "brand",
+									"value": "nikee",
+									"description": "!required: any brand name",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/assets",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"assets"
+							]
+						},
+						"description": "Create an asset as an seller"
+					},
+					"response": []
+				},
+				{
+					"name": "Seller list my items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/assets?user={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "user",
+									"value": "{{sellerId}}"
+								}
+							]
+						},
+						"description": "List all my items as a seller"
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -380,13 +587,13 @@
 	],
 	"variable": [
 		{
-			"id": "89b7c0b1-b9fa-4833-993f-af0322573207",
+			"id": "348d553a-6461-44b9-81e7-d4b2e5dc147c",
 			"key": "local",
 			"value": "localhost:3000",
 			"type": "string"
 		},
 		{
-			"id": "67a20aae-7d89-4852-aeab-9cb59e57729c",
+			"id": "2ec1b5c1-6eec-4ca5-9c0f-490a4b2eb02a",
 			"key": "qa",
 			"value": "https://qa.spl.yt",
 			"type": "string"
