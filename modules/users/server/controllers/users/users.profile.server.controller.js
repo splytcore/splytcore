@@ -32,7 +32,7 @@ exports.update = function (req, res) {
     user.updated = Date.now();
     user.displayName = user.firstName + ' ' + user.lastName;
     // TODO: remove this hack asap. we shouldn't need to force set terms and conditions this way
-    user.termsAndConditions = true
+    // user.termsAndConditions = true
 
     user.save(function (err) {
       if (err) {
@@ -150,7 +150,7 @@ exports.changeProfilePicture = function (req, res) {
 exports.saveIgCode = (req, res, next) => {
 
   if(!req.body.igCode || req.user.igAccessToken !== '') {
-    next()
+    return next()
   }
 
   curl.setHeaders([
@@ -175,7 +175,7 @@ exports.saveIgCode = (req, res, next) => {
       console.log(igInfo)
       req.body.igAccessToken = igInfo.access_token
       req.body.profileImageURL = igInfo.user.profile_picture
-      req.body.firstName = igInfo.user.full_name.length > 0 ? igInfo.user.full_name : req.user.firstName
+      req.body.instagramUsername = igInfo.user.username
       next()
     }
   }).catch(e => {
@@ -185,13 +185,14 @@ exports.saveIgCode = (req, res, next) => {
 }
 
 exports.getBackgroundImage = (req, res) => {
+  console.log('exports.get background image')
+  console.log(req.user)
   if(req.user.igAccessToken === '') {
     return res.status(400).send({
-      message: "Instagram is not connected with this account"
+      message: 'Instagram is not connected with this account'
     })
   }
 
-  console.log(req.user.igAccessToken)
   let getProfileUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + req.user.igAccessToken
   let imageUrl = []
   curl.get(getProfileUrl)
