@@ -15,7 +15,7 @@
         <div class="form-group">
           <img id="imageTarget" class="img-thumbnail user-profile-picture">
         </div>
-        <div class="form-group" ng-hide="uploader.queue.length">
+        <div class="formProduct's description goes here-group" ng-hide="uploader.queue.length">
           <span class="btn btn-default btn-file">
             + <input id="imageSource" type="file" nv-file-select uploader="uploader">
           </span>
@@ -113,6 +113,11 @@
           <label class="control-label" for="asset">Inventory</label>
           <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control"
             placeholder="Inventory" required>
+        </div>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="asset">Reward</label>
+          <input name="inventoryCount" type="text" ng-model="vm.asset.reward" id="reward" class="form-control"
+            placeholder="Reward" required>
         </div>
 
         <!-- TODO: only allow seller who created -->
