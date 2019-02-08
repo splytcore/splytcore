@@ -11,6 +11,7 @@ const _ = require('lodash')
 //const stripe = require('stripe')('pk_test_tZPTIhuELHzFYOV3STXQ34dv')
 const curl = new (require('curl-request'))()
 const userController = require(path.resolve('./modules/users/server/controllers/users/users.profile.server.controller'))
+const config = require(path.resolve('./config/config'))
 
 /**
  * Create a Stripe
@@ -97,15 +98,13 @@ exports.list = function(req, res) {
 
 
 exports.saveIgCode = (req, res, next) => {
-  let clientId = '09156f2dbd264bdb8652cff79b354b36'
-  let clientSecret = 'ebde362954ba4ee2814e2778d78ef146'
 
   curl.setHeaders([
     'Content-Type: application/x-www-form-urlencoded'
   ])
   curl.setBody({
-    'client_id': clientId,
-    'client_secret':clientSecret,
+    'client_id': config.instagram.clientId,
+    'client_secret':config.instagram.clientSecret,
     'grant_type':'authorization_code',
     'redirect_uri':req.body.redirectUri,
     'code': req.body.igCode
