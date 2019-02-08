@@ -27,6 +27,8 @@ exports.invokeRolesPolicies = function () {
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
+  console.log(req.user)
+
   // If an Store is being processed and the current user created it then allow any manipulation
   if (req.store && req.user && req.store.user && req.store.user.id === req.user.id) {
     return next();
