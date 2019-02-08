@@ -20,12 +20,19 @@
     vm.addToCart = addToCart
 
 
+    console.log('storeid: ' +  $cookies.storeId)
+
     function addToCart(assetId) {
+
+      if (!$cookies.storeId) {
+        return alert('You must select store first to asset to cart!')
+      }
 
       let cartItem = new CartsItemsService()
       cartItem.cart = $cookies.cartId
       cartItem.asset = assetId
       cartItem.quantity = vm.qty
+      cartItem.storeId = $cookies.storeId
 
       cartItem.$save((result) => {
         console.log('success')

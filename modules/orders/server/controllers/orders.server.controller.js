@@ -34,23 +34,28 @@ exports.create = function(req, res, next) {
   console.log(req.body)
   
   async.waterfall([
-
-    function createOrder(callback) {
+    function getCartHeader(callback) {
+      Cart.findById(req.body.cart).exec(function(err, cart) {
+        callback(err, cart)
+      })         
+    },
+    function createOrder(cart, callback) {
+      
       let order = new Order(req.body)
       order.customer = req.user
+      order.store = cart.store
+
       order.save((err) => {
         req.orderItems = []
         req.order = order
         callback(err, order)
       })
     },
-
     function getItems(order, callback) {
-      CartItem.find({ cart: order.cart }).populate('hashtag').exec(function(err, items) {
+      CartItem.find({ cart: order.cart }).populate('asset').populate('hashtag').exec(function(err, items) {
         callback(err, order, items)
       })        
     },
-
     function createOrderDetails(order, cartItems, callback) {
       async.each(cartItems, function(cartItem, cb) {
         let orderItem = new OrderItem(cartItem)
@@ -59,6 +64,13 @@ exports.create = function(req, res, next) {
         // orderItem.hashtag = cartItem.hashtag
         // orderItem.quantity = cartItem.quantity
         
+        console.log('qty:' + cartItem.quantity)
+        console.log('price: ' + cartItem.asset.price)
+
+        //update totals for header
+        order.totalCost += (cartItem.quantity * cartItem.asset.price)
+        order.totalQuantity += cartItem.quantity
+
         orderItem.save((err) => {
           if (err) {
             cb(err)
@@ -77,7 +89,11 @@ exports.create = function(req, res, next) {
         callback(err, order)
       });
     },
-    
+    function updateOrderTotals(order, callback) {
+      order.save((err) => {
+        callback(err, order)
+      })
+    },    
     function sendEmailReceiptCustomer(order, callback) {
       //emailOrderReceiptToCustomer(req, res, order)   
       callback(null, order)
@@ -89,9 +105,10 @@ exports.create = function(req, res, next) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
+    } else {
+      res.clearCookie('cartId')
+      next()      
     }
-    res.clearCookie('cartId')
-    next()
   })
   
 }
@@ -142,11 +159,11 @@ function emailOrderReceiptToCustomer(req, res, order) {
 function emailOrderReceiptToSeller(req, res, orderItem) {
   console.log('orderitem')
   
-  console.log(orderItem.asset.toString())
+  console.log(orderItem.asset.id)
 
   async.waterfall([
     function getSellerFromAsset(done) {
-      let assetId = orderItem.asset.toString()
+      let assetId = orderItem.asset.id
       Asset.findById(assetId).populate('user').exec(function(err, asset) {
         done(err, asset)
       })

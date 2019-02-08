@@ -3,11 +3,16 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  mongoose = require('mongoose'),
-  Analytic = mongoose.model('Analytic'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+const path = require('path')
+const mongoose = require('mongoose')
+const Analytic = mongoose.model('Analytic')
+const Order = mongoose.model('Order')
+const Store = mongoose.model('Store')
+
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const _ = require('lodash')
+
+mongoose.Promise = Promise
 
 /**
  * Create a Analytic
@@ -91,6 +96,58 @@ exports.list = function(req, res) {
     }
   });
 };
+
+/* 
+* Get Sales from date to thru day by milliseconds
+*/
+
+exports.getAffiliateGrossSales = function(req, res) {
+
+  let q = req.query
+  console.log(q)
+  let fromDateMS = parseInt(q.fromDateMS)
+  let thruDateMS = parseInt(q.thruDateMS)
+
+  let userId = q.userId
+
+
+  fromDateMS = 0
+  thruDateMS = 1575187200000
+
+  userId = '5badbc98ffd77b340a5f4ec1'
+
+
+  let grossSales = 0
+  let totalQuantity = 0
+
+  Store.findOne({ affiliate: userId }).exec()
+    .then((store) => {
+      // console.log(store)
+      return Order.find({ store: store._id, created: { $gte: fromDateMS, $lte: thruDateMS } }).exec()
+    })
+    .then((orders) => {
+      console.log('lenght: ' + orders.length)
+      orders.forEach((o) => {
+        grossSales += o.totalCost ? o.totalCost : 0
+        totalQuantity += o.totalQuantity ? o.totalQuantity : 0
+        console.log('total cost:' + o.totalCost)
+      })
+      return
+    })
+    .then(() => {
+      res.jsonp({ affiliateId: userId, grossSales: grossSales, totalQuantity: totalQuantity })
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    })
+}
+
+function getStore(userId) {
+
+}
 
 /**
  * Analytic middleware

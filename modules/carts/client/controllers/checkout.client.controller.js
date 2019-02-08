@@ -125,15 +125,15 @@
       $rootScope.billing = vm.order.billing
       $rootScope.shipping = vm.order.shipping
 
-      stripe.createToken(card)
-      .then(res => {
-        if (res.error) {
-          // Inform the user if there was an error.
-          var errorElement = document.getElementById('card-errors');
-          errorElement.textContent = res.error.message;
-        } else {
-          // Send the token to your server.
-          vm.order.stripeToken = res.token.id
+      // stripe.createToken(card)
+      // .then(res => {
+      //   if (res.error) {
+      //     // Inform the user if there was an error.
+      //     var errorElement = document.getElementById('card-errors');
+      //     errorElement.textContent = res.error.message;
+      //   } else {
+      //     // Send the token to your server.
+      //     vm.order.stripeToken = res.token.id
           vm.order.$save(res => {
             alert('new order created successful!')
             // vm.cart = null
@@ -145,8 +145,8 @@
             console.log(error)
             vm.error = error.toString()
           })
-        }
-      })
+      //   }
+      // })
 
     }
 

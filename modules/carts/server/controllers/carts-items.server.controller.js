@@ -34,8 +34,9 @@ exports.create = function(req, res) {
 function addToCart (req, res) {
 
   let cartId = req.cookies ? req.cookies.cartId  : null
+  let storeId = req.cookies? req.cookies.storeId : null
 
-  getCart(cartId)
+  getCart(cartId, storeId)
     .then((cart) => {
       res.cookie('cartId', cart.id)
       req.body.cart = cart
@@ -84,7 +85,7 @@ function createCheckoutFromSocialAccount(req, res) {
     })
     .then((res_hashtag)=> {
       hashtag = res_hashtag
-      return getCart(cartId) 
+      return getCart(cartId, storeId) 
     })
     .then((res_cart)=> {
       // console.log(cart)
@@ -168,12 +169,13 @@ function getHashtagByInstagram(affiliate) {
 * Finds current existing cart header
 * Creates new one if it doesn't exist
 */
-function getCart(cartId) {
+function getCart(cartId, storeId) {
 
   return new Promise ((resolve, reject) => {
     if (!cartId) {
       // console.log('create new cart')
       let cart = new Cart()
+      cart.store = storeId
       cart.save((err) => {
         if (err) {
           reject(err)
