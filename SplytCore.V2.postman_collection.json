@@ -55,7 +55,7 @@
 						},
 						{
 							"key": "email",
-							"value": "hi8@spl.yt",
+							"value": "hi99@spl.yt",
 							"description": "required, unique",
 							"type": "text"
 						},
@@ -131,16 +131,16 @@
 						},
 						{
 							"key": "password",
-							"value": "splytcore2017!",
+							"value": "password",
 							"description": "required",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{local}}/api/auth/signin",
+					"raw": "{{qa}}/api/auth/signin",
 					"host": [
-						"{{local}}"
+						"{{qa}}"
 					],
 					"path": [
 						"api",
@@ -195,9 +195,9 @@
 					]
 				},
 				"url": {
-					"raw": "{{local}}/api/stores",
+					"raw": "{{qa}}/api/stores",
 					"host": [
-						"{{local}}"
+						"{{qa}}"
 					],
 					"path": [
 						"api",
@@ -354,6 +354,81 @@
 				"description": "Affiliate can set custom hashtag for all the items they have selected for their store"
 			},
 			"response": []
+		},
+		{
+			"name": "Save instagram code to user object",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "sessionId={{sessionId}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "igCode",
+							"value": "71a53126986b43adaaeec84176dbb424",
+							"type": "text"
+						},
+						{
+							"key": "redirectUri",
+							"value": "http://localhost:3000/influencer/insta/save",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{local}}/api/users",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				},
+				"description": "Save this code thus giving splyt access to your instagram profile"
+			},
+			"response": []
+		},
+		{
+			"name": "Affiliate get latest post instagram image",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "sessionId={{sessionId}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{qa}}/api/users/background",
+					"host": [
+						"{{qa}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"background"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -380,13 +455,13 @@
 	],
 	"variable": [
 		{
-			"id": "89b7c0b1-b9fa-4833-993f-af0322573207",
+			"id": "53107330-e2d0-4ddc-9d41-3f471e9892f8",
 			"key": "local",
 			"value": "localhost:3000",
 			"type": "string"
 		},
 		{
-			"id": "67a20aae-7d89-4852-aeab-9cb59e57729c",
+			"id": "50704d13-a839-47bc-b9b4-097d8b53c872",
 			"key": "qa",
 			"value": "https://qa.spl.yt",
 			"type": "string"
