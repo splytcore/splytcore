@@ -38,6 +38,10 @@ let OrderSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  store: {
+    type: Schema.ObjectId,
+    ref: 'Store'
+  }, 
   cart: {
     type: Schema.ObjectId,
     ref: 'Cart'
