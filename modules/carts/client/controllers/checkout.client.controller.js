@@ -125,28 +125,42 @@
       $rootScope.billing = vm.order.billing
       $rootScope.shipping = vm.order.shipping
 
-      stripe.createToken(card)
-      .then(res => {
-        if (res.error) {
-          // Inform the user if there was an error.
-          var errorElement = document.getElementById('card-errors');
-          errorElement.textContent = res.error.message;
-        } else {
-          // Send the token to your server.
-          vm.order.stripeToken = res.token.id
-          vm.order.$save(res => {
-            alert('new order created successful!')
-            // vm.cart = null
-            // vm.totalQuantity = 0
-            // vm.totalCost = 0      
-            $state.go('orders.view', { orderId: res._id })
-          }, (error) => {
-            console.log('error')
-            console.log(error)
-            vm.error = error.toString()
-          })
-        }
+      //TESTING WITHOUT CC
+      vm.order.$save(res => {
+        alert('new order created successful!')
+        // vm.cart = null
+        // vm.totalQuantity = 0
+        // vm.totalCost = 0      
+        $state.go('orders.view', { orderId: res._id })
+      }, (error) => {
+        console.log('error')
+        console.log(error)
+        vm.error = error.toString()
       })
+
+
+      // stripe.createToken(card)
+      // .then(res => {
+      //   if (res.error) {
+      //     // Inform the user if there was an error.
+      //     var errorElement = document.getElementById('card-errors');
+      //     errorElement.textContent = res.error.message;
+      //   } else {
+      //     // Send the token to your server.
+      //     vm.order.stripeToken = res.token.id
+      //     vm.order.$save(res => {
+      //       alert('new order created successful!')
+      //       // vm.cart = null
+      //       // vm.totalQuantity = 0
+      //       // vm.totalCost = 0      
+      //       $state.go('orders.view', { orderId: res._id })
+      //     }, (error) => {
+      //       console.log('error')
+      //       console.log(error)
+      //       vm.error = error.toString()
+      //     })
+      //   }
+      // })
 
     }
 

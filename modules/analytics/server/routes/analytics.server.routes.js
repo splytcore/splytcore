@@ -15,6 +15,9 @@ module.exports = function(app) {
   app.route('/api/analytics/affiliates/grossSales')
     .get(analytics.getAffiliateGrossSales)
 
+  app.route('/api/analytics/sellers/grossSales')
+    .get(analytics.getSellerGrossSales)
+
 
   // app.route('/api/analytics/:analyticId').all(analyticsPolicy.isAllowed)
   //   .get(analytics.read)

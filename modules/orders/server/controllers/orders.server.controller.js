@@ -31,11 +31,11 @@ const smtpTransport = nodemailer.createTransport(config.mailer.options)
 exports.create = function(req, res, next) {
 
   console.log('creating order')
-  console.log(req.body)
+  // console.log(req.body)
   
   async.waterfall([
     function getCartHeader(callback) {
-      Cart.findById(req.body.cart).exec(function(err, cart) {
+      Cart.findById(req.body.cart).populate('store').exec(function(err, cart) {
         callback(err, cart)
       })         
     },
@@ -52,7 +52,7 @@ exports.create = function(req, res, next) {
       })
     },
     function getItems(order, callback) {
-      CartItem.find({ cart: order.cart }).populate('asset').populate('hashtag').exec(function(err, items) {
+      CartItem.find({ cart: order.cart }).deepPopulate('asset.user').exec(function(err, items) {
         callback(err, order, items)
       })        
     },
@@ -60,12 +60,11 @@ exports.create = function(req, res, next) {
       async.each(cartItems, function(cartItem, cb) {
         let orderItem = new OrderItem(cartItem)
         orderItem.order = order
-        // orderItem.asset = cartItem.asset
-        // orderItem.hashtag = cartItem.hashtag
-        // orderItem.quantity = cartItem.quantity
-        
-        console.log('qty:' + cartItem.quantity)
-        console.log('price: ' + cartItem.asset.price)
+        orderItem.seller = cartItem.asset.user
+        orderItem.affiliate = order.store.affiliate
+          
+        // console.log('qty:' + cartItem.quantity)
+        // console.log('price: ' + cartItem.asset.price)
 
         //update totals for header
         order.totalCost += (cartItem.quantity * cartItem.asset.price)

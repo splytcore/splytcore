@@ -41,7 +41,7 @@ function addToCart (req, res) {
       res.cookie('cartId', cart.id)
       req.body.cart = cart
       console.log(req.body)
-      CartItem.findOneAndUpdate({ cart: cart.id, asset: req.body.asset }, req.body, { upsert:true }, (err, cartItem) => {
+      CartItem.findOneAndUpdate({ cart: cart.id, asset: req.body.asset }, req.body, { new: true, upsert:true }, (err, cartItem) => {
         if (err) {
           console.log(err)
           return res.status(400).send({

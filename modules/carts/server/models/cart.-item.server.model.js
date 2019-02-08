@@ -5,7 +5,7 @@
  */
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 /**
  * Cart Item Schema
  */
@@ -28,5 +28,9 @@ let CartItemSchema = new Schema({
   }  
 })
 
+
 CartItemSchema.index({ cart: 1, asset: 1 }, { unique: true })
+
+CartItemSchema.plugin(deepPopulate)
+
 mongoose.model('CartItem', CartItemSchema)

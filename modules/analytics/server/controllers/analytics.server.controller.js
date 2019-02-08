@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const Analytic = mongoose.model('Analytic')
 const Order = mongoose.model('Order')
 const Store = mongoose.model('Store')
+const OrderItem = mongoose.model('OrderItem')
 
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
@@ -145,9 +146,49 @@ exports.getAffiliateGrossSales = function(req, res) {
     })
 }
 
-function getStore(userId) {
+/* 
+* Get Sales from date to thru day by milliseconds
+*/
 
+exports.getSellerGrossSales = function(req, res) {
+
+  let q = req.query
+  console.log(q)
+  let fromDateMS = parseInt(q.fromDateMS)
+  let thruDateMS = parseInt(q.thruDateMS)
+
+  let userId = q.userId
+
+  // for testing
+  fromDateMS = 0
+  thruDateMS = 1575187200000
+
+  userId = '5badbc98ffd77b340a5f4ec1'
+
+
+  let grossSales = 0
+  let totalQuantity = 0
+
+  OrderItem.find({ seller: userId, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec()
+    .then((items) => {
+      console.log('lenght: ' + items.length)
+      items.forEach((i) => {
+        grossSales += i.asset.price * i.quantity
+        totalQuantity += i.quantity
+      })
+      return
+    })
+    .then(() => {
+      res.jsonp({ sellerId: userId, grossSales: grossSales, totalQuantity: totalQuantity })
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    })
 }
+
 
 /**
  * Analytic middleware

@@ -20,8 +20,12 @@ const OrderItemSchema = new Schema({
   },
   affiliate: {
     type: Schema.ObjectId,
-    ref: 'Affiliate'
+    ref: 'User'
   },
+  seller: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },  
   asset: {
     type: Schema.ObjectId,
     ref: 'Asset'
