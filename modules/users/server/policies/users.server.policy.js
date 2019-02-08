@@ -18,6 +18,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/users/background',
       permissions: 'get'
     }]
+  }, {
+    roles: ['affiliate', 'seller', 'users'],
+    allows: [{
+      resources: '/api/users',
+      permissions: 'put'
+    }]
   }]);
 };
 
