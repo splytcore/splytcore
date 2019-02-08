@@ -78,6 +78,7 @@ function createCheckoutFromSocialAccount(req, res) {
     .then((res_affiliate)=> {
       console.log(res_affiliate)
       return getHashtagByInstagram(res_affiliate)
+      // return 'baller'
     })
     .then((hashtag)=> {
       console.log('hashtag ' + hashtag)

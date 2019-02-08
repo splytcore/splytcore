@@ -14,7 +14,8 @@ let StoreSchema = new Schema({
     type: String,
     default: '',
     required: 'Please fill Store name',
-    trim: true
+    trim: true,
+    unique: true
   },
   description: {
     type: String,

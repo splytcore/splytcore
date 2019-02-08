@@ -37,25 +37,28 @@
     vm.authentication = Authentication
 
     //NOTE: future we'll only haver the storeId
-    vm.addAssetFromStoreId = addAssetFromStoreId
+    vm.addAssetFromStore = addAssetFromStore
 
-    vm.storeId = $location.search().storeId
+    vm.storeName = $location.search().storeName
 
-    console.log('storeId:' + vm.storeId)
+    console.log('storeName:' + vm.storeName)
 
     //Get store information and assets by hashtag
-    if (vm.storeId) {
-      StoresService.get({ storeId: vm.storeId }).$promise
-        .then((store) => {
-          vm.store = store
+    if (vm.storeName) {
+      StoresService.query({ storeName: vm.storeName }).$promise
+        .then((stores) => {
+          vm.store = stores[0]
+          console.log('stores length' + stores.length)
           console.log(vm.store)
           console.log('store name: ' + vm.store.name)
+          addAssetFromStore(vm.store)
           return HashtagsService.query({ affiliate: vm.store.affiliate._id }).$promise
         })
         .then((hashtags) => {
           console.log('hashtags asset: ')
           vm.hashtagAssets = hashtags
           console.log(vm.hashtagAssets)
+
         })
     } 
     
@@ -71,17 +74,17 @@
     //BUG HERE. Calculating incorrectly 
     //Get cart items.
     //If theres storeId, we find asset by hashtag then add it to cart
-    if ($cookies.cartId) {
-      CartsService.get({ cartId: $cookies.cartId }).$promise
-        .then((cart)=> {
-          vm.cart = cart
-          if (vm.storeId) {
-            addAssetFromStoreId(vm.storeId)            
-          }
-        })
-    } else if (vm.storeId){
-      addAssetFromStoreId(vm.storeId)
-    }
+    // if ($cookies.cartId) {
+    //   CartsService.get({ cartId: $cookies.cartId }).$promise
+    //     .then((cart)=> {
+    //       vm.cart = cart
+    //       if (vm.storeId) {
+    //         addAssetFromStoreId(vm.storeName)            
+    //       }
+    //     })
+    // } else if (vm.storeId){
+    //   addAssetFromStoreId(vm.storeName)
+    // }
 
 
     vm.error = null
@@ -93,11 +96,11 @@
 
 
    // add asset if there's a hashtag
-    function addAssetFromStoreId(storeId) {
+    function addAssetFromStore(store) {
         
       let cartItem = new CartsItemsService()
       cartItem.cart = $cookies.cartId
-      cartItem.store = storeId
+      cartItem.store = vm.store._id
       cartItem.quantity = 1
       cartItem.$save()
         .then((result) => {
