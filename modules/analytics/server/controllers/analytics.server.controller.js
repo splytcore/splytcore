@@ -110,11 +110,11 @@ exports.getAffiliateGrossSales = function(req, res) {
 
   let userId = q.userId
 
+  //for testing
+  // fromDateMS = 0
+  // thruDateMS = 1575187200000
 
-  fromDateMS = 0
-  thruDateMS = 1575187200000
-
-  userId = '5badbc98ffd77b340a5f4ec1'
+  // userId = '5badbc98ffd77b340a5f4ec1'
 
 
   let grossSales = 0
