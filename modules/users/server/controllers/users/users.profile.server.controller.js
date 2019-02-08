@@ -13,6 +13,7 @@ const multer = require('multer')
 const config = require(path.resolve('./config/config'))
 const User = mongoose.model('User')
 const curl = new (require('curl-request'))()
+const async = require('async')
 
 /**
  * Update user details
@@ -180,6 +181,45 @@ exports.saveIgCode = (req, res, next) => {
   }).catch(e => {
     console.log(e)
     return res.status(400).send({ e })
+  })
+}
+
+exports.getBackgroundImage = (req, res) => {
+  if(req.user.igAccessToken === '') {
+    return res.status(400).send({
+      message: "Instagram is not connected with this account"
+    })
+  }
+
+  console.log(req.user.igAccessToken)
+  let getProfileUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + req.user.igAccessToken
+  let imageUrl = []
+  curl.get(getProfileUrl)
+  .then(({statusCode, body}) => {
+    if(statusCode !== 200) {
+      return res.status(parseInt(statusCode)).send({
+        message: body.error_message
+      })
+    }
+      let posts = JSON.parse(body).data
+      async.each(posts, (post, callback) => {
+        imageUrl.push(post.images.standard_resolution.url)
+        callback()
+      }, (err) => {
+        if(err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          })
+        } else {
+          res.jsonp(imageUrl)
+        }
+      })
+  })
+  .catch(err => {
+    console.log(err)
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    })
   })
 }
 
