@@ -53,6 +53,16 @@
           pageTitle: 'Sellers Create'
         }
       })
+      .state('sellers.batchuploadassets', {
+        url: '/batchuploadassets',
+        templateUrl: 'modules/sellers/client/views/batch-upload-assets.seller.client.view.html',
+        controller: 'SellerBatchUploadAssetsController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['seller', 'admin'],
+          pageTitle: 'Batch Upload Assets'
+        }
+      })
   }
 
   // getAssets.$inject = ['$stateParams', 'SellersService'];

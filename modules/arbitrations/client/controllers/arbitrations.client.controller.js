@@ -6,9 +6,9 @@
     .module('arbitrations')
     .controller('ArbitrationsController', ArbitrationsController);
 
-  ArbitrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arbitrationResolve', '$stateParams', 'EthService', 'ArbitraitionsManagerService', '$cookies', '$filter'];
+  ArbitrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'arbitrationResolve', '$stateParams', 'ArbitraitionsManagerService', '$cookies', '$filter'];
 
-  function ArbitrationsController ($scope, $state, $window, Authentication, arbitration, $stateParams, EthService, ArbitraitionsManagerService, $cookies, $filter) {
+  function ArbitrationsController ($scope, $state, $window, Authentication, arbitration, $stateParams, ArbitraitionsManagerService, $cookies, $filter) {
     
     console.log($stateParams)
 
@@ -152,7 +152,6 @@
               alert('NOT VALID SELECTION')
               break;
       }
-      EthService.updateUserBalances()      
 
     }       
   }

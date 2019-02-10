@@ -1,7 +1,7 @@
 <section>
 
   <div ng-show="env.indexOf('dev') > -1">
-  {{ vm.asset }}
+    {{ vm.asset }}
   </div>
 
   <div class="page-header">
@@ -9,21 +9,40 @@
   </div>
 
   <div class="col-md-12">
+
+    <form id="imageForm" class="signin form-horizontal">
+      <fieldset>
+        <div class="form-group">
+          <img id="imageTarget" class="img-thumbnail user-profile-picture">
+        </div>
+        <div class="formProduct's description goes here-group" ng-hide="uploader.queue.length">
+          <span class="btn btn-default btn-file">
+            + <input id="imageSource" type="file" nv-file-select uploader="uploader">
+          </span>
+        </div>
+        <div class="form-group" ng-show="uploader.queue.length">
+          <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload</button>
+        </div>
+        <div ng-show="success" class=" text-success">
+          <strong>Profile Picture Changed Successfully</strong>
+        </div>
+        <div ng-show="error" class=" text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
     <form name="vm.form.assetForm" class="form-horizontal" ng-submit="vm.save(vm.form.assetForm.$valid)" novalidate>
       <fieldset>
-
-        <div class="form-group">
-          <img ng-src="modules/assets/client/img/asset.jpeg" class="img-thumbnail asset-picture-detail">
-        </div>
-
         <div class="form-group" show-errors>
           <label class="control-label" for="id">ID</label>
-          <input name="id" type="text" ng-model="vm.asset._id" id="title" class="form-control" placeholder="ID" disabled>
+          <input name="id" type="text" ng-model="vm.asset._id" id="title" class="form-control" placeholder="ID"
+            disabled>
         </div>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="title">Title</label>
-          <input name="title" type="text" ng-model="vm.asset.title" id="title" class="form-control" placeholder="Title" required>
+          <input name="title" type="text" ng-model="vm.asset.title" id="title" class="form-control" placeholder="Title"
+            required>
           <div ng-messages="vm.form.assetForm.title.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset title is required.</p>
           </div>
@@ -32,7 +51,8 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="description">Description</label>
-          <input name="description" type="text" ng-model="vm.asset.description" id="description" class="form-control" placeholder="Description" required>
+          <input name="description" type="text" ng-model="vm.asset.description" id="description" class="form-control"
+            placeholder="Description" required>
           <div ng-messages="vm.form.assetForm.description.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset description is required.</p>
           </div>
@@ -40,7 +60,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="category">Category</label>
-<!--           
+          <!--           
           <input name="category" type="text" ng-model="vm.asset.category.name" id="description" class="form-control" placeholder="Category" required>
  -->
           <!-- {{vm.asset.category}} -->
@@ -55,7 +75,8 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="brand">Brand</label>
-          <input name="brand" type="text" ng-model="vm.asset.brand" id="brand" class="form-control" placeholder="Description" required>
+          <input name="brand" type="text" ng-model="vm.asset.brand" id="brand" class="form-control" placeholder="Description"
+            required>
           <div ng-messages="vm.form.assetForm.brand.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset brand is required.</p>
           </div>
@@ -64,44 +85,75 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="ether">Status</label>
-          <input name="status" type="text" ng-model="vm.asset.status" id="status" class="form-control" placeholder="Status" required>
-            <div ng-messages="vm.form.assetForm.status.$error" role="alert">
+          <input name="status" type="text" ng-model="vm.asset.status" id="status" class="form-control" placeholder="Status"
+            required>
+          <div ng-messages="vm.form.assetForm.status.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Status is required.</p>
-          </div>  
+          </div>
         </div>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="price">Price</label>
-          <input name="price" type="text" ng-model="vm.asset.price" id="price" class="form-control" placeholder="price" required>
+          <input name="price" type="text" ng-model="vm.asset.price" id="price" class="form-control" placeholder="price"
+            required>
           <div ng-messages="vm.form.assetForm.price.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Price is required.</p>
-          </div>       
+          </div>
         </div>
 
-        <div class="form-group" show-errors>
-          <label class="control-label" for="hashtag">Hashtag</label>
-          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="hashtag" class="form-control" placeholder="hashtag">   
-        </div>
+        <!--         <div class="form-group" show-errors>
+          <label class="control-label" for="hashtag">Hashtag
+            <a ui-sref="hashtags.edit({ hashtagId: vm.hashtag._id })">(edit)</a>
+            <a ui-sref="hashtags.create({ assetId: vm.asset._id })">(create)</a>
+          </label>
+          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="hashtag" class="form-control" placeholder="hashtag" disabled>   
+        </div> -->
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="asset">Inventory</label>       
-          <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required>
+          <label class="control-label" for="asset">Inventory</label>
+          <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control"
+            placeholder="Inventory" required>
+        </div>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="asset">Reward</label>
+          <input name="inventoryCount" type="text" ng-model="vm.asset.reward" id="reward" class="form-control"
+            placeholder="Reward" required>
         </div>
 
         <!-- TODO: only allow seller who created -->
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.asset._id ? 'Update' : 'Create'}}</button>
-          <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>                         
+          <button ng-show="vm.asset._id" type="button" class="btn btn-default" ng-click="vm.remove()">Remove</button>
         </div>
-     
+
         <div class="form-group">
-          <br/>                     
+          <br />
           <div ng-show="vm.error" class="text-danger">
             <strong ng-bind="vm.error"></strong>
           </div>
         </div>
-      
+
       </fieldset>
     </form>
   </div>
+
+
+  <div>
+    <h4>Hashtags</h4>
+    <div class="list-group">
+      <a ng-repeat="hashtag in vm.asset.hashtags" ui-sref="hashtags.edit({ hashtagId: hashtag._id })" class="list-group-item">
+        <small class="list-group-item-text">
+          Posted on
+          <span ng-bind="hashtag.created | date:'mediumDate'"></span>
+          by
+          <span ng-if="hashtag.affiliate" ng-bind="hashtag.affiliate.displayName"></span>
+          <span ng-if="!hashtag.affiliate">Deleted User</span>
+        </small>
+        <h4 class="list-group-item-heading" ng-bind="hashtag.name"></h4>
+      </a>
+      <div class="list-group-item">
+        <button type="button" class="btn btn-default" ui-sref="hashtags.create({assetId: vm.asset._id })">Create</button>
+      </div>
+    </div>
+
 </section>

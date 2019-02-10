@@ -6,7 +6,19 @@
 .asset-picture-thumbnail {
   max-width: 100px;
   max-height: 100px;
-  float: left;
+  float:left;
+}
+
+.row-wrap-content {
+	display: block;
+	overflow: auto;
+}
+
+.upload-image-button {
+  border-radius: 0px;
+  height: 150px;
+  width: 500px;
+  font-size: 50px;
 }
 
 

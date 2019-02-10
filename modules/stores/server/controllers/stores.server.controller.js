@@ -3,11 +3,14 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  mongoose = require('mongoose'),
-  Store = mongoose.model('Store'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+const path = require('path')
+const mongoose = require('mongoose')
+const Store = mongoose.model('Store')
+const StoreAsset = mongoose.model('StoreAsset')
+
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const _ = require('lodash')
+
 
 /**
  * Create a Store
@@ -33,8 +36,19 @@ exports.create = function(req, res) {
 exports.read = function(req, res) {
   // convert mongoose document to JSON
   let store = req.store ? req.store.toJSON() : {};
+  
+  console.log('binding assets')
+  StoreAsset.find({ store: store._id }).sort('-created').populate('asset').exec(function(err, storeAssets) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      store.storeAssets = storeAssets
+      res.jsonp(store);
+    }
+  });
 
-  res.jsonp(store);
 }
 
 /**
@@ -77,7 +91,15 @@ exports.delete = function(req, res) {
  * List of Stores
  */
 exports.list = function(req, res) {
-  Store.find().sort('-created').populate('affiliate', 'displayName').exec(function(err, stores) {
+  
+  let q = req.query
+
+  if (q.storeName) {
+    q.name = q.storeName
+    delete q.storeName
+  }
+
+  Store.find(q).sort('-created').populate('affiliate', 'displayName profileImageURL').exec(function(err, stores) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

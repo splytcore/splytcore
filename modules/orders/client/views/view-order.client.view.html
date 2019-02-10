@@ -1,24 +1,69 @@
 <section>
   <div class="page-header">
-    <h1 ng-bind="vm.order.name"></h1>
+    <h1>Order ID#{{ vm.order._id }}</h1>
+    {{vm.order}}
+    {{vm.asset}}
   </div>
-  <div class="pull-right">
-    <a class="btn btn-primary"
-       ui-sref="orders.edit({ orderId: vm.order._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
+  <div class="col-md-12">
+
+    <form name="vm.form.orderForm" class="form-horizontal" ng-submit="vm.save(vm.form.orderForm.$valid)" novalidate>
+      <fieldset>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="id">ID</label>
+          <input name="id" type="text" ng-model="vm.order._id" id="title" class="form-control" placeholder="Order Id" disabled>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Total Cost</label>
+          <input name="name" type="text" ng-model="vm.order.totalCost" id="trxAmount" class="form-control" placeholder="Trx Amount" disabled>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">totalCount</label>
+          <input name="quantity" type="text" ng-model="vm.order.totalQuantity" id="totalCount" class="form-control" placeholder="totalCount" disabled>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="buyerWallet">Status</label>
+          <input name="status" type="text" ng-model="vm.order.status" id="status" class="form-control" placeholder="Status" disabled>
+        </div>
+
+
+        <div class="form-group">
+          <h3>Items</h3>
+          <ul class="list-group">
+              <li class="list-group-item height">
+                <h4>
+                  <div class="col-sm-4">ID</div>
+                  <div class="col-sm-4">Title</div>
+                  <div class="col-sm-1">Price</div>
+                  <div class="col-sm-1">Quantity</div>
+                  <div class="col-sm-1">Total</div>
+                </h4>
+              </li>  
+              <li ng-repeat="i in vm.order.items" class="list-group-item height">
+                <span class="col-sm-4"> {{i._id }} </span>
+                <span class="col-sm-4"> {{ i.asset.title }} </span>
+                <span class="col-sm-1"> {{ i.asset.price | currency }} </span>
+                <span class="col-sm-1"> {{ i.quantity }} </span>
+                <span class="col-sm-1"> {{ i.quantity * i.asset.price | currency }} </span>               
+              </li>
+              <li class="list-group-item height">
+                <span class="col-sm-9"> Summary </span>
+                <span class="col-sm-1"> {{ vm.order.totalQuantity }} </span>
+                <span class="col-sm-1"> {{ vm.order.totalCost | currency }} </span>                
+              </li>  
+          </ul>
+
+        </div>
+
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
   </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.order.created | date:'mediumDate'"></span>
-      by
-      <span ng-bind="vm.order.user.displayName"></span>
-      <span ng-if="!vm.order.user">Deleted User</span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="vm.order.content"></p>
 </section>

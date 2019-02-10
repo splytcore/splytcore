@@ -22,7 +22,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'seller', 'affiliate', 'customer'],
+    roles: ['user', 'seller', 'affiliate', 'customer', 'guest'],
     allows: [{
       resources: '/api/orders',
       permissions: ['get', 'post']
@@ -34,7 +34,7 @@ exports.invokeRolesPolicies = function () {
     roles: ['guest'],
     allows: [{
       resources: '/api/orders',
-      permissions: ['get', 'post']
+      permissions: ['get']
     }, {
       resources: '/api/orders/:orderId',
       permissions: ['get']
@@ -49,7 +49,7 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If an Order is being processed and the current user created it then allow any manipulation
-  if (req.order && req.user && req.order.user && req.order.user.id === req.user.id) {
+  if (req.order && req.user && req.order.customer && req.order.customer.id === req.user.id) {
     return next();
   }
 

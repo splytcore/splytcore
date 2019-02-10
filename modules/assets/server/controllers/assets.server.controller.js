@@ -7,6 +7,10 @@ const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
 const Asset = mongoose.model('Asset')
+const Hashtag = mongoose.model('Hashtag')
+const multer = require('multer')
+const config = require(path.resolve('./config/config'))
+
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
 const  _ = require('lodash')
@@ -45,7 +49,19 @@ exports.read = function(req, res, next) {
   
   asset.isCurrentUserOwner = req.user && asset.user && asset.user._id.toString() === req.user._id.toString() 
 
-  return res.jsonp(asset)  
+  Hashtag.find({asset: asset._id}).sort('-created').exec(function(err, hashtags) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    // console.log(assets)
+    asset.hashtags = hashtags
+    req.asset = asset
+    next()
+    // res.jsonp(asset)  
+  })
+
 
 }
 
@@ -90,8 +106,11 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  console.log(req.query)
-  Asset.find(req.query).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
+  let q = req.query
+  
+  console.log(q)
+  delete q.sort
+  Asset.find(q).sort(q.sort).populate('user', 'displayName').exec(function(err, assets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -100,19 +119,6 @@ exports.list = function(req, res) {
     // console.log(assets)
     res.jsonp(assets)
   })
-
-
-
-  // switch(listType) {
-  //     case 'ASSETS.LISTMYASSETS':
-  //          exports.listMyAssets(req,res)
-  //         break                       
-  //     case 'ASSETS.LISTBYCATEGORY':
-  //          exports.listByCategory(req,res)
-  //         break    
-  //     default:
-  //          exports.listAll(req,res)
-  // }
 
 }
 
@@ -166,6 +172,62 @@ exports.listAll = function(req, res) {
 
 }
 
+exports.uploadAssetImage = function(req, res) {
+
+  var upload = multer(config.uploads.assetUpload).single('newAssetImage');
+  var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+  
+  // Filtering to upload only images
+  upload.fileFilter = profileUploadFileFilter;
+
+  upload(req, res, function (uploadError) {
+    if(uploadError) {
+      console.log(uploadError)
+      return res.status(400).send({
+        message: 'Error occurred while uploading profile picture'
+      })
+    } else {
+      res.jsonp({ imageURL: config.uploads.assetUpload.dest + req.file.filename })
+    }
+  })
+}
+
+exports.incrementView = function(req, res, next) {
+  console.log('asset coming up for incrementing view')
+  console.log(req.asset)
+  if(!req.asset || req.user) {
+    console.log('asset not found in db or to increment view count or you have to be guest role')
+    return res.jsonp(req.asset)
+  }
+
+  Asset.findByIdAndUpdate(req.asset._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
+    if(err || !asset) {
+      console.log('asset not found to update its view count')
+    }
+    res.jsonp(asset)
+  })
+}
+
+exports.incrementBuy = function(req, res, next) {
+
+  if(!req.orderItems) {
+    console.log('orders are not present, skipping incrementing buy count for assets')
+    return res.jsonp(req.order)
+  }
+
+  async.each(req.orderItems, (orderItem, callback) => {
+    Asset.findByIdAndUpdate(orderItem.asset, { $inc: { buys: 1 }}, function(err, asset) {
+      callback()
+    })
+  }, (err) => {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    res.jsonp(req.order);      
+  })
+}
 
 /**
  * asset middleware

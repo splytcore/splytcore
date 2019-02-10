@@ -27,5 +27,10 @@
       state: 'sellers.assets',
       roles: ['seller']
     })
+    Menus.addSubMenuItem('topbar', 'sellers', {
+      title: 'Batch Upload Assets',
+      state: 'sellers.batchuploadassets',
+      roles: ['seller']
+    })
   }
 }())

@@ -7,8 +7,11 @@
     <form name="vm.form.assetForm" class="form-horizontal" novalidate>
       <fieldset>
 
-        <div class="form-group">
-          <img ng-src="modules/assets/client/img/asset.jpeg" class="img-thumbnail asset-picture-detail">
+        <div class="form-group" ng-show="{{vm.asset.imageURL[0] !== ''}}">
+          <img  src="{{vm.asset.imageURL[0]}}" class="img-thumbnail asset-picture-detail">
+        </div>
+        <div class="form-group" ng-hide="{{vm.asset.imageURL[0] !== ''}}">
+          <img  ng-src="modules/assets/client/img/asset.jpeg" class="img-thumbnail asset-picture-detail">
         </div>
 
         <div class="form-group" show-errors>
@@ -74,13 +77,19 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="hashtag">Hashtag</label>
-          <input name="hashtag" type="text" ng-model="vm.asset.hashtag" id="hashtag" class="form-control" placeholder="hashtag">   
+          <label class="control-label" for="asset">Inventory</label>       
+          <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="seller">Seller</label>       
+          <input name="seller" type="text" ng-model="vm.asset.user.displayName" id="seller" class="form-control" placeholder="seller" required>
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="asset">Inventory</label>       
-          <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required>
+          <label class="control-label" for="views">Views</label>       
+          <input name="views" type="text" ng-model="vm.asset.views" id="views" class="form-control" placeholder="views" disabled>
         </div>
 
 
@@ -91,16 +100,17 @@
           </select>                     
         </div>
      
-      <div class="form-group">
-        <br/>
-        <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>                          
-        <div ng-show="vm.error" class="text-danger">
-          <strong ng-bind="vm.error"></strong>
-        </div>
-      </div>
+        <div class="form-group">
+          <br/>
+          <button type="submit" ng-show="!vm.asset._id" class="btn btn-default"> Create </button>                          
+          <div ng-show="vm.error" class="text-danger">
+            <strong ng-bind="vm.error"></strong>
+          </div>
+        </div>        
       
       </fieldset>
     </form>
   </div>
+
 
 </section>

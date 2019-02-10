@@ -7,12 +7,12 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Reward Schema
+ * Asset Schema
  */
 var AssetSchema = new Schema({
   title: {
     type: String,
-    default: 'Fake Asset #' + Date.now,
+    default: '',
     required: 'Please fill title',
     trim: true
   },   
@@ -32,20 +32,20 @@ var AssetSchema = new Schema({
   },  
   inventoryCount: {
     type: Number,
-    default: 2
+    default: 1
   },
   status: {
     type: String,
     default: 'active',
     enum: [ 'active', 'in_arbitration', 'expired', 'sold_out', 'closed', 'other']
   },
-  imageURL: {
+  imageURL: [{
     type: String,
     default: 'modules/assets/client/img/asset.jpeg'
-  },     
+  }],     
   price: {
     type: Number,
-    required: 'Please fill price'
+    default: 0
   },  
   //seller     
   user: {
@@ -58,19 +58,36 @@ var AssetSchema = new Schema({
   },
   brand: {
     type: String,
-    required: 'Please fill brand',
     trim: true
   },
-  //TODO: create collection instead
-  hashtag: {
-    type: String,
-    trim: true,
-    unique: true
-  },
+  //transient
+  hashtags: [{
+    type: Schema.ObjectId,
+    ref: 'Hashtag'
+  }],
   sku: {
     type: String,
     trim: true
-  }           
+  },
+  views: {
+    type: Number,
+    default: 0
+  },
+  buys: {
+    type: Number,
+    default: 0
+  },
+  reward: {
+    type: Number,
+    required: "Reward is required, 0-100",
+    min: 0,
+    max: 100
+  }       
 })
+
+// AssetSchema.post('init', function(asset, next) {
+//   console.log('TODO: bind asset transients here')
+//   next()
+// })
 
 mongoose.model('Asset', AssetSchema);

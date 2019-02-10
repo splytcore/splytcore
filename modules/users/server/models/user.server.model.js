@@ -90,11 +90,6 @@ var UserSchema = new Schema({
     type: String,
     required: 'Provider is required',
     default: 'local'
-  },  
-  instagram: {
-    type: String,
-    default: '',
-    validate: [validateInstagramStrategyProperty, 'Please fill in your Instagram Username']
   },
   igAccessToken: {
     type: String,
@@ -132,7 +127,16 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  termsAndConditions: {
+    type: Boolean,
+    required: true
+  },
+  instagramUsername: {
+    type: String,
+    default: ''
   }
+
 });
 
 /**

@@ -4,7 +4,6 @@ var defaultEnvConfig = require('./default');
 
 module.exports = {  
   db: {
-    // uri: 'mongodb://35.162.114.40/checkin-stage', // points to AWS DEV - MONGODB
     uri: 'mongodb://localhost/dev-splyt', // points to AWS DEV - MONGODB
     options: {
       user: '',
@@ -67,5 +66,15 @@ module.exports = {
         roles: ['user', 'admin']
       }
     }
+  },
+  instagram: {
+    clientId: '09156f2dbd264bdb8652cff79b354b36',
+    clientSecret: 'ebde362954ba4ee2814e2778d78ef146'
+  },
+  stripe: {
+    // Test secret key
+    secretKey: 'sk_test_W2U93hsqzkoPTsk6ZNyNkWza'
+    // Live secret key
+    //secretKey: 'sk_live_yKzwUTAPUFOvO8YstDg2N90e'
   }
 };

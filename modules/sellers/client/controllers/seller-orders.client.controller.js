@@ -1,15 +1,15 @@
 (function () {
-  'use strict';
+  'use strict'
 
   angular
     .module('sellers')
-    .controller('SellerOrdersController', SellerOrdersController);
+    .controller('SellerOrdersController', SellerOrdersController)
 
-  SellerOrdersController.$inject = ['OrdersService', '$state'];
+  SellerOrdersController.$inject = ['OrdersService', '$state']
 
   function SellerOrdersController(OrdersService, $state) {
     var vm = this;
 
-    vm.orders = OrdersService.query({listType: 'ORDERS.LISTBYASSETID', assetId: $state.params.assetId });
+    vm.orders = OrdersService.query()
   }
 }())

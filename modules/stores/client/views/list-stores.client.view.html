@@ -7,11 +7,13 @@
        ui-sref="stores.view({ storeId: store._id })"
        class="list-group-item">
       <small class="list-group-item-text">
-        Posted on
+        Created on
         <span ng-bind="store.created | date:'mediumDate'"></span>
         by
         <span ng-if="store.affiliate" ng-bind="store.affiliate.displayName"></span>
         <span ng-if="!store.affiliate">Deleted Affiliate</span>
+        <span><img ng-src="{{store.affiliate.profileImageURL}}" alt="{{store.affiliate.displayName}}" class="header-profile-image" />
+        </span>
       </small>
       <h4 class="list-group-item-heading" ng-bind="store.name"></h4>
     </a>

@@ -25,6 +25,14 @@ angular.module('users').config(['$stateProvider',
         url: '/picture',
         templateUrl: 'modules/users/client/views/settings/change-profile-picture.client.view.html'
       })
+      .state('settings.authenticateInstagram', {
+        url: '/authenticateInstagram',
+        templateUrl: 'modules/users/client/views/settings/authenticate-instagram.client.view.html',
+        controllerAs: 'vm',
+        data: {
+          roles: ['affiliate']
+        }
+      })
       .state('authentication', {
         abstract: true,
         url: '/authentication',
@@ -38,6 +46,10 @@ angular.module('users').config(['$stateProvider',
         url: '/signin?err',
         templateUrl: 'modules/users/client/views/authentication/signin.client.view.html'
       })
+      .state('authentication.termsAndConditions', {
+        url: '/terms',
+        templateUrl: 'modules/users/client/views/authentication/terms.client.view.html'
+      })      
       .state('password', {
         abstract: true,
         url: '/password',

@@ -88,7 +88,7 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
-  app.use(cors({credentials: true, origin: ['http://13.58.147.177','http://localhost:8100', 'http://localhost:5000']}));  
+  app.use(cors({credentials: true, origin: ['http://localhost:3000', 'http://localhost:8100', 'http://localhost:5000']}));  
 };
 
 /**

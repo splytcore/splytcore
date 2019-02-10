@@ -9,6 +9,8 @@ const Asset = mongoose.model('Asset')
 const Store = mongoose.model('Store')
 const Cart = mongoose.model('Cart')
 const CartItem = mongoose.model('CartItem')
+const Hashtag = mongoose.model('Hashtag')
+
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const  _ = require('lodash')
 const curl = new (require('curl-request'))()
@@ -31,14 +33,17 @@ exports.create = function(req, res) {
 
 function addToCart (req, res) {
 
-  let cartId = req.body.cart
+  let cartId = req.cookies ? req.cookies.cartId  : null
+  let storeId = req.cookies? req.cookies.storeId : null
 
-  getCart(cartId)
+  getCart(cartId, storeId)
     .then((cart) => {
-      let cartItem = new CartItem(req.body)
-      cartItem.cart = cart
-      cartItem.save(function(err) {
+      res.cookie('cartId', cart.id)
+      req.body.cart = cart
+      console.log(req.body)
+      CartItem.findOneAndUpdate({ cart: cart.id, asset: req.body.asset }, req.body, { new: true, upsert:true }, (err, cartItem) => {
         if (err) {
+          console.log(err)
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           })
@@ -58,51 +63,58 @@ function addToCart (req, res) {
 
 function createCheckoutFromSocialAccount(req, res) {
 
-  console.log(req.body)
+  // console.log(req.body)
 
-  let cartId = req.body.cart
+  console.log(req.cookies)
+
+  let cartId = req.cookies ? req.cookies.cartId : null
   let storeId = req.body.store
   
   let cart
   let store
-  let asset
-
+  let hashtag
 
   getAffiliateFromStore(storeId)
-    .then((affiliate)=> {
-      console.log(affiliate)
-      return getHashtagByInstagram(affiliate)
+    .then((res_affiliate)=> {
+      console.log(res_affiliate)
+      return getHashtagByInstagram(res_affiliate)
+      // return 'baller'
     })
     .then((hashtag)=> {
       console.log('hashtag ' + hashtag)
       return getAssetByHashtag(hashtag)
-      
     })
-    .then((res_asset)=> {
-      asset = res_asset
-      return getCart(cartId) 
+    .then((res_hashtag)=> {
+      hashtag = res_hashtag
+      return getCart(cartId, storeId) 
     })
     .then((res_cart)=> {
       // console.log(cart)
       // console.log(asset)
-      var cartItem = new CartItem(req.body)
+      res.cookie('cartId', res_cart.id)
+
+      let cartId = res_cart.id
+
+      let cartItem = req.body
       cartItem.cart = res_cart
-      cartItem.asset = asset
+      cartItem.asset = hashtag.asset
+      cartItem.hashtag = hashtag
       cartItem.store = store
-      cartItem.save(function(err) {
+
+      CartItem.findOneAndUpdate({ cart: cartId, asset: cartItem.asset.id }, cartItem, { new: true, upsert:true }, (err, result_cartItem) => {
         if (err) {
+          console.log(err)
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           })
         } else {
-          console.log(cartItem)
-          res.jsonp(cartItem)
+          res.jsonp(result_cartItem)
         }
       })
     })
     .catch((err) => {
       return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+          message: err.toString()
         })
     })
 }
@@ -114,6 +126,8 @@ function getAffiliateFromStore(storeId) {
       Store.findById(storeId).populate('affiliate', 'igAccessToken').exec(function(err, store) {
         if (err) {
           reject(err)
+        } else if (!store) {
+          reject(new Error('STORE NOT FOUND!'))
         } else {
           resolve(store.affiliate)
         }
@@ -129,7 +143,7 @@ function getAffiliateFromStore(storeId) {
 function getHashtagByInstagram(affiliate) {
   return new Promise((resolve, reject) => {
     if(!affiliate.igAccessToken){
-      reject()
+      reject(new Error('Instagram access token not found!'))
     }
     let getProfileUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
 
@@ -137,7 +151,7 @@ function getHashtagByInstagram(affiliate) {
     .then(({statusCode, body}) => {
       if(statusCode === 200) {
         let tag = JSON.parse(body).data[0].tags[0]
-        console.log(tag)
+        // console.log(tag)
         resolve(tag)
       } else {
         console.log(statusCode, body)
@@ -145,7 +159,7 @@ function getHashtagByInstagram(affiliate) {
     })
     .catch(e => {
       console.log(e)
-      reject()
+      reject(e)
     })
   })
   
@@ -156,12 +170,13 @@ function getHashtagByInstagram(affiliate) {
 * Finds current existing cart header
 * Creates new one if it doesn't exist
 */
-function getCart(cartId) {
+function getCart(cartId, storeId) {
 
   return new Promise ((resolve, reject) => {
     if (!cartId) {
       // console.log('create new cart')
       let cart = new Cart()
+      cart.store = storeId
       cart.save((err) => {
         if (err) {
           reject(err)
@@ -191,13 +206,17 @@ function getAssetByHashtag (hashtag) {
         console.log('no hashtag included')
         resolve(null)
     } else  {
-      Asset.findOne({ hashtag: hashtag }).exec(function(err, asset) {
+
+      Hashtag.findOne({ name: hashtag }).populate('asset').exec(function(err, res_hashtag) {
         if (err) {
           reject(err)
-        } else {
-          console.log('hashtag result form query ')
-          console.log(asset)
-          resolve(asset)
+        } else if (!res_hashtag) {
+          console.log('not hashtag found')
+          reject(new Error('No Hashtag found in system for ' + hashtag))
+        } else {          
+          // console.log('hashtag result form query ')
+          // console.log(hashtag)
+          resolve(res_hashtag)
         }
 
       })

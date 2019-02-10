@@ -3,18 +3,19 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 /**
  * Store Schema
  */
-var StoreSchema = new Schema({
+let StoreSchema = new Schema({
   name: {
     type: String,
     default: '',
     required: 'Please fill Store name',
-    trim: true
+    trim: true,
+    unique: true
   },
   description: {
     type: String,
@@ -28,6 +29,11 @@ var StoreSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Category'
   }],   
+  //transient field
+  storeAssets: [{
+    type: Schema.ObjectId,
+    ref: 'StoreAsset'
+  }],  
   affiliate: {
     type: Schema.ObjectId,
     ref: 'User'

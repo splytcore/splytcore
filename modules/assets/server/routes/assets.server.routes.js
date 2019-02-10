@@ -14,10 +14,16 @@ module.exports = function(app) {
     .get(assets.list)
     .post(assets.create)
 
+  //Upload asset images
+  app.route('/api/assets/picture/upload').post(assets.uploadAssetImage)
+
+
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
-    .get(assets.read)
+    .get(assets.read, assets.incrementView)
     .put(assets.update)
     .delete(assets.delete)
+
+
 
   // Finish by binding the asset middleware
   app.param('assetId', assets.assetByID)

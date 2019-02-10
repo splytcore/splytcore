@@ -1,0 +1,31 @@
+<section>
+  <div class="page-header">
+    <h1>My Stores</h1>
+  </div>
+
+  <div ng-show="vm.error" class="text-danger">
+    <strong ng-bind="vm.error"></strong>
+  </div>
+
+  <div ng-show="vm.success" class="text-success">
+    <strong>Success!</strong>
+  </div>
+
+  <br/>  
+  <div class="list-group">
+    <a ng-repeat="store in vm.stores"
+       ui-sref="affiliates.storesEdit({ storeId: store._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="store.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="store.affiliate" ng-bind="store.affiliate.user.displayName"></span>
+        <span ng-if="!store.affiliate">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="store.name"></h4>
+    </a>
+  </div>
+
+
+</section>

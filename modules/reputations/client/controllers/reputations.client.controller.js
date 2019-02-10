@@ -6,9 +6,9 @@
     .module('reputations')
     .controller('ReputationsController', ReputationsController);
 
-  ReputationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reputationResolve', '$stateParams', '$cookies', 'EthService'];
+  ReputationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'reputationResolve', '$stateParams', '$cookies'];
 
-  function ReputationsController ($scope, $state, $window, Authentication, reputation, $stateParams, $cookies, EthService) {
+  function ReputationsController ($scope, $state, $window, Authentication, reputation, $stateParams, $cookies) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -51,7 +51,6 @@
       }
 
       function successCallback(res) {
-        EthService.updateUserBalances()
         $state.go('reputations.listPending')
 
       }

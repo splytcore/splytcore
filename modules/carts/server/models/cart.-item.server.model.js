@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
-
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 /**
  * Cart Item Schema
  */
-var CartItemSchema = new Schema({
+let CartItemSchema = new Schema({
   cart: {
     type: Schema.ObjectId,
     ref: 'Cart'
@@ -18,10 +18,19 @@ var CartItemSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Asset'
   },
+  hashtag: {
+    type: Schema.ObjectId,
+    ref: 'Hashtag'
+  },  
   quantity: {
     type: Number,
     default: 1
   }  
 })
 
-mongoose.model('CartItem', CartItemSchema);
+
+CartItemSchema.index({ cart: 1, asset: 1 }, { unique: true })
+
+CartItemSchema.plugin(deepPopulate)
+
+mongoose.model('CartItem', CartItemSchema)

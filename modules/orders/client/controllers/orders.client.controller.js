@@ -6,9 +6,9 @@
     .module('orders')
     .controller('OrdersController', OrdersController);
 
-  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', 'EthService', '$cookies', 'AssetsManagerService', 'MarketsService'];
+  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', '$cookies'];
 
-  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, EthService, $cookies, AssetsManagerService, MarketsService) {
+  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, $cookies) {
     var vm = this
     // console.log($stateParams)
     vm.user = Authentication.user
@@ -17,15 +17,13 @@
     vm.form = {}
     vm.remove = remove
     vm.save = save
-    vm.applyAction = applyAction
-
     vm.updateTrxAmount = updateTrxAmount
 
     vm.etherscanURL = $cookies.etherscanURL
     
     vm.requestRefund = requestRefund
     vm.approveRefund = approveRefund
-    vm.applyAction = applyAction
+
 
     //TODO: save actions in config file
     vm.actions = [ 
@@ -35,31 +33,31 @@
 
     function requestRefund() {
 
-      EthService.requestRefund(vm.order._id)
-        .success((result) => {
-          console.log(result)
-          alert(result)
-          // $window.location.reload();          
-        })
-        .error((err) => {
-          console.log(err)
-          vm.error = err.message          
-        })
+      // EthService.requestRefund(vm.order._id)
+      //   .success((result) => {
+      //     console.log(result)
+      //     alert(result)
+      //     // $window.location.reload();          
+      //   })
+      //   .error((err) => {
+      //     console.log(err)
+      //     vm.error = err.message          
+      //   })
 
     }
 
 
     function approveRefund() {
 
-      EthService.approveRefund(vm.order._id)
-        .success((result) => {
-          console.log(result)
-          alert(result)
-          // $window.location.reload();          
-        })
-        .error((err) => {
-          console.log(err)
-        })
+      // EthService.approveRefund(vm.order._id)
+      //   .success((result) => {
+      //     console.log(result)
+      //     alert(result)
+      //     // $window.location.reload();          
+      //   })
+      //   .error((err) => {
+      //     console.log(err)
+      //   })
 
     }
 
@@ -82,7 +80,7 @@
         return false;
       }
 
-      if (parseInt($stateParams.status) != 1) {
+      if (parseInt($stateParams.status) !== 1) {
         alert('Asset must be in status 1 to purchase')
         return false
       }
@@ -104,22 +102,6 @@
         vm.error = res.data.message
       }
     }
-    
-    function applyAction() {
-      console.log(vm.selectedAction)
-      switch(parseInt(vm.selectedAction)) {
-          case 1:
-              requestRefund()              
-              break;
-          case 2:
-              approveRefund()              
-              break;        
-          default:
-              alert('NOT VALID SELECTION')
-              break;
-      } 
-      EthService.updateUserBalances()     
-    }   
 
   }
 }());

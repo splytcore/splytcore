@@ -29,7 +29,7 @@
       })
       .state('affiliates.stores', {
         url: '/stores',
-        templateUrl: 'modules/affiliates/client/views/stores.client.view.html',
+        templateUrl: 'modules/affiliates/client/views/stores-affiliate.client.view.html',
         controller: 'AffiliatesStoreController',
         controllerAs: 'vm',
         // resolve: {
@@ -39,15 +39,15 @@
           roles: ['affiliate', 'admin'],
           pageTitle: 'Affiliates Category Create'
         }
-      })     
-      .state('affiliates.categories', {
-        url: '/categories',
-        templateUrl: 'modules/affiliates/client/views/categories.client.view.html',
-        controller: 'AffiliatesCategoryController',
+      })         
+      .state('affiliates.storesEdit', {
+        url: '/stores/:storeId',
+        templateUrl: 'modules/affiliates/client/views/assets-affiliate.client.view.html',
+        controller: 'AffiliatesAssetsController',
         controllerAs: 'vm',
-        // resolve: {
-        //   affiliateResolve: newAffiliate
-        // },
+        resolve: {
+          storeResolve: getStore
+        },
         data: {
           roles: ['affiliate', 'admin'],
           pageTitle: 'Affiliates Category Create'
@@ -68,4 +68,14 @@
   function newAffiliate(AffiliatesService) {
     return new AffiliatesService();
   }
+
+
+  getStore.$inject = ['$stateParams', 'StoresService'];
+
+  function getStore($stateParams, StoresService) {
+    return StoresService.get({
+      storeId: $stateParams.storeId
+    }).$promise;
+  }
+
 }());
