@@ -7,6 +7,199 @@
 	},
 	"item": [
 		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c5783e3-2db7-4494-8b6b-d61b9221fa16",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"userEmail\", data.email);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "6fa48c92-b53d-4dcf-9e00-115e05d34db6",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "roles",
+									"value": "affiliate",
+									"description": "required: affiliate, seller",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "first name here",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "last name here",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "josh+{{$guid}}@spl.yt",
+									"description": "required, unique",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "splytcore2017!",
+									"description": "required, 1 special char, 1 number 8+ length total",
+									"type": "text"
+								},
+								{
+									"key": "termsAndConditions",
+									"value": "true",
+									"description": "required: true or false",
+									"type": "text"
+								},
+								{
+									"key": "instagram",
+									"value": "asdf",
+									"description": "required: any string",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/signup",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "Signup first then sign in"
+					},
+					"response": []
+				},
+				{
+					"name": "Sign in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "49c54557-c352-4523-b6e4-608a5b932965",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"sessionId\", data.sessionId);",
+									"if(data.user.roles.indexOf('seller') > -1) {",
+									"    pm.globals.set(\"sellerId\", data.user._id);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{userEmail}}",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "splytcore2017!",
+									"description": "required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/signin",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						},
+						"description": "Sign in after signing up"
+					},
+					"response": []
+				},
+				{
+					"name": "Affiliate Only - Get recent post images",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{qa}}/api/users/background",
+							"host": [
+								"{{qa}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"background"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Affiliate",
 			"item": [
 				{
@@ -19,7 +212,7 @@
 								"exec": [
 									"var data = JSON.parse(responseBody);",
 									"pm.globals.set(\"storeId\", data._id);",
-									""
+									"pm.globals.set(\"storeName\", data.name);"
 								],
 								"type": "text/javascript"
 							}
@@ -45,16 +238,16 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "my own store",
+									"value": "lenovostore",
 									"description": "required: any string",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{qa}}/api/stores",
+							"raw": "{{local}}/api/stores",
 							"host": [
-								"{{qa}}"
+								"{{local}}"
 							],
 							"path": [
 								"api",
@@ -261,189 +454,6 @@
 			]
 		},
 		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "Signup",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "6c5783e3-2db7-4494-8b6b-d61b9221fa16",
-								"exec": [
-									"var data = JSON.parse(responseBody);",
-									"pm.globals.set(\"userEmail\", data.email);",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "roles",
-									"value": "seller",
-									"description": "required: affiliate, seller",
-									"type": "text"
-								},
-								{
-									"key": "firstName",
-									"value": "first name here",
-									"description": "required",
-									"type": "text"
-								},
-								{
-									"key": "lastName",
-									"value": "last name here",
-									"description": "required",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "hi9999@spl.yt",
-									"description": "required, unique",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "splytcore2017!",
-									"description": "required, 1 special char, 1 number 8+ length total",
-									"type": "text"
-								},
-								{
-									"key": "termsAndConditions",
-									"value": "true",
-									"description": "required: true or false",
-									"type": "text"
-								},
-								{
-									"key": "instagram",
-									"value": "asdf",
-									"description": "required: any string",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/auth/signup",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"signup"
-							]
-						},
-						"description": "Signup first then sign in"
-					},
-					"response": []
-				},
-				{
-					"name": "Sign in",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "49c54557-c352-4523-b6e4-608a5b932965",
-								"exec": [
-									"var data = JSON.parse(responseBody);",
-									"pm.globals.set(\"sessionId\", data.sessionId);",
-									"if(data.user.roles.indexOf('seller') > -1) {",
-									"    pm.globals.set(\"sellerId\", data.user._id);",
-									"}",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "email",
-									"value": "{{userEmail}}",
-									"description": "required",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "splytcore2017!",
-									"description": "required",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/auth/signin",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"signin"
-							]
-						},
-						"description": "Sign in after signing up"
-					},
-					"response": []
-				},
-				{
-					"name": "Affiliate get latest post instagram image",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{qa}}/api/users/background",
-							"host": [
-								"{{qa}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"background"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Seller",
 			"item": [
 				{
@@ -486,7 +496,7 @@
 								},
 								{
 									"key": "imageURL",
-									"value": "[ \"./modules/assets/client/img/uploads/5615f844b9594944b286108cfac1c56c\" ]",
+									"value": "\"./modules/assets/client/img/uploads/5615f844b9594944b286108cfac1c56c\"",
 									"description": "!required: full image url or partial url",
 									"type": "text"
 								},
@@ -561,6 +571,60 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Consumer",
+			"item": [
+				{
+					"name": "Get Store by store name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"affiliateId\", data[0].affiliate._id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/stores?storeName={{storeName}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"stores"
+							],
+							"query": [
+								{
+									"key": "storeName",
+									"value": "{{storeName}}"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				}
+			],
+			"description": "Consumers/Guests who comein to checkout/buy a product"
 		}
 	],
 	"event": [
@@ -587,13 +651,13 @@
 	],
 	"variable": [
 		{
-			"id": "348d553a-6461-44b9-81e7-d4b2e5dc147c",
+			"id": "feac5a68-2a78-4013-b5f7-64d716c82d51",
 			"key": "local",
 			"value": "localhost:3000",
 			"type": "string"
 		},
 		{
-			"id": "2ec1b5c1-6eec-4ca5-9c0f-490a4b2eb02a",
+			"id": "af05b9da-7484-4ae7-9cdb-0a1ec572248c",
 			"key": "qa",
 			"value": "https://qa.spl.yt",
 			"type": "string"
