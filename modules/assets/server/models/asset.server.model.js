@@ -79,7 +79,7 @@ var AssetSchema = new Schema({
   },
   reward: {
     type: Number,
-    required: "Reward is required, 0-100",
+    required: 'Reward is required, 0-100',
     min: 0,
     max: 100
   }       

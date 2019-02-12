@@ -39,4 +39,38 @@ exports.renderNotFound = function (req, res) {
       res.send('Path not found');
     }
   });
-};
+}
+
+// Takes care of global pagination, sort with any db key and sort order
+exports.paginate = function (req, res, next) {
+
+  if(!req.query.limit && !req.query.skip) {
+    console.log('limit params not found')
+    return next()
+  }
+
+  // Handles pagination
+  req.paginate = {
+    skip: req.query.skip > 0 ? parseInt(req.query.skip) : 0,
+    limit: req.query.limit > 0 ? parseInt(req.query.limit) : 10
+  }
+
+  // Handles sort key and order
+  if(req.query.sort) {
+    let sortOrder = req.query.sort[0]
+    let sort
+    if( sortOrder === '-' && req.query.sort.length > 0 ) {
+      sort = req.query.sort.split('-')[1]
+      req.paginate.sort = {
+        [sort] : -1 
+      }
+    } else {
+      sort = req.query.sort
+      req.paginate.sort = {
+        [sort] : 1
+      }
+    }
+  }
+
+  next()
+}
