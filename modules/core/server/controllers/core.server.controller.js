@@ -43,11 +43,11 @@ exports.renderNotFound = function (req, res) {
 
 // Takes care of global pagination, sort with any db key and sort order
 exports.paginate = function (req, res, next) {
-
-  if(!req.query.limit && !req.query.skip) {
-    console.log('limit params not found')
-    return next()
-  }
+  // commented this out to force limit 10 items if query params are not present
+  // if(!req.query.limit && !req.query.skip) {
+  //   console.log('limit params not found')
+  //   return next()
+  // }
 
   // Handles pagination
   req.paginate = {
