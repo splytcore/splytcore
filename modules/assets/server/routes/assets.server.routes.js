@@ -3,15 +3,17 @@
 /**
  * Module dependencies
  */
+const path = require('path')
 const assetsPolicy = require('../policies/assets.server.policy')
 const assets = require('../controllers/assets.server.controller')
-const path = require('path')
+const core = require(path.resolve('./modules/core/server/controllers/core.server.controller'))
 // const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))  
 
+console.log(core.paginate)
 module.exports = function(app) {
   // assets Routes
   app.route('/api/assets').all(assetsPolicy.isAllowed)
-    .get(assets.list)
+    .get(core.paginate, assets.list)
     .post(assets.create)
 
   //Upload asset images

@@ -105,18 +105,14 @@ exports.delete = function(req, res) {
  * List of assets
  */
 exports.list = function(req, res) {
-
-  let q = req.query
-  
-  console.log(q)
-  delete q.sort
-  Asset.find(q).sort(q.sort).populate('user', 'displayName').exec(function(err, assets) {
+ 
+  Asset.find({}, {}, req.paginate).populate('user', 'displayName').exec(function(err, assets) {
     if (err) {
+      console.log(err)
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
     }
-    // console.log(assets)
     res.jsonp(assets)
   })
 
@@ -128,7 +124,7 @@ exports.list = function(req, res) {
  */
 
 exports.listMyAssets = function(req, res) {
-
+  
   Asset.find({ user : req.user }).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
     if (err) {
       return res.status(400).send({

@@ -289,13 +289,27 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{local}}/api/assets",
+							"raw": "{{local}}/api/assets?sort=-title&skip=2&limit=3",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
 								"assets"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "-title"
+								},
+								{
+									"key": "skip",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "3"
+								}
 							]
 						},
 						"description": "List all products so i can choose what to choose to represent as an affiliate"
@@ -764,13 +778,13 @@
 	],
 	"variable": [
 		{
-			"id": "feac5a68-2a78-4013-b5f7-64d716c82d51",
+			"id": "810e5897-c9ce-4664-a14f-412cb26294e3",
 			"key": "local",
 			"value": "localhost:3000",
 			"type": "string"
 		},
 		{
-			"id": "af05b9da-7484-4ae7-9cdb-0a1ec572248c",
+			"id": "bae7f31a-5d0b-451b-a38c-d5026faaef75",
 			"key": "qa",
 			"value": "https://qa.spl.yt",
 			"type": "string"

@@ -57,7 +57,8 @@
             inventoryCount : dataArray[x][keepColumns[3]],
             price: parseFloat(dataArray[x][keepColumns[4]]),
             imageURL: dataArray[x][keepColumns[5]],
-            hashtag: dataArray[x][keepColumns[0]] === '' ? dataArray[x][0] : dataArray[x][keepColumns[0]]
+            hashtag: dataArray[x][keepColumns[0]] === '' ? dataArray[x][0] : dataArray[x][keepColumns[0]],
+            reward: 0
           }
           newData.push(asset)
           if(x + 1 ===  dataArray.length) {
