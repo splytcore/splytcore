@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1128304c-a5e5-4356-ae5c-cd48fab9cefb",
+		"_postman_id": "d1bc7cb4-4c01-41c0-91af-65adfd1dcca3",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -230,6 +230,11 @@
 							{
 								"key": "Cookie",
 								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "storeId={{storeId}}",
 								"type": "text"
 							}
 						],
@@ -620,6 +625,114 @@
 							]
 						},
 						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Cart from Instagram",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "storeId={{storeId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "store",
+									"value": "{{storeId}}",
+									"description": "store id\n",
+									"type": "text"
+								},
+								{
+									"key": "fromInstagram",
+									"value": "true\n\n",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/cartsitems",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"cartsitems"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item to Cart From Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "asset",
+									"value": "{{assetId}}",
+									"description": "assetid\n",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "store",
+									"value": "{{storeId}}",
+									"type": "text"
+								},
+								{
+									"key": "fromInstagram",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/cartsitems",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"cartsitems"
+							]
+						}
 					},
 					"response": []
 				}

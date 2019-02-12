@@ -60,7 +60,14 @@
           console.log(vm.hashtagAssets)
 
         })
-    } 
+    } else if ($cookies.cartId) {
+      CartsService.get({ cartId: $cookies.cartId }).$promise
+        .then((cart) => {
+          console.log('updated card')
+          console.log(vm.cart)
+          vm.cart = cart
+       })      
+    }
     
 
     
@@ -101,6 +108,7 @@
       let cartItem = new CartsItemsService()
       cartItem.cart = $cookies.cartId
       cartItem.store = vm.store._id
+      cartItem.fromInstagram = true
       cartItem.quantity = 1
       cartItem.$save()
         .then((result) => {
@@ -129,38 +137,38 @@
       $rootScope.shipping = vm.order.shipping
 
       //TESTING WITHOUT CC
-      // vm.order.$save(res => {
-      //   alert('new order created successful!')   
-      //   $state.go('orders.view', { orderId: res._id })
-      // }, (error) => {
-      //   console.log('error')
-      //   console.log(error)
-      //   vm.error = error.toString()
-      // })
-
-
-      stripe.createToken(card)
-      .then(res => {
-        if (res.error) {
-          // Inform the user if there was an error.
-          var errorElement = document.getElementById('card-errors');
-          errorElement.textContent = res.error.message;
-        } else {
-          // Send the token to your server.
-          vm.order.stripeToken = res.token.id
-          vm.order.$save(res => {
-            alert('new order created successful!')
-            // vm.cart = null
-            // vm.totalQuantity = 0
-            // vm.totalCost = 0      
-            $state.go('orders.view', { orderId: res._id })
-          }, (error) => {
-            console.log('error')
-            console.log(error)
-            vm.error = error.toString()
-          })
-        }
+      vm.order.$save(res => {
+        alert('new order created successful!')   
+        $state.go('orders.view', { orderId: res._id })
+      }, (error) => {
+        console.log('error')
+        console.log(error)
+        vm.error = error.toString()
       })
+
+
+      // stripe.createToken(card)
+      // .then(res => {
+      //   if (res.error) {
+      //     // Inform the user if there was an error.
+      //     var errorElement = document.getElementById('card-errors');
+      //     errorElement.textContent = res.error.message;
+      //   } else {
+      //     // Send the token to your server.
+      //     vm.order.stripeToken = res.token.id
+      //     vm.order.$save(res => {
+      //       alert('new order created successful!')
+      //       // vm.cart = null
+      //       // vm.totalQuantity = 0
+      //       // vm.totalCost = 0      
+      //       $state.go('orders.view', { orderId: res._id })
+      //     }, (error) => {
+      //       console.log('error')
+      //       console.log(error)
+      //       vm.error = error.toString()
+      //     })
+      //   }
+      // })
 
     }
 

@@ -33,7 +33,8 @@
       cartItem.asset = assetId
       cartItem.quantity = vm.qty
       cartItem.storeId = $cookies.storeId
-
+      cartItem.fromInstagram = false
+      
       cartItem.$save((result) => {
         console.log('success')
         console.log(result)

@@ -5,6 +5,7 @@
  */
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const deepPopulate = require('mongoose-deep-populate')(mongoose)
 
 /**
  * Cart Schema
@@ -43,5 +44,5 @@ let CartSchema = new Schema({
 })
 
 
-
+CartSchema.plugin(deepPopulate)
 mongoose.model('Cart', CartSchema)

@@ -21,10 +21,19 @@ const curl = new (require('curl-request'))()
  */
 exports.create = function(req, res) {
 
+  console.log(req.body)
+
   let storeId = req.body.store
-  if (storeId) {
+  let fromInstagram = req.body.fromInstagram ? req.body.fromInstagram.toString() : 'false'
+                              
+
+  console.log('fromInstagram: ' + fromInstagram)
+
+  if (fromInstagram.indexOf('true') > -1) {
+    console.log('adding item from instagram')
     createCheckoutFromSocialAccount(req, res)
   } else {
+    console.log('just simple add to cart')
     addToCart(req, res)
   }
 
@@ -33,8 +42,8 @@ exports.create = function(req, res) {
 
 function addToCart (req, res) {
 
-  let cartId = req.cookies ? req.cookies.cartId  : null
-  let storeId = req.cookies? req.cookies.storeId : null
+  let cartId = req.body.cart
+  let storeId = req.body.store
 
   getCart(cartId, storeId)
     .then((cart) => {
@@ -67,15 +76,15 @@ function createCheckoutFromSocialAccount(req, res) {
 
   console.log(req.cookies)
 
-  let cartId = req.cookies ? req.cookies.cartId : null
+  let cartId = req.body.cart
   let storeId = req.body.store
   
   let cart
-  let store
   let hashtag
 
   getAffiliateFromStore(storeId)
     .then((res_affiliate)=> {
+      console.log('getting affiliate')
       console.log(res_affiliate)
       return getHashtagByInstagram(res_affiliate)
       // return 'baller'
@@ -85,23 +94,23 @@ function createCheckoutFromSocialAccount(req, res) {
       return getAssetByHashtag(hashtag)
     })
     .then((res_hashtag)=> {
+      console.log('getting hashtag')      
       hashtag = res_hashtag
       return getCart(cartId, storeId) 
     })
     .then((res_cart)=> {
-      // console.log(cart)
+      console.log(res_cart)
       // console.log(asset)
-      res.cookie('cartId', res_cart.id)
-
-      let cartId = res_cart.id
+      console.log('adding to cart now!')
+      let cartId = res_cart._id
 
       let cartItem = req.body
       cartItem.cart = res_cart
       cartItem.asset = hashtag.asset
       cartItem.hashtag = hashtag
-      cartItem.store = store
+      cartItem.store = storeId
 
-      CartItem.findOneAndUpdate({ cart: cartId, asset: cartItem.asset.id }, cartItem, { new: true, upsert:true }, (err, result_cartItem) => {
+      CartItem.findOneAndUpdate({ cart: cartId, asset: cartItem.asset._id }, cartItem, { new: true, upsert:true }, (err, result_cartItem) => {
         if (err) {
           console.log(err)
           return res.status(400).send({
@@ -174,7 +183,7 @@ function getCart(cartId, storeId) {
 
   return new Promise ((resolve, reject) => {
     if (!cartId) {
-      // console.log('create new cart')
+      console.log('create new cart')
       let cart = new Cart()
       cart.store = storeId
       cart.save((err) => {
@@ -185,8 +194,8 @@ function getCart(cartId, storeId) {
         }
       })
     } else  {
-      // console.log('cart exist already')
-      Cart.findById(cartId).exec(function(err, cart) {
+      console.log('cart exist already')
+      Cart.findById(cartId).populate('store').populate('customer').exec(function(err, cart) {
         if (err) {
           reject(err)
         } else {

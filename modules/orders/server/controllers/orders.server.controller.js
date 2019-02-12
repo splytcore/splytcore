@@ -35,7 +35,7 @@ exports.create = function(req, res, next) {
   
   async.waterfall([
     function getCartHeader(callback) {
-      Cart.findById(req.body.cart).populate('store').exec(function(err, cart) {
+      Cart.findById(req.body.cart).deepPopulate('store.affiliate').exec(function(err, cart) {
         callback(err, cart)
       })         
     },
@@ -94,7 +94,7 @@ exports.create = function(req, res, next) {
       })
     },    
     function sendEmailReceiptCustomer(order, callback) {
-      //emailOrderReceiptToCustomer(req, res, order)   
+      emailOrderReceiptToCustomer(req, res, order)   
       callback(null, order)
     }
 
@@ -149,7 +149,10 @@ function emailOrderReceiptToCustomer(req, res, order) {
     }
   ], function (err) {
     if (err) {
+      console.log('email error sending customer')     
       console.log(err)
+    } else {
+      console.log('email sent to customer')
     }
   })
       
@@ -198,7 +201,10 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
     }
   ], function (err) {
     if (err) {
+      console.log('error sending email to seller')     
       console.log(err)
+    } else {
+      console.log('email sent to seller')      
     }
   })
       
@@ -251,7 +257,10 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
     }
   ], function (err) {
     if (err) {
+      console.log('error sending email to affiliate')      
       console.log(err)
+    } else {
+      console.log('email sent to affiliate')      
     }
   })
       
