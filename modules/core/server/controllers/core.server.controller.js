@@ -70,6 +70,10 @@ exports.paginate = function (req, res, next) {
         [sort] : 1
       }
     }
+  } else {
+    req.paginate.sort = {
+      created: -1
+    }
   }
 
   next()
