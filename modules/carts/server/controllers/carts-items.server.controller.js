@@ -23,10 +23,7 @@ exports.create = function(req, res) {
 
   console.log(req.body)
 
-  let storeId = req.body.store
   let fromInstagram = req.body.fromInstagram ? req.body.fromInstagram.toString() : 'false'
-                              
-
   console.log('fromInstagram: ' + fromInstagram)
 
   if (fromInstagram.indexOf('true') > -1) {
@@ -185,7 +182,6 @@ function getCart(cartId, storeId) {
     if (!cartId) {
       console.log('create new cart')
       let cart = new Cart()
-      cart.store = storeId
       cart.save((err) => {
         if (err) {
           reject(err)
@@ -195,7 +191,7 @@ function getCart(cartId, storeId) {
       })
     } else  {
       console.log('cart exist already')
-      Cart.findById(cartId).populate('store').populate('customer').exec(function(err, cart) {
+      Cart.findById(cartId).populate('customer').exec(function(err, cart) {
         if (err) {
           reject(err)
         } else {

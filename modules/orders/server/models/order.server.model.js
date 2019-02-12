@@ -38,10 +38,10 @@ let OrderSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
-  store: {
-    type: Schema.ObjectId,
-    ref: 'Store'
-  }, 
+  // store: {
+  //   type: Schema.ObjectId,
+  //   ref: 'Store'
+  // }, 
   cart: {
     type: Schema.ObjectId,
     ref: 'Cart'
@@ -106,7 +106,7 @@ OrderSchema.index({
 
 //Bind order items
 OrderSchema.post('init', function(order, next) {
-  OrderItem.find({ order: order.id }).populate('asset').exec((err, items) => {
+  OrderItem.find({ order: order.id }).populate('asset').populate('store').populate('hashtag').populate('seller').exec((err, items) => {
     order.items = items
     next()
   })

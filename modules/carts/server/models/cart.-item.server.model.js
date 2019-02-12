@@ -26,6 +26,10 @@ let CartItemSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Hashtag'
   },  
+  store: {
+    type: Schema.ObjectId,
+    ref: 'Store'
+  },        
   quantity: {
     type: Number,
     default: 1

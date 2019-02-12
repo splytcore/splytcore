@@ -31,11 +31,13 @@ const smtpTransport = nodemailer.createTransport(config.mailer.options)
 exports.create = function(req, res, next) {
 
   console.log('creating order')
-  // console.log(req.body)
+  console.log(req.body)
   
+  let cartId = req.body.cart
+
   async.waterfall([
     function getCartHeader(callback) {
-      Cart.findById(req.body.cart).deepPopulate('store.affiliate').exec(function(err, cart) {
+      Cart.findById(cartId).populate('store').exec(function(err, cart) {
         callback(err, cart)
       })         
     },
@@ -43,7 +45,7 @@ exports.create = function(req, res, next) {
       
       let order = new Order(req.body)
       order.customer = req.user
-      order.store = cart.store
+      // order.store = cart.store
 
       order.save((err) => {
         req.orderItems = []
@@ -52,7 +54,7 @@ exports.create = function(req, res, next) {
       })
     },
     function getItems(order, callback) {
-      CartItem.find({ cart: order.cart }).deepPopulate('asset.user').exec(function(err, items) {
+      CartItem.find({ cart: cartId }).deepPopulate('asset.user hashtag').exec(function(err, items) {
         callback(err, order, items)
       })        
     },
@@ -61,7 +63,7 @@ exports.create = function(req, res, next) {
         let orderItem = new OrderItem(cartItem)
         orderItem.order = order
         orderItem.seller = cartItem.asset.user
-        orderItem.affiliate = order.store.affiliate
+        orderItem.affiliate = cartItem.affiliate
           
         // console.log('qty:' + cartItem.quantity)
         // console.log('price: ' + cartItem.asset.price)
@@ -235,7 +237,7 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
         name: affiliate.displayName,
         appName: config.app.title,
         asset: orderItem.hashtag.asset,
-        url: req.protocol + '://' + req.headers.host + '/orders/' + orderItem.order.Id,
+        url: req.protocol + '://' + req.headers.host + '/orders/' + orderItem.order.id,
         orderId: orderItem.order.id,
         totalQuantity: orderItem.quantity,
         totalCost: orderItem.totalCost

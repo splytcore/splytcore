@@ -18,9 +18,9 @@ const OrderItemSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  affiliate: {
+  store: {
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'Store'
   },
   seller: {
     type: Schema.ObjectId,

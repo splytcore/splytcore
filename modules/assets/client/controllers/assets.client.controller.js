@@ -32,7 +32,7 @@
       cartItem.cart = $cookies.cartId
       cartItem.asset = assetId
       cartItem.quantity = vm.qty
-      cartItem.storeId = $cookies.storeId
+      cartItem.store = $cookies.storeId
       cartItem.fromInstagram = false
       
       cartItem.$save((result) => {
