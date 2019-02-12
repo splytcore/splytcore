@@ -289,27 +289,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{local}}/api/assets?sort=-title&skip=2&limit=3",
+							"raw": "{{local}}/api/assets",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
 								"assets"
-							],
-							"query": [
-								{
-									"key": "sort",
-									"value": "-title"
-								},
-								{
-									"key": "skip",
-									"value": "2"
-								},
-								{
-									"key": "limit",
-									"value": "3"
-								}
 							]
 						},
 						"description": "List all products so i can choose what to choose to represent as an affiliate"
@@ -613,8 +599,8 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "",
-								"value": "",
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
 								"type": "text"
 							}
 						],
@@ -703,6 +689,11 @@
 								"name": "Content-Type",
 								"value": "application/x-www-form-urlencoded",
 								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -749,6 +740,47 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "cart",
+									"value": "{{cartId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/orders",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Create order from checkout"
+					},
+					"response": []
 				}
 			],
 			"description": "Consumers/Guests who comein to checkout/buy a product"
@@ -778,13 +810,13 @@
 	],
 	"variable": [
 		{
-			"id": "810e5897-c9ce-4664-a14f-412cb26294e3",
+			"id": "feac5a68-2a78-4013-b5f7-64d716c82d51",
 			"key": "local",
 			"value": "localhost:3000",
 			"type": "string"
 		},
 		{
-			"id": "bae7f31a-5d0b-451b-a38c-d5026faaef75",
+			"id": "af05b9da-7484-4ae7-9cdb-0a1ec572248c",
 			"key": "qa",
 			"value": "https://qa.spl.yt",
 			"type": "string"
