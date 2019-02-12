@@ -33,10 +33,10 @@ let CartSchema = new Schema({
     type: Number,
     default: 0
   },     
-  store: {
-    type: Schema.ObjectId,
-    ref: 'Store'
-  },
+  // store: {
+  //   type: Schema.ObjectId,
+  //   ref: 'Store'
+  // },
   customer: {
     type: Schema.ObjectId,
     ref: 'User'
