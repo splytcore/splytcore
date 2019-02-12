@@ -284,27 +284,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{local}}/api/assets?sort=-title&skip=2&limit=3",
+							"raw": "{{local}}/api/assets",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
 								"assets"
-							],
-							"query": [
-								{
-									"key": "sort",
-									"value": "-title"
-								},
-								{
-									"key": "skip",
-									"value": "2"
-								},
-								{
-									"key": "limit",
-									"value": "3"
-								}
 							]
 						},
 						"description": "List all products so i can choose what to choose to represent as an affiliate"
@@ -638,8 +624,8 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "",
-								"value": "",
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
 								"type": "text"
 							}
 						],
@@ -701,6 +687,7 @@
 								{
 									"key": "fromInstagram",
 									"value": "true\n\n",
+									"description": "set to true if redirected from Instagram",
 									"type": "text"
 								}
 							]
@@ -720,6 +707,19 @@
 				},
 				{
 					"name": "Add Item to Cart From Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4178004c-b86f-40bf-b97e-4db3731f4e52",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"cartId\", data.cart);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -727,6 +727,11 @@
 								"key": "Content-Type",
 								"name": "Content-Type",
 								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
 								"type": "text"
 							}
 						],
@@ -747,11 +752,13 @@
 								{
 									"key": "store",
 									"value": "{{storeId}}",
+									"description": "storeId which store",
 									"type": "text"
 								},
 								{
 									"key": "fromInstagram",
 									"value": "false",
+									"description": "set to false since it's not redirected from Instagram",
 									"type": "text"
 								},
 								{
@@ -772,6 +779,98 @@
 								"cartsitems"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "cart",
+									"value": "{{cartId}}",
+									"description": "cartId to create order from",
+									"type": "text"
+								},
+								{
+									"key": "billing.address1",
+									"value": "123 address",
+									"type": "text"
+								},
+								{
+									"key": "billing.address2",
+									"value": "apt2",
+									"type": "text"
+								},
+								{
+									"key": "billing.city",
+									"value": "Santa Monica",
+									"type": "text"
+								},
+								{
+									"key": "billing.state",
+									"value": "CA",
+									"type": "text"
+								},
+								{
+									"key": "billing.zip",
+									"value": "91311",
+									"type": "text"
+								},
+								{
+									"key": "shipping.address1",
+									"value": "456 Blvd",
+									"type": "text"
+								},
+								{
+									"key": "shipping.address2",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "shipping.city",
+									"value": "Northridge",
+									"type": "text"
+								},
+								{
+									"key": "shipping.state",
+									"value": "New York",
+									"type": "text"
+								},
+								{
+									"key": "shipping.zip",
+									"value": "912345",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/orders",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Create order from checkout"
 					},
 					"response": []
 				}
@@ -803,13 +902,13 @@
 	],
 	"variable": [
 		{
-			"id": "810e5897-c9ce-4664-a14f-412cb26294e3",
+			"id": "feac5a68-2a78-4013-b5f7-64d716c82d51",
 			"key": "local",
 			"value": "localhost:3000",
 			"type": "string"
 		},
 		{
-			"id": "bae7f31a-5d0b-451b-a38c-d5026faaef75",
+			"id": "af05b9da-7484-4ae7-9cdb-0a1ec572248c",
 			"key": "qa",
 			"value": "https://qa.spl.yt",
 			"type": "string"
