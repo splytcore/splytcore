@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d1bc7cb4-4c01-41c0-91af-65adfd1dcca3",
+		"_postman_id": "fb95fff8-d3bd-49bc-866c-7036d3c2cc7d",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -68,7 +68,7 @@
 								},
 								{
 									"key": "email",
-									"value": "josh+{{$guid}}@spl.yt",
+									"value": "josh+{{$randomInt}}@spl.yt",
 									"description": "required, unique",
 									"type": "text"
 								},
@@ -184,9 +184,9 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{qa}}/api/users/background",
+							"raw": "{{local}}/api/users/background",
 							"host": [
-								"{{qa}}"
+								"{{local}}"
 							],
 							"path": [
 								"api",
@@ -231,11 +231,6 @@
 								"key": "Cookie",
 								"value": "sessionId={{sessionId}}",
 								"type": "text"
-							},
-							{
-								"key": "Cookie",
-								"value": "storeId={{storeId}}",
-								"type": "text"
 							}
 						],
 						"body": {
@@ -243,7 +238,7 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "lenovostore",
+									"value": "lenovostore{{$randomInt}}",
 									"description": "required: any string",
 									"type": "text"
 								}
@@ -272,7 +267,7 @@
 								"id": "439fd094-79e2-4a03-a160-65e66d4ca86c",
 								"exec": [
 									"var data = JSON.parse(responseBody);",
-									"var index = _.random(0, data.length);",
+									"var index = _.random(0, data.length - 1);",
 									"pm.globals.set(\"assetId\", data[index]._id);",
 									"pm.globals.set(\"asset\", JSON.stringify(data[index]));",
 									""
@@ -359,6 +354,36 @@
 							]
 						},
 						"description": "Affiliate can select this item to be displayed in their store"
+					},
+					"response": []
+				},
+				{
+					"name": "Affiliate get my store items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/stores/{{storeId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"stores",
+								"{{storeId}}"
+							]
+						},
+						"description": "Once you add items in your store, view it so you can remove the items if you wanted to in the future"
 					},
 					"response": []
 				},
