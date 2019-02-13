@@ -7,9 +7,11 @@ const path = require('path')
 const mongoose = require('mongoose')
 const Store = mongoose.model('Store')
 const StoreAsset = mongoose.model('StoreAsset')
+const Hashtag = mongoose.model('Hashtag')
 
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
+const async = require('async')
 
 
 /**
@@ -44,8 +46,37 @@ exports.read = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      store.storeAssets = storeAssets
-      res.jsonp(store);
+      // console.log(storeAssets)
+      let response;
+      async.each(storeAssets, (storeAsset, callback) => {
+        let newStoreAsset
+        console.log('hashtag array', storeAsset.asset._id, req.user._id)
+        Hashtag.findOne({ asset: storeAsset.asset._id, affiliate: req.user._id}).exec((err, hashtag) => {
+          console.log(hashtag)
+          if(hashtag) {
+            let asset = {}
+            asset = _.extend(asset, storeAsset.asset)
+            delete asset.hashtags
+            asset.hashtags = []
+            asset.hashtags.push(hashtag)
+            storeAsset.asset = asset
+            callback()
+          } else {
+            callback()
+          }
+        })
+      }, err => {
+        if(err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          })
+        } else {
+          store.storeAssets = storeAssets
+          res.jsonp(store);
+        }
+        
+      })
+      
     }
   });
 

@@ -12,7 +12,6 @@ var mongoose = require('mongoose'),
 var HashtagSchema = new Schema({
   name: {
     type: String,
-    default: '',
     required: 'Please fill Hashtag name',
     trim: true,
     unique: true
