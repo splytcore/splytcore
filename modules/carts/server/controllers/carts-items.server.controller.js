@@ -173,6 +173,7 @@ function getHashtagsByInstagram(affiliate) {
         resolve({ tags: tags, overviewImgUrl: overviewImgUrl })
       } else {
         console.log(statusCode, body)
+        reject(JSON.parse(body).meta.error_message)
       }
     })
     .catch(e => {
