@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fb95fff8-d3bd-49bc-866c-7036d3c2cc7d",
+		"_postman_id": "09db0bd2-9cd2-46b4-b806-c05aa73e0d8d",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -358,6 +358,52 @@
 					"response": []
 				},
 				{
+					"name": "Affiliate create hashtag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "redshoes{{$randomInt}}",
+									"type": "text"
+								},
+								{
+									"key": "asset",
+									"value": "{{assetId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/hashtags",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"hashtags"
+							]
+						},
+						"description": "After selecting an item to be added to a store, affiliate can create custom hashtag for it"
+					},
+					"response": []
+				},
+				{
 					"name": "Affiliate get my store items",
 					"request": {
 						"method": "GET",
@@ -526,19 +572,20 @@
 								},
 								{
 									"key": "imageURL",
-									"value": "\"./modules/assets/client/img/uploads/5615f844b9594944b286108cfac1c56c\"",
+									"value": "",
 									"description": "!required: full image url or partial url",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "reward",
-									"value": "2",
+									"value": ".50",
 									"description": "required: 0-100",
 									"type": "text"
 								},
 								{
 									"key": "brand",
-									"value": "nikee",
+									"value": "nike",
 									"description": "!required: any brand name",
 									"type": "text"
 								}
@@ -614,7 +661,8 @@
 								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
 								"exec": [
 									"var data = JSON.parse(responseBody);",
-									"pm.globals.set(\"affiliateId\", data[0].affiliate._id);"
+									"pm.globals.set(\"affiliateId\", data[0].affiliate._id);",
+									"pm.globals.set(\"storeId\", data[0]._id);"
 								],
 								"type": "text/javascript"
 							}
@@ -634,7 +682,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{local}}/api/stores?storeName={{storeName}}",
+							"raw": "{{local}}/api/stores?storeName=dipentheguystore",
 							"host": [
 								"{{local}}"
 							],
@@ -645,7 +693,7 @@
 							"query": [
 								{
 									"key": "storeName",
-									"value": "{{storeName}}"
+									"value": "dipentheguystore"
 								}
 							]
 						},
@@ -681,12 +729,12 @@
 								{
 									"key": "store",
 									"value": "{{storeId}}",
-									"description": "store id\n",
+									"description": "store id",
 									"type": "text"
 								},
 								{
 									"key": "fromInstagram",
-									"value": "true\n\n",
+									"value": "true",
 									"description": "set to true if redirected from Instagram",
 									"type": "text"
 								}
