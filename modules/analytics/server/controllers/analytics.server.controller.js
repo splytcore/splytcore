@@ -121,19 +121,29 @@ exports.getAffiliateGrossSales = function(req, res) {
   let totalQuantity = 0
   let totalReward = 0
 
+
   Store.findOne({ affiliate: userId }).exec()
     .then((store) => {
       // console.log(store)
-      return OrderItem.find({ store: store._id, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec()
+      if (!store) {
+        return Promise.resolve()
+      } else {
+        return OrderItem.find({ store: store._id, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec()
+      }
     })
     .then((items) => {
-      console.log('lenght: ' + items.length)
-      items.forEach((i) => {
-        grossSales += (i.asset.price * i.quantity)
-        totalQuantity += i.quanity
-        totalReward += i.asset.reward
-      })
-      return
+
+      if (!items) {
+        return
+      } else {
+        items.forEach((i) => {
+          grossSales += (i.asset.price * i.quantity)
+          totalQuantity += i.quantity
+          totalReward += i.asset.reward
+        })
+        return
+      }
+
     })
     .then(() => {
       res.jsonp({ affiliateId: userId, grossSales: grossSales, totalQuantity: totalQuantity, totalReward: totalReward})
@@ -170,11 +180,12 @@ exports.getSellerGrossSales = function(req, res) {
 
   OrderItem.find({ seller: userId, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec()
     .then((items) => {
-      console.log('lenght: ' + items.length)
-      items.forEach((i) => {
-        grossSales += i.asset.price * i.quantity
-        totalQuantity += i.quantity
-      })
+      if (items) {
+        items.forEach((i) => {
+          grossSales += i.asset.price * i.quantity
+          totalQuantity += i.quantity
+        })
+      } 
       return
     })
     .then(() => {
