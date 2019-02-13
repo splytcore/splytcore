@@ -117,7 +117,7 @@ function createCheckoutFromSocialAccount(req, res) {
         if (err) {
           return Promise.reject(err)
         } else {
-          res_cart.overviewImgUrl = overviewImgUrl      
+          res_cart.overviewImageUrl = overviewImgUrl      
           res_cart.save((err) => {
             res.jsonp(res_cart)
           })
@@ -166,9 +166,9 @@ function getHashtagsByInstagram(affiliate) {
         let tags = bodyJson.data[0].tags
         console.log('tags')
         console.log(tags)
-        // let overviewImgUrl = bodyJson.images.standard_resolution.url 
-        console.log(bodyJson)
-        let overviewImgUrl = "imag/rulds.pic"
+        let overviewImgUrl = bodyJson.data[0].images.standard_resolution.url
+
+        // let overviewImgUrl = "imag/rulds.pic"
         // console.log(tag)
         resolve({ tags: tags, overviewImgUrl: overviewImgUrl })
       } else {

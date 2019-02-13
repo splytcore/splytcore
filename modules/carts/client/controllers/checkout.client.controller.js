@@ -117,7 +117,7 @@
           CartsService.get({ cartId: cart._id }).$promise
             .then((cart) => {
               console.log('updated card')
-              console.log(vm.cart)
+              console.log(cart)
               vm.cart = cart
            })
       })
