@@ -113,35 +113,35 @@ exports.getAffiliateGrossSales = function(req, res) {
 
   //for testing
   // fromDateMS = 0
-  // thruDateMS = 1575187200000
+  // thruDateMS = (new Date()).getTime()
 
-  // userId = '5badbc98ffd77b340a5f4ec1'
-
+  // userId = '5bae85c096985d1167289d9c'
 
   let grossSales = 0
   let totalQuantity = 0
+  let totalReward = 0
 
   Store.findOne({ affiliate: userId }).exec()
     .then((store) => {
       // console.log(store)
-      return Order.find({ store: store._id, created: { $gte: fromDateMS, $lte: thruDateMS } }).exec()
+      return OrderItem.find({ store: store._id, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec()
     })
-    .then((orders) => {
-      console.log('lenght: ' + orders.length)
-      orders.forEach((o) => {
-        grossSales += o.totalCost ? o.totalCost : 0
-        totalQuantity += o.totalQuantity ? o.totalQuantity : 0
-        console.log('total cost:' + o.totalCost)
+    .then((items) => {
+      console.log('lenght: ' + items.length)
+      items.forEach((i) => {
+        grossSales += (i.asset.price * i.quantity)
+        totalQuantity += i.quanity
+        totalReward += i.asset.reward
       })
       return
     })
     .then(() => {
-      res.jsonp({ affiliateId: userId, grossSales: grossSales, totalQuantity: totalQuantity })
+      res.jsonp({ affiliateId: userId, grossSales: grossSales, totalQuantity: totalQuantity, totalReward: totalReward})
     })
     .catch((err) => {
       console.log(err)
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: err.toString()
       })
     })
 }
@@ -160,11 +160,10 @@ exports.getSellerGrossSales = function(req, res) {
   let userId = q.userId
 
   // for testing
-  fromDateMS = 0
-  thruDateMS = 1575187200000
+  // fromDateMS = 0
+  // thruDateMS = (new Date()).getTime()
 
-  userId = '5badbc98ffd77b340a5f4ec1'
-
+  // userId = '5c5a2fdc67f728159b3c7ea5'
 
   let grossSales = 0
   let totalQuantity = 0
@@ -184,7 +183,7 @@ exports.getSellerGrossSales = function(req, res) {
     .catch((err) => {
       console.log(err)
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: err.toString()
       })
     })
 }
