@@ -170,7 +170,7 @@ function getHashtagsByInstagram(affiliate) {
         console.log(bodyJson)
         let overviewImgUrl = "imag/rulds.pic"
         // console.log(tag)
-        resolve({ tags: tags, overviewImgURL: overviewImgUrl })
+        resolve({ tags: tags, overviewImgUrl: overviewImgUrl })
       } else {
         console.log(statusCode, body)
       }
