@@ -13,8 +13,7 @@ var HashtagSchema = new Schema({
   name: {
     type: String,
     required: 'Please fill Hashtag name',
-    trim: true,
-    unique: true
+    trim: true
   },
   created: {
     type: Date,
