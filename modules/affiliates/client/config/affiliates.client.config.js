@@ -28,7 +28,7 @@
       roles: ['affiliate']
     })
     Menus.addSubMenuItem('topbar', 'affiliates', {
-      title: 'My Stores',
+      title: 'My Stores Setup',
       state: 'affiliates.stores',
       roles: ['affiliate']
     })    

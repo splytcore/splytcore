@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 const path = require('path')
+const async = require('async')
 const mongoose = require('mongoose')
 const Asset = mongoose.model('Asset')
 const Store = mongoose.model('Store')
@@ -76,23 +77,26 @@ function createCheckoutFromSocialAccount(req, res) {
   let cartId = req.body.cart
   let storeId = req.body.store
   
-  let cart
-  let hashtag
+  // let cart
+  let hashtags
+  let overviewImgUrl
 
   getAffiliateFromStore(storeId)
     .then((res_affiliate)=> {
       console.log('getting affiliate')
       console.log(res_affiliate)
-      return getHashtagByInstagram(res_affiliate)
+      return getHashtagsByInstagram(res_affiliate)
       // return 'baller'
     })
-    .then((hashtag)=> {
-      console.log('hashtag ' + hashtag)
-      return getAssetByHashtag(hashtag)
+    .then((res_tags)=> {
+      console.log('hashtags ' + res_tags.tags)
+      console.log('overviewimgURL ' + res_tags.overviewImgUrl)    
+      overviewImgUrl = res_tags.overviewImgUrl
+      return getAssetsByHashtag(res_tags.tags)
     })
-    .then((res_hashtag)=> {
+    .then((res_hashtags)=> {
       console.log('getting hashtag')      
-      hashtag = res_hashtag
+      hashtags = res_hashtags
       return getCart(cartId, storeId) 
     })
     .then((res_cart)=> {
@@ -100,21 +104,23 @@ function createCheckoutFromSocialAccount(req, res) {
       // console.log(asset)
       console.log('adding to cart now!')
       let cartId = res_cart._id
-
-      let cartItem = req.body
-      cartItem.cart = res_cart
-      cartItem.asset = hashtag.asset
-      cartItem.hashtag = hashtag
-      cartItem.store = storeId
-
-      CartItem.findOneAndUpdate({ cart: cartId, asset: cartItem.asset._id }, cartItem, { new: true, upsert:true }, (err, result_cartItem) => {
+      async.each(hashtags, (hashtag, callback) => {
+        let cartItem = req.body
+        cartItem.cart = res_cart
+        cartItem.asset = hashtag.asset
+        cartItem.hashtag = hashtag
+        cartItem.store = storeId
+        CartItem.findOneAndUpdate({ cart: cartId, asset: cartItem.asset._id }, cartItem, { new: true, upsert:true }, (err, result_cartItem) => {
+          callback(err)
+        })
+      }, (err) => {
         if (err) {
-          console.log(err)
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          })
+          return Promise.reject(err)
         } else {
-          res.jsonp(result_cartItem)
+          res_cart.overviewImgUrl = overviewImgUrl      
+          res_cart.save((err) => {
+            res.jsonp(res_cart)
+          })
         }
       })
     })
@@ -146,7 +152,7 @@ function getAffiliateFromStore(storeId) {
 }
 //TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
 //JOSH THIS IS FOR YOU
-function getHashtagByInstagram(affiliate) {
+function getHashtagsByInstagram(affiliate) {
   return new Promise((resolve, reject) => {
     if(!affiliate.igAccessToken){
       reject(new Error('Instagram access token not found!'))
@@ -156,9 +162,15 @@ function getHashtagByInstagram(affiliate) {
     curl.get(getProfileUrl)
     .then(({statusCode, body}) => {
       if(statusCode === 200) {
-        let tag = JSON.parse(body).data[0].tags[0]
+        let bodyJson = JSON.parse(body)
+        let tags = bodyJson.data[0].tags
+        console.log('tags')
+        console.log(tags)
+        // let overviewImgUrl = bodyJson.images.standard_resolution.url 
+        console.log(bodyJson)
+        let overviewImgUrl = "imag/rulds.pic"
         // console.log(tag)
-        resolve(tag)
+        resolve({ tags: tags, overviewImgURL: overviewImgUrl })
       } else {
         console.log(statusCode, body)
       }
@@ -204,28 +216,24 @@ function getCart(cartId, storeId) {
 
 
 // Find Asset by hashtag
-function getAssetByHashtag (hashtag) {
+function getAssetsByHashtag (tags) {
 
   return new Promise ((resolve, reject) => {
-    if (!hashtag) {
-        console.log('no hashtag included')
-        resolve(null)
-    } else  {
-
-      Hashtag.findOne({ name: hashtag }).populate('asset').exec(function(err, res_hashtag) {
+      let hashtags = []
+      async.each(tags, (tag, callback) => {
+        Hashtag.findOne({ name: tag }).populate('asset').exec(function(err, res_hashtag) {
+          if (res_hashtag) {
+            hashtags.push(res_hashtag)
+          }
+          callback(err)
+        })
+      }, (err) => {
         if (err) {
           reject(err)
-        } else if (!res_hashtag) {
-          console.log('not hashtag found')
-          reject(new Error('No Hashtag found in system for ' + hashtag))
-        } else {          
-          // console.log('hashtag result form query ')
-          // console.log(hashtag)
-          resolve(res_hashtag)
+        } else {
+          resolve(hashtags)
         }
-
       })
-    }
   })
 }
 

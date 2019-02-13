@@ -111,10 +111,10 @@
       cartItem.fromInstagram = true
       cartItem.quantity = 1
       cartItem.$save()
-        .then((result) => {
-          console.log(result)
-          console.log('cartId: ' + result.cart)
-          CartsService.get({ cartId: result.cart }).$promise
+        .then((cart) => {
+          console.log('cart')
+          console.log(cart._id)
+          CartsService.get({ cartId: cart._id }).$promise
             .then((cart) => {
               console.log('updated card')
               console.log(vm.cart)

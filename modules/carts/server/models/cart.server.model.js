@@ -33,6 +33,9 @@ let CartSchema = new Schema({
     type: Number,
     default: 0
   },     
+  overviewImageUrl: {
+    type: String
+  },  
   // store: {
   //   type: Schema.ObjectId,
   //   ref: 'Store'
