@@ -79,7 +79,7 @@ function emailSignup(res, user) {
       var mailOptions = {
         to: user.email,
         from: config.mailer.from,
-        subject: 'Splyt - Successful Signup!',
+        subject: 'Welcome to Pollenly!',
         html: emailHTML
       }
       smtpTransport.sendMail(mailOptions, function (err) {

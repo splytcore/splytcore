@@ -194,7 +194,7 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
       var mailOptions = {
         to: asset.user.email,
         from: config.mailer.from,
-        subject: 'Order Fulfillment',
+        subject: 'New Order Fulfillment',
         html: emailHTML
       }
       smtpTransport.sendMail(mailOptions, function (err) {
@@ -250,7 +250,7 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
       var mailOptions = {
         to: affiliate.email,
         from: config.mailer.from,
-        subject: 'Congrats affiliate! You have sold and item!',
+        subject: 'Congratulations Affiliate!',
         html: emailHTML
       }
       smtpTransport.sendMail(mailOptions, function (err) {
