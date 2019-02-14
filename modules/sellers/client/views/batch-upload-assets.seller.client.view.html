@@ -13,11 +13,26 @@
           Upload CSV file <input type="file" nv-file-select uploader="uploader">
       </span>
     </div>
-
     <table>
-      <tr ng-repeat="x in uploadedData">
-        <td ng-repeat="title in x">{{title}}</td>
-      </tr>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Title</th>
+          <th>Image Url</th>
+          <th>a</th>
+          <th>Price</th>
+          <th>Inventory</th>
+          <th>SKU</th>
+          <th>Hashtags</th>
+
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="x in uploadedData">
+          <td ng-repeat="title in x" style="max-width: 200px; overflow: hidden">{{title}}</td>
+        </tr>
+      </tbody>
     </table>
   
   </section>
