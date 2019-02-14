@@ -6,9 +6,9 @@
       .module('sellers')
       .controller('SellerBatchUploadAssetsController', SellerBatchUploadAssetsController);
   
-    SellerBatchUploadAssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AssetsService', 'CategoriesService', 'FileUploader'];
+    SellerBatchUploadAssetsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AssetsService', 'CategoriesService', 'FileUploader', '$timeout'];
   
-    function SellerBatchUploadAssetsController ($scope, $state, $window, Authentication, AssetsService, CategoriesService, FileUploader) {
+    function SellerBatchUploadAssetsController ($scope, $state, $window, Authentication, AssetsService, CategoriesService, FileUploader, $timeout) {
       var vm = this;
       let progressBarDenomination
       /* jshint ignore:start */
@@ -32,37 +32,37 @@
 
 
       // Convert parsed CSV file from array to object format for display and saving purposes
-      let removeExtraFields = dataArray => {
+      let morphRawData = dataArray => {
 
-        // Extract keys splyt backend cares about, forget the others
-        let keepColumns = []
-        keepColumns.push(dataArray[0].indexOf('Title'))
-        keepColumns.push(dataArray[0].indexOf('Body (HTML)'))
-        keepColumns.push(dataArray[0].indexOf('Variant SKU'))
-        keepColumns.push(dataArray[0].indexOf('Variant Inventory Qty'))
-        keepColumns.push(dataArray[0].indexOf('Variant Price'))
-        keepColumns.push(dataArray[0].indexOf('Image Src'))
+        // Extract keys pollenly backend cares about, forget the others
+        let rawColnIndex = {
+          title: dataArray[0].indexOf('Title'),
+          description: dataArray[0].indexOf('Body (HTML)'),
+          sku: dataArray[0].indexOf('Variant SKU'),
+          inventoryCount: dataArray[0].indexOf('Variant Inventory Qty'),
+          price: dataArray[0].indexOf('Variant Inventory Qty'),
+          imageUrl: dataArray[0].indexOf('Image Src'),
+        }
 
         $scope.progressBarDenomination = 100 / dataArray.length -1
         
-        let newData = []
-        
-        // Convert array csv to object arrays
-        for(var x = 1; x < dataArray.length; x++) {
+        $scope.uploadedData = []
+
+        let dataArraylen = dataArray.length
+        // Convert array csv to object array
+        for(var x = 1; x < dataArraylen; x++) {
           // Append more fields here as asset DB model changes to reflect
-          let asset = {
-            title : dataArray[x][keepColumns[0]] === '' ? dataArray[x][0] : dataArray[x][keepColumns[0]],
-            description: dataArray[x][keepColumns[1]] === '' ? 'Description' : dataArray[x][keepColumns[1]],
-            sku : dataArray[x][keepColumns[2]] === '' ? 'SKU' : dataArray[x][keepColumns[2]],
-            inventoryCount : dataArray[x][keepColumns[3]],
-            price: parseFloat(dataArray[x][keepColumns[4]]),
-            imageURL: dataArray[x][keepColumns[5]],
-            hashtag: dataArray[x][keepColumns[0]] === '' ? dataArray[x][0] : dataArray[x][keepColumns[0]],
+          $scope.uploadedData.push({
+            title : dataArray[x][rawColnIndex.title].length < 1 ? 'No title' : dataArray[x][rawColnIndex.title],
+            description: dataArray[x][rawColnIndex.description] === '' ? 'No description' : dataArray[x][rawColnIndex.description],
+            sku : dataArray[x][rawColnIndex.sku] === '' ? 'No sku' : dataArray[x][rawColnIndex.sku],
+            inventoryCount : dataArray[x][rawColnIndex.inventoryCount],
+            price: parseFloat(dataArray[x][rawColnIndex.price]),
+            imageURL: dataArray[x][rawColnIndex.imageUrl],
+            hashtag: '',
             reward: 0
-          }
-          newData.push(asset)
-          if(x + 1 ===  dataArray.length) {
-            $scope.uploadedData = newData  
+          })
+          if(x + 1 ===  dataArraylen) {
             $scope.$apply()
           }
         }  
@@ -75,14 +75,14 @@
           fileReader.readAsText(fileItem._file);
   
           fileReader.onload = function (fileReaderEvent) {
-            let csvParsed
+            let csv
             /* jshint ignore:start */
-            csvParsed = Papa.parse(fileReaderEvent.target.result, {})
+            csv = Papa.parse(fileReaderEvent.target.result, {})
             /* jshint ignore:end */
 
-            if(!csvParsed.errors[0]) {
-              csvParsed.data.splice(csvParsed.data.length - 1, 1)
-              removeExtraFields(csvParsed.data)
+            if(!csv.errors[0]) {
+              csv.data.splice(csv.data.length - 1, 1)
+              morphRawData(csv.data)
 
             }
           }
@@ -106,7 +106,6 @@
           vm.error = res.data.message;
         }
       }
-
       
     }
   }());
