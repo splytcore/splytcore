@@ -47,7 +47,7 @@ function addToCart (req, res) {
     .then((cart) => {
       res.cookie('cartId', cart.id)
       req.body.cart = cart
-      console.log(req.body)
+      // console.log(req.body)
       CartItem.findOneAndUpdate({ cart: cart.id, asset: req.body.asset }, req.body, { new: true, upsert:true }, (err, cartItem) => {
         if (err) {
           console.log(err)
@@ -84,13 +84,13 @@ function createCheckoutFromSocialAccount(req, res) {
   getAffiliateFromStore(storeId)
     .then((res_affiliate)=> {
       console.log('getting affiliate')
-      console.log(res_affiliate)
+      // console.log(res_affiliate)
       return getHashtagsByInstagram(res_affiliate)
       // return 'baller'
     })
     .then((res_tags)=> {
-      console.log('hashtags ' + res_tags.tags)
-      console.log('overviewimgURL ' + res_tags.overviewImgUrl)    
+      // console.log('hashtags ' + res_tags.tags)
+      // console.log('overviewimgURL ' + res_tags.overviewImgUrl)    
       overviewImgUrl = res_tags.overviewImgUrl
       return getAssetsByHashtag(res_tags.tags)
     })
@@ -100,7 +100,7 @@ function createCheckoutFromSocialAccount(req, res) {
       return getCart(cartId, storeId) 
     })
     .then((res_cart)=> {
-      console.log(res_cart)
+      // console.log(res_cart)
       // console.log(asset)
       console.log('adding to cart now!')
       let cartId = res_cart._id
