@@ -13,7 +13,7 @@
         <span ng-if="hashtag.affiliate" ng-bind="hashtag.user.displayName"></span>
         <span ng-if="!hashtag.affiliate">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="hashtag.name"></h4>
+      <h4 class="list-group-item-heading">Asset => {{ hashtag.asset.title }}  Hashtag Name => {{ hashtag.name }}  Affiliate => {{ hashtag.affiliate.displayName }} </h4>
     </a>
   </div>
 
