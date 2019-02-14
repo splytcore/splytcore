@@ -47,6 +47,5 @@ let CartSchema = new Schema({
   }
 })
 
-
 CartSchema.plugin(deepPopulate)
 mongoose.model('Cart', CartSchema)

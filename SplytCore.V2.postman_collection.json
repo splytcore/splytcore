@@ -906,6 +906,213 @@
 					"response": []
 				},
 				{
+					"name": "Update the quantity of Item from Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4178004c-b86f-40bf-b97e-4db3731f4e52",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"cartId\", data.cart);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "quantity",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/cartsitems/{{cartItemId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"cartsitems",
+								"{{cartItemId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cart and Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"cartItemId\", data.cartItems[0]._id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/carts/{{cartId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"carts",
+								"{{cartId}}"
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete item from Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4178004c-b86f-40bf-b97e-4db3731f4e52",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"cartId\", data.cart);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/cartsitems/{{cartItemId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"cartsitems",
+								"{{cartItemId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Shopping Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4178004c-b86f-40bf-b97e-4db3731f4e52",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"cartId\", data.cart);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/carts/{{cartId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"carts",
+								"{{cartId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Order",
 					"request": {
 						"method": "POST",
