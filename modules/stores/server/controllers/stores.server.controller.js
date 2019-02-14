@@ -39,8 +39,7 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   let store = req.store ? req.store.toJSON() : {};
   
-  console.log('binding assets')
-  StoreAsset.find({ store: store._id }).sort('-created').populate('asset').exec(function(err, storeAssets) {
+  StoreAsset.find({ store: store._id }, {}, req.paginate).populate('asset').exec(function(err, storeAssets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -50,7 +49,7 @@ exports.read = function(req, res) {
       let response;
       async.each(storeAssets, (storeAsset, callback) => {
         let newStoreAsset
-        console.log('hashtag array', storeAsset.asset._id, req.user._id)
+
         Hashtag.findOne({ asset: storeAsset.asset._id, affiliate: req.user._id}).exec((err, hashtag) => {
           console.log(hashtag)
           if(hashtag) {
