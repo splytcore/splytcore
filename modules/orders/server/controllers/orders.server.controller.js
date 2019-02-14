@@ -54,7 +54,7 @@ exports.create = function(req, res, next) {
       })
     },
     function getItems(order, callback) {
-      CartItem.find({ cart: cartId }).deepPopulate('asset.user hashtag').exec(function(err, items) {
+      CartItem.find({ cart: cartId }).('asset.user hashtag').exec(function(err, items) {
         callback(err, order, items)
       })        
     },
@@ -96,7 +96,7 @@ exports.create = function(req, res, next) {
       })
     },    
     function sendEmailReceiptCustomer(order, callback) {
-      emailOrderReceiptToCustomer(req, res, order)   
+      //emailOrderReceiptToCustomer(req, res, order)   
       callback(null, order)
     }
 
