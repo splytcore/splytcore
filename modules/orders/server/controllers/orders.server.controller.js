@@ -132,7 +132,7 @@ function emailOrderReceiptToCustomer(req, res, order) {
         name: customer.displayName,
         appName: config.app.title,
         orderId: order.id,
-        url: req.protocol + '://' + req.headers.host + '/orders/' + order.id
+        url: config.pollenlyreq.protocol + '://' + req.headers.host + '/orders/' + order.id
       }, function (err, emailHTML) {
         done(err, emailHTML, customer);
       });
@@ -142,7 +142,7 @@ function emailOrderReceiptToCustomer(req, res, order) {
       var mailOptions = {
         to: customer.email,
         from: config.mailer.from,
-        subject: 'Order Receipt',
+        subject: 'New Order - Pollenly',
         html: emailHTML
       };
       smtpTransport.sendMail(mailOptions, function (err) {
@@ -194,7 +194,7 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
       var mailOptions = {
         to: asset.user.email,
         from: config.mailer.from,
-        subject: 'New Order Fulfillment',
+        subject: 'New Order Fulfillment - Pollenly',
         html: emailHTML
       }
       smtpTransport.sendMail(mailOptions, function (err) {
@@ -250,7 +250,7 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
       var mailOptions = {
         to: affiliate.email,
         from: config.mailer.from,
-        subject: 'Congratulations Affiliate!',
+        subject: 'Congratulations Affiliate! - Pollenly',
         html: emailHTML
       }
       smtpTransport.sendMail(mailOptions, function (err) {
