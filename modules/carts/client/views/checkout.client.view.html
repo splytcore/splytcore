@@ -16,9 +16,7 @@
         <span class="col-xs-2" ng-bind="item.asset.title"></span>
         <span class="col-xs-3" ng-bind="item.quantity"></span>
         <span class="col-xs-3" ng-bind="item.asset.price | currency"></span>
-        <span class="col-xs-2" ng-bind="item.quantity * item.asset.price | currency"></span>
-        <span ng-init="vm.totalCost = vm.totalCost + (item.quantity * item.asset.price)"> </span>     
-        <span ng-init="vm.totalQuantity = vm.totalQuantity + item.quantity"> </span>        
+        <span class="col-xs-2" ng-bind="item.quantity * item.asset.price | currency"></span>     
       </h4>
       <p class="list-group-item-text row">
         <span class="col-xs-3" ng-bind="item.asset.description"></span>
@@ -28,8 +26,8 @@
     <div class="list-group-item">    
       <h3 class="list-group-item-heading row">
         <span class="col-xs-6">Totals</span>
-        <span class="col-xs-3" ng-bind="vm.totalQuantity"></span>
-        <span class="col-xs-3" ng-bind="vm.totalCost | currency"></span>
+        <span class="col-xs-3" ng-bind="vm.cart.totalQuantity"></span>
+        <span class="col-xs-3" ng-bind="vm.cart.totalCost | currency"></span>
       </h3>
       <br/>
     </div>

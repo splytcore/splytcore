@@ -41,6 +41,9 @@ exports.read = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       })
     } else {
+      cart.totalQuantity = cartItems.reduce((total, i) => total + i.quantity, 0)
+      cart.totalCost = cartItems.reduce((total, i) => total + i.asset.price * i.quantity, 0)
+
       cart.cartItems = cartItems
       res.jsonp(cart)
     }
@@ -74,7 +77,7 @@ exports.delete = function(req, res) {
   
   res.clearCookie('cartId')
   
-  var cart = req.cart;
+  var cart = req.cart
 
   //removes all items
   CartItem.remove({ cart : cart._id }, function(err) {
@@ -92,7 +95,7 @@ exports.delete = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(cart);
+      res.jsonp(cart)
     }
   });
 };
