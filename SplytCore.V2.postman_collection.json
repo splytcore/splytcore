@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "09db0bd2-9cd2-46b4-b806-c05aa73e0d8d",
+		"_postman_id": "ebac2a03-329d-491a-98e6-be2a84b1221c",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -526,6 +526,47 @@
 						"description": "After selecting an item to be added to a store, affiliate can create custom hashtag for it"
 					},
 					"response": []
+				},
+				{
+					"name": "Get Total Sales By Date  And Affiliate Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/affiliates/grossSales?userId={{affiliateId}}&fromDateMS=0&thruDateMS=999999999",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"affiliates",
+								"grossSales"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{affiliateId}}",
+									"description": "Affiliate Id"
+								},
+								{
+									"key": "fromDateMS",
+									"value": "0",
+									"description": "From Date in MS"
+								},
+								{
+									"key": "thruDateMS",
+									"value": "999999999",
+									"description": "Thru Date in MS\n"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -644,6 +685,80 @@
 							]
 						},
 						"description": "Create an asset as an seller"
+					},
+					"response": []
+				},
+				{
+					"name": "Seller list my items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/assets?user={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "user",
+									"value": "{{sellerId}}"
+								}
+							]
+						},
+						"description": "List all my items as a seller"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Sales By Date  And Seller Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "?fromDateMS=0&thruDateMS=999999999&userId={{sellerId}}",
+							"query": [
+								{
+									"key": "fromDateMS",
+									"value": "0",
+									"description": "From Date In Milliseconds"
+								},
+								{
+									"key": "thruDateMS",
+									"value": "999999999",
+									"description": "Thru Date in Milliseconds\n"
+								},
+								{
+									"key": "userId",
+									"value": "{{sellerId}}",
+									"description": "Seller Id"
+								}
+							]
+						}
 					},
 					"response": []
 				}
