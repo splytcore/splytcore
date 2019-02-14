@@ -132,7 +132,7 @@ function emailOrderReceiptToCustomer(req, res, order) {
         name: customer.displayName,
         appName: config.app.title,
         orderId: order.id,
-        url: config.pollenlyreq.protocol + '://' + req.headers.host + '/orders/' + order.id
+        url: req.protocol + '://' + req.headers.host + '/orders/' + order.id
       }, function (err, emailHTML) {
         done(err, emailHTML, customer);
       });
