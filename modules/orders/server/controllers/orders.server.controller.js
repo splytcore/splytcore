@@ -132,7 +132,7 @@ function emailOrderReceiptToCustomer(req, res, order) {
         name: customer.displayName,
         appName: config.app.title,
         orderId: order.id,
-        url: req.protocol + '://' + req.headers.host + '/orders/' + order.id
+        url: req.headers.origin + '/orders/' + order.id
       }, function (err, emailHTML) {
         done(err, emailHTML, customer);
       });
@@ -180,7 +180,7 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
       res.render(path.resolve('modules/orders/server/templates/seller-order-email'), {
         name: asset.user.displayName,
         appName: config.app.title,
-        url: req.protocol + '://' + req.headers.host + '/orders/' + orderItem.order.id,
+        url: req.headers.origin + '/orders/' + orderItem.order.id,
         asset: asset,
         orderId: orderItem.order.id,
         totalQuantity: orderItem.quantity,
@@ -237,7 +237,7 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
         name: affiliate.displayName,
         appName: config.app.title,
         asset: orderItem.hashtag.asset,
-        url: req.protocol + '://' + req.headers.host + '/orders/' + orderItem.order.id,
+        url: req.headers.origin + '/orders/' + orderItem.order.id,
         orderId: orderItem.order.id,
         totalQuantity: orderItem.quantity,
         totalCost: orderItem.totalCost

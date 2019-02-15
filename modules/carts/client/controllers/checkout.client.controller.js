@@ -68,30 +68,8 @@
           vm.cart = cart
        })      
     }
-    
-
-    
+        
     console.log('cart id: ' + $cookies.cartId)
-
-    // vm.hashtagAssets = HashtagsService.query({ affiliate: vm.authentication.user._id })
-    // console.log('hashtags asset: ')
-    // console.log(vm.hashtagAssets)
-
-
-    //BUG HERE. Calculating incorrectly 
-    //Get cart items.
-    //If theres storeId, we find asset by hashtag then add it to cart
-    // if ($cookies.cartId) {
-    //   CartsService.get({ cartId: $cookies.cartId }).$promise
-    //     .then((cart)=> {
-    //       vm.cart = cart
-    //       if (vm.storeId) {
-    //         addAssetFromStoreId(vm.storeName)            
-    //       }
-    //     })
-    // } else if (vm.storeId){
-    //   addAssetFromStoreId(vm.storeName)
-    // }
 
 
     vm.error = null
@@ -137,7 +115,15 @@
       $rootScope.shipping = vm.order.shipping
 
       //TESTING WITHOUT CC
-      
+      // vm.order.$save(res => {
+      //   alert('new order created successful!')   
+      //   $state.go('orders.view', { orderId: res._id })
+      // }, (error) => {
+      //   console.log('error')
+      //   console.log(error)
+      //   vm.error = error.toString()
+      // })
+
 
 
       stripe.createToken(card)
