@@ -651,6 +651,50 @@
 						"description": "List all my items as a seller"
 					},
 					"response": []
+				},
+				{
+					"name": "Seller remaining inventory info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/sellers/remainingInventory?userId={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"sellers",
+								"remainingInventory"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{sellerId}}"
+								}
+							]
+						},
+						"description": "List all my items as a seller"
+					},
+					"response": []
 				}
 			]
 		},
