@@ -19,6 +19,9 @@ module.exports = function(app) {
     .get(analytics.getSellerGrossSales)
 
 
+  app.route('/api/analytics/sellers/remainingInventory')
+    .get(analytics.getSellerRemainingInventory)
+
   // app.route('/api/analytics/:analyticId').all(analyticsPolicy.isAllowed)
   //   .get(analytics.read)
   //   .put(analytics.update)

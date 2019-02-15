@@ -6,6 +6,7 @@
 const path = require('path')
 const mongoose = require('mongoose')
 const Analytic = mongoose.model('Analytic')
+const Asset = mongoose.model('Asset')
 const Order = mongoose.model('Order')
 const Store = mongoose.model('Store')
 const OrderItem = mongoose.model('OrderItem')
@@ -190,6 +191,39 @@ exports.getSellerGrossSales = function(req, res) {
     })
     .then(() => {
       res.jsonp({ sellerId: userId, grossSales: grossSales, totalQuantity: totalQuantity })
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(400).send({
+        message: err.toString()
+      })
+    })
+}
+
+/* 
+* Get Sales from date to thru day by milliseconds
+*/
+
+exports.getSellerRemainingInventory = function(req, res) {
+
+  let q = req.query
+  console.log(q)
+
+  let userId = q.userId
+
+  let remainingInventoryValue = 0
+  let remainingInventoryCount = 0
+
+  Asset.find({ user: userId }).exec()
+    .then((assets) => {
+      if (assets) {
+        remainingInventoryValue = assets.reduce((total, asset) => total + asset.inventoryCount * asset.price, 0)
+        remainingInventoryCount =  assets.reduce((total, asset) => total + asset.inventoryCount, 0)    
+      } 
+      return
+    })
+    .then(() => {
+      res.jsonp({ sellerId: userId, remainingInventoryValue: remainingInventoryValue, remainingInventoryCount: remainingInventoryCount })
     })
     .catch((err) => {
       console.log(err)
