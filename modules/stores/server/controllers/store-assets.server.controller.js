@@ -81,8 +81,10 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
   
   console.log(req.query)
+  
+  let q = req.query
 
-  StoreAsset.find().sort('-created').populate('affiliate', 'displayName').exec(function(err, storeAssets) {
+  StoreAsset.find(q).sort('-created').populate('affiliate', 'displayName').exec(function(err, storeAssets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
