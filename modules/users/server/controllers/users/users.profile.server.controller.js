@@ -12,6 +12,7 @@ const mongoose = require('mongoose')
 const multer = require('multer')
 const config = require(path.resolve('./config/config'))
 const User = mongoose.model('User')
+const Store = mongoose.model('Store')
 const curl = new (require('curl-request'))()
 const async = require('async')
 
@@ -170,14 +171,12 @@ exports.saveIgCode = (req, res, next) => {
         message: JSON.parse(body).error_message
       });
     }
-    if(statusCode === 200) {
-      let igInfo = JSON.parse(body)
-      console.log(igInfo)
-      req.body.igAccessToken = igInfo.access_token
-      req.body.profileImageURL = igInfo.user.profile_picture
-      req.body.instagramUsername = igInfo.user.username
-      next()
-    }
+    let igInfo = JSON.parse(body)
+    req.body.igAccessToken = igInfo.access_token
+    req.body.profileImageURL = igInfo.user.profile_picture
+    req.body.instagramUsername = igInfo.user.username
+    next()
+    
   }).catch(e => {
     console.log(e)
     return res.status(400).send({ e })
@@ -222,6 +221,10 @@ exports.getBackgroundImage = (req, res) => {
       message: errorHandler.getErrorMessage(err)
     })
   })
+}
+
+function findDuplicateIgUsers(igUserId) {
+
 }
 
 /**
