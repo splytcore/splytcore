@@ -96,7 +96,7 @@ exports.create = function(req, res, next) {
       })
     },    
     function sendEmailReceiptCustomer(order, callback) {
-      emailOrderReceiptToCustomer(req, res, order)   
+      //emailOrderReceiptToCustomer(req, res, order)   
       callback(null, order)
     }
 
