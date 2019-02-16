@@ -106,7 +106,7 @@ exports.storeAssetByID = function(req, res, next, id) {
     });
   }
 
-  StoreAsset.findById(id).populate('asset').exec(function (err, storeAsset) {
+  StoreAsset.findById(id).populate('asset').populate('store').exec(function (err, storeAsset) {
     if (err) {
       return next(err);
     } else if (!storeAsset) {

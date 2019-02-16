@@ -18,9 +18,12 @@ module.exports = function(app) {
   app.route('/api/analytics/sellers/grossSales')
     .get(analytics.getSellerGrossSales)
 
-
   app.route('/api/analytics/sellers/remainingInventory')
     .get(analytics.getSellerRemainingInventory)
+
+  app.route('/api/analytics/sellers/affiliatesLength')
+    .get(analytics.getSellerAffiliatesLength)
+
 
   // app.route('/api/analytics/:analyticId').all(analyticsPolicy.isAllowed)
   //   .get(analytics.read)
