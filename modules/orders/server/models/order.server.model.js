@@ -107,7 +107,7 @@ OrderSchema.index({
 //Bind order items
 OrderSchema.post('init', function(order, next) {
   OrderItem.find({ order: order.id }).populate('asset').populate('store').populate('hashtag').
-    populate('seller', '-salt -password -roles -igAccessToken')
+    populate('seller', '-salt -password -roles -igAccessToken -instagramUsername -instagramId')
     .exec((err, items) => {
       order.items = items
       next()

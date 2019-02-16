@@ -317,7 +317,13 @@ exports.approveRefund = function(req, res) {
 exports.read = function(req, res) {
   // convert mongoose document to JSON
   let order = req.order ? req.order.toJSON() : {}
-  
+    
+  //remove addresses of order if viewing as guest 
+  if (!req.user) {
+    delete order.shipping
+    delete order.billing
+  }
+
   res.jsonp(order)
 
 }
@@ -372,7 +378,18 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  Order.find().sort('-created').populate('customer', 'displayName').exec(function(err, orders) {
+  let q = req.query
+  let sort = q.sort
+  delete q.sort
+
+  let deselect = ''
+  if (!req.user) {
+    deselect = '-shipping -billing'
+  }
+
+  Order.find(q, deselect).sort(sort)
+    .populate('customer', 'displayName ')
+    .exec(function(err, orders) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -436,6 +453,7 @@ exports.orderByID = function(req, res, next, id) {
         message: 'No Order with that identifier has been found'
       })
     }
+
     req.order = order
     next()
   })

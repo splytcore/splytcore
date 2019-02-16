@@ -53,6 +53,7 @@ exports.isAllowed = function (req, res, next) {
     return next();
   }
 
+
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
     if (err) {
@@ -68,5 +69,6 @@ exports.isAllowed = function (req, res, next) {
         });
       }
     }
-  });
-};
+  })
+
+}
