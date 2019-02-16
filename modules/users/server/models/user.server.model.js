@@ -135,8 +135,10 @@ var UserSchema = new Schema({
   instagramUsername: {
     type: String,
     default: ''
+  },
+  instagramId: {
+    type: Number
   }
-
 });
 
 /**

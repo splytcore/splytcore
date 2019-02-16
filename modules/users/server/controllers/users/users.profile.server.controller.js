@@ -172,10 +172,19 @@ exports.saveIgCode = (req, res, next) => {
       });
     }
     let igInfo = JSON.parse(body)
-    req.body.igAccessToken = igInfo.access_token
-    req.body.profileImageURL = igInfo.user.profile_picture
-    req.body.instagramUsername = igInfo.user.username
-    next()
+    User.findOne({instagramId: igInfo.user.id}).exec((err, user) => {
+      if(!err && user) {
+        console.log('Your instagram account ' + igInfo.user.username + ' is connected to pollenly user ' + user.email)
+        return res.status(400).send({
+          message: 'Your instagram account ' + igInfo.user.username + ' is connected to pollenly user ' + user.email
+        })
+      }
+      req.body.instagramId = igInfo.user.id
+      req.body.igAccessToken = igInfo.access_token
+      req.body.profileImageURL = igInfo.user.profile_picture
+      req.body.instagramUsername = igInfo.user.username
+      next()
+    })
     
   }).catch(e => {
     console.log(e)
