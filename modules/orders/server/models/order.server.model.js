@@ -106,9 +106,11 @@ OrderSchema.index({
 
 //Bind order items
 OrderSchema.post('init', function(order, next) {
-  OrderItem.find({ order: order.id }).populate('asset').populate('store').populate('hashtag').populate('seller').exec((err, items) => {
-    order.items = items
-    next()
+  OrderItem.find({ order: order.id }).populate('asset').populate('store').populate('hashtag').
+    populate('seller', '-salt -password -roles -igAccessToken')
+    .exec((err, items) => {
+      order.items = items
+      next()
   })
 })
 

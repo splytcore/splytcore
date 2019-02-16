@@ -427,7 +427,7 @@ exports.orderByID = function(req, res, next, id) {
       message: 'Order is invalid'
     })
   }
-
+  
   Order.findById(id).populate('customer', 'displayName').exec(function (err, order) {
     if (err) {
       return next(err)
