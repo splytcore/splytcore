@@ -5,10 +5,14 @@
  */
 const path = require('path')
 const mongoose = require('mongoose')
+const async = require('async')
+
 const Analytic = mongoose.model('Analytic')
 const Asset = mongoose.model('Asset')
 const Order = mongoose.model('Order')
 const Store = mongoose.model('Store')
+const StoreAsset = mongoose.model('StoreAsset')
+
 const OrderItem = mongoose.model('OrderItem')
 
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
@@ -201,7 +205,7 @@ exports.getSellerGrossSales = function(req, res) {
 }
 
 /* 
-* Get Sales from date to thru day by milliseconds
+* Get sellers remaining inventory and value
 */
 
 exports.getSellerRemainingInventory = function(req, res) {
@@ -233,6 +237,51 @@ exports.getSellerRemainingInventory = function(req, res) {
     })
 }
 
+/* 
+* Get total number of affiliates whos selling they're asset
+*/
+
+exports.getSellerAffiliatesLength = function(req, res) {
+
+  let q = req.query
+  console.log(q)
+
+  let userId = q.userId
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).send({
+      message: 'userId is invalid'
+    })
+  }
+  
+  let affiliates = new Set()
+
+  Asset.find({ user: userId }).populate('user').exec()
+    .then((assets) => {    
+      async.each(assets, (asset, callback) => {
+        StoreAsset.find({ asset: asset.id }).deepPopulate('store.affiliate').exec((err, storeAssets) => {
+          if (storeAssets.length > 0) {
+            let affiliateIds = storeAssets.map((storeAsset) => storeAsset.store.affiliate.id)
+            affiliateIds.forEach((id) => affiliates.add(id))
+          }
+          callback()
+        })
+      }, (err) => {
+        if (err) {
+          return Promise.reject(err)
+        } else {
+          res.jsonp({ sellerId: userId, totalNumberAffiliates: affiliates.size })
+        }
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(400).send({
+        message: err.toString()
+      })
+    })
+
+}
 
 /**
  * Analytic middleware
