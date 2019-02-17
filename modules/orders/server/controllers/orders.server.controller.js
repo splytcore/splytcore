@@ -12,6 +12,7 @@ const Asset = mongoose.model('Asset')
 const Cart = mongoose.model('Cart')
 const CartItem = mongoose.model('CartItem')
 
+const Store = mongoose.model('Store')
 const User = mongoose.model('User')
 
 const async = require('async') 
@@ -378,17 +379,43 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
+  let roles = req.user ? req.user.roles : 'guest'
+
+  if (roles.indexOf('customer') > -1) {
+    exports.ordersByCustomer(req, res)
+  }
+
+  if (roles.indexOf('affiliate') > -1) {
+    exports.ordersByAffiliate(req, res)
+  }
+
+  if (roles.indexOf('seller') > -1) {
+    exports.ordersBySeller(req, res)
+  }
+
+  if (roles.indexOf('guest') > -1) {
+      return res.status(400).send({
+        message: 'Not authorized for guests roles'
+      })
+  }
+
+}
+
+/**
+ * List of Orders
+ */
+
+exports.ordersByCustomer = function(req, res) {
+
   let q = req.query
   let sort = q.sort
   delete q.sort
+  q.customer = req.user.id
 
-  let deselect = ''
-  if (!req.user) {
-    deselect = '-shipping -billing'
-  }
+  console.log(q)
 
-  Order.find(q, deselect).sort(sort)
-    .populate('customer', 'displayName ')
+  Order.find(q).sort(sort)
+    .populate('customer', 'displayName')
     .exec(function(err, orders) {
     if (err) {
       return res.status(400).send({
@@ -399,7 +426,77 @@ exports.list = function(req, res) {
   })
 
 }
+/**
+ * List of Orders
+ */
+exports.ordersByAffiliate = function(req, res) {
 
+  let q = req.query
+  let sort = q.sort
+  delete q.sort
+
+  let affiliateId = req.user.id
+
+  Store.findOne({ affiliate: affiliateId }).exec()
+    .then((store) => {
+      if (store) {
+        return OrderItem.find({ store : store._id }).populate('order').exec()
+      } else {
+        return Promise.reject('No store found for this affiliate')
+      }
+    })
+    .then((orderItems) => {
+      // console.log('order items')
+      // console.log(orderItems)
+      let orderIds = orderItems.map((item) => item.order.id)
+      let orderIdsUnique = orderIds.filter((id) => orderIds.indexOf(id) > -1)
+      // console.log(orderIdsUnique)
+      return Order.find({ _id : { $in: orderIdsUnique }}).populate('customer', 'displayName').exec()
+    })    
+    .then((orders) => {
+      res.jsonp(orders)
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    })
+
+}
+/**
+ * List of Orders
+ */
+exports.ordersBySeller = function(req, res) {
+
+  let q = req.query
+  let sort = q.sort
+  delete q.sort
+
+  let userId = req.user.id
+
+  Asset.find({ user: userId }).exec()
+    .then((assets) => {
+      let assetIds = assets.map((asset) => asset.id)      
+      return OrderItem.find({ asset: {$in : assetIds }}).populate('order').exec()
+    })
+    .then((orderItems) => {
+      let orderIds = orderItems.map((item) => item.order.id)
+      let orderIdsUnique = orderIds.filter((id) => orderIds.indexOf(id) > -1)
+      // console.log(orderIdsUnique)
+      return Order.find({ _id : { $in: orderIdsUnique }}).populate('customer', 'displayName').exec()
+    })
+    .then((orders) => {
+      res.jsonp(orders)
+    })    
+    .catch((err) => {
+      // console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    })
+
+}
 /**
  * Charge client for the given amount
  */

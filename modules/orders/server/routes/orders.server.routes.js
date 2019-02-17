@@ -16,14 +16,6 @@ module.exports = function(app) {
 
     // comment out for dev
     .post(orders.create, orders.charge, assets.incrementBuy);
-    // .post(orders.create);
-
-  // app.route('/api/orders/:orderId/requestRefund').all(ordersPolicy.isAllowed)
-  //   .post(orders.requestRefund)
-
-  // app.route('/api/orders/:orderId/approveRefund').all(ordersPolicy.isAllowed)
-  //   .post(orders.approveRefund)
-
 
   app.route('/api/orders/:orderId').all(ordersPolicy.isAllowed)
     .get(orders.read)
