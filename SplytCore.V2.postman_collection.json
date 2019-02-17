@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "09db0bd2-9cd2-46b4-b806-c05aa73e0d8d",
+		"_postman_id": "2aa53243-fbc0-4455-8313-5043a0d99f0e",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -879,6 +879,50 @@
 						"description": "List all my items as a seller"
 					},
 					"response": []
+				},
+				{
+					"name": "Seller remaining inventory info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/sellers/remainingInventory?userId={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"sellers",
+								"remainingInventory"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{sellerId}}"
+								}
+							]
+						},
+						"description": "List all my items as a seller"
+					},
+					"response": []
 				}
 			]
 		},
@@ -1050,52 +1094,52 @@
 									"type": "text"
 								},
 								{
-									"key": "billing.address1",
-									"value": "123 street ave",
+									"key": "billing[address1]",
+									"value": "123 address",
 									"type": "text"
 								},
 								{
-									"key": "billing.address2",
+									"key": "billing[address2]",
 									"value": "apt2",
 									"type": "text"
 								},
 								{
-									"key": "billing.city",
+									"key": "billing[city]",
 									"value": "Santa Monica",
 									"type": "text"
 								},
 								{
-									"key": "billing.state",
+									"key": "billing[state]",
 									"value": "CA",
 									"type": "text"
 								},
 								{
-									"key": "billing.zip",
+									"key": "billing[zip]",
 									"value": "91311",
 									"type": "text"
 								},
 								{
-									"key": "shipping.address1",
+									"key": "shipping[address1]",
 									"value": "456 Blvd",
 									"type": "text"
 								},
 								{
-									"key": "shipping.address2",
+									"key": "shipping[address2]",
 									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "shipping.city",
+									"key": "shipping[city]",
 									"value": "Northridge",
 									"type": "text"
 								},
 								{
-									"key": "shipping.state",
+									"key": "shipping[state]",
 									"value": "New York",
 									"type": "text"
 								},
 								{
-									"key": "shipping.zip",
+									"key": "shipping[zip]",
 									"value": "912345",
 									"type": "text"
 								},

@@ -12,6 +12,7 @@ const Asset = mongoose.model('Asset')
 const Cart = mongoose.model('Cart')
 const CartItem = mongoose.model('CartItem')
 
+const Store = mongoose.model('Store')
 const User = mongoose.model('User')
 
 const async = require('async') 
@@ -132,7 +133,7 @@ function emailOrderReceiptToCustomer(req, res, order) {
         name: customer.displayName,
         appName: config.app.title,
         orderId: order.id,
-        url: req.protocol + '://' + req.headers.host + '/orders/' + order.id
+        url: req.headers.origin + '/orders/' + order.id
       }, function (err, emailHTML) {
         done(err, emailHTML, customer);
       });
@@ -180,7 +181,7 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
       res.render(path.resolve('modules/orders/server/templates/seller-order-email'), {
         name: asset.user.displayName,
         appName: config.app.title,
-        url: req.protocol + '://' + req.headers.host + '/orders/' + orderItem.order.id,
+        url: req.headers.origin + '/orders/' + orderItem.order.id,
         asset: asset,
         orderId: orderItem.order.id,
         totalQuantity: orderItem.quantity,
@@ -237,7 +238,7 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
         name: affiliate.displayName,
         appName: config.app.title,
         asset: orderItem.hashtag.asset,
-        url: req.protocol + '://' + req.headers.host + '/orders/' + orderItem.order.id,
+        url: req.headers.origin + '/orders/' + orderItem.order.id,
         orderId: orderItem.order.id,
         totalQuantity: orderItem.quantity,
         totalCost: orderItem.totalCost
@@ -317,7 +318,13 @@ exports.approveRefund = function(req, res) {
 exports.read = function(req, res) {
   // convert mongoose document to JSON
   let order = req.order ? req.order.toJSON() : {}
-  
+    
+  //remove addresses of order if viewing as guest 
+  if (!req.user) {
+    delete order.shipping
+    delete order.billing
+  }
+
   res.jsonp(order)
 
 }
@@ -372,7 +379,44 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-  Order.find().sort('-created').populate('customer', 'displayName').exec(function(err, orders) {
+  let roles = req.user ? req.user.roles : 'guest'
+
+  if (roles.indexOf('customer') > -1) {
+    exports.ordersByCustomer(req, res)
+  }
+
+  if (roles.indexOf('affiliate') > -1) {
+    exports.ordersByAffiliate(req, res)
+  }
+
+  if (roles.indexOf('seller') > -1) {
+    exports.ordersBySeller(req, res)
+  }
+
+  if (roles.indexOf('guest') > -1) {
+      return res.status(400).send({
+        message: 'Not authorized for guests roles'
+      })
+  }
+
+}
+
+/**
+ * List of Orders
+ */
+
+exports.ordersByCustomer = function(req, res) {
+
+  let q = req.query
+  let sort = q.sort
+  delete q.sort
+  q.customer = req.user.id
+
+  console.log(q)
+
+  Order.find(q).sort(sort)
+    .populate('customer', 'displayName')
+    .exec(function(err, orders) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -382,7 +426,77 @@ exports.list = function(req, res) {
   })
 
 }
+/**
+ * List of Orders
+ */
+exports.ordersByAffiliate = function(req, res) {
 
+  let q = req.query
+  let sort = q.sort
+  delete q.sort
+
+  let affiliateId = req.user.id
+
+  Store.findOne({ affiliate: affiliateId }).exec()
+    .then((store) => {
+      if (store) {
+        return OrderItem.find({ store : store._id }).populate('order').exec()
+      } else {
+        return Promise.reject('No store found for this affiliate')
+      }
+    })
+    .then((orderItems) => {
+      // console.log('order items')
+      // console.log(orderItems)
+      let orderIds = orderItems.map((item) => item.order.id)
+      let orderIdsUnique = orderIds.filter((id) => orderIds.indexOf(id) > -1)
+      // console.log(orderIdsUnique)
+      return Order.find({ _id : { $in: orderIdsUnique }}).populate('customer', 'displayName').exec()
+    })    
+    .then((orders) => {
+      res.jsonp(orders)
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    })
+
+}
+/**
+ * List of Orders
+ */
+exports.ordersBySeller = function(req, res) {
+
+  let q = req.query
+  let sort = q.sort
+  delete q.sort
+
+  let userId = req.user.id
+
+  Asset.find({ user: userId }).exec()
+    .then((assets) => {
+      let assetIds = assets.map((asset) => asset.id)      
+      return OrderItem.find({ asset: {$in : assetIds }}).populate('order').exec()
+    })
+    .then((orderItems) => {
+      let orderIds = orderItems.map((item) => item.order.id)
+      let orderIdsUnique = orderIds.filter((id) => orderIds.indexOf(id) > -1)
+      // console.log(orderIdsUnique)
+      return Order.find({ _id : { $in: orderIdsUnique }}).populate('customer', 'displayName').exec()
+    })
+    .then((orders) => {
+      res.jsonp(orders)
+    })    
+    .catch((err) => {
+      // console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })      
+    })
+
+}
 /**
  * Charge client for the given amount
  */
@@ -427,7 +541,7 @@ exports.orderByID = function(req, res, next, id) {
       message: 'Order is invalid'
     })
   }
-
+  
   Order.findById(id).populate('customer', 'displayName').exec(function (err, order) {
     if (err) {
       return next(err)
@@ -436,6 +550,7 @@ exports.orderByID = function(req, res, next, id) {
         message: 'No Order with that identifier has been found'
       })
     }
+
     req.order = order
     next()
   })

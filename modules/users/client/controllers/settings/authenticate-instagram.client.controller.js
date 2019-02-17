@@ -26,38 +26,60 @@
 
       user.roles = roles
       user.igAccessToken = ''
+      user.instagramUsername = ''
+      user.instagramId = ''
       
       user.$update(function (response) {
         $scope.$broadcast('show-errors-reset', 'userForm')
 
         $scope.success = true
         Authentication.user = response
-        
       }, function (response) {
         $scope.error = response.data.message;
       });
     }
+
+    function searchToObject() {
+      var pairs = window.location.search.substring(1).split("&"),
+        obj = {},
+        pair,
+        i;
     
-    if(window.location.search.substring(1).split('=')[0] === 'code' && Authentication.user.igAccessToken === '') {
-      console.log(Authentication.user.igAccessToken)
-      $scope.isIgAuthenticated = true
+      for ( i in pairs ) {
+        if ( pairs[i] === "" ) continue;
+    
+        pair = pairs[i].split("=");
+        obj[ decodeURIComponent( pair[0] ) ] = decodeURIComponent( pair[1] );
+      }
+    
+      return obj;
+    }
+    
+    if(searchToObject().code && Authentication.user.igAccessToken === '') {
       let igCode = window.location.search.substring(1).split('=')[1]
       $http.put('/api/users', {
         igCode: igCode,
         redirectUri: redirectUri
-      });
-      window.location.search = ''
+      })
+      .success(res => {
+        $scope.user = res
+        $scope.isIgAuthenticated = true
+
+      })
+      .error((err, status) => {
+        console.log(err)
+        $scope.error = err.message;
+        $scope.isIgAuthenticated = false
+
+      })
+      // window.location.search = ''
     } else {
       $scope.isIgAuthenticated = false
     }
-
-    try {
       
-      if(window.location.search.substring(1).split('&')[1].split('=')[0] === 'error') {
-        $scope.isIgErrored = true
-      }
-    } catch (err) {
-
+    if(searchToObject().error) {
+      $scope.error = searchToObject().error
+      $scope.isIgErrored = true
     }
 
     if(Authentication.user.igAccessToken !== '') {

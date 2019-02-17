@@ -1,13 +1,16 @@
 {
-  "apps" : [{
-    "name"        : "SPLYT",
-    "script"      : "gulp",
-    "watch"       : false,
-    // "env": {
-    //   "NODE_ENV": "dev"
-    // },
-    "args": [
-      "prod"
-    ]
+  apps : [{
+    name   : 'splyt',
+    script : 'npm start',
+    watch  : false,
+    args   : [ '--color'],
+    log_date_format: 'YY-MM-DD hh:mm a'
+  }, {
+    name   : 'splyt-prod',
+    script : 'gulp',
+    watch  : false,
+    args   : [ 'prod', '--color' ],
+    log_date_format: 'YY-MM-DD HH:mm Z'
+
   }]
 }

@@ -5,6 +5,7 @@
  */
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const deepPopulate = require('mongoose-deep-populate')(mongoose)
 
 /**
  * Store Asset Schema
@@ -25,6 +26,8 @@ let StoreAssetSchema = new Schema({
     default: Date.now
   }  
 })
+
+StoreAssetSchema.plugin(deepPopulate)
 
 StoreAssetSchema.index({ store: 1, asset: 1 }, { unique: true })
 mongoose.model('StoreAsset', StoreAssetSchema)

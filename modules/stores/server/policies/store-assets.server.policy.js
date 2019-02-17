@@ -22,7 +22,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'seller', 'affiliate', 'customer'],
+    roles: ['affiliate'],
     allows: [{
       resources: '/api/storeassets',
       permissions: ['get', 'post']
@@ -31,7 +31,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'put', 'delete']
     }]
   }, {
-    roles: ['guest'],
+    roles: ['guest', 'customer', 'seller'],
     allows: [{
       resources: '/api/storeassets',
       permissions: ['get']
@@ -49,7 +49,7 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If an Store is being processed and the current user created it then allow any manipulation
-  if (req.store && req.user && req.store.user && req.store.user.id === req.user.id) {
+  if (req.storeAsset && req.user && req.storeAsset.store.affiliate && req.store.affiliate.id === req.user.id) {
     return next();
   }
 

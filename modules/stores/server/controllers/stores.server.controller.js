@@ -50,7 +50,7 @@ exports.read = function(req, res) {
       async.each(storeAssets, (storeAsset, callback) => {
         let newStoreAsset
 
-        Hashtag.findOne({ asset: storeAsset.asset._id, affiliate: req.user._id}).exec((err, hashtag) => {
+        Hashtag.findOne({ asset: storeAsset.asset._id, affiliate: store.affiliate._id}).exec((err, hashtag) => {
           console.log(hashtag)
           if(hashtag) {
             let asset = {}

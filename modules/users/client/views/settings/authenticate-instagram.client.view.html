@@ -5,6 +5,9 @@
     <button class="btn" ng-click="igLogin()" ng-hide="{{isIgAuthenticated}}">Give Permissions</button>
     <button class="btn" ng-click="igLogout()" ng-show="{{isIgAuthenticated}}">Revoke Access</button>
     </br>
+    <alert type="danger" ng-show="error" class="text-center text-danger">
+        <span ng-bind="error"></span>
+    </alert>
     <span  style="color: red" ng-show="{{isIgErrored}}">Aww snap. We need your account permission to proceed.</span>
     <span  style="color: green" ng-show="{{isIgAuthenticated}}">Contrats! your Instagram account is now linked with spl.yt</span>
 
