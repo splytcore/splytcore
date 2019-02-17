@@ -183,7 +183,7 @@ exports.uploadAssetImage = function(req, res) {
         message: 'Error occurred while uploading profile picture'
       })
     } else {
-      res.jsonp({ imageURL: req.headers.origin + config.uploads.assetUpload.dest.split('.')[1] + req.file.filename })
+      res.jsonp({ imageURL: req.headers.host + config.uploads.assetUpload.dest.split('.')[1] + req.file.filename })
     }
   })
 }
