@@ -31,6 +31,12 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'put']
     }]
   }, {
+    roles: ['seller'],
+    allows: [{
+      resources: ['/api/assets/mine'],
+      permissions: ['get']
+    }]
+  }, {
     roles: ['guest'],
     allows: [{
       resources: '/api/assets',
