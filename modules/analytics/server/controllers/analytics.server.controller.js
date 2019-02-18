@@ -12,6 +12,7 @@ const Asset = mongoose.model('Asset')
 const Order = mongoose.model('Order')
 const Store = mongoose.model('Store')
 const StoreAsset = mongoose.model('StoreAsset')
+const TopSellers = mongoose.model('TopSellers')
 
 const OrderItem = mongoose.model('OrderItem')
 
@@ -282,6 +283,58 @@ exports.getSellerAffiliatesLength = function(req, res) {
     })
 
 }
+/* 
+* Get top selling assets from and thru date with limit\
+* TODO: delete records after generating report
+*/
+exports.getTopSellingAssets = function(req, res) {
+
+  let q = req.query
+  console.log(q)
+
+  let fromDateMS = parseInt(q.fromDateMS)
+  let thruDateMS = parseInt(q.thruDateMS)
+  let limit = q.limit ? parseInt(q.limit) : 10 //default 10
+
+  // for testing
+  fromDateMS = 0
+  thruDateMS = (new Date()).getTime()
+
+  let reportId = (new Date()).getTime()
+
+  OrderItem.find({ created: { $gte: fromDateMS, $lte: thruDateMS }}).populate('order').populate('asset').exec()
+    .then((orderItems) => {
+      if (!orderItems) {
+        return
+      }
+      async.each(orderItems, (item, cb) => {
+        TopSellers.findOneAndUpdate({ reportId: reportId, asset: item.asset.id }, {$inc: { quantity: item.quantity }}, { upsert: true }).exec((err, result) => {
+          cb(err)
+        })        
+      }, (err) => {
+        if (err) {
+          return Promise.reject(err)
+        } else {
+          return
+        }
+      })
+    })
+    .then(() => { 
+      TopSellers.find({ reportId: reportId }, '-reportId -_id -created').sort('-quantity').populate('asset', 'title').limit(limit).exec((err, result) => {
+        if (err) {
+          return Promise.reject(err)
+        }
+        res.jsonp(result)
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(400).send({
+        message: err.toString()
+      })
+    })
+}
+
 
 /**
  * Analytic middleware
