@@ -112,8 +112,9 @@ exports.getAffiliateGrossSales = function(req, res) {
 
   let q = req.query
   console.log(q)
-  let fromDateMS = parseInt(q.fromDateMS)
-  let thruDateMS = parseInt(q.thruDateMS)
+  
+  let fromDateMS = q.fromDateMS ? parseInt(q.fromDateMS) : 0
+  let thruDateMS = q.thruDateMS ? parseInt(q.thruDateMS) : (new Date()).getTime()
 
   let userId = q.userId
 
@@ -170,8 +171,9 @@ exports.getSellerGrossSales = function(req, res) {
 
   let q = req.query
   console.log(q)
-  let fromDateMS = parseInt(q.fromDateMS)
-  let thruDateMS = parseInt(q.thruDateMS)
+  
+  let fromDateMS = q.fromDateMS ? parseInt(q.fromDateMS) : 0
+  let thruDateMS = q.thruDateMS ? parseInt(q.thruDateMS) : (new Date()).getTime()
 
   let userId = q.userId
 
@@ -292,8 +294,9 @@ exports.getTopSellingAssets = function(req, res) {
   let q = req.query
   console.log(q)
 
-  let fromDateMS = parseInt(q.fromDateMS)
-  let thruDateMS = parseInt(q.thruDateMS)
+  let fromDateMS = q.fromDateMS ? parseInt(q.fromDateMS) : 0
+  let thruDateMS = q.thruDateMS ? parseInt(q.thruDateMS) : (new Date()).getTime()
+
   let limit = q.limit ? parseInt(q.limit) : 10 //default 10
 
   // for testing
