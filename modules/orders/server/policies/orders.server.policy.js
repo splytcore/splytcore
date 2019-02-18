@@ -72,3 +72,55 @@ exports.isAllowed = function (req, res, next) {
   })
 
 }
+
+/*
+* Only users associated with that order should be allowed to view the order
+* TODO: bind anytime api with :orderId is called
+*/
+exports.onlyOrderParticipants = function (req, res, next) {
+  
+  let roles = (req.user) ? req.user.roles : ['guest'];
+  let order = req.order
+
+  if (roles.indexOf('guest') > -1) {
+    return res.status(400).send({
+      message: 'Not authorized for guests roles'
+    })
+  }
+
+  // current user needs to part of the order
+  if (roles.indexOf('customer') > -1) {
+    if (order.customer.id === req.user.id) {
+      next()
+    } else {
+      return res.status(400).send({
+        message: 'Not authorized'
+      })      
+    }
+  }
+
+  if (roles.indexOf('affiliate') > -1) {
+    let affiliateIds = order.items.map((item) => item.store.affiliate.id)
+    if (affiliateIds.indexOf(req.user.id) > -1) {
+      next()
+    } else {
+      return res.status(400).send({
+        message: 'Not authorized'
+      })          
+    }
+  }
+
+  if (roles.indexOf('seller') > -1) {
+    let sellerIds = order.items.map((item) => item.seller.id)
+    if (sellerIds.indexOf(req.user.id) > -1) {
+      next()
+    } else {
+      return res.status(400).send({
+        message: 'Not authorized'
+      })          
+    }    
+  }
+
+
+
+}
