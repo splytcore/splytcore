@@ -169,6 +169,73 @@
 					"response": []
 				},
 				{
+					"name": "Change password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "49c54557-c352-4523-b6e4-608a5b932965",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"sessionId\", data.sessionId);",
+									"if(data.user.roles.indexOf('seller') > -1) {",
+									"    pm.globals.set(\"sellerId\", data.user._id);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "currentPassword",
+									"value": "splytcore2017!",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "splytcore2018!",
+									"description": "required: any new password, should be same as verify password",
+									"type": "text"
+								},
+								{
+									"key": "verifyPassword",
+									"value": "splytcore2018!",
+									"description": "required: should be same as new password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/users/password",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"password"
+							]
+						},
+						"description": "change password"
+					},
+					"response": []
+				},
+				{
 					"name": "Affiliate Only - Get recent post images",
 					"request": {
 						"method": "GET",
@@ -203,7 +270,7 @@
 			"name": "Affiliate",
 			"item": [
 				{
-					"name": "Affiliate create a storefront",
+					"name": "Create a storefront",
 					"event": [
 						{
 							"listen": "test",
@@ -259,7 +326,7 @@
 					"response": []
 				},
 				{
-					"name": "Affiliate list products to select for my store",
+					"name": "List products to select from",
 					"event": [
 						{
 							"listen": "test",
@@ -298,7 +365,7 @@
 					"response": []
 				},
 				{
-					"name": "Affiliate select item for store",
+					"name": "Select item for store",
 					"event": [
 						{
 							"listen": "test",
@@ -358,7 +425,7 @@
 					"response": []
 				},
 				{
-					"name": "Affiliate create hashtag",
+					"name": "Create item hashtag",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -404,7 +471,7 @@
 					"response": []
 				},
 				{
-					"name": "Affiliate get my store items",
+					"name": "Get my store items",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -430,54 +497,6 @@
 							]
 						},
 						"description": "Once you add items in your store, view it so you can remove the items if you wanted to in the future"
-					},
-					"response": []
-				},
-				{
-					"name": "Affiliate set custom hashtag for an item",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							},
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "asset",
-									"value": "{{asset}}",
-									"description": "required: asset object",
-									"type": "text"
-								},
-								{
-									"key": "name",
-									"value": "redveloster",
-									"description": "required: any string",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/hashtags",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"hashtags"
-							]
-						},
-						"description": "Affiliate can set custom hashtag for all the items they have selected for their store"
 					},
 					"response": []
 				},
@@ -526,6 +545,60 @@
 						"description": "Save this code thus giving splyt access to your instagram profile"
 					},
 					"response": []
+				},
+				{
+					"name": "Deauthorize instagram",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "igAccessToken",
+									"value": "''",
+									"description": "required: empty string only",
+									"type": "text"
+								},
+								{
+									"key": "instagramUsername",
+									"value": "''",
+									"description": "required: empty string only",
+									"type": "text"
+								},
+								{
+									"key": "instagramId",
+									"value": "''",
+									"description": "required: empty string only",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Save this code thus giving splyt access to your instagram profile"
+					},
+					"response": []
 				}
 			]
 		},
@@ -533,7 +606,78 @@
 			"name": "Seller",
 			"item": [
 				{
-					"name": "Seller create asset",
+					"name": "Upload asset Image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0ad85d13-19dc-46a7-a66e-96c2fc85dfcd",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"assetImageUrl\", data.imageURL);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "newAssetImage",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/assets/picture/upload",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"assets",
+								"picture",
+								"upload"
+							]
+						},
+						"description": "Create an asset as an seller"
+					},
+					"response": []
+				},
+				{
+					"name": "Create asset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "666d38b5-fd07-4496-b1a0-0fc1e1ba106f",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"assetId\", data._id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -572,15 +716,14 @@
 								},
 								{
 									"key": "imageURL",
-									"value": "",
+									"value": "[{{assetImageUrl}}]",
 									"description": "!required: full image url or partial url",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "reward",
 									"value": ".50",
-									"description": "required: 0-100",
+									"description": "required: dollar amount in 2 decimal places",
 									"type": "text"
 								},
 								{
@@ -611,7 +754,92 @@
 					"response": []
 				},
 				{
-					"name": "Seller list my items",
+					"name": "Update asset",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Title goes here",
+									"description": "optional: any title string",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "Product's description goes here",
+									"description": "optional: any description string",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "inventoryCount",
+									"value": "5",
+									"description": "optional: any number above 0",
+									"type": "text"
+								},
+								{
+									"key": "imageURL",
+									"value": "",
+									"description": "optional: full image url or partial url",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "reward",
+									"value": ".50",
+									"description": "optional: 0-100",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "brand",
+									"value": "nike",
+									"description": "optional: any brand name",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": "199.99",
+									"description": "optional",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/assets/{{assetId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"assets",
+								"{{assetId}}"
+							]
+						},
+						"description": "Create an asset as an seller"
+					},
+					"response": []
+				},
+				{
+					"name": "List my items",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -731,7 +959,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{local}}/api/stores?storeName=dipentheguystore",
+							"raw": "{{local}}/api/stores?storeName={{storeName}}",
 							"host": [
 								"{{local}}"
 							],
@@ -742,7 +970,7 @@
 							"query": [
 								{
 									"key": "storeName",
-									"value": "dipentheguystore"
+									"value": "{{storeName}}"
 								}
 							]
 						},
@@ -917,7 +1145,8 @@
 								},
 								{
 									"key": "stripeToken",
-									"value": "",
+									"value": "tok_....",
+									"description": "required: ",
 									"type": "text"
 								}
 							]
@@ -935,7 +1164,13 @@
 						"description": "Create order from checkout"
 					},
 					"response": []
-				},
+				}
+			],
+			"description": "Consumers/Guests who comein to checkout/buy a product"
+		},
+		{
+			"name": "Browse Pollenly",
+			"item": [
 				{
 					"name": "Add Item to Cart From Store",
 					"event": [
@@ -1013,8 +1248,7 @@
 					},
 					"response": []
 				}
-			],
-			"description": "Consumers/Guests who comein to checkout/buy a product"
+			]
 		}
 	],
 	"event": [
