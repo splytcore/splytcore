@@ -19,6 +19,9 @@ module.exports = function(app) {
   //Upload asset images
   app.route('/api/assets/picture/upload').post(assets.uploadAssetImage)
 
+  app.route('/api/assets/mine').all(assetsPolicy.isAllowed)
+    .get(core.paginate, assets.listMyAssets)
+
 
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
     .get(assets.read, assets.incrementView)

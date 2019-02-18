@@ -125,7 +125,7 @@ exports.list = function(req, res) {
 
 exports.listMyAssets = function(req, res) {
   
-  Asset.find({ user : req.user }).sort('-created').populate('user', 'displayName').exec(function(err, assets) {
+  Asset.find({ user : req.user }, {}, req.paginate).populate('user', 'displayName').exec(function(err, assets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
