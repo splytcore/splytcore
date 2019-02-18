@@ -297,8 +297,8 @@ exports.getTopSellingAssets = function(req, res) {
   let limit = q.limit ? parseInt(q.limit) : 10 //default 10
 
   // for testing
-  fromDateMS = 0
-  thruDateMS = (new Date()).getTime()
+  // fromDateMS = 0
+  // thruDateMS = (new Date()).getTime()
 
   let reportId = (new Date()).getTime()
 
