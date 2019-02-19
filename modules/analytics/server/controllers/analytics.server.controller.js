@@ -348,19 +348,8 @@ exports.getSellerSalesSummary = function(req, res) {
   let q = req.query
   console.log(q)
 
-  // let fromDateMS = q.fromDateMS ? parseInt(q.fromDateMS) : 0
-  // let thruDateMS = q.thruDateMS ? parseInt(q.thruDateMS) : (new Date()).getTime()
-
   let limit = q.limit ? parseInt(q.limit) : 10 //default 10
-
   let userId = q.userId
-
-  userId = '5c64cda0b90701d10b7a792d'
-
-  // for testing
-  // fromDateMS = 0
-  // thruDateMS = (new Date()).getTime()
-
   let reportId = (new Date()).getTime()
 
   OrderItem.find({ seller: userId }).populate('order').populate('asset').exec()
