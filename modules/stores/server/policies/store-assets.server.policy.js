@@ -3,6 +3,8 @@
 /**
  * Module dependencies
  */
+const mongoose = require('mongoose')
+const Store = mongoose.model('Store')
 var acl = require('acl');
 
 // Using the memory backend
@@ -45,13 +47,39 @@ exports.invokeRolesPolicies = function () {
 /**
  * Check If Stores Policy Allows
  */
+exports.onlyStoreCreator = function (req, res, next) {
+
+  if (req.user && req.storeAsset) {
+
+    console.log('storeId: ' + req.storeAsset.store.id)
+    console.log('userId: ' + req.user.id)
+
+    let storeId = req.storeAsset.store.id
+    let affiliateId = req.user.id
+
+    Store.count({ _id: storeId, affiliate: affiliateId }).exec((err, count) => {
+      console.log('is this your store? ' + count)
+      if (count > 0) {
+        return next()
+      } else {
+        return res.status(403).json({
+          message: 'User is not authorized. Only store creator is allowed'
+        })       
+      }
+    })
+
+  } else {
+    return res.status(403).json({
+      message: 'User is not authorized. Only store creator allowed'
+    })   
+  }
+}
+
+/**
+ * Check If Stores Policy Allows
+ */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-
-  // If an Store is being processed and the current user created it then allow any manipulation
-  if (req.storeAsset && req.user && req.storeAsset.store.affiliate && req.store.affiliate.id === req.user.id) {
-    return next();
-  }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
@@ -68,5 +96,6 @@ exports.isAllowed = function (req, res, next) {
         });
       }
     }
-  });
-};
+  })
+}
+
