@@ -72,7 +72,8 @@ function createCheckoutFromSocialAccount(req, res) {
 
   let cartId = req.body.cart
   let storeId = req.body.store
-  
+  let affiliate
+
   // let cart
   let hashtags
   let overviewImgUrl
@@ -80,7 +81,8 @@ function createCheckoutFromSocialAccount(req, res) {
   getAffiliateFromStore(storeId)
     .then((res_affiliate)=> {
       console.log('getting affiliate')
-      // console.log(res_affiliate)
+      console.log('affiliateId: ' + res_affiliate.id)
+      affiliate = res_affiliate
       return getHashtagsByInstagram(res_affiliate)
       // return 'baller'
     })
@@ -88,7 +90,7 @@ function createCheckoutFromSocialAccount(req, res) {
       // res_igMeta = [{tags: [], overviewImgUrl: 'image url'},{tags: [], overviewImgUrl: 'image url'}...]
       // TODO: scott use the whole res_igMeta array and find assets from our database. instead of only the first post  
       overviewImgUrl = res_igMeta[0].overviewImgUrl
-      return res_igMeta[0].tags
+      return getAssetsByHashtagAndAffiliateId(res_igMeta[0].tags)
     })
     .then((res_hashtags)=> {
       console.log('getting hashtag')      
@@ -219,12 +221,12 @@ function getCart(cartId, storeId) {
 
 
 // Find Asset by hashtag
-function getAssetsByHashtag (tags) {
+function getAssetsByHashtagAndAffiliateId(tags, affiliateId) {
 
   return new Promise ((resolve, reject) => {
       let hashtags = []
       async.each(tags, (tag, callback) => {
-        Hashtag.findOne({ name: tag }).populate('asset').exec(function(err, res_hashtag) {
+        Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
           if (res_hashtag) {
             hashtags.push(res_hashtag)
           }

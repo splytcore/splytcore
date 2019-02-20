@@ -9,6 +9,7 @@ let Schema = mongoose.Schema
 
 /**
  * Top Sellers Schema
+ * Temporary collections for creating report
  */
 var TopSellersSchema = new Schema({
   created: {
