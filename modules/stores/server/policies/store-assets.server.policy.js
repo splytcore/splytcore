@@ -45,7 +45,7 @@ exports.invokeRolesPolicies = function () {
 };
 
 /**
- * Check If Stores Policy Allows
+ * Only allow store creator rule
  */
 exports.onlyStoreCreator = function (req, res, next) {
 
