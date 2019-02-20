@@ -76,7 +76,8 @@ function createCheckoutFromSocialAccount(req, res) {
 
   let cartId = req.body.cart
   let storeId = req.body.store
-  
+  let affiliate
+
   // let cart
   let hashtags
   let overviewImgUrl
@@ -84,7 +85,8 @@ function createCheckoutFromSocialAccount(req, res) {
   getAffiliateFromStore(storeId)
     .then((res_affiliate)=> {
       console.log('getting affiliate')
-      // console.log(res_affiliate)
+      console.log('affiliateId: ' + res_affiliate.id)
+      affiliate = res_affiliate
       return getHashtagsByInstagram(res_affiliate)
       // return 'baller'
     })
@@ -92,7 +94,7 @@ function createCheckoutFromSocialAccount(req, res) {
       // console.log('hashtags ' + res_tags.tags)
       // console.log('overviewimgURL ' + res_tags.overviewImgUrl)    
       overviewImgUrl = res_tags.overviewImgUrl
-      return getAssetsByHashtag(res_tags.tags)
+      return getAssetsByHashtagAndAffiliateId(res_tags.tags, affiliate.id)
     })
     .then((res_hashtags)=> {
       console.log('getting hashtag')      
@@ -217,12 +219,12 @@ function getCart(cartId, storeId) {
 
 
 // Find Asset by hashtag
-function getAssetsByHashtag (tags) {
+function getAssetsByHashtagAndAffiliateId(tags, affiliateId) {
 
   return new Promise ((resolve, reject) => {
       let hashtags = []
       async.each(tags, (tag, callback) => {
-        Hashtag.findOne({ name: tag }).populate('asset').exec(function(err, res_hashtag) {
+        Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
           if (res_hashtag) {
             hashtags.push(res_hashtag)
           }
