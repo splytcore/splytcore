@@ -12,8 +12,10 @@ module.exports = function(app) {
   // Carts Routes
   app.route('/api/cartsitems')
     .get(cartsItems.list)
-
     .post(cartsItems.create)
+
+  app.route('/api/instagram/:storeId')
+    .get(cartsItems.getInstagramAssets)
 
   app.route('/api/cartsitems/:cartItemId')
     .get(cartsItems.read)

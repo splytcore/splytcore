@@ -25,74 +25,13 @@ const curl = new (require('curl-request'))()
  */
 exports.create = function(req, res) {
 
-  console.log(req.body)
-
-  let fromInstagram = req.body.fromInstagram ? req.body.fromInstagram.toString() : 'false'
-  console.log('fromInstagram: ' + fromInstagram)
-
-  if (fromInstagram.indexOf('true') > -1) {
-    console.log('adding item from instagram')
-    createCheckoutFromSocialAccount(req, res)
-  } else {
-    console.log('just simple add to cart')
-    addToCart(req, res)
-  }
-
-}
-
-
-function addToCart (req, res) {
-
-  let cartId = req.body.cart
-  let storeId = req.body.store
-
-  getCart(cartId, storeId)
-    .then((cart) => {
-      res.cookie('cartId', cart.id)
-      req.body.cart = cart
-      // console.log(req.body)
-      CartItem.findOneAndUpdate({ cart: cart.id, asset: req.body.asset }, req.body, { new: true, upsert:true }, (err, cartItem) => {
-        if (err) {
-          console.log(err)
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          })
-        } else {
-          // console.log(cartItem)
-          res.jsonp(cartItem)
-        }
-      })
-    })
-    .catch((err) => {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      })                
-    })
-}
-
-
-function createCheckoutFromSocialAccount(req, res) {
-
-  // console.log(req.body)
-
-  console.log(req.cookies)
-
-  let cartId = req.body.cart
-  let storeId = req.body.store
-  let affiliate
+  let affiliate = req.store.affiliate
 
   // let cart
   let hashtags
   let overviewImgUrl
 
-  getAffiliateFromStore(storeId)
-    .then((res_affiliate)=> {
-      console.log('getting affiliate')
-      console.log('affiliateId: ' + res_affiliate.id)
-      affiliate = res_affiliate
-      return getHashtagsByInstagram(res_affiliate)
-      // return 'baller'
-    })
+  getHashtagsByInstagram(res_affiliate)
     .then((res_instagramArray)=> {
       console.log('hashtags ')
       console.log(res_instagramArray)
@@ -111,25 +50,6 @@ function createCheckoutFromSocialAccount(req, res) {
     })
 }
 
-function getAffiliateFromStore(storeId) {
-
-  return new Promise ((resolve, reject) => {
-    if (storeId) {
-      Store.findById(storeId).populate('affiliate', 'igAccessToken').exec(function(err, store) {
-        if (err) {
-          reject(err)
-        } else if (!store) {
-          reject(new Error('STORE NOT FOUND!'))
-        } else {
-          resolve(store.affiliate)
-        }
-      })
-    } else {
-      resolve()
-    }
-  })
-
-}
 //TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
 //JOSH THIS IS FOR YOU
 function getHashtagsByInstagram(affiliate) {
@@ -171,35 +91,6 @@ function getHashtagsByInstagram(affiliate) {
   
 }
 
-/*
-* Finds current existing cart header
-* Creates new one if it doesn't exist
-*/
-function getCart(cartId, storeId) {
-
-  return new Promise ((resolve, reject) => {
-    if (!cartId) {
-      console.log('create new cart')
-      let cart = new Cart()
-      cart.save((err) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(cart)
-        }
-      })
-    } else  {
-      console.log('cart exist already')
-      Cart.findById(cartId).populate('customer').exec(function(err, cart) {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(cart)
-        }
-      })
-    }
-  })
-}
 
 
 // Find Asset by hashtag
@@ -238,64 +129,31 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
 /**
  * Show the current cartItem
  */
-exports.read = function(req, res) {
-  // convert mongoose document to JSON
-  var cartItem = req.cartItemItem ? req.cartItem.toJSON() : {};
+// exports.read = function(req, res) {
+//   // convert mongoose document to JSON
+//   var cartItem = req.cartItemItem ? req.cartItem.toJSON() : {};
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  // cartItem.isCurrentUserOwner = req.user && cartItem.user && cartItem.user._id.toString() === req.user._id.toString();
+//   // Add a custom field to the Article, for determining if the current User is the "owner".
+//   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
+//   // cartItem.isCurrentUserOwner = req.user && cartItem.user && cartItem.user._id.toString() === req.user._id.toString();
 
-  res.jsonp(cartItem);
-};
+//   res.jsonp(cartItem);
+// };
 
-/**
- * Update a cartItem
- */
-exports.update = function(req, res) {
-  var cartItem = req.cartItem;
-
-  cartItem = _.extend(cartItem, req.body);
-
-  cartItem.save(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(cartItem);
-    }
-  });
-};
-
-/**
- * Delete an cartItem
- */
-exports.delete = function(req, res) {
-  var cartItem = req.cartItem;
-
-  cartItem.remove(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(cartItem);
-    }
-  });
-};
 
 /**
  * List of cartItems
  */
 exports.list = function(req, res) {
-  CartItem.find().sort('-created').populate('user', 'displayName').exec(function(err, cartItems) {
+  let id = req.params.instgramAssets._id
+
+  InstagramAssets.findById(id).populate('assets').exec(function(err, instagramAssets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(cartItems);
+      res.jsonp(instagramAssets);
     }
   });
 };
