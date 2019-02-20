@@ -70,10 +70,6 @@ function addToCart (req, res) {
 
 function createCheckoutFromSocialAccount(req, res) {
 
-  // console.log(req.body)
-
-  console.log(req.cookies)
-
   let cartId = req.body.cart
   let storeId = req.body.store
   let affiliate
@@ -90,11 +86,11 @@ function createCheckoutFromSocialAccount(req, res) {
       return getHashtagsByInstagram(res_affiliate)
       // return 'baller'
     })
-    .then((res_tags)=> {
-      // console.log('hashtags ' + res_tags.tags)
-      // console.log('overviewimgURL ' + res_tags.overviewImgUrl)    
-      overviewImgUrl = res_tags.overviewImgUrl
-      return getAssetsByHashtagAndAffiliateId(res_tags.tags, affiliate.id)
+    .then((res_igMeta)=> { 
+      // res_igMeta = [{tags: [], overviewImgUrl: 'image url'},{tags: [], overviewImgUrl: 'image url'}...]
+      // TODO: scott use the whole res_igMeta array and find assets from our database. instead of only the first post  
+      overviewImgUrl = res_igMeta[0].overviewImgUrl
+      return getAssetsByHashtagAndAffiliateId(res_igMeta[0].tags)
     })
     .then((res_hashtags)=> {
       console.log('getting hashtag')      
@@ -153,7 +149,6 @@ function getAffiliateFromStore(storeId) {
 
 }
 //TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
-//JOSH THIS IS FOR YOU
 function getHashtagsByInstagram(affiliate) {
   return new Promise((resolve, reject) => {
     if(!affiliate.igAccessToken){
@@ -166,13 +161,20 @@ function getHashtagsByInstagram(affiliate) {
       if(statusCode === 200) {
         let bodyJson = JSON.parse(body)
         let tags = bodyJson.data[0].tags
-        console.log('tags')
-        console.log(tags)
-        let overviewImgUrl = bodyJson.data[0].images.standard_resolution.url
-
-        // let overviewImgUrl = "imag/rulds.pic"
-        // console.log(tag)
-        resolve({ tags: tags, overviewImgUrl: overviewImgUrl })
+        let response = []
+        async.each(bodyJson.data, (post, callback) => {
+          response.push({
+            tags: post.tags,
+            overviewImgUrl: post.images.standard_resolution.url
+          })
+          callback()
+        }, err => {
+          if(err) {
+            console.log('Couldnt fetch all posts')
+            return reject('Couldnt fetch all posts')
+          }
+          resolve(response)
+        })
       } else {
         console.log(statusCode, body)
         reject(JSON.parse(body).meta.error_message)

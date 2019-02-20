@@ -38,7 +38,7 @@
       <li class="dropdown" dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
           <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
-          <span ng-bind="authentication.user.displayName"></span><span> 
+          <span ng-bind="authentication.user.instagramUsername ? authentication.user.instagramUsername : authentication.user.displayName"></span><span> 
  	  <!-- ({{ authentication.user.etherBalance | number: '8' }}  /  {{ authentication.user.tokenBalance }}) -->
         </span><b class="caret"></b>
         </a>
