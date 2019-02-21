@@ -97,7 +97,8 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
                 price: res_hashtag.asset.price, 
                 imageURL: res_hashtag.asset.imageURL ? res_hashtag.asset.imageURL : [],
                 brand: res_hashtag.asset.brand ? res_hashtag.asset.brand : '',
-                description: res_hashtag.asset.description ? res_hashtag.asset.description : ''
+                description: res_hashtag.asset.description ? res_hashtag.asset.description : '',
+                inventoryCount: res_hashtag.asset.inventoryCount
               })   
               //TODO: save or not to save?
             }
