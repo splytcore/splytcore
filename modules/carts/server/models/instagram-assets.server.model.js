@@ -19,7 +19,12 @@ let InstagramAssetsSchema = new Schema({
       type: String
     },
     title: {
-      type: String
+      type: String,
+      default: ''
+    },
+    imageURL: {
+      type: String,
+      default: ''  
     },
     price: {
       type: Number

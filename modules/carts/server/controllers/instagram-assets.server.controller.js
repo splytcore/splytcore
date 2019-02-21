@@ -6,15 +6,8 @@
 const path = require('path')
 const async = require('async')
 const mongoose = require('mongoose')
-const Asset = mongoose.model('Asset')
-const Store = mongoose.model('Store')
-const Cart = mongoose.model('Cart')
-const CartItem = mongoose.model('CartItem')
-
 const InstagramAssets = mongoose.model('InstagramAssets')
-
 const Hashtag = mongoose.model('Hashtag')
-
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const  _ = require('lodash')
 const curl = new (require('curl-request'))()
@@ -39,26 +32,6 @@ exports.read = function(req, res) {
           message: err.toString()
         })
     })
-}
-
-function getAffiliateFromStore(storeId) {
-
-  return new Promise ((resolve, reject) => {
-    if (storeId) {
-      Store.findById(storeId).populate('affiliate', 'igAccessToken').exec(function(err, store) {
-        if (err) {
-          reject(err)
-        } else if (!store) {
-          reject(new Error('STORE NOT FOUND!'))
-        } else {
-          resolve(store.affiliate)
-        }
-      })
-    } else {
-      resolve()
-    }
-  })
-
 }
 
 //TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
@@ -104,15 +77,11 @@ function getHashtagsByInstagram(affiliate) {
 
 
 
-// Find Asset by hashtag
+// Find Assets by hashtag and returns to client in array
 function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
 
-  console.log('number of instgrams: ' + instagramArray.length)
-
   return new Promise ((resolve, reject) => {
-    
     let instagramAssetsArray = []
-
     async.each(instagramArray, (instagram, callback) => {  
         
         let tags = instagram.tags   
@@ -120,10 +89,9 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
      
         async.each(tags, (tag, callback2) => {
           Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
-            console.log(instagram.overviewImgUrl)
             instagramAssets.overviewImageUrl = instagram.overviewImgUrl
             if (res_hashtag) {
-              instagramAssets.assets.push({ _id: res_hashtag.asset.id, title: res_hashtag.asset.title, price: res_hashtag.asset.price })   
+              instagramAssets.assets.push({ _id: res_hashtag.asset.id, title: res_hashtag.asset.title, price: res_hashtag.asset.price, imgURL: res_hashtag.asset.imgURL })   
               //TODO: save or not to save?
             }
             callback2(err)
