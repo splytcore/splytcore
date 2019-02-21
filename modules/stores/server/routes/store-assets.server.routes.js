@@ -10,6 +10,8 @@ module.exports = function(app) {
   // Stores Routes
   app.route('/api/storeassets').all(storeAssetsPolicy.isAllowed)
     .get(storeAssets.list)
+
+  app.route('/api/storeassets').all(storeAssetsPolicy.onlyStoreCreator)
     .post(storeAssets.create)
 
   app.route('/api/storeassets/:storeAssetId').all(storeAssetsPolicy.isAllowed)
