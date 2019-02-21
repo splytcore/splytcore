@@ -10,6 +10,12 @@ const core = require(path.resolve('./modules/core/server/controllers/core.server
 // const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))  
 
 console.log(core.paginate)
+
+/*
+*
+* TODO: Security only allow creator of the asset to update, delete
+*
+*/
 module.exports = function(app) {
   // assets Routes
   app.route('/api/assets').all(assetsPolicy.isAllowed)
@@ -22,13 +28,10 @@ module.exports = function(app) {
   app.route('/api/assets/mine').all(assetsPolicy.isAllowed)
     .get(core.paginate, assets.listMyAssets)
 
-
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
     .get(assets.read, assets.incrementView)
     .put(assets.update)
     .delete(assets.delete)
-
-
 
   // Finish by binding the asset middleware
   app.param('assetId', assets.assetByID)
