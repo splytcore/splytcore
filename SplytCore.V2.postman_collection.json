@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b61258e9-f5eb-4ad7-9484-4c9e5aac6a1a",
+		"_postman_id": "e47a80df-81c9-4d35-865a-9a48131c91f7",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -937,7 +937,31 @@
 					"response": []
 				},
 				{
-					"name": "Create Cart from Instagram",
+					"name": "Get Instagram items by storeId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/instagramAssets/{{storeId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"instagramAssets",
+								"{{storeId}}"
+							]
+						},
+						"description": "This will get all hashtagged items from instagram in the latest post"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item to cart",
 					"event": [
 						{
 							"listen": "test",
@@ -957,18 +981,18 @@
 							{
 								"key": "Content-Type",
 								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
 							},
 							{
 								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
 							},
 							{
 								"key": "Cookie",
-								"value": "storeId={{storeId}}",
-								"type": "text"
+								"type": "text",
+								"value": "storeId={{storeId}}"
 							}
 						],
 						"body": {
@@ -977,13 +1001,24 @@
 								{
 									"key": "store",
 									"value": "{{storeId}}",
-									"description": "store id",
+									"description": "storeId",
 									"type": "text"
 								},
 								{
-									"key": "fromInstagram",
-									"value": "true",
-									"description": "set to true if redirected from Instagram",
+									"key": "asset",
+									"value": "{{assetId}}",
+									"description": "assetId",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "cart",
+									"value": "{{cartId}}",
+									"description": "optional. Will create new one if none passed",
 									"type": "text"
 								}
 							]
@@ -998,30 +1033,6 @@
 								"cartsitems"
 							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get cart items from instagram",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/carts/{{cartId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"carts",
-								"{{cartId}}"
-							]
-						},
-						"description": "This will get all hashtagged items from instagram in the latest post"
 					},
 					"response": []
 				},
