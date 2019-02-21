@@ -319,7 +319,7 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   let order = req.order ? req.order.toJSON() : {}
     
-  //remove addresses of order if viewing as guest 
+  //remove addresses of order if viewing as guest for now
   if (!req.user) {
     delete order.shipping
     delete order.billing

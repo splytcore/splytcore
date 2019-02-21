@@ -98,7 +98,8 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
                 imageURL: res_hashtag.asset.imageURL ? res_hashtag.asset.imageURL : [],
                 brand: res_hashtag.asset.brand ? res_hashtag.asset.brand : '',
                 description: res_hashtag.asset.description ? res_hashtag.asset.description : '',
-                inventoryCount: res_hashtag.asset.inventoryCount
+                inventoryCount: res_hashtag.asset.inventoryCount,
+                hashtag: res_hashtag._id //to be used when adding to card to give credit which hashtag used
               })   
               //TODO: save or not to save?
             }

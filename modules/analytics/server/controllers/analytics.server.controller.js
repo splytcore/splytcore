@@ -11,6 +11,7 @@ const Analytic = mongoose.model('Analytic')
 const Asset = mongoose.model('Asset')
 const Order = mongoose.model('Order')
 const Store = mongoose.model('Store')
+const User = mongoose.model('User')
 const StoreAsset = mongoose.model('StoreAsset')
 const TopSellers = mongoose.model('TopSellers')
 const SellerSalesSummary = mongoose.model('SellerSalesSummary')
@@ -341,7 +342,7 @@ exports.getTopSellingAssets = function(req, res) {
 
 /* 
 * Get sellers sales summary 
-* TODO: delete records after generating report
+
 */
 exports.getSellerSalesSummary = function(req, res) {
 
@@ -375,6 +376,83 @@ exports.getSellerSalesSummary = function(req, res) {
           return Promise.reject(err)
         }
         res.jsonp(result)
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(400).send({
+        message: err.toString()
+      })
+    })
+}
+
+/* 
+* Get sellers sales summary 
+* Total Gross Sales from begining
+* Total number of orders
+
+* Total number assets
+* Total number of Sellers
+* Total number of Affiliates
+* Total commission
+* Total commissions
+*/
+exports.getGeneralSalesSummary = function(req, res) {
+
+  // let q = req.query
+
+  let totalGrossSales = 0
+  let totalSellers = 0
+  let totalQuantity = 0
+  let totalAffiliates = 0
+  let totalRewards = 0
+  let totalOrders = 0
+  let totalAssets = 0
+
+
+  OrderItem.find().populate('order').populate('asset').exec()
+    .then((orderItems) => {
+      if (!orderItems) {
+        return Promise.reject('No orders for seller found')
+      }
+      async.each(orderItems, (item, cb) => {
+        totalGrossSales += item.asset.price * item.quantity
+        totalQuantity += item.quantity
+        totalRewards += item.asset.reward
+        cb()
+      }, (err) => {
+        if (err) {
+          return Promise.reject(err)
+        } else {
+          return
+        }
+      })
+    })
+    .then(() => { 
+      return Order.count().exec()
+    })
+    .then((ordersLength) => {
+      totalOrders = ordersLength 
+      return Asset.count().exec()
+    })
+    .then((assetsLength) => {
+      totalAssets = assetsLength
+      return User.count({ roles: 'seller' }).exec()
+    })
+    .then((sellersLength) => { 
+      totalSellers = sellersLength
+      return User.count({ roles: 'affiliate' }).exec()
+    })
+    .then((affiliatesLength) => { 
+      totalAffiliates = affiliatesLength
+      res.jsonp({ 
+        totalGrossSales: totalGrossSales, 
+        totalSellers: totalSellers, 
+        totalQuantity: totalQuantity, 
+        totalAffiliates: totalAffiliates, 
+        totalRewards: totalRewards,
+        totalOrders: totalOrders,
+        totalAssets: totalAssets
       })
     })
     .catch((err) => {
