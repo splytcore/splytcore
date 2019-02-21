@@ -111,7 +111,10 @@ exports.signin = function (req, res, next) {
         } else {            
           let cookies = req.cookies   
           console.log(cookies.sessionId)       
-          res.json({ user: user, sessionId: cookies.sessionId })
+          res.json({ 
+            user: user, 
+            sessionId: cookies.sessionId 
+          })
         }
       })
     }
