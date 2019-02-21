@@ -40,13 +40,15 @@
           description: dataArray[0].indexOf('Body (HTML)'),
           sku: dataArray[0].indexOf('Variant SKU'),
           inventoryCount: dataArray[0].indexOf('Variant Inventory Qty'),
-          price: dataArray[0].indexOf('Variant Inventory Qty'),
+          price: dataArray[0].indexOf('Variant Price'),
           imageUrl: dataArray[0].indexOf('Image Src'),
         }
 
         $scope.progressBarDenomination = 100 / dataArray.length -1
         
         $scope.uploadedData = []
+
+        console.log(rawColnIndex)
 
         let dataArraylen = dataArray.length
         // Convert array csv to object array
@@ -105,6 +107,11 @@
         function errorCallback(res) {
           vm.error = res.data.message;
         }
+      }
+
+      $scope.editThis = (dataElem) => {
+        console.log(dataElem)
+        dataElem.title = '<input value="' + dataElem.title + '"></input>'
       }
       
     }

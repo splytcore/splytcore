@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2aa53243-fbc0-4455-8313-5043a0d99f0e",
+		"_postman_id": "e47a80df-81c9-4d35-865a-9a48131c91f7",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -120,6 +120,13 @@
 									"if(data.user.roles.indexOf('seller') > -1) {",
 									"    pm.globals.set(\"sellerId\", data.user._id);",
 									"}",
+									"if(data.user.roles.indexOf('affiliate') > -1) {",
+									"    pm.globals.set(\"affiliateId\", data.user._id);",
+									"}",
+									"if(data.user.roles.indexOf('customer') > -1) {",
+									"    pm.globals.set(\"customerId\", data.user._id);",
+									"}",
+									"",
 									""
 								],
 								"type": "text/javascript"
@@ -716,7 +723,7 @@
 								},
 								{
 									"key": "imageURL",
-									"value": "[{{assetImageUrl}}]",
+									"value": "{{assetImageUrl}}",
 									"description": "!required: full image url or partial url",
 									"type": "text"
 								},
@@ -861,63 +868,14 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{local}}/api/assets?user={{sellerId}}",
+							"raw": "{{local}}/api/assets/mine",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
-								"assets"
-							],
-							"query": [
-								{
-									"key": "user",
-									"value": "{{sellerId}}"
-								}
-							]
-						},
-						"description": "List all my items as a seller"
-					},
-					"response": []
-				},
-				{
-					"name": "Seller remaining inventory info",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/analytics/sellers/remainingInventory?userId={{sellerId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"analytics",
-								"sellers",
-								"remainingInventory"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "{{sellerId}}"
-								}
+								"assets",
+								"mine"
 							]
 						},
 						"description": "List all my items as a seller"
@@ -979,7 +937,31 @@
 					"response": []
 				},
 				{
-					"name": "Create Cart from Instagram",
+					"name": "Get Instagram items by storeId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/instagramAssets/{{storeId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"instagramAssets",
+								"{{storeId}}"
+							]
+						},
+						"description": "This will get all hashtagged items from instagram in the latest post"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item to cart",
 					"event": [
 						{
 							"listen": "test",
@@ -999,18 +981,18 @@
 							{
 								"key": "Content-Type",
 								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
 							},
 							{
 								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
 							},
 							{
 								"key": "Cookie",
-								"value": "storeId={{storeId}}",
-								"type": "text"
+								"type": "text",
+								"value": "storeId={{storeId}}"
 							}
 						],
 						"body": {
@@ -1019,13 +1001,24 @@
 								{
 									"key": "store",
 									"value": "{{storeId}}",
-									"description": "store id",
+									"description": "storeId",
 									"type": "text"
 								},
 								{
-									"key": "fromInstagram",
-									"value": "true",
-									"description": "set to true if redirected from Instagram",
+									"key": "asset",
+									"value": "{{assetId}}",
+									"description": "assetId",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "cart",
+									"value": "{{cartId}}",
+									"description": "optional. Will create new one if none passed",
 									"type": "text"
 								}
 							]
@@ -1040,30 +1033,6 @@
 								"cartsitems"
 							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get cart items from instagram",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/carts/{{cartId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"carts",
-								"{{cartId}}"
-							]
-						},
-						"description": "This will get all hashtagged items from instagram in the latest post"
 					},
 					"response": []
 				},
@@ -1094,52 +1063,52 @@
 									"type": "text"
 								},
 								{
-									"key": "billing[address1]",
-									"value": "123 address",
+									"key": "billing.address1",
+									"value": "123 street ave",
 									"type": "text"
 								},
 								{
-									"key": "billing[address2]",
+									"key": "billing.address2",
 									"value": "apt2",
 									"type": "text"
 								},
 								{
-									"key": "billing[city]",
+									"key": "billing.city",
 									"value": "Santa Monica",
 									"type": "text"
 								},
 								{
-									"key": "billing[state]",
+									"key": "billing.state",
 									"value": "CA",
 									"type": "text"
 								},
 								{
-									"key": "billing[zip]",
+									"key": "billing.zip",
 									"value": "91311",
 									"type": "text"
 								},
 								{
-									"key": "shipping[address1]",
+									"key": "shipping.address1",
 									"value": "456 Blvd",
 									"type": "text"
 								},
 								{
-									"key": "shipping[address2]",
+									"key": "shipping.address2",
 									"value": "",
 									"type": "text"
 								},
 								{
-									"key": "shipping[city]",
+									"key": "shipping.city",
 									"value": "Northridge",
 									"type": "text"
 								},
 								{
-									"key": "shipping[state]",
+									"key": "shipping.state",
 									"value": "New York",
 									"type": "text"
 								},
 								{
-									"key": "shipping[zip]",
+									"key": "shipping.zip",
 									"value": "912345",
 									"type": "text"
 								},
@@ -1245,6 +1214,290 @@
 								"cartsitems"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "Get top selling items for date range",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/topSellingAssets?fromDateMS=0&thruDateMS=999999999&limit=3",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"topSellingAssets"
+							],
+							"query": [
+								{
+									"key": "fromDateMS",
+									"value": "0",
+									"description": "from date in milliseconds"
+								},
+								{
+									"key": "thruDateMS",
+									"value": "999999999",
+									"description": "thru date in milliseconds"
+								},
+								{
+									"key": "limit",
+									"value": "3",
+									"description": "get  top x selling items"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
+					"name": "Affiliate report to get gross sales by date range",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/affiliates/grossSales?fromDateMS=0&thruDateMS=999999999&userId={{affiliateId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"affiliates",
+								"grossSales"
+							],
+							"query": [
+								{
+									"key": "fromDateMS",
+									"value": "0",
+									"description": "from date in milliseconds"
+								},
+								{
+									"key": "thruDateMS",
+									"value": "999999999",
+									"description": "thru date in milliseconds"
+								},
+								{
+									"key": "userId",
+									"value": "{{affiliateId}}",
+									"description": "affiliateId"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
+					"name": "Seller report to get gross sales by date range",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/sellers/grossSales?fromDateMS=0&thruDateMS=999999999&userId={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"sellers",
+								"grossSales"
+							],
+							"query": [
+								{
+									"key": "fromDateMS",
+									"value": "0",
+									"description": "from date in milliseconds"
+								},
+								{
+									"key": "thruDateMS",
+									"value": "999999999",
+									"description": "thru date in milliseconds"
+								},
+								{
+									"key": "userId",
+									"value": "{{sellerId}}",
+									"description": "sellerId"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
+					"name": "Seller report to get remaining inventory count and value",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/sellers/remainingInventory?userId={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"sellers",
+								"remainingInventory"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{sellerId}}",
+									"description": "sellerId"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
+					"name": "Seller report to get how many affiliates sold my items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/sellers/affiliatesLength?userId={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"sellers",
+								"affiliatesLength"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{sellerId}}",
+									"description": "SellerId"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
 					},
 					"response": []
 				}

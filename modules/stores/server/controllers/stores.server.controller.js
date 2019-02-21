@@ -145,13 +145,14 @@ exports.list = function(req, res) {
  */
 exports.storeByID = function(req, res, next, id) {
 
+  console.log('middlware get store')
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Store is invalid'
     });
   }
 
-  Store.findById(id).populate('affiliate', 'displayName').populate('categories').exec(function (err, store) {
+  Store.findById(id).populate('affiliate', 'displayName').populate('affiliate', '-password -salt').populate('categories').exec(function (err, store) {
     if (err) {
       return next(err);
     } else if (!store) {

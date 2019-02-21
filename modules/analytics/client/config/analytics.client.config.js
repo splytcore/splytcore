@@ -9,24 +9,24 @@
 
   function menuConfig(Menus) {
     // Set top bar menu items
-    // Menus.addMenuItem('topbar', {
-    //   title: 'Analytics',
-    //   state: 'analytics',
-    //   type: 'dropdown',
-    //   roles: ['user', 'admin']
-    // });
+    Menus.addMenuItem('topbar', {
+      title: 'Analytics',
+      state: 'analytics',
+      type: 'dropdown',
+      roles: ['user', 'admin']
+    });
 
-    // // Add the dropdown list item
-    // Menus.addSubMenuItem('topbar', 'analytics', {
-    //   title: 'List Analytics',
-    //   state: 'analytics.list'
-    // });
+    // Add the dropdown list item
+    Menus.addSubMenuItem('topbar', 'analytics', {
+      title: 'List Analytics',
+      state: 'analytics.list'
+    });
 
-    // // Add the dropdown create item
-    // Menus.addSubMenuItem('topbar', 'analytics', {
-    //   title: 'Create Analytic',
-    //   state: 'analytics.create',
-    //   roles: ['user']
-    // });
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'analytics', {
+      title: 'Create Analytic',
+      state: 'analytics.create',
+      roles: ['user']
+    });
   }
 }());

@@ -31,6 +31,12 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'put']
     }]
   }, {
+    roles: ['seller'],
+    allows: [{
+      resources: ['/api/assets/mine'],
+      permissions: ['get']
+    }]
+  }, {
     roles: ['guest'],
     allows: [{
       resources: '/api/assets',
@@ -41,6 +47,20 @@ exports.invokeRolesPolicies = function () {
     }]
   }]);
 };
+/**
+ * Check If asset creator allows modification
+ */
+exports.onlyAssetCreator = function (req, res, next) {
+
+  if (req.user.id === req.asset.user.id) {
+    return next()
+  } else {
+    return res.status(403).json({
+      message: 'User is not authorized'
+    })     
+  }
+
+}
 
 /**
  * Check If assets Policy Allows

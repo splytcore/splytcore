@@ -6,9 +6,9 @@
     .module('analytics')
     .controller('AnalyticsController', AnalyticsController);
 
-  AnalyticsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'analyticResolve'];
+  AnalyticsController.$inject = ['$http', '$scope', '$state', '$window', 'Authentication', 'analyticResolve'];
 
-  function AnalyticsController ($scope, $state, $window, Authentication, analytic) {
+  function AnalyticsController ($http, $scope, $state, $window, Authentication, analytic) {
     var vm = this;
 
     vm.authentication = Authentication;

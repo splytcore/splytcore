@@ -17,20 +17,20 @@
       <thead>
         <tr>
           <th>Description</th>
-          <th>Title</th>
-          <th>Image Url</th>
-          <th>a</th>
-          <th>Price</th>
-          <th>Inventory</th>
-          <th>SKU</th>
           <th>Hashtags</th>
+          <th>Image Url</th>
+          <th>Inventory</th>
+          <th>Price</th>
+          <th>Reward</th>
+          <th>SKU</th>
+          <th>Title</th>
 
 
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="x in uploadedData">
-          <td ng-repeat="title in x" style="max-width: 200px; overflow: hidden">{{title}}</td>
+        <tr ng-repeat="x in uploadedData" >
+          <td ng-click="editThis(this)" ng-repeat="title in x" style="max-width: 200px; overflow: hidden">{{title}}</td>
         </tr>
       </tbody>
     </table>

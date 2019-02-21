@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', '$cookies', '$rootScope', '$interval',
-  function ($q, $scope, Authentication, $cookies, $rootScope, $interval) {
+angular.module('core').controller('HomeController', ['$q', '$scope', 'Authentication', '$rootScope', '$interval',
+  function ($q, $scope, Authentication, $rootScope, $interval) {
     // This provides Authentication context.
     $scope.authentication = Authentication
     $scope.user = $scope.authentication.user

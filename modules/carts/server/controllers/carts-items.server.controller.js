@@ -10,6 +10,9 @@ const Asset = mongoose.model('Asset')
 const Store = mongoose.model('Store')
 const Cart = mongoose.model('Cart')
 const CartItem = mongoose.model('CartItem')
+
+const InstagramAssets = mongoose.model('InstagramAssets')
+
 const Hashtag = mongoose.model('Hashtag')
 
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
@@ -23,22 +26,6 @@ const curl = new (require('curl-request'))()
 exports.create = function(req, res) {
 
   console.log(req.body)
-
-  let fromInstagram = req.body.fromInstagram ? req.body.fromInstagram.toString() : 'false'
-  console.log('fromInstagram: ' + fromInstagram)
-
-  if (fromInstagram.indexOf('true') > -1) {
-    console.log('adding item from instagram')
-    createCheckoutFromSocialAccount(req, res)
-  } else {
-    console.log('just simple add to cart')
-    addToCart(req, res)
-  }
-
-}
-
-
-function addToCart (req, res) {
 
   let cartId = req.body.cart
   let storeId = req.body.store
@@ -65,124 +52,6 @@ function addToCart (req, res) {
         message: errorHandler.getErrorMessage(err)
       })                
     })
-}
-
-
-function createCheckoutFromSocialAccount(req, res) {
-
-  // console.log(req.body)
-
-  console.log(req.cookies)
-
-  let cartId = req.body.cart
-  let storeId = req.body.store
-  
-  // let cart
-  let hashtags
-  let overviewImgUrl
-
-  getAffiliateFromStore(storeId)
-    .then((res_affiliate)=> {
-      console.log('getting affiliate')
-      // console.log(res_affiliate)
-      return getHashtagsByInstagram(res_affiliate)
-      // return 'baller'
-    })
-    .then((res_tags)=> {
-      // console.log('hashtags ' + res_tags.tags)
-      // console.log('overviewimgURL ' + res_tags.overviewImgUrl)    
-      overviewImgUrl = res_tags.overviewImgUrl
-      return getAssetsByHashtag(res_tags.tags)
-    })
-    .then((res_hashtags)=> {
-      console.log('getting hashtag')      
-      hashtags = res_hashtags
-      return getCart(cartId, storeId) 
-    })
-    .then((res_cart)=> {
-      // console.log(res_cart)
-      // console.log(asset)
-      console.log('adding to cart now!')
-      let cartId = res_cart._id
-      async.each(hashtags, (hashtag, callback) => {
-        let cartItem = req.body
-        cartItem.cart = res_cart
-        cartItem.asset = hashtag.asset
-        cartItem.hashtag = hashtag
-        cartItem.store = storeId
-        CartItem.findOneAndUpdate({ cart: cartId, asset: cartItem.asset._id }, cartItem, { new: true, upsert:true }, (err, result_cartItem) => {
-          callback(err)
-        })
-      }, (err) => {
-        if (err) {
-          return Promise.reject(err)
-        } else {
-          res_cart.overviewImageUrl = overviewImgUrl      
-          res_cart.save((err) => {
-            res.jsonp(res_cart)
-          })
-        }
-      })
-    })
-    .catch((err) => {
-      return res.status(400).send({
-          message: err.toString()
-        })
-    })
-}
-
-function getAffiliateFromStore(storeId) {
-
-  return new Promise ((resolve, reject) => {
-    if (storeId) {
-      Store.findById(storeId).populate('affiliate', 'igAccessToken').exec(function(err, store) {
-        if (err) {
-          reject(err)
-        } else if (!store) {
-          reject(new Error('STORE NOT FOUND!'))
-        } else {
-          resolve(store.affiliate)
-        }
-      })
-    } else {
-      resolve()
-    }
-  })
-
-}
-//TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
-//JOSH THIS IS FOR YOU
-function getHashtagsByInstagram(affiliate) {
-  return new Promise((resolve, reject) => {
-    if(!affiliate.igAccessToken){
-      reject(new Error('Instagram access token not found!'))
-    }
-    let getProfileUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
-
-    curl.get(getProfileUrl)
-    .then(({statusCode, body}) => {
-      if(statusCode === 200) {
-        let bodyJson = JSON.parse(body)
-        let tags = bodyJson.data[0].tags
-        console.log('tags')
-        console.log(tags)
-        let overviewImgUrl = bodyJson.data[0].images.standard_resolution.url
-
-        // let overviewImgUrl = "imag/rulds.pic"
-        // console.log(tag)
-        resolve({ tags: tags, overviewImgUrl: overviewImgUrl })
-      } else {
-        console.log(statusCode, body)
-        reject(JSON.parse(body).meta.error_message)
-      }
-    })
-    .catch(e => {
-      console.log(e)
-      reject(e)
-    })
-  })
-  
-  
 }
 
 /*
@@ -212,29 +81,6 @@ function getCart(cartId, storeId) {
         }
       })
     }
-  })
-}
-
-
-// Find Asset by hashtag
-function getAssetsByHashtag (tags) {
-
-  return new Promise ((resolve, reject) => {
-      let hashtags = []
-      async.each(tags, (tag, callback) => {
-        Hashtag.findOne({ name: tag }).populate('asset').exec(function(err, res_hashtag) {
-          if (res_hashtag) {
-            hashtags.push(res_hashtag)
-          }
-          callback(err)
-        })
-      }, (err) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(hashtags)
-        }
-      })
   })
 }
 

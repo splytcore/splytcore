@@ -25,8 +25,6 @@
     vm.remove = remove;
     vm.save = save;
 
-
-
     // Remove existing Store
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
@@ -50,7 +48,7 @@
       }
 
       function successCallback(res) {
-        $state.go('stores.view', {
+        $state.go('affiliates.storesEdit', {
           storeId: res._id
         });
       }

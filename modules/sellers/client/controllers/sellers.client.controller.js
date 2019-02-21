@@ -6,9 +6,9 @@
     .module('sellers')
     .controller('SellersController', SellersController);
 
-  SellersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'AssetsService', 'CategoriesService'];
+  SellersController.$inject = ['$http','$scope', '$state', '$window', 'Authentication', 'AssetsService', 'CategoriesService'];
 
-  function SellersController ($scope, $state, $window, Authentication, AssetsService, CategoriesService) {
+  function SellersController ($http, $scope, $state, $window, Authentication, AssetsService, CategoriesService) {
     var vm = this;
 
     vm.user = Authentication.user;
@@ -17,7 +17,15 @@
     vm.remove = remove
     vm.create = create
 
-    vm.assets = AssetsService.query({ user: vm.user._id })
+    $http.get('api/assets/mine')
+      .then((result) => {
+        vm.assets = result.data
+      })
+      .catch((err) => {
+        alert(err)
+      })
+
+
     vm.asset = new AssetsService()
 
     vm.categories = CategoriesService.query()
