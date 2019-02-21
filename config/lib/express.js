@@ -88,7 +88,7 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
-  app.use(cors({credentials: true, origin: ['https://shop.pollenly.com', 'http://localhost:3000', 'http://localhost:8100', 'http://localhost:5000']}));  
+  app.use(cors({credentials: true, origin: ['https://shop.pollenly.com', 'http://localhost:3000']}));  
 };
 
 /**
@@ -115,7 +115,8 @@ module.exports.initSession = function (app, db) {
     cookie: {
       maxAge: config.sessionCookie.maxAge,
       httpOnly: config.sessionCookie.httpOnly,
-      secure: config.sessionCookie.secure && config.secure.ssl
+      secure: config.sessionCookie.secure && config.secure.ssl,
+      domain: '.pollenly.com'
     },
     key: config.sessionKey,
     store: new MongoStore({
