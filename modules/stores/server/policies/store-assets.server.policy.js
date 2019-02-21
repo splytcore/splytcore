@@ -49,12 +49,9 @@ exports.invokeRolesPolicies = function () {
  */
 exports.onlyStoreCreator = function (req, res, next) {
 
-  if (req.user && req.storeAsset) {
+  if (req.user) {    
 
-    console.log('storeId: ' + req.storeAsset.store.id)
-    console.log('userId: ' + req.user.id)
-
-    let storeId = req.storeAsset.store.id
+    let storeId = req.storeAsset ? req.storeAsset.store.id : req.body.store
     let affiliateId = req.user.id
 
     Store.count({ _id: storeId, affiliate: affiliateId }).exec((err, count) => {

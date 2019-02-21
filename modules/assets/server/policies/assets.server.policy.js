@@ -47,6 +47,20 @@ exports.invokeRolesPolicies = function () {
     }]
   }]);
 };
+/**
+ * Check If asset creator allows modification
+ */
+exports.onlyAssetCreator = function (req, res, next) {
+
+  if (req.user.id === req.asset.user.id) {
+    return next()
+  } else {
+    return res.status(403).json({
+      message: 'User is not authorized'
+    })     
+  }
+
+}
 
 /**
  * Check If assets Policy Allows

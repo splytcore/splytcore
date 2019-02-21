@@ -4,6 +4,8 @@
 
   <div class="page-header">
     <h3> My Cart </h3>
+
+{{ vm.instagramAssets }}
   </div>
 
   <div class="list-group">
@@ -33,6 +35,16 @@
     </div>
   
   </div>
+
+
+  <div class="list-group">
+    <a ng-repeat="item in vm.hashtagAssets"
+       class="list-group-item">
+       {{item}}
+  </a>
+
+  </div>
+
 
 
   <div class="panel panel-primary">
