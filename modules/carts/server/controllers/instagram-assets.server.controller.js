@@ -91,7 +91,14 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
           Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
             instagramAssets.overviewImageUrl = instagram.overviewImgUrl
             if (res_hashtag) {
-              instagramAssets.assets.push({ _id: res_hashtag.asset.id, title: res_hashtag.asset.title, price: res_hashtag.asset.price, imgURL: res_hashtag.asset.imgURL })   
+              instagramAssets.assets.push({ 
+                _id: res_hashtag.asset._id, 
+                title: res_hashtag.asset.title, 
+                price: res_hashtag.asset.price, 
+                imageURL: res_hashtag.asset.imageURL ? res_hashtag.asset.imageURL : [],
+                brand: res_hashtag.asset.brand ? res_hashtag.asset.brand : ''
+                description: res_hashtag.asset.description ? res_hashtag.asset.description : ''
+              })   
               //TODO: save or not to save?
             }
             callback2(err)
