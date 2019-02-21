@@ -121,15 +121,8 @@ exports.delete = function(req, res) {
  * List of Stores
  */
 exports.list = function(req, res) {
-  
-  let q = req.query
 
-  if (q.storeName) {
-    q.name = q.storeName
-    delete q.storeName
-  }
-
-  Store.find(q).sort('-created').populate('affiliate', 'displayName profileImageURL').exec(function(err, stores) {
+  Store.find({}).sort('-created').populate('affiliate', 'displayName profileImageURL').exec(function(err, stores) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -138,6 +131,18 @@ exports.list = function(req, res) {
       res.jsonp(stores);
     }
   });
+}
+
+exports.listByName = function(req, res) {
+
+  Store.findOne(req.params).sort('-created').populate('affiliate', 'displayName profileImageURL').exec((err, store) => {
+    if(err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.jsonp(store)
+  })
 }
 
 /**

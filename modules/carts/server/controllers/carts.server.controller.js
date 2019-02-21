@@ -40,13 +40,12 @@ exports.read = function(req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-    } else {
-      cart.totalQuantity = cartItems.reduce((total, i) => total + i.quantity, 0)
-      cart.totalCost = cartItems.reduce((total, i) => total + i.asset.price * i.quantity, 0)
-
-      cart.cartItems = cartItems
-      res.jsonp(cart)
     }
+    cart.totalQuantity = cartItems.reduce((total, i) => total + i.quantity, 0)
+    cart.totalCost = cartItems.reduce((total, i) => total + i.asset.price * i.quantity, 0)
+
+    cart.cartItems = cartItems
+    res.jsonp(cart)
   })
 
 }
