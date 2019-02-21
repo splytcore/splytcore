@@ -10,9 +10,9 @@
     .module('carts')
     .controller('CheckoutController', CheckoutController);
 
-  CheckoutController.$inject = ['HashtagsService', '$rootScope','StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
+  CheckoutController.$inject = ['$http', 'HashtagsService', '$rootScope','StoresService', '$location','AssetsService','$stateParams', '$cookies', '$scope', '$state', '$window', 'Authentication', 'CartsItemsService', 'CartsService', 'OrdersService'];
 
-  function CheckoutController (HashtagsService, $rootScope, StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
+  function CheckoutController ($http, HashtagsService, $rootScope, StoresService, $location, AssetsService, $stateParams, $cookies, $scope, $state, $window, Authentication, CartsItemsService, CartsService, OrdersService) {
     let vm = this
   
     let stripe
@@ -36,9 +36,6 @@
 
     vm.authentication = Authentication
 
-    //NOTE: future we'll only haver the storeId
-    vm.addAssetFromStore = addAssetFromStore
-
     vm.storeName = $location.search().storeName
 
     console.log('storeName:' + vm.storeName)
@@ -51,8 +48,7 @@
           console.log('stores length' + stores.length)
           console.log(vm.store)
           console.log('store name: ' + vm.store.name)
-          addAssetFromStore(vm.store)
-          return HashtagsService.query({ affiliate: vm.store.affiliate._id }).$promise
+          createInstagramAssets(vm.store)
         })
         .then((hashtags) => {
           console.log('hashtags asset: ')
@@ -60,7 +56,9 @@
           console.log(vm.hashtagAssets)
 
         })
-    } else if ($cookies.cartId) {
+    } 
+
+    if ($cookies.cartId) {
       CartsService.get({ cartId: $cookies.cartId }).$promise
         .then((cart) => {
           console.log('updated card')
@@ -80,29 +78,45 @@
     vm.copyToClipboard = copyToClipboard
 
 
+
    // add asset if there's a hashtag
-    function addAssetFromStore(store) {
-        
-      let cartItem = new CartsItemsService()
-      cartItem.cart = $cookies.cartId
-      cartItem.store = vm.store._id
-      cartItem.fromInstagram = true
-      cartItem.quantity = 1
-      cartItem.$save()
-        .then((cart) => {
-          console.log('cart')
-          console.log(cart._id)
-          CartsService.get({ cartId: cart._id }).$promise
-            .then((cart) => {
-              console.log('updated card')
-              console.log(cart)
-              vm.cart = cart
-           })
-      })
-      .catch((error) => {
-        vm.error = error.data.message
-      })
+    function createInstagramAssets(store) {
+      console.log('getting assets from instagram')
+      console.log(store)
+
+      $http.get('/api/instagramAssets/' + store._id)
+        .then((result) => {
+          console.log(result.data)
+          vm.instagramAssets = result.data
+        })        
+        .catch((err) => {
+          console.log(err)
+        })
     }
+
+   // add asset if there's a hashtag
+    // function addAssetFromStore(store) {
+        
+    //   let cartItem = new CartsItemsService()
+    //   cartItem.cart = $cookies.cartId
+    //   cartItem.store = vm.store._id
+    //   cartItem.fromInstagram = true
+    //   cartItem.quantity = 1
+    //   cartItem.$save()
+    //     .then((cart) => {
+    //       console.log('cart')
+    //       console.log(cart._id)
+    //       CartsService.get({ cartId: cart._id }).$promise
+    //         .then((cart) => {
+    //           console.log('updated card')
+    //           console.log(cart)
+    //           vm.cart = cart
+    //        })
+    //   })
+    //   .catch((error) => {
+    //     vm.error = error.data.message
+    //   })
+    // }
 
     // CreateOrder
     function submitOrder() {

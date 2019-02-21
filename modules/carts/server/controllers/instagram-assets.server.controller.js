@@ -23,21 +23,12 @@ const curl = new (require('curl-request'))()
  * Create a Shopping Cart if there's none assigned
  * Then adds an item
  */
-exports.create = function(req, res) {
+exports.read = function(req, res) {
 
   let affiliate = req.store.affiliate
 
-  // let cart
-  let hashtags
-  let overviewImgUrl
-
-  getHashtagsByInstagram(res_affiliate)
+  getHashtagsByInstagram(affiliate)
     .then((res_instagramArray)=> {
-      console.log('hashtags ')
-      console.log(res_instagramArray)
-
-      // console.log('overviewimgURL ' + res_tags.overviewImgUrl)    
-      // overviewImgUrl = res_tags.overviewImgUrl
       return getAssetsByHashtagAndAffiliateId(res_instagramArray, affiliate.id)
     })
     .then((res_instagramAssetsArray)=> {
@@ -48,6 +39,26 @@ exports.create = function(req, res) {
           message: err.toString()
         })
     })
+}
+
+function getAffiliateFromStore(storeId) {
+
+  return new Promise ((resolve, reject) => {
+    if (storeId) {
+      Store.findById(storeId).populate('affiliate', 'igAccessToken').exec(function(err, store) {
+        if (err) {
+          reject(err)
+        } else if (!store) {
+          reject(new Error('STORE NOT FOUND!'))
+        } else {
+          resolve(store.affiliate)
+        }
+      })
+    } else {
+      resolve()
+    }
+  })
+
 }
 
 //TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
@@ -96,19 +107,24 @@ function getHashtagsByInstagram(affiliate) {
 // Find Asset by hashtag
 function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
 
+  console.log('number of instgrams: ' + instagramArray.length)
+
   return new Promise ((resolve, reject) => {
     
     let instagramAssetsArray = []
 
     async.each(instagramArray, (instagram, callback) => {  
         
-        let tags = instagram.tags
+        let tags = instagram.tags   
         let instagramAssets = new InstagramAssets()
-
+     
         async.each(tags, (tag, callback2) => {
           Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
+            console.log(instagram.overviewImgUrl)
+            instagramAssets.overviewImageUrl = instagram.overviewImgUrl
             if (res_hashtag) {
-              InstagramAssets.assets.push({ id : res_hashtag.asset.id, title: res_hashtag.asset.title, price: res_hashtag.asset.price })
+              instagramAssets.assets.push({ _id: res_hashtag.asset.id, title: res_hashtag.asset.title, price: res_hashtag.asset.price })   
+              //TODO: save or not to save?
             }
             callback2(err)
           })
@@ -126,58 +142,3 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
   })
 }
 
-/**
- * Show the current cartItem
- */
-// exports.read = function(req, res) {
-//   // convert mongoose document to JSON
-//   var cartItem = req.cartItemItem ? req.cartItem.toJSON() : {};
-
-//   // Add a custom field to the Article, for determining if the current User is the "owner".
-//   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-//   // cartItem.isCurrentUserOwner = req.user && cartItem.user && cartItem.user._id.toString() === req.user._id.toString();
-
-//   res.jsonp(cartItem);
-// };
-
-
-/**
- * List of cartItems
- */
-exports.list = function(req, res) {
-  let id = req.params.instgramAssets._id
-
-  InstagramAssets.findById(id).populate('assets').exec(function(err, instagramAssets) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(instagramAssets);
-    }
-  });
-};
-
-/**
- * cartItem middleware
- */
-exports.cartItemByID = function(req, res, next, id) {
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({
-      message: 'cartItem is invalid'
-    });
-  }
-
-  CartItem.findById(id).populate('user', 'displayName').exec(function (err, cartItem) {
-    if (err) {
-      return next(err);
-    } else if (!cartItem) {
-      return res.status(404).send({
-        message: 'No cartItem with that identifier has been found'
-      });
-    }
-    req.cartItem = cartItem;
-    next();
-  });
-};

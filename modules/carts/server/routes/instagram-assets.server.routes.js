@@ -10,8 +10,6 @@ const instagramAssets = require('../controllers/instagram-assets.server.controll
 module.exports = function(app) {
 
   app.route('/api/instagramAssets/:storeId')
-    .get(cartsItems.getInstagramAssets)
+    .get(instagramAssets.read)
 
-  // Finish by binding the Cart middleware
-  // app.param('cartItemId', cartsItems.cartItemByID)
-};
+}

@@ -27,22 +27,6 @@ exports.create = function(req, res) {
 
   console.log(req.body)
 
-  let fromInstagram = req.body.fromInstagram ? req.body.fromInstagram.toString() : 'false'
-  console.log('fromInstagram: ' + fromInstagram)
-
-  if (fromInstagram.indexOf('true') > -1) {
-    console.log('adding item from instagram')
-    createCheckoutFromSocialAccount(req, res)
-  } else {
-    console.log('just simple add to cart')
-    addToCart(req, res)
-  }
-
-}
-
-
-function addToCart (req, res) {
-
   let cartId = req.body.cart
   let storeId = req.body.store
 
@@ -68,107 +52,6 @@ function addToCart (req, res) {
         message: errorHandler.getErrorMessage(err)
       })                
     })
-}
-
-
-function createCheckoutFromSocialAccount(req, res) {
-
-  // console.log(req.body)
-
-  console.log(req.cookies)
-
-  let cartId = req.body.cart
-  let storeId = req.body.store
-  let affiliate
-
-  // let cart
-  let hashtags
-  let overviewImgUrl
-
-  getAffiliateFromStore(storeId)
-    .then((res_affiliate)=> {
-      console.log('getting affiliate')
-      console.log('affiliateId: ' + res_affiliate.id)
-      affiliate = res_affiliate
-      return getHashtagsByInstagram(res_affiliate)
-      // return 'baller'
-    })
-    .then((res_instagramArray)=> {
-      console.log('hashtags ')
-      console.log(res_instagramArray)
-
-      // console.log('overviewimgURL ' + res_tags.overviewImgUrl)    
-      // overviewImgUrl = res_tags.overviewImgUrl
-      return getAssetsByHashtagAndAffiliateId(res_instagramArray, affiliate.id)
-    })
-    .then((res_instagramAssetsArray)=> {
-      res.jsonp(res_instagramAssetsArray)
-    })
-    .catch((err) => {
-      return res.status(400).send({
-          message: err.toString()
-        })
-    })
-}
-
-function getAffiliateFromStore(storeId) {
-
-  return new Promise ((resolve, reject) => {
-    if (storeId) {
-      Store.findById(storeId).populate('affiliate', 'igAccessToken').exec(function(err, store) {
-        if (err) {
-          reject(err)
-        } else if (!store) {
-          reject(new Error('STORE NOT FOUND!'))
-        } else {
-          resolve(store.affiliate)
-        }
-      })
-    } else {
-      resolve()
-    }
-  })
-
-}
-//TODO: this is where we'll crawl their instgram account and grab the hashtags or hashtag ids
-//JOSH THIS IS FOR YOU
-function getHashtagsByInstagram(affiliate) {
-  return new Promise((resolve, reject) => {
-    if(!affiliate.igAccessToken){
-      reject(new Error('Instagram access token not found!'))
-    }
-    let getProfileUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
-
-    curl.get(getProfileUrl)
-    .then(({statusCode, body}) => {
-      if(statusCode === 200) {
-        let bodyJson = JSON.parse(body)
-        let tags = bodyJson.data[0].tags
-        let response = []
-        async.each(bodyJson.data, (post, callback) => {
-          response.push({
-            tags: post.tags,
-            overviewImgUrl: post.images.standard_resolution.url
-          })
-          callback()
-        }, err => {
-          if(err) {
-            console.log('Couldnt fetch all posts')
-            return reject('Couldnt fetch all posts')
-          }
-          resolve(response)
-        })
-      } else {
-        console.log(statusCode, body)
-        reject(JSON.parse(body).meta.error_message)
-      }
-    })
-    .catch(e => {
-      console.log(e)
-      reject(e)
-    })
-  })
-  
 }
 
 /*
@@ -198,40 +81,6 @@ function getCart(cartId, storeId) {
         }
       })
     }
-  })
-}
-
-
-// Find Asset by hashtag
-function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
-
-  return new Promise ((resolve, reject) => {
-    
-    let instagramAssetsArray = []
-
-    async.each(instagramArray, (instagram, callback) => {  
-        
-        let tags = instagram.tags
-        let instagramAssets = new InstagramAssets()
-
-        async.each(tags, (tag, callback2) => {
-          Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
-            if (res_hashtag) {
-              InstagramAssets.assets.push({ id : res_hashtag.asset.id, title: res_hashtag.asset.title, price: res_hashtag.asset.price })
-            }
-            callback2(err)
-          })
-        }, (err) => {
-          instagramAssetsArray.push(instagramAssets)
-          callback(err)
-        })
-    }, (err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(instagramAssetsArray)
-      }
-    })
   })
 }
 

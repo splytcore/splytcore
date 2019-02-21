@@ -14,9 +14,6 @@ module.exports = function(app) {
     .get(cartsItems.list)
     .post(cartsItems.create)
 
-  app.route('/api/instagram/:storeId')
-    .get(cartsItems.getInstagramAssets)
-
   app.route('/api/cartsitems/:cartItemId')
     .get(cartsItems.read)
     .put(cartsItems.update)
