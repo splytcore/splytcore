@@ -78,3 +78,23 @@ exports.paginate = function (req, res, next) {
 
   next()
 }
+
+// This endpoint will run a script file that will
+// pull all repos's github code and rebuild frontend, pm2 restart for backend
+
+exports.pullCodeAndBuild = function(req, res) {
+  const shell = require('shelljs')
+  shell.exec('/home/ubuntu/updaterepos', function(code, stdout, stderr) {
+    console.log('Exit code:', code)
+    console.log('Program output:', stdout)
+    console.log('Program stderr:', stderr)
+    if(stderr) {
+      return res.status(400).send({
+        message: stderr
+      })
+    }
+    res.status(200).send({
+      output: stdout
+    })
+  })
+}
