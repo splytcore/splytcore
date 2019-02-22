@@ -20,21 +20,31 @@ const  _ = require('lodash')
  */
 exports.create = function(req, res) {
 
-  console.log(req.body)
-
   let asset = new Asset(req.body)
   console.log('assetId: ' + asset._id)
   asset.user = req.user
-  asset.save(function(err) {
-    if (err) {
-      console.log(err)
+
+  // Put in place to deter spamming the system with dirty inventory for the time being
+  // TODO: remove this after you have a decent spam protection in place
+  Asset.find({user: req.user}).count().exec((err, assetCount) => {
+    if(err || assetCount >= 10) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: 'Sorry your account is currently limited to 10 unique inventory, please edit an existing item instead. You can also send us an email at hello@pollenly.com to increase your limit.'
       })
     } else {
-      res.jsonp(asset)
+      asset.save(function(err) {
+        if (err) {
+          console.log(err)
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          })
+        } else {
+          res.jsonp(asset)
+        }
+      })
     }
   })
+
 }
 
 

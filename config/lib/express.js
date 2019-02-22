@@ -115,8 +115,7 @@ module.exports.initSession = function (app, db) {
     cookie: {
       maxAge: config.sessionCookie.maxAge,
       httpOnly: config.sessionCookie.httpOnly,
-      secure: config.sessionCookie.secure && config.secure.ssl,
-      domain: '.pollenly.com'
+      secure: config.sessionCookie.secure && config.secure.ssl
     },
     key: config.sessionKey,
     store: new MongoStore({
