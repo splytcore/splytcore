@@ -18,10 +18,9 @@
     $http.get('api/analytics/generalSalesSummary')
       .then((result) => {
         vm.summary = result.data
-        vm.error = 'testing error'
         console.log(vm.summary)
       }, (error) => {
-        vm.error = error
+        vm.error = error.toString()
       })    
   }
 }())

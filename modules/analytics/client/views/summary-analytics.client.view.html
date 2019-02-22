@@ -2,7 +2,8 @@
   <div class="page-header">
     <h1>Pollenly General Running Sales Summary</h1>
   </div>
-{{vm.summary}}
+<!-- {{vm.summary}} -->
+
   <div class="list-group">
       
       <div class="list-group-item">
@@ -18,7 +19,7 @@
       <div class="list-group-item">
         <h4 class="list-group-item-heading">
           <div class-"row">
-            <span class="col-sm-4">Total Quantity</span>
+            <span class="col-sm-4">Total Number of Items Sold</span>
             <span class="col-sm-8"> {{vm.summary.totalQuantity}}</span>
           </div>
         </h4>
@@ -56,11 +57,45 @@
         <br/>
       </div>
 
+
      <div class="list-group-item">
         <h4 class="list-group-item-heading">
           <div class-"row">
-            <span class="col-sm-4">Total Rewards</span>
+            <span class="col-sm-4">Total Number of Assets Listed</span>
+            <span class="col-sm-8"> {{vm.summary.totalAssets}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
+
+     <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Buys / Total Clicks(views) = Conversion % </span>
+            <span class="col-sm-8">  {{vm.summary.totalBuys }} / {{vm.summary.totalViews}} = {{ vm.summary.totalViewsBuysPercentage }}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
+
+     <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Commission</span>
             <span class="col-sm-8"> {{vm.summary.totalRewards | currency }}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
+
+     <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Affiliates Commission * 80% </span>
+            <span class="col-sm-8"> {{vm.summary.totalAffiliatesCommission | currency }}</span>
           </div>
         </h4>
         <br/>
@@ -69,12 +104,13 @@
      <div class="list-group-item">
         <h4 class="list-group-item-heading">
           <div class-"row">
-            <span class="col-sm-4">Total Number of Assets</span>
-            <span class="col-sm-8"> {{vm.summary.totalAssets}}</span>
+            <span class="col-sm-4">Total Pollenly Commission * 20% </span>
+            <span class="col-sm-8"> {{vm.summary.totalPollenlyCommission | currency }}</span>
           </div>
         </h4>
         <br/>
       </div>
+
 
   </div>
 
