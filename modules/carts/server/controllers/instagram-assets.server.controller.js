@@ -91,16 +91,19 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
           Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
             instagramAssets.overviewImageUrl = instagram.overviewImgUrl
             if (res_hashtag) {
-              instagramAssets.assets.push({ 
-                _id: res_hashtag.asset._id, 
-                title: res_hashtag.asset.title, 
-                price: res_hashtag.asset.price, 
-                imageURL: res_hashtag.asset.imageURL ? res_hashtag.asset.imageURL : [],
-                brand: res_hashtag.asset.brand ? res_hashtag.asset.brand : '',
-                description: res_hashtag.asset.description ? res_hashtag.asset.description : '',
-                inventoryCount: res_hashtag.asset.inventoryCount,
-                hashtag: res_hashtag._id //to be used when adding to card to give credit which hashtag used
-              })   
+              // if inventory is 0 don't display the product at all
+              if(res_hashtag.asset.inventoryCount > 0) {
+                instagramAssets.assets.push({ 
+                  _id: res_hashtag.asset._id, 
+                  title: res_hashtag.asset.title, 
+                  price: res_hashtag.asset.price, 
+                  imageURL: res_hashtag.asset.imageURL ? res_hashtag.asset.imageURL : [],
+                  brand: res_hashtag.asset.brand ? res_hashtag.asset.brand : '',
+                  description: res_hashtag.asset.description ? res_hashtag.asset.description : '',
+                  inventoryCount: res_hashtag.asset.inventoryCount,
+                  hashtag: res_hashtag._id //to be used when adding to card to give credit which hashtag used
+                })   
+              }
               //TODO: save or not to save?
             }
             callback2(err)

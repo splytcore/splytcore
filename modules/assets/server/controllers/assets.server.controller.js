@@ -212,7 +212,8 @@ exports.incrementBuy = function(req, res, next) {
   }
 
   async.each(req.orderItems, (orderItem, callback) => {
-    Asset.findByIdAndUpdate(orderItem.asset, { $inc: { buys: 1 }}, function(err, asset) {
+    const decrementQty = orderItem.quantity - (orderItem.quantity * 2)
+    Asset.findByIdAndUpdate(orderItem.asset, { $inc: { buys: orderItem.quantity, inventoryCount: decrementQty}}, function(err, asset) {
       callback()
     })
   }, (err) => {
