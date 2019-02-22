@@ -1,11 +1,11 @@
 (function () {
-  'use strict';
+  'use strict'
 
   angular
     .module('analytics')
-    .run(menuConfig);
+    .run(menuConfig)
 
-  menuConfig.$inject = ['Menus'];
+  menuConfig.$inject = ['Menus']
 
   function menuConfig(Menus) {
     // Set top bar menu items
@@ -13,20 +13,12 @@
       title: 'Analytics',
       state: 'analytics',
       type: 'dropdown',
-      roles: ['user', 'admin']
+      roles: ['user', 'admin', 'seller' , 'affiliate', 'customer']
     });
 
-    // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'analytics', {
-      title: 'List Analytics',
-      state: 'analytics.list'
-    });
-
-    // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'analytics', {
-      title: 'Create Analytic',
-      state: 'analytics.create',
-      roles: ['user']
-    });
+      title: 'Summary Report',
+      state: 'analytics.summary'
+    })
   }
-}());
+}())

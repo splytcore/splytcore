@@ -1,0 +1,18 @@
+<section>
+  <div class="page-header">
+    <h1>Pollenly General Sales Summary</h1>
+  </div>
+
+  <div class="list-group">
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          {{vm.summary}}
+        </h4>
+      </div>
+  </div>
+
+  <div ng-show="vm.error" class="text-danger">
+    <strong ng-bind="vm.error"></strong>
+  </div>
+
+</section>
