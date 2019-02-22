@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1db78ed4-3e80-4662-b593-5019a380c773",
+		"_postman_id": "82014b04-5c8f-4008-9550-aa42da4af2d0",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -916,7 +916,10 @@
 										"type": "text"
 									}
 								],
-								"body": {},
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
 								"url": {
 									"raw": "{{local}}/api/carts",
 									"host": [
@@ -947,9 +950,6 @@
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"method": "GET",
 								"header": [
@@ -960,7 +960,10 @@
 										"value": "application/x-www-form-urlencoded"
 									}
 								],
-								"body": {},
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
 								"url": {
 									"raw": "{{local}}/api/carts/{{cartId}}",
 									"host": [
@@ -1723,6 +1726,33 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Dev only",
+			"item": [
+				{
+					"name": "Pull code on server and rebuild",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/pull-code-and-build",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"pull-code-and-build"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "apis to make dev life easier"
 		}
 	],
 	"event": [
