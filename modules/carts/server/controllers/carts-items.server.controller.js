@@ -76,6 +76,15 @@ function getCart(cartId, storeId) {
       Cart.findById(cartId).populate('customer').exec(function(err, cart) {
         if (err) {
           reject(err)
+        } else if (!cart) {
+          let cart2 = new Cart()
+          cart2.save((err) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(cart2)
+            }  
+          })             
         } else {
           resolve(cart)
         }

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "82014b04-5c8f-4008-9550-aa42da4af2d0",
+		"_postman_id": "b6138479-17aa-4512-870c-654e4bed792d",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -266,6 +266,35 @@
 								"api",
 								"users",
 								"background"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign out",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/signout",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signout"
 							]
 						}
 					},

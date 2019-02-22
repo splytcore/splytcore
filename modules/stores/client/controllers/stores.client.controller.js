@@ -15,7 +15,7 @@
     vm.store = store
   
     $cookies.storeId = vm.store._id ? vm.store._id : null
-
+    console.log('storeId: ' + $cookies.storeId)
     console.log(store)
     vm.assets = vm.store._id ? vm.store.storeAssets.map(storeAsset => storeAsset.asset) : []
     console.log(vm.assets)    

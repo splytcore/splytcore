@@ -146,9 +146,9 @@ exports.getAffiliateGrossSales = function(req, res) {
         return
       } else {
         items.forEach((i) => {
-          grossSales += (i.asset.price * i.quantity)
+          grossSales += (i.soldPrice * i.quantity)
           totalQuantity += i.quantity
-          totalReward += i.asset.reward
+          totalReward += i.reward
         })
         return
       }
@@ -192,7 +192,7 @@ exports.getSellerGrossSales = function(req, res) {
     .then((items) => {
       if (items) {
         items.forEach((i) => {
-          grossSales += i.asset.price * i.quantity
+          grossSales += i.soldPrice * i.quantity
           totalQuantity += i.quantity
         })
       } 
@@ -359,7 +359,7 @@ exports.getSellerSalesSummary = function(req, res) {
         return Promise.reject('No orders for seller found')
       }
       async.each(orderItems, (item, cb) => {
-        SellerSalesSummary.findOneAndUpdate({ reportId: reportId, asset: item.asset.id }, {$inc: { quantity: item.quantity, sales: item.quantity * item.asset.price }, hashtag: item.hashtag }, { upsert: true }).exec((err, result) => {
+        SellerSalesSummary.findOneAndUpdate({ reportId: reportId, asset: item.asset.id }, {$inc: { quantity: item.quantity, sales: item.quantity * item.price }, hashtag: item.hashtag }, { upsert: true }).exec((err, result) => {
           cb(err)
         })        
       }, (err) => {
@@ -416,9 +416,9 @@ exports.getGeneralSalesSummary = function(req, res) {
         return Promise.reject('No orders for seller found')
       }
       async.each(orderItems, (item, cb) => {
-        totalGrossSales += item.asset.price * item.quantity
+        totalGrossSales += item.soldPrice * item.quantity
         totalQuantity += item.quantity
-        totalRewards += item.asset.reward
+        totalRewards += item.reward
         cb()
       }, (err) => {
         if (err) {
