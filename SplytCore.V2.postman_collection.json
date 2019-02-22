@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e47a80df-81c9-4d35-865a-9a48131c91f7",
+		"_postman_id": "1db78ed4-3e80-4662-b593-5019a380c773",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -888,16 +888,317 @@
 			"name": "Consumer",
 			"item": [
 				{
-					"name": "Get Store by store name",
+					"name": "Cart",
+					"item": [
+						{
+							"name": "Create a cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "057298bc-438d-4a70-bcc8-a752fb4e00f8",
+										"exec": [
+											"const res = JSON.parse(responseBody)",
+											"pm.globals.set(\"cartId\", res._id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{local}}/api/carts",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"carts"
+									]
+								},
+								"description": "Creates a empty cart for a customer"
+							},
+							"response": []
+						},
+						{
+							"name": "Read a cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "057298bc-438d-4a70-bcc8-a752fb4e00f8",
+										"exec": [
+											"const res = JSON.parse(responseBody)",
+											"pm.globals.set(\"cartId\", res._id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{local}}/api/carts/{{cartId}}",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"carts",
+										"{{cartId}}"
+									]
+								},
+								"description": "Read contents of cart which will return cart items as array as well"
+							},
+							"response": []
+						},
+						{
+							"name": "Add Item to cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "87cc0d14-b736-4f5d-adae-d5b12886548d",
+										"exec": [
+											"const res = JSON.parse(responseBody)",
+											"",
+											"pm.globals.set(\"cartItemId\", res._id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Cookie",
+										"type": "text",
+										"value": "sessionId={{sessionId}}"
+									},
+									{
+										"key": "Cookie",
+										"type": "text",
+										"value": "storeId={{storeId}}"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "store",
+											"value": "{{storeId}}",
+											"description": "storeId",
+											"type": "text"
+										},
+										{
+											"key": "asset",
+											"value": "{{assetId}}",
+											"description": "assetId",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "1",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cart",
+											"value": "{{cartId}}",
+											"description": "optional. Will create new one if none passed",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local}}/api/cartsitems",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"cartsitems"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update cart item quantity",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "87cc0d14-b736-4f5d-adae-d5b12886548d",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "quantity",
+											"value": "2",
+											"description": "required: new quantity value",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local}}/api/cartsitems/{{cartItemId}}",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"cartsitems",
+										"{{cartItemId}}"
+									]
+								},
+								"description": "updates quantity for any cart item"
+							},
+							"response": []
+						},
+						{
+							"name": "Remove item from cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "87cc0d14-b736-4f5d-adae-d5b12886548d",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Cookie",
+										"type": "text",
+										"value": "sessionId={{sessionId}}"
+									},
+									{
+										"key": "Cookie",
+										"type": "text",
+										"value": "storeId={{storeId}}"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "store",
+											"value": "{{storeId}}",
+											"description": "storeId",
+											"type": "text"
+										},
+										{
+											"key": "asset",
+											"value": "{{assetId}}",
+											"description": "assetId",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "1",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cart",
+											"value": "{{cartId}}",
+											"description": "optional. Will create new one if none passed",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local}}/api/cartsitems/{{cartItemId}}",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"cartsitems",
+										"{{cartItemId}}"
+									]
+								},
+								"description": "item must be in cart to remove or else you'll get back 400 with message item in cart not found"
+							},
+							"response": []
+						}
+					],
+					"description": "Managing cart for consumer",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Get store by store name",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
 								"exec": [
-									"var data = JSON.parse(responseBody);",
-									"pm.globals.set(\"affiliateId\", data[0].affiliate._id);",
-									"pm.globals.set(\"storeId\", data[0]._id);"
+									"const res = JSON.parse(responseBody);",
+									"pm.globals.set(\"affiliateId\", res.affiliate._id);",
+									"pm.globals.set(\"storeId\", res._id);"
 								],
 								"type": "text/javascript"
 							}
@@ -917,19 +1218,15 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{local}}/api/stores?storeName={{storeName}}",
+							"raw": "{{local}}/api/store/byname/{{storeName}}",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
-								"stores"
-							],
-							"query": [
-								{
-									"key": "storeName",
-									"value": "{{storeName}}"
-								}
+								"store",
+								"byname",
+								"{{storeName}}"
 							]
 						},
 						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
@@ -937,7 +1234,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Instagram items by storeId",
+					"name": "Get instagram items by storeId",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -957,82 +1254,6 @@
 							]
 						},
 						"description": "This will get all hashtagged items from instagram in the latest post"
-					},
-					"response": []
-				},
-				{
-					"name": "Add Item to cart",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "87cc0d14-b736-4f5d-adae-d5b12886548d",
-								"exec": [
-									"var data = JSON.parse(responseBody);",
-									"pm.globals.set(\"cartId\", data._id);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded"
-							},
-							{
-								"key": "Cookie",
-								"type": "text",
-								"value": "sessionId={{sessionId}}"
-							},
-							{
-								"key": "Cookie",
-								"type": "text",
-								"value": "storeId={{storeId}}"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "store",
-									"value": "{{storeId}}",
-									"description": "storeId",
-									"type": "text"
-								},
-								{
-									"key": "asset",
-									"value": "{{assetId}}",
-									"description": "assetId",
-									"type": "text"
-								},
-								{
-									"key": "quantity",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "cart",
-									"value": "{{cartId}}",
-									"description": "optional. Will create new one if none passed",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/cartsitems",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"cartsitems"
-							]
-						}
 					},
 					"response": []
 				},

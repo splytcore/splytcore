@@ -14,6 +14,9 @@ module.exports = function(app) {
     .get(stores.list)
     .post(stores.create)
 
+  app.route('/api/store/byname/:name')
+    .get(stores.listByName)
+
   app.route('/api/stores/:storeId').all(storesPolicy.isAllowed)
     .get(core.paginate, stores.read)
     .put(stores.update)
