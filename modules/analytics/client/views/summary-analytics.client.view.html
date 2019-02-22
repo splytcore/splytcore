@@ -1,14 +1,81 @@
 <section>
   <div class="page-header">
-    <h1>Pollenly General Sales Summary</h1>
+    <h1>Pollenly General Running Sales Summary</h1>
   </div>
-
+{{vm.summary}}
   <div class="list-group">
+      
       <div class="list-group-item">
         <h4 class="list-group-item-heading">
-          {{vm.summary}}
+          <div class-"row">
+            <span class="col-sm-4">Total Gross Sales</span>
+            <span class="col-sm-8"> {{vm.summary.totalGrossSales | currency}}</span>
+          </div>
         </h4>
+        <br/>
       </div>
+
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Quantity</span>
+            <span class="col-sm-8"> {{vm.summary.totalQuantity}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Sellers</span>
+            <span class="col-sm-8"> {{vm.summary.totalSellers}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Orders</span>
+            <span class="col-sm-8"> {{vm.summary.totalOrders}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
+
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Affiliates</span>
+            <span class="col-sm-8"> {{vm.summary.totalAffiliates}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
+     <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Rewards</span>
+            <span class="col-sm-8"> {{vm.summary.totalRewards | currency }}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
+     <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Assets</span>
+            <span class="col-sm-8"> {{vm.summary.totalAssets}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+
   </div>
 
   <div ng-show="vm.error" class="text-danger">
