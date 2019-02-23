@@ -105,19 +105,6 @@ function incrementAssetViewCount(instagramArray) {
     })
   })
   // console.log(instagramAssets)
-  for(let i = 0; i < instagramAssets.length; i++) {
-    console.log('asset length per item', instagramAssets[i].assets.length)
-    if(instagramAssets[i].assets.length > 0) {
-      for(let j = 0; j < instagramAssets[i].assets.length; i++) {
-        console.log('asset id', instagramAssets[i].assets[j]._id)
-        Asset.findByIdAndUpdate(instagramAssets[i].assets[j]._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
-          console.log('Asset coming up')
-          console.log(asset)
-          // All done dont need to do anything
-        })
-      }
-    }
-  }
 }
 
 
