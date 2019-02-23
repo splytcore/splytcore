@@ -114,54 +114,54 @@ function incrementAssetViewCount(instagramArray) {
 function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
 
   return new Promise ((resolve, reject) => {
-    //let instagramAssetsArray = []
+    let instagramAssetsArray = []
     async.eachOf(instagramArray, (instagram, key, callback) => {  
         console.log('key: ' + key)
         let tags = instagram.tags   
-        //let instagramAssets = new InstagramAssets()
+        let instagramAssets = new InstagramAssets()
      
-        //instagramAssets.index = key
+        instagramAssets.index = key
 
-        Hashtag.find({name: {$in: tags }, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtags) {
-          if(err) {
-            callback(err)
-          }
-          if(res_hashtags.length > 0) {
-            instagram.assets = []
-            for(var i = 0; i < res_hashtags.length; i++) {
-              instagram.assets.push(res_hashtags[i].asset)
-            }
-          } else {
-            instagramArray.splice(key, 1)
-          }
-          delete instagram.tags
-          callback(err)
-        })
-
-        // async.eachOf(tags, (tag, index, callback2) => {
-        //   Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
-        //     instagramAssets.overviewImageUrl = instagram.overviewImgUrl
-        //     if (res_hashtag) {
-        //       // if inventory is 0 don't display the product at all
-        //       if(res_hashtag.asset.inventoryCount > 0) {
-        //         instagramAssets.assets.push({ 
-        //           _id: res_hashtag.asset._id, 
-        //           title: res_hashtag.asset.title, 
-        //           price: res_hashtag.asset.price, 
-        //           imageURL: res_hashtag.asset.imageURL ? res_hashtag.asset.imageURL : [],
-        //           brand: res_hashtag.asset.brand ? res_hashtag.asset.brand : '',
-        //           description: res_hashtag.asset.description ? res_hashtag.asset.description : '',
-        //           inventoryCount: res_hashtag.asset.inventoryCount,
-        //           hashtag: res_hashtag._id //to be used when adding to card to give credit which hashtag used
-        //         })   
-        //       }
-        //     } 
-        //     callback2(err)              
-        //   })
-        // }, (err) => {
-        //   instagramAssetsArray.push(instagramAssets)
+        // Hashtag.find({name: {$in: tags }, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtags) {
+        //   if(err) {
+        //     callback(err)
+        //   }
+        //   if(res_hashtags.length > 0) {
+        //     instagram.assets = []
+        //     for(var i = 0; i < res_hashtags.length; i++) {
+        //       instagram.assets.push(res_hashtags[i].asset)
+        //     }
+        //   } else {
+        //     instagramArray.splice(key, 1)
+        //   }
+        //   delete instagram.tags
         //   callback(err)
         // })
+
+        async.eachOf(tags, (tag, index, callback2) => {
+          Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
+            instagramAssets.overviewImageUrl = instagram.overviewImgUrl
+            if (res_hashtag) {
+              // if inventory is 0 don't display the product at all
+              if(res_hashtag.asset.inventoryCount > 0) {
+                instagramAssets.assets.push({ 
+                  _id: res_hashtag.asset._id, 
+                  title: res_hashtag.asset.title, 
+                  price: res_hashtag.asset.price, 
+                  imageURL: res_hashtag.asset.imageURL ? res_hashtag.asset.imageURL : [],
+                  brand: res_hashtag.asset.brand ? res_hashtag.asset.brand : '',
+                  description: res_hashtag.asset.description ? res_hashtag.asset.description : '',
+                  inventoryCount: res_hashtag.asset.inventoryCount,
+                  hashtag: res_hashtag._id //to be used when adding to card to give credit which hashtag used
+                })   
+              }
+            } 
+            callback2(err)              
+          })
+        }, (err) => {
+          instagramAssetsArray.push(instagramAssets)
+          callback(err)
+        })
     }, (err) => {
       if (err) {
         reject(err)
