@@ -13,9 +13,15 @@ var path = require('path'),
  * Create a Hashtag
  */
 exports.create = function(req, res) {
-  var hashtag = new Hashtag(req.body);
-  hashtag.affiliate = req.user;
+  let hashtag = new Hashtag(req.body);
+  const regex = /^[a-z]*$/gm
+  if(!hashtag.name.match(regex)) {
+    return res.status(400).send({
+      message: 'Hashtag must not include spaces or dots'
+    })
+  }
 
+  hashtag.affiliate = req.user;
   hashtag.save(function(err) {
     if (err) {
       return res.status(400).send({
