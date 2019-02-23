@@ -13,7 +13,7 @@
       title: 'Assets',
       state: 'assets',
       type: 'dropdown',
-      roles: ['user', 'admin', 'seller']
+      roles: ['seller']
     });
 
     // Add the dropdown list item

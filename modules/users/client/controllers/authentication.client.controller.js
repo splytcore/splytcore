@@ -52,6 +52,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response.user;
         // And redirect to the previous or home page according to role
 
+        if ($scope.authentication.user.roles.indexOf('admin') > -1) {
+          $state.go('analytics.summary')
+        } else 
         if ($scope.authentication.user.roles.indexOf('seller') > -1) {
           $state.go($state.previous.state.name || 'sellers.dashboard', $state.previous.params)
         } else 
