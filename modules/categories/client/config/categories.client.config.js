@@ -1,32 +1,32 @@
-(function () {
-  'use strict';
+// (function () {
+//   'use strict';
 
-  angular
-    .module('categories')
-    .run(menuConfig);
+//   angular
+//     .module('categories')
+//     .run(menuConfig);
 
-  menuConfig.$inject = ['Menus'];
+//   menuConfig.$inject = ['Menus'];
 
-  function menuConfig(Menus) {
-    // Set top bar menu items
-    Menus.addMenuItem('topbar', {
-      title: 'Categories',
-      state: 'categories',
-      type: 'dropdown',
-      roles: ['user', 'admin']
-    });
+//   function menuConfig(Menus) {
+//     // Set top bar menu items
+//     Menus.addMenuItem('topbar', {
+//       title: 'Categories',
+//       state: 'categories',
+//       type: 'dropdown',
+//       roles: ['user', 'admin']
+//     });
 
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'categories', {
-      title: 'List Categories',
-      state: 'categories.list'
-    });
+//     // Add the dropdown list item
+//     Menus.addSubMenuItem('topbar', 'categories', {
+//       title: 'List Categories',
+//       state: 'categories.list'
+//     });
 
-    // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'categories', {
-      title: 'Create Category',
-      state: 'categories.create',
-      roles: ['*']
-    });
-  }
-}());
+//     // Add the dropdown create item
+//     Menus.addSubMenuItem('topbar', 'categories', {
+//       title: 'Create Category',
+//       state: 'categories.create',
+//       roles: ['*']
+//     });
+//   }
+// }());

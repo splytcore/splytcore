@@ -13,7 +13,7 @@
       title: 'Stores',
       state: 'stores',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['customer', 'guest']
     });
 
     // Add the dropdown list item
