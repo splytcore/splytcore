@@ -200,9 +200,7 @@ exports.uploadAssetImage = function(req, res) {
 
 exports.incrementView = function(req, res, next) {
   console.log('asset coming up for incrementing view')
-  console.log(req.asset)
-  if(!req.asset || req.user) {
-    console.log('asset not found in db or to increment view count or you have to be guest role')
+  if(!req.asset) {
     return res.jsonp(req.asset)
   }
 
