@@ -26,7 +26,7 @@ exports.read = function(req, res) {
       return getAssetsByHashtagAndAffiliateId(res_instagramArray, affiliate.id)
     })
     .then((res_instagramAssetsArray)=> {
-      incrementAssetViewCount(res_instagramAssetsArray)
+      //incrementAssetViewCount(res_instagramAssetsArray)
       res.jsonp(res_instagramAssetsArray)
     })
     .catch((err) => {
