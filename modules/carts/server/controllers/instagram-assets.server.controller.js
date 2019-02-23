@@ -101,7 +101,7 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
         let tags = instagram.tags   
         let instagramAssets = new InstagramAssets()
      
-        async.each(tags, (tag, callback2) => {
+        async.eachOf(tags, (tag, key2, callback2) => {
           Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
             instagramAssets.overviewImageUrl = instagram.overviewImgUrl
             if (res_hashtag) {
