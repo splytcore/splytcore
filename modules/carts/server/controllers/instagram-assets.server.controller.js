@@ -50,10 +50,12 @@ function getHashtagsByInstagram(affiliate) {
         let tags = bodyJson.data[0].tags
         let response = []
         async.each(bodyJson.data, (post, callback) => {
-          response.push({
-            tags: post.tags,
-            overviewImgUrl: post.images.standard_resolution.url
-          })
+          if(post.tags.length > 0) {
+            response.push({
+              tags: post.tags,
+              overviewImgUrl: post.images.standard_resolution.url
+            })
+          }
           callback()
         }, err => {
           if(err) {
