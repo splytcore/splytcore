@@ -8,6 +8,7 @@ const async = require('async')
 const mongoose = require('mongoose')
 const InstagramAssets = mongoose.model('InstagramAssets')
 const Hashtag = mongoose.model('Hashtag')
+const Asset = mongoose.model('Asset')
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const  _ = require('lodash')
 const curl = new (require('curl-request'))()
@@ -25,6 +26,7 @@ exports.read = function(req, res) {
       return getAssetsByHashtagAndAffiliateId(res_instagramArray, affiliate.id)
     })
     .then((res_instagramAssetsArray)=> {
+      //incrementAssetViewCount(res_instagramAssetsArray)
       res.jsonp(res_instagramAssetsArray)
     })
     .catch((err) => {
@@ -73,6 +75,18 @@ function getHashtagsByInstagram(affiliate) {
     })
   })
   
+}
+
+function incrementAssetViewCount(instagramAssets) {
+  for(let i = 0; i < instagramAssets.length; i++) {
+    if(instagramAssets[i].assets.length > 0) {
+      for(let j = 0; j < instagramAssets[i].assets.length; i++) {
+        Asset.findByIdAndUpdate(instagramAssets[i].assets[j]._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
+          // All done dont need to do anything
+        })
+      }
+    }
+  }
 }
 
 
