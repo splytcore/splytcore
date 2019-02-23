@@ -127,7 +127,10 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
             callback(err)
           }
           if(res_hashtags.length > 0) {
-            instagram.assets = res_hashtags
+            instagram.assets = []
+            for(var i = 0; i < res_hashtags.length; i++) {
+              instagram.assets.push(res_hashtags[i].asset)
+            }
           } else {
             instagramArray.splice(key, 1)
           }
