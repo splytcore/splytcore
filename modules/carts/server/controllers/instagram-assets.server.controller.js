@@ -97,11 +97,13 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
   return new Promise ((resolve, reject) => {
     let instagramAssetsArray = []
     async.eachOf(instagramArray, (instagram, key, callback) => {  
-        // console.log('key: ' + key)
+        console.log('key: ' + key)
         let tags = instagram.tags   
         let instagramAssets = new InstagramAssets()
      
-        async.eachOf(tags, (tag, key2, callback2) => {
+        instagramAssets.index = key
+
+        async.eachOf(tags, (tag, index, callback2) => {
           Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
             instagramAssets.overviewImageUrl = instagram.overviewImgUrl
             if (res_hashtag) {
@@ -118,9 +120,8 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
                   hashtag: res_hashtag._id //to be used when adding to card to give credit which hashtag used
                 })   
               }
-              //TODO: save or not to save?
-            }
-            callback2(err)
+            } 
+            callback2(err)              
           })
         }, (err) => {
           instagramAssetsArray.push(instagramAssets)
@@ -130,6 +131,7 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
       if (err) {
         reject(err)
       } else {
+        let sort = instagramAssetsArray.sort((a,b) => a.index - b.index ) 
         resolve(instagramAssetsArray)
       }
     })

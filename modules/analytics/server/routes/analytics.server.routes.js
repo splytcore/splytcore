@@ -26,7 +26,7 @@ module.exports = function(app) {
   app.route('/api/analytics/topSellingAssets')
     .get(analytics.getTopSellingAssets)
 
-  app.route('/api/analytics/generalSalesSummary')
+  app.route('/api/analytics/generalSalesSummary').all(analyticsPolicy.isAllowed)
     .get(analytics.getGeneralSalesSummary)
 
 };

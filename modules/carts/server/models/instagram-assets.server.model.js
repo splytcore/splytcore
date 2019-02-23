@@ -14,6 +14,9 @@ let InstagramAssetsSchema = new Schema({
   overviewImageUrl: {
     type: String
   },
+  index: {
+    type: Number
+  },
   assets: [{
     id: {
       type: String
