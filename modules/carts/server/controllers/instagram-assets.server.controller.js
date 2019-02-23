@@ -26,7 +26,9 @@ exports.read = function(req, res) {
       return getAssetsByHashtagAndAffiliateId(res_instagramArray, affiliate.id)
     })
     .then((res_instagramAssetsArray)=> {
-      //incrementAssetViewCount(res_instagramAssetsArray)
+      return incrementAssetViewCount(res_instagramAssetsArray)
+    })
+    .then((res_instagramAssetsArray) => {
       res.jsonp(res_instagramAssetsArray)
     })
     .catch((err) => {
@@ -77,11 +79,40 @@ function getHashtagsByInstagram(affiliate) {
   
 }
 
-function incrementAssetViewCount(instagramAssets) {
+function incrementAssetViewCount(instagramArray) {
+  return new Promise ((resolve, reject) => {
+    async.each(instagramArray, (instagram, callback) => {  
+        
+        let assets = instagram.assets   
+
+        async.each(assets, (asset, callback2) => {
+
+          Asset.findByIdAndUpdate(asset._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
+            callback2(err)
+            // All done dont need to do anything
+          })
+
+        }, (err) => {
+          if(err) callback(err)
+          resolve(instagramArray)
+        })
+    }, (err) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(instagramArray)
+      }
+    })
+  })
+  // console.log(instagramAssets)
   for(let i = 0; i < instagramAssets.length; i++) {
+    console.log('asset length per item', instagramAssets[i].assets.length)
     if(instagramAssets[i].assets.length > 0) {
       for(let j = 0; j < instagramAssets[i].assets.length; i++) {
+        console.log('asset id', instagramAssets[i].assets[j]._id)
         Asset.findByIdAndUpdate(instagramAssets[i].assets[j]._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
+          console.log('Asset coming up')
+          console.log(asset)
           // All done dont need to do anything
         })
       }
