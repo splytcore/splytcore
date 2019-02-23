@@ -127,12 +127,12 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
 
   return new Promise ((resolve, reject) => {
     let instagramAssetsArray = []
-    async.each(instagramArray, (instagram, callback) => {  
-        
+    async.eachOf(instagramArray, (instagram, key, callback) => {  
+        // console.log('key: ' + key)
         let tags = instagram.tags   
         let instagramAssets = new InstagramAssets()
      
-        async.each(tags, (tag, callback2) => {
+        async.eachOf(tags, (tag, key2, callback2) => {
           Hashtag.findOne({ name: tag, affiliate: affiliateId }).populate('asset').exec(function(err, res_hashtag) {
             instagramAssets.overviewImageUrl = instagram.overviewImgUrl
             if (res_hashtag) {
