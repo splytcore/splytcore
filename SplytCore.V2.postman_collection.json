@@ -50,7 +50,7 @@
 							"urlencoded": [
 								{
 									"key": "roles",
-									"value": "seller",
+									"value": "affiliate",
 									"description": "required: affiliate, seller",
 									"type": "text"
 								},
@@ -104,74 +104,6 @@
 							]
 						},
 						"description": "Signup first then sign in"
-					},
-					"response": []
-				},
-				{
-					"name": "Sign in",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "49c54557-c352-4523-b6e4-608a5b932965",
-								"exec": [
-									"var data = JSON.parse(responseBody);",
-									"pm.globals.set(\"sessionId\", data.sessionId);",
-									"if(data.user.roles.indexOf('seller') > -1) {",
-									"    pm.globals.set(\"sellerId\", data.user._id);",
-									"}",
-									"if(data.user.roles.indexOf('affiliate') > -1) {",
-									"    pm.globals.set(\"affiliateId\", data.user._id);",
-									"}",
-									"if(data.user.roles.indexOf('customer') > -1) {",
-									"    pm.globals.set(\"customerId\", data.user._id);",
-									"}",
-									"",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "email",
-									"value": "{{userEmail}}",
-									"description": "required",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "splytcore2017!",
-									"description": "required",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/auth/signin",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"signin"
-							]
-						},
-						"description": "Sign in after signing up"
 					},
 					"response": []
 				},
@@ -270,12 +202,328 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Sign in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "49c54557-c352-4523-b6e4-608a5b932965",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"sessionId\", data.sessionId);",
+									"if(data.user.roles.indexOf('seller') > -1) {",
+									"    pm.globals.set(\"sellerId\", data.user._id);",
+									"}",
+									"if(data.user.roles.indexOf('affiliate') > -1) {",
+									"    pm.globals.set(\"affiliateId\", data.user._id);",
+									"}",
+									"if(data.user.roles.indexOf('customer') > -1) {",
+									"    pm.globals.set(\"customerId\", data.user._id);",
+									"}",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{userEmail}}",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "splytcore2017!",
+									"description": "required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/signin",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						},
+						"description": "Sign in after signing up"
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Affiliate",
 			"item": [
+				{
+					"name": "Select item for store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc7e0c84-a1c6-40af-bfaf-bebd4eb14448",
+								"exec": [
+									"const res = JSON.parse(responseBody);",
+									"pm.globals.set(\"storeAssetId\", data._id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "store",
+									"value": "{{storeId}}",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "asset",
+									"value": "{{assetId}}",
+									"description": "required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/storeassets",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"storeassets"
+							]
+						},
+						"description": "Affiliate can select this item to be displayed in their store"
+					},
+					"response": []
+				},
+				{
+					"name": "List products to select from",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "439fd094-79e2-4a03-a160-65e66d4ca86c",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"var index = _.random(0, data.length - 1);",
+									"pm.globals.set(\"assetId\", data[index]._id);",
+									"pm.globals.set(\"asset\", JSON.stringify(data[index]));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/assets",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"assets"
+							]
+						},
+						"description": "List all products so i can choose what to choose to represent as an affiliate"
+					},
+					"response": []
+				},
+				{
+					"name": "Create item hashtag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "redshoes{{$randomInt}}",
+									"description": "no #, spaces or dot allowed",
+									"type": "text"
+								},
+								{
+									"key": "asset",
+									"value": "{{assetId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/hashtags",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"hashtags"
+							]
+						},
+						"description": "After selecting an item to be added to a store, affiliate can create custom hashtag for it"
+					},
+					"response": []
+				},
+				{
+					"name": "Deauthorize instagram",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "igAccessToken",
+									"value": "''",
+									"description": "required: empty string only",
+									"type": "text"
+								},
+								{
+									"key": "instagramUsername",
+									"value": "''",
+									"description": "required: empty string only",
+									"type": "text"
+								},
+								{
+									"key": "instagramId",
+									"value": "''",
+									"description": "required: empty string only",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Save this code thus giving splyt access to your instagram profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Save instagram code to user object",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "igCode",
+									"value": "71a53126986b43adaaeec84176dbb424",
+									"type": "text"
+								},
+								{
+									"key": "redirectUri",
+									"value": "http://localhost:3000/influencer/insta/save",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Save this code thus giving splyt access to your instagram profile"
+					},
+					"response": []
+				},
 				{
 					"name": "Create a storefront",
 					"event": [
@@ -333,151 +581,6 @@
 					"response": []
 				},
 				{
-					"name": "List products to select from",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "439fd094-79e2-4a03-a160-65e66d4ca86c",
-								"exec": [
-									"var data = JSON.parse(responseBody);",
-									"var index = _.random(0, data.length - 1);",
-									"pm.globals.set(\"assetId\", data[index]._id);",
-									"pm.globals.set(\"asset\", JSON.stringify(data[index]));",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/assets",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"assets"
-							]
-						},
-						"description": "List all products so i can choose what to choose to represent as an affiliate"
-					},
-					"response": []
-				},
-				{
-					"name": "Select item for store",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "cc7e0c84-a1c6-40af-bfaf-bebd4eb14448",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							},
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "store",
-									"value": "{{storeId}}",
-									"description": "required",
-									"type": "text"
-								},
-								{
-									"key": "asset",
-									"value": "{{assetId}}",
-									"description": "required",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/storeassets",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"storeassets"
-							]
-						},
-						"description": "Affiliate can select this item to be displayed in their store"
-					},
-					"response": []
-				},
-				{
-					"name": "Create item hashtag",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							},
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "redshoes{{$randomInt}}",
-									"type": "text"
-								},
-								{
-									"key": "asset",
-									"value": "{{assetId}}",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/hashtags",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"hashtags"
-							]
-						},
-						"description": "After selecting an item to be added to a store, affiliate can create custom hashtag for it"
-					},
-					"response": []
-				},
-				{
 					"name": "Get my store items",
 					"request": {
 						"method": "GET",
@@ -506,55 +609,14 @@
 						"description": "Once you add items in your store, view it so you can remove the items if you wanted to in the future"
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "Seller",
+			"item": [
 				{
-					"name": "Save instagram code to user object",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							},
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "igCode",
-									"value": "71a53126986b43adaaeec84176dbb424",
-									"type": "text"
-								},
-								{
-									"key": "redirectUri",
-									"value": "http://localhost:3000/influencer/insta/save",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/users",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"users"
-							]
-						},
-						"description": "Save this code thus giving splyt access to your instagram profile"
-					},
-					"response": []
-				},
-				{
-					"name": "Deauthorize instagram",
+					"name": "Update asset",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -574,44 +636,70 @@
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "igAccessToken",
-									"value": "''",
-									"description": "required: empty string only",
+									"key": "title",
+									"value": "Title goes here",
+									"description": "optional: any title string",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "Product's description goes here",
+									"description": "optional: any description string",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "inventoryCount",
+									"value": "5",
+									"description": "optional: any number above 0",
 									"type": "text"
 								},
 								{
-									"key": "instagramUsername",
-									"value": "''",
-									"description": "required: empty string only",
-									"type": "text"
+									"key": "imageURL",
+									"value": "",
+									"description": "optional: full image url or partial url",
+									"type": "text",
+									"disabled": true
 								},
 								{
-									"key": "instagramId",
-									"value": "''",
-									"description": "required: empty string only",
-									"type": "text"
+									"key": "reward",
+									"value": ".50",
+									"description": "optional: 0-100",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "brand",
+									"value": "nike",
+									"description": "optional: any brand name",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": "199.99",
+									"description": "optional",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{local}}/api/users",
+							"raw": "{{local}}/api/assets/{{assetId}}",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
-								"users"
+								"assets",
+								"{{assetId}}"
 							]
 						},
-						"description": "Save this code thus giving splyt access to your instagram profile"
+						"description": "Create an asset as an seller"
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Seller",
-			"item": [
+				},
 				{
 					"name": "Upload asset Image",
 					"event": [
@@ -761,91 +849,6 @@
 					"response": []
 				},
 				{
-					"name": "Update asset",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded"
-							},
-							{
-								"key": "Cookie",
-								"type": "text",
-								"value": "sessionId={{sessionId}}"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "title",
-									"value": "Title goes here",
-									"description": "optional: any title string",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "description",
-									"value": "Product's description goes here",
-									"description": "optional: any description string",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "inventoryCount",
-									"value": "5",
-									"description": "optional: any number above 0",
-									"type": "text"
-								},
-								{
-									"key": "imageURL",
-									"value": "",
-									"description": "optional: full image url or partial url",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "reward",
-									"value": ".50",
-									"description": "optional: 0-100",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "brand",
-									"value": "nike",
-									"description": "optional: any brand name",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "price",
-									"value": "199.99",
-									"description": "optional",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/assets/{{assetId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"assets",
-								"{{assetId}}"
-							]
-						},
-						"description": "Create an asset as an seller"
-					},
-					"response": []
-				},
-				{
 					"name": "List my items",
 					"request": {
 						"method": "GET",
@@ -891,6 +894,51 @@
 					"name": "Cart",
 					"item": [
 						{
+							"name": "Read a cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "057298bc-438d-4a70-bcc8-a752fb4e00f8",
+										"exec": [
+											"const res = JSON.parse(responseBody)",
+											"pm.globals.set(\"cartId\", res._id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{local}}/api/carts/{{cartId}}",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"carts",
+										"{{cartId}}"
+									]
+								},
+								"description": "Read contents of cart which will return cart items as array as well"
+							},
+							"response": []
+						},
+						{
 							"name": "Create a cart",
 							"event": [
 								{
@@ -935,15 +983,14 @@
 							"response": []
 						},
 						{
-							"name": "Read a cart",
+							"name": "Remove item from cart",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "057298bc-438d-4a70-bcc8-a752fb4e00f8",
+										"id": "87cc0d14-b736-4f5d-adae-d5b12886548d",
 										"exec": [
-											"const res = JSON.parse(responseBody)",
-											"pm.globals.set(\"cartId\", res._id);",
+											"var data = JSON.parse(responseBody);",
 											""
 										],
 										"type": "text/javascript"
@@ -951,31 +998,66 @@
 								}
 							],
 							"request": {
-								"method": "GET",
+								"method": "DELETE",
 								"header": [
 									{
 										"key": "Content-Type",
 										"name": "Content-Type",
 										"type": "text",
 										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Cookie",
+										"type": "text",
+										"value": "sessionId={{sessionId}}"
+									},
+									{
+										"key": "Cookie",
+										"type": "text",
+										"value": "storeId={{storeId}}"
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": ""
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "store",
+											"value": "{{storeId}}",
+											"description": "storeId",
+											"type": "text"
+										},
+										{
+											"key": "asset",
+											"value": "{{assetId}}",
+											"description": "assetId",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "1",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cart",
+											"value": "{{cartId}}",
+											"description": "optional. Will create new one if none passed",
+											"type": "text"
+										}
+									]
 								},
 								"url": {
-									"raw": "{{local}}/api/carts/{{cartId}}",
+									"raw": "{{local}}/api/cartsitems/{{cartItemId}}",
 									"host": [
 										"{{local}}"
 									],
 									"path": [
 										"api",
-										"carts",
-										"{{cartId}}"
+										"cartsitems",
+										"{{cartItemId}}"
 									]
 								},
-								"description": "Read contents of cart which will return cart items as array as well"
+								"description": "item must be in cart to remove or else you'll get back 400 with message item in cart not found"
 							},
 							"response": []
 						},
@@ -1107,158 +1189,10 @@
 								"description": "updates quantity for any cart item"
 							},
 							"response": []
-						},
-						{
-							"name": "Remove item from cart",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "87cc0d14-b736-4f5d-adae-d5b12886548d",
-										"exec": [
-											"var data = JSON.parse(responseBody);",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/x-www-form-urlencoded"
-									},
-									{
-										"key": "Cookie",
-										"type": "text",
-										"value": "sessionId={{sessionId}}"
-									},
-									{
-										"key": "Cookie",
-										"type": "text",
-										"value": "storeId={{storeId}}"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "store",
-											"value": "{{storeId}}",
-											"description": "storeId",
-											"type": "text"
-										},
-										{
-											"key": "asset",
-											"value": "{{assetId}}",
-											"description": "assetId",
-											"type": "text"
-										},
-										{
-											"key": "quantity",
-											"value": "1",
-											"type": "text",
-											"disabled": true
-										},
-										{
-											"key": "cart",
-											"value": "{{cartId}}",
-											"description": "optional. Will create new one if none passed",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{local}}/api/cartsitems/{{cartItemId}}",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"api",
-										"cartsitems",
-										"{{cartItemId}}"
-									]
-								},
-								"description": "item must be in cart to remove or else you'll get back 400 with message item in cart not found"
-							},
-							"response": []
 						}
 					],
 					"description": "Managing cart for consumer",
 					"_postman_isSubFolder": true
-				},
-				{
-					"name": "Get store by store name",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
-								"exec": [
-									"const res = JSON.parse(responseBody);",
-									"pm.globals.set(\"affiliateId\", res.affiliate._id);",
-									"pm.globals.set(\"storeId\", res._id);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/store/byname/{{storeName}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"store",
-								"byname",
-								"{{storeName}}"
-							]
-						},
-						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
-					},
-					"response": []
-				},
-				{
-					"name": "Get instagram items by storeId",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/instagramAssets/{{storeId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"instagramAssets",
-								"{{storeId}}"
-							]
-						},
-						"description": "This will get all hashtagged items from instagram in the latest post"
-					},
-					"response": []
 				},
 				{
 					"name": "Create Order",
@@ -1357,6 +1291,75 @@
 						"description": "Create order from checkout"
 					},
 					"response": []
+				},
+				{
+					"name": "Get store by store name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									"const res = JSON.parse(responseBody);",
+									"pm.globals.set(\"affiliateId\", res.affiliate._id);",
+									"pm.globals.set(\"storeId\", res._id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/store/byname/{{storeName}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"store",
+								"byname",
+								"{{storeName}}"
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
+					"name": "Get instagram items by storeId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/instagramAssets/{{storeId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"instagramAssets",
+								"{{storeId}}"
+							]
+						},
+						"description": "This will get all hashtagged items from instagram in the latest post"
+					},
+					"response": []
 				}
 			],
 			"description": "Consumers/Guests who comein to checkout/buy a product"
@@ -1446,6 +1449,56 @@
 		{
 			"name": "Analytics",
 			"item": [
+				{
+					"name": "Seller report to get how many affiliates sold my items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/sellers/affiliatesLength?userId={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"sellers",
+								"affiliatesLength"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{sellerId}}",
+									"description": "SellerId"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
 				{
 					"name": "Get top selling items for date range",
 					"event": [
@@ -1566,6 +1619,56 @@
 					"response": []
 				},
 				{
+					"name": "Seller report to get remaining inventory count and value",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/sellers/remainingInventory?userId={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"sellers",
+								"remainingInventory"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{sellerId}}",
+									"description": "sellerId"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
 					"name": "Seller report to get gross sales by date range",
 					"event": [
 						{
@@ -1618,106 +1721,6 @@
 									"key": "userId",
 									"value": "{{sellerId}}",
 									"description": "sellerId"
-								}
-							]
-						},
-						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
-					},
-					"response": []
-				},
-				{
-					"name": "Seller report to get remaining inventory count and value",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"type": "text",
-								"value": "sessionId={{sessionId}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/analytics/sellers/remainingInventory?userId={{sellerId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"analytics",
-								"sellers",
-								"remainingInventory"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "{{sellerId}}",
-									"description": "sellerId"
-								}
-							]
-						},
-						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
-					},
-					"response": []
-				},
-				{
-					"name": "Seller report to get how many affiliates sold my items",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"type": "text",
-								"value": "sessionId={{sessionId}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/analytics/sellers/affiliatesLength?userId={{sellerId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"analytics",
-								"sellers",
-								"affiliatesLength"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "{{sellerId}}",
-									"description": "SellerId"
 								}
 							]
 						},

@@ -37,7 +37,15 @@ const OrderItemSchema = new Schema({
   quantity: {
     type: Number,
     default: 1
-  }
+  },
+  soldPrice: {
+    type: Number,
+    default: 0
+  },  
+  reward: {
+    type: Number,
+    default: 0
+  }  
 })
 
 mongoose.model('OrderItem', OrderItemSchema)

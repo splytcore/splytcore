@@ -13,7 +13,7 @@
       title: 'Analytics',
       state: 'analytics',
       type: 'dropdown',
-      roles: ['user', 'admin', 'seller' , 'affiliate', 'customer']
+      roles: ['user', 'admin']
     });
 
     Menus.addSubMenuItem('topbar', 'analytics', {

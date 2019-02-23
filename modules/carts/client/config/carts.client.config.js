@@ -1,26 +1,26 @@
-(function () {
-  'use strict';
+// (function () {
+//   'use strict';
 
-  angular
-    .module('carts')
-    .run(menuConfig);
+//   angular
+//     .module('carts')
+//     .run(menuConfig);
 
-  menuConfig.$inject = ['Menus'];
+//   menuConfig.$inject = ['Menus'];
 
-  function menuConfig(Menus) {
-    // Set top bar menu items
-    Menus.addMenuItem('topbar', {
-      title: 'Carts',
-      state: 'carts',
-      type: 'dropdown',
-      roles: ['user', 'admin']
-    })
+//   function menuConfig(Menus) {
+//     // Set top bar menu items
+//     Menus.addMenuItem('topbar', {
+//       title: 'Carts',
+//       state: 'carts',
+//       type: 'dropdown',
+//       roles: ['user', 'admin']
+//     })
 
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'carts', {
-      title: 'List Carts',
-      roles: ['user', 'admin'],
-      state: 'carts.list'
-    })
-  }
-}());
+//     // Add the dropdown list item
+//     Menus.addSubMenuItem('topbar', 'carts', {
+//       title: 'List Carts',
+//       roles: ['user', 'admin'],
+//       state: 'carts.list'
+//     })
+//   }
+// }());

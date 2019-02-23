@@ -8,7 +8,7 @@
     </button>
     <a ui-sref="home" class="navbar-brand">
       <span>
-        Powered by <img class="headerLogo" src="/modules/core/client/img/brand/logo.png" alt="Logo">Spl.yt
+        Powered by Pollenly
       </span>
     </a>
   </div>
@@ -63,7 +63,8 @@
       </li>
     </ul>
 
-    <ul class="nav navbar-nav navbar-right">
+
+    <ul ng-show="authentication.user.roles.indexOf('admin') > -1 ? false : true" class="nav navbar-nav navbar-right">
       <li ui-sref-active="active">
         <a ui-sref="cart.checkout">Cart</a>
       </li>

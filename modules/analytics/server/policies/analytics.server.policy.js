@@ -22,9 +22,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user'],
+    roles: ['user', 'admin'],
     allows: [{
-      resources: '/api/analytics',
+      resources: ['/api/analytics', '/api/analytics/generalSalesSummary'],
       permissions: ['get', 'post']
     }, {
       resources: '/api/analytics/:analyticId',
