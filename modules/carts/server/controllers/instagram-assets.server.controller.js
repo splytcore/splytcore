@@ -57,7 +57,8 @@ function getHashtagsByInstagram(affiliate) {
           if(post.tags.length > 0) {
             response.push({
               tags: post.tags,
-              overviewImgUrl: post.images.standard_resolution.url
+              overviewImgUrl: post.images.standard_resolution.url,
+              created: post.created_time
             })
           }
           callback()
@@ -135,9 +136,15 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
       if (err) {
         reject(err)
       } else {
-        resolve(response)
+        resolve(response.sort(arrayConditions))
       }
     })
   })
+}
+
+function arrayConditions(a, b) {
+  if (a.created < b.created) return 1
+  if (a.created > b.created) return -1
+  return 0
 }
 
