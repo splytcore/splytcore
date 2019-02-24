@@ -120,15 +120,14 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
 
           if(res_hashtags.length > 0) {
             response.push(instagram)
-            let responseLastIndex = response.length - 1
-            response[responseLastIndex].assets = []
+            response[response.length -1].assets = []
             for(var i = 0; i < res_hashtags.length; i++) {
               if(!res_hashtags[i].asset) break
-              response[responseLastIndex].assets.push(res_hashtags[i].asset)
-              delete response[responseLastIndex].tags
+              response[response.length -1].assets.push(res_hashtags[i].asset)
+              delete response[response.length -1].tags
             }
           } else {
-            response.splice(responseLastIndex, 1)
+            response.splice(response.length -1, 1)
           }
           callback(err)
         })
@@ -141,3 +140,4 @@ function getAssetsByHashtagAndAffiliateId(instagramArray, affiliateId) {
     })
   })
 }
+
