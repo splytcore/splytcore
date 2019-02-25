@@ -15,7 +15,7 @@ var path = require('path'),
 exports.create = function(req, res) {
   let hashtag = new Hashtag(req.body);
   // sanitation check for #, spaces or dots
-  const regex = /^[a-z]*$/gm
+  const regex = /^[a-zA-Z]*$/gm
   if(!hashtag.name.match(regex)) {
     return res.status(400).send({
       message: 'Hashtag must not include #, spaces or dots'
