@@ -1,0 +1,40 @@
+<section>
+  <div class="page-header">
+    <h1>Signup Tokens</h1>
+  </div>
+  <div class="list-group">
+
+       <!-- ui-sref="preregistrations.view({ preregistrationId: preregistration._id })" -->
+    <div class="list-group-item">
+      <h4 class="list-group-item-heading">
+        <div class="pull-right">
+          <button type="button" ng-click="vm.selectAll()" class="btn btn-primary">SELECT ALL</button>
+          <button type="button" ng-click="vm.unselectAll()" class="btn btn-primary">UNSELECT ALL</button>       
+          <button type="button" ng-click="vm.deleteList()" class="btn btn-warning">DELETE ({{vm.toDeleteList.length}})</button>          
+        </div>
+        <br/>
+      </h4>
+      <small class="list-group-item-text">
+        Check all you need to delete
+      </small>
+    </div>
+
+    <div ng-repeat="pre in vm.preregistrations" class="list-group-item">
+      <h4 class="list-group-item-heading">
+        <span ng-bind="pre.signupToken"></span>
+        <div class="checkbox pull-right">
+          <input type="checkbox" name="checkboxs[]" ng-click="vm.addRemoveList(pre._id)">
+        </div>
+      </h4>
+      <small class="list-group-item-text">Email: {{ pre.signupUser ? pre.signupUser.email : 'NA' }} </small> <br/>
+      
+      <small class="list-group-item-text">Signed up: {{ pre.signupDate ? (pre.signupDate | date:'mediumDate') : 'NA' }} </small>
+      <br/>
+
+    </div>
+  </div>
+  
+  <div class="alert alert-warning text-center" ng-if="vm.preregistrations.$resolved && !vm.preregistrations.length">
+    No Preregistrations yet, why don't you <a ui-sref="preregistrations.create">create one</a>?
+  </div>
+</section>
