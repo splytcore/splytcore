@@ -96,7 +96,7 @@ let OrderSchema = new Schema({
       type: String,
       required: 'email address is required'
     }
-  }
+  },
   items: [{
     type: Schema.ObjectId,
     ref: 'OrderItem'
