@@ -24,7 +24,7 @@ module.exports = function(app) {
     .get(core.paginate, assets.listMyAssets)
 
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
-    .get(assets.read, assets.incrementView)
+    .get(assets.read)
 
   app.route('/api/assets/:assetId').all(assetsPolicy.onlyAssetCreator)
     .put(assets.update)

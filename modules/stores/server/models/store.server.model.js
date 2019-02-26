@@ -37,6 +37,10 @@ let StoreSchema = new Schema({
   affiliate: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  views: {
+    type: Number,
+    default: 0
   }
 })
 

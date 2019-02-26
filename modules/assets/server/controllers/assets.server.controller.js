@@ -198,19 +198,19 @@ exports.uploadAssetImage = function(req, res) {
   })
 }
 
-exports.incrementView = function(req, res, next) {
-  console.log('asset coming up for incrementing view')
-  if(!req.asset) {
-    return res.jsonp(req.asset)
-  }
+// exports.incrementView = function(req, res, next) {
+//   console.log('asset coming up for incrementing view')
+//   if(!req.asset) {
+//     return res.jsonp(req.asset)
+//   }
 
-  Asset.findByIdAndUpdate(req.asset._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
-    if(err || !asset) {
-      console.log('asset not found to update its view count')
-    }
-    res.jsonp(asset)
-  })
-}
+//   Asset.findByIdAndUpdate(req.asset._id, { $inc: { views: 1 }}, { upsert: true }, function(err, asset) {
+//     if(err || !asset) {
+//       console.log('asset not found to update its view count')
+//     }
+//     res.jsonp(asset)
+//   })
+// }
 
 exports.incrementBuy = function(req, res, next) {
 

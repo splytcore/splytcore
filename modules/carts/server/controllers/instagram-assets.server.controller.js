@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 const InstagramAssets = mongoose.model('InstagramAssets')
 const Hashtag = mongoose.model('Hashtag')
 const Asset = mongoose.model('Asset')
+const Store = mongoose.model('Store')
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const  _ = require('lodash')
 const curl = new (require('curl-request'))()
@@ -26,7 +27,7 @@ exports.read = function(req, res) {
       return getAssetsByHashtagAndAffiliateId(res_instagramArray, affiliate.id)
     })
     .then((res_instagramAssetsArray)=> {
-      return incrementAssetViewCount(res_instagramAssetsArray)
+      return incrementStoreViewCount(req.store, res_instagramAssetsArray)
     })
     .then((res_instagramAssetsArray) => {
       res.jsonp(res_instagramAssetsArray)
@@ -82,27 +83,43 @@ function getHashtagsByInstagram(affiliate) {
   
 }
 
-function incrementAssetViewCount(instagramArray) {
+function incrementStoreViewCount(store, instagramArray) {
+  
   return new Promise ((resolve, reject) => {
-    async.each(instagramArray, (instagram, callback) => {  
-        
-        let assets = instagram.assets   
-
-        async.each(assets, (asset, callback2) => {
-          // console.log(asset)
-          Asset.findByIdAndUpdate(asset._id, { $inc: { views: 1 }}, { }, function(err, asset) {
-            callback2(err)
-            // All done dont need to do anything
-          })
-
-        }, (err) => {
-          if(err) callback(err)
-          resolve(instagramArray)
-        })
-    }, (err) => {
-      if (err) reject(err)
-      else resolve(instagramArray)
+    Store.findByIdAndUpdate(store._id, {$inc: {views: 1 }}, {}, function(err, store) {
+      if(err) {
+        return reject(err)
+      }
+      console.log('updated store here')
+      console.log(store)
+      resolve(instagramArray)
     })
+    // store.views = store.views + 1
+    // let newStore = new Store(store)
+    // newStore.save(() => {
+    //   console.log('updated store view count')
+    //  resolve(instagramArray)
+    // })
+    // async.each(instagramArray, (instagram, callback) => {  
+        
+    //     let assets = instagram.assets   
+
+    //     async.each(assets, (asset, callback2) => {
+    //       // console.log(asset)
+    //       Asset.findByIdAndUpdate(asset._id, { $inc: { views: 1 }}, { }, function(err, asset) {
+    //         console.log('update views on an asset', asset._id)
+    //         callback2(err)
+    //         // All done dont need to do anything
+    //       })
+
+    //     }, (err) => {
+    //       if(err) callback(err)
+    //       resolve(instagramArray)
+    //     })
+    // }, (err) => {
+    //   if (err) reject(err)
+    //   else resolve(instagramArray)
+    // })
   })
   // console.log(instagramAssets)
 }

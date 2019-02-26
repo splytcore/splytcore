@@ -323,6 +323,7 @@ exports.getGeneralSalesSummary = function(req, res) {
   let totalSellers = 0
   let totalQuantity = 0
   let totalAffiliates = 0
+  let totalStoreViews = 0
 
   let totalRewards = 0 //total commission  
   let totalAffiliatesCommission = 0 //total reward * .20
@@ -335,7 +336,6 @@ exports.getGeneralSalesSummary = function(req, res) {
   let totalBuys = 0
   let totalViewsBuysPercentage = 0
 
-
   OrderItem.find().populate('order').populate('asset').exec()
     .then((orderItems) => {
       if (!orderItems) {
@@ -345,8 +345,8 @@ exports.getGeneralSalesSummary = function(req, res) {
         totalGrossSales += item.soldPrice * item.quantity
         totalQuantity += item.quantity
         totalRewards += item.reward
-        totalViews += item.asset.views
-        totalBuys += item.asset.buys
+        // totalViews += item.asset.views
+        // totalBuys += item.asset.buys
         cb()
       }, (err) => {
         if (err) {
@@ -371,9 +371,13 @@ exports.getGeneralSalesSummary = function(req, res) {
       totalSellers = sellersLength
       return User.count({ roles: 'affiliate' }).exec()
     })
-    .then((affiliatesLength) => { 
-      totalAffiliates = affiliatesLength
-      totalViewsBuysPercentage = (totalBuys / totalViews) * 100
+    .then((affiliatesLength) => {
+      return findStoreViews(affiliatesLength)
+    })
+    .then((resolveOfFindStoreView) => { 
+      totalAffiliates = resolveOfFindStoreView.affiliatesLength
+      totalStoreViews = resolveOfFindStoreView.totalViews
+      totalViewsBuysPercentage = (totalOrders / totalStoreViews) * 100
       res.jsonp({ 
         totalGrossSales: totalGrossSales, 
         totalSellers: totalSellers, 
@@ -382,8 +386,7 @@ exports.getGeneralSalesSummary = function(req, res) {
         totalRewards: totalRewards,
         totalOrders: totalOrders,
         totalAssets: totalAssets,
-        totalViews: totalViews,
-        totalBuys: totalBuys,
+        totalStoreViews: totalStoreViews,
         totalViewsBuysPercentage: totalViewsBuysPercentage,
         totalAffiliatesCommission: (totalRewards * 80) / 100 ,
         totalPollenlyCommission: (totalRewards * 20) / 100
@@ -395,5 +398,25 @@ exports.getGeneralSalesSummary = function(req, res) {
         message: err.toString()
       })
     })
-}
+
+    function findStoreViews(affiliatesLength) {
+      return new Promise(function (resolve, reject) {
+        Store.find({ views: { $gt: 0 }}).exec((err, stores) => {
+          let totalViews = 0
+          async.each(stores, (store, cb) => {
+            totalViews += store.views
+            cb(err)
+          }, err => {
+            if(err) return reject(err)
+            resolve({ 
+              affiliatesLength: affiliatesLength, 
+              totalViews: totalViews 
+            })
+          })
+        })
+        
+      });
+    }
+
+  }
 

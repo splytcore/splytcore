@@ -69,14 +69,6 @@ var AssetSchema = new Schema({
     type: String,
     trim: true
   },
-  views: {
-    type: Number,
-    default: 0
-  },
-  buys: {
-    type: Number,
-    default: 0
-  },
   reward: {
     type: Number,
     required: 'Reward is required, in 2 decimal places',
