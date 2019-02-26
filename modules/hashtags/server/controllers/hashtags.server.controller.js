@@ -15,7 +15,7 @@ var path = require('path'),
 exports.create = function(req, res) {
   let hashtag = new Hashtag(req.body);
   // sanitation check for #, spaces or dots
-  const regex = /^[a-zA-Z]*$/gm
+  const regex = /^[a-zA-Z1-9]*$/gm
   if(!hashtag.name.match(regex)) {
     return res.status(400).send({
       message: 'Hashtag must not include spaces or special characters'
@@ -54,7 +54,7 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
   var hashtag = req.hashtag;
   
-  const regex = /^[a-zA-Z]*$/gm
+  const regex = /^[a-zA-Z1-9]*$/gm
   if(!req.body.name.match(regex)) {
     return res.status(400).send({
       message: 'Hashtag must not include spaces or special characters'
