@@ -18,7 +18,7 @@ exports.create = function(req, res) {
   const regex = /^[a-zA-Z1-9]*$/gm
   if(!hashtag.name.match(regex)) {
     return res.status(400).send({
-      message: 'Hashtag must not include spaces or special characters'
+      message: 'Must not include spaces or special characters'
     })
   }
   hashtag.name = hashtag.name.toLowerCase()
@@ -57,7 +57,7 @@ exports.update = function(req, res) {
   const regex = /^[a-zA-Z1-9]*$/gm
   if(!req.body.name.match(regex)) {
     return res.status(400).send({
-      message: 'Hashtag must not include spaces or special characters'
+      message: 'Must not include spaces or special characters'
     })
   }
 
