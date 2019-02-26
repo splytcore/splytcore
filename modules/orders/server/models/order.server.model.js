@@ -32,11 +32,6 @@ let OrderSchema = new Schema({
   totalCost: {
     type: Number,
     default: 0
-  },   
-  //customer
-  customer: {
-    type: Schema.ObjectId,
-    ref: 'User'
   },
   // store: {
   //   type: Schema.ObjectId,

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "82014b04-5c8f-4008-9550-aa42da4af2d0",
+		"_postman_id": "8d5c3b49-cf9e-4cbc-9d39-42c315bf05bb",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -9,6 +9,73 @@
 		{
 			"name": "Users",
 			"item": [
+				{
+					"name": "Change password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "49c54557-c352-4523-b6e4-608a5b932965",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"sessionId\", data.sessionId);",
+									"if(data.user.roles.indexOf('seller') > -1) {",
+									"    pm.globals.set(\"sellerId\", data.user._id);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "currentPassword",
+									"value": "splytcore2017!",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "splytcore2018!",
+									"description": "required: any new password, should be same as verify password",
+									"type": "text"
+								},
+								{
+									"key": "verifyPassword",
+									"value": "splytcore2018!",
+									"description": "required: should be same as new password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/users/password",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"password"
+							]
+						},
+						"description": "change password"
+					},
+					"response": []
+				},
 				{
 					"name": "Signup",
 					"event": [
@@ -104,73 +171,6 @@
 							]
 						},
 						"description": "Signup first then sign in"
-					},
-					"response": []
-				},
-				{
-					"name": "Change password",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "49c54557-c352-4523-b6e4-608a5b932965",
-								"exec": [
-									"var data = JSON.parse(responseBody);",
-									"pm.globals.set(\"sessionId\", data.sessionId);",
-									"if(data.user.roles.indexOf('seller') > -1) {",
-									"    pm.globals.set(\"sellerId\", data.user._id);",
-									"}",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "currentPassword",
-									"value": "splytcore2017!",
-									"description": "required",
-									"type": "text"
-								},
-								{
-									"key": "newPassword",
-									"value": "splytcore2018!",
-									"description": "required: any new password, should be same as verify password",
-									"type": "text"
-								},
-								{
-									"key": "verifyPassword",
-									"value": "splytcore2018!",
-									"description": "required: should be same as new password",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/users/password",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"password"
-							]
-						},
-						"description": "change password"
 					},
 					"response": []
 				},
@@ -277,6 +277,62 @@
 			"name": "Affiliate",
 			"item": [
 				{
+					"name": "Create a storefront",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e60b3a43-9c39-41f6-a2f3-fa41a6ba8b5f",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.globals.set(\"storeId\", data._id);",
+									"pm.globals.set(\"storeName\", data.name);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "lenovostore{{$randomInt}}",
+									"description": "required: any string",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/stores",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"stores"
+							]
+						},
+						"description": "Affiliate create a storefront for my followers to refer to"
+					},
+					"response": []
+				},
+				{
 					"name": "Select item for store",
 					"event": [
 						{
@@ -339,6 +395,52 @@
 					"response": []
 				},
 				{
+					"name": "Save instagram code to user object",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "igCode",
+									"value": "71a53126986b43adaaeec84176dbb424",
+									"type": "text"
+								},
+								{
+									"key": "redirectUri",
+									"value": "http://localhost:3000/influencer/insta/save",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Save this code thus giving splyt access to your instagram profile"
+					},
+					"response": []
+				},
+				{
 					"name": "List products to select from",
 					"event": [
 						{
@@ -378,16 +480,10 @@
 					"response": []
 				},
 				{
-					"name": "Create item hashtag",
+					"name": "Get my store items",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							},
 							{
 								"key": "Cookie",
 								"value": "sessionId={{sessionId}}",
@@ -395,32 +491,21 @@
 							}
 						],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "redshoes{{$randomInt}}",
-									"description": "no #, spaces or dot allowed",
-									"type": "text"
-								},
-								{
-									"key": "asset",
-									"value": "{{assetId}}",
-									"type": "text"
-								}
-							]
+							"mode": "raw",
+							"raw": ""
 						},
 						"url": {
-							"raw": "{{local}}/api/hashtags",
+							"raw": "{{local}}/api/stores/{{storeId}}",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
-								"hashtags"
+								"stores",
+								"{{storeId}}"
 							]
 						},
-						"description": "After selecting an item to be added to a store, affiliate can create custom hashtag for it"
+						"description": "Once you add items in your store, view it so you can remove the items if you wanted to in the future"
 					},
 					"response": []
 				},
@@ -479,67 +564,7 @@
 					"response": []
 				},
 				{
-					"name": "Save instagram code to user object",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							},
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "igCode",
-									"value": "71a53126986b43adaaeec84176dbb424",
-									"type": "text"
-								},
-								{
-									"key": "redirectUri",
-									"value": "http://localhost:3000/influencer/insta/save",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/users",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"users"
-							]
-						},
-						"description": "Save this code thus giving splyt access to your instagram profile"
-					},
-					"response": []
-				},
-				{
-					"name": "Create a storefront",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "e60b3a43-9c39-41f6-a2f3-fa41a6ba8b5f",
-								"exec": [
-									"var data = JSON.parse(responseBody);",
-									"pm.globals.set(\"storeId\", data._id);",
-									"pm.globals.set(\"storeName\", data.name);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
+					"name": "Create item hashtag",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -560,53 +585,28 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "lenovostore{{$randomInt}}",
-									"description": "required: any string",
+									"value": "redshoes{{$randomInt}}",
+									"description": "no #, spaces or dot allowed",
+									"type": "text"
+								},
+								{
+									"key": "asset",
+									"value": "{{assetId}}",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{local}}/api/stores",
+							"raw": "{{local}}/api/hashtags",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
-								"stores"
+								"hashtags"
 							]
 						},
-						"description": "Affiliate create a storefront for my followers to refer to"
-					},
-					"response": []
-				},
-				{
-					"name": "Get my store items",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/stores/{{storeId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"stores",
-								"{{storeId}}"
-							]
-						},
-						"description": "Once you add items in your store, view it so you can remove the items if you wanted to in the future"
+						"description": "After selecting an item to be added to a store, affiliate can create custom hashtag for it"
 					},
 					"response": []
 				}
@@ -615,91 +615,6 @@
 		{
 			"name": "Seller",
 			"item": [
-				{
-					"name": "Update asset",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded"
-							},
-							{
-								"key": "Cookie",
-								"type": "text",
-								"value": "sessionId={{sessionId}}"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "title",
-									"value": "Title goes here",
-									"description": "optional: any title string",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "description",
-									"value": "Product's description goes here",
-									"description": "optional: any description string",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "inventoryCount",
-									"value": "5",
-									"description": "optional: any number above 0",
-									"type": "text"
-								},
-								{
-									"key": "imageURL",
-									"value": "",
-									"description": "optional: full image url or partial url",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "reward",
-									"value": ".50",
-									"description": "optional: 0-100",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "brand",
-									"value": "nike",
-									"description": "optional: any brand name",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "price",
-									"value": "199.99",
-									"description": "optional",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{local}}/api/assets/{{assetId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"assets",
-								"{{assetId}}"
-							]
-						},
-						"description": "Create an asset as an seller"
-					},
-					"response": []
-				},
 				{
 					"name": "Upload asset Image",
 					"event": [
@@ -754,6 +669,43 @@
 							]
 						},
 						"description": "Create an asset as an seller"
+					},
+					"response": []
+				},
+				{
+					"name": "List my items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/assets/mine",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"assets",
+								"mine"
+							]
+						},
+						"description": "List all my items as a seller"
 					},
 					"response": []
 				},
@@ -849,39 +801,87 @@
 					"response": []
 				},
 				{
-					"name": "List my items",
+					"name": "Update asset",
 					"request": {
-						"method": "GET",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "Content-Type",
 								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
 								"type": "text",
-								"disabled": true
+								"value": "application/x-www-form-urlencoded"
 							},
 							{
 								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": ""
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Title goes here",
+									"description": "optional: any title string",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "Product's description goes here",
+									"description": "optional: any description string",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "inventoryCount",
+									"value": "5",
+									"description": "optional: any number above 0",
+									"type": "text"
+								},
+								{
+									"key": "imageURL",
+									"value": "",
+									"description": "optional: full image url or partial url",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "reward",
+									"value": ".50",
+									"description": "optional: 0-100",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "brand",
+									"value": "nike",
+									"description": "optional: any brand name",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": "199.99",
+									"description": "optional",
+									"type": "text",
+									"disabled": true
+								}
+							]
 						},
 						"url": {
-							"raw": "{{local}}/api/assets/mine",
+							"raw": "{{local}}/api/assets/{{assetId}}",
 							"host": [
 								"{{local}}"
 							],
 							"path": [
 								"api",
 								"assets",
-								"mine"
+								"{{assetId}}"
 							]
 						},
-						"description": "List all my items as a seller"
+						"description": "Create an asset as an seller"
 					},
 					"response": []
 				}
@@ -893,95 +893,6 @@
 				{
 					"name": "Cart",
 					"item": [
-						{
-							"name": "Read a cart",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "057298bc-438d-4a70-bcc8-a752fb4e00f8",
-										"exec": [
-											"const res = JSON.parse(responseBody)",
-											"pm.globals.set(\"cartId\", res._id);",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/x-www-form-urlencoded"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{local}}/api/carts/{{cartId}}",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"api",
-										"carts",
-										"{{cartId}}"
-									]
-								},
-								"description": "Read contents of cart which will return cart items as array as well"
-							},
-							"response": []
-						},
-						{
-							"name": "Create a cart",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "057298bc-438d-4a70-bcc8-a752fb4e00f8",
-										"exec": [
-											"const res = JSON.parse(responseBody)",
-											"pm.globals.set(\"cartId\", res._id);",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"value": "application/x-www-form-urlencoded",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{local}}/api/carts",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"api",
-										"carts"
-									]
-								},
-								"description": "Creates a empty cart for a customer"
-							},
-							"response": []
-						},
 						{
 							"name": "Remove item from cart",
 							"event": [
@@ -1058,6 +969,101 @@
 									]
 								},
 								"description": "item must be in cart to remove or else you'll get back 400 with message item in cart not found"
+							},
+							"response": []
+						},
+						{
+							"name": "Update cart item quantity",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "87cc0d14-b736-4f5d-adae-d5b12886548d",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "quantity",
+											"value": "2",
+											"description": "required: new quantity value",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local}}/api/cartsitems/{{cartItemId}}",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"cartsitems",
+										"{{cartItemId}}"
+									]
+								},
+								"description": "updates quantity for any cart item"
+							},
+							"response": []
+						},
+						{
+							"name": "Read a cart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "057298bc-438d-4a70-bcc8-a752fb4e00f8",
+										"exec": [
+											"const res = JSON.parse(responseBody)",
+											"pm.globals.set(\"cartId\", res._id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{local}}/api/carts/{{cartId}}",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"carts",
+										"{{cartId}}"
+									]
+								},
+								"description": "Read contents of cart which will return cart items as array as well"
 							},
 							"response": []
 						},
@@ -1141,13 +1147,15 @@
 							"response": []
 						},
 						{
-							"name": "Update cart item quantity",
+							"name": "Create a cart",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "87cc0d14-b736-4f5d-adae-d5b12886548d",
+										"id": "057298bc-438d-4a70-bcc8-a752fb4e00f8",
 										"exec": [
+											"const res = JSON.parse(responseBody)",
+											"pm.globals.set(\"cartId\", res._id);",
 											""
 										],
 										"type": "text/javascript"
@@ -1155,44 +1163,81 @@
 								}
 							],
 							"request": {
-								"method": "PUT",
+								"method": "POST",
 								"header": [
 									{
 										"key": "Content-Type",
 										"name": "Content-Type",
-										"type": "text",
-										"value": "application/x-www-form-urlencoded"
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
 									}
 								],
 								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "quantity",
-											"value": "2",
-											"description": "required: new quantity value",
-											"type": "text"
-										}
-									]
+									"mode": "raw",
+									"raw": ""
 								},
 								"url": {
-									"raw": "{{local}}/api/cartsitems/{{cartItemId}}",
+									"raw": "{{local}}/api/carts",
 									"host": [
 										"{{local}}"
 									],
 									"path": [
 										"api",
-										"cartsitems",
-										"{{cartItemId}}"
+										"carts"
 									]
 								},
-								"description": "updates quantity for any cart item"
+								"description": "Creates a empty cart for a customer"
 							},
 							"response": []
 						}
 					],
 					"description": "Managing cart for consumer",
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Get store by store name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									"const res = JSON.parse(responseBody);",
+									"pm.globals.set(\"affiliateId\", res.affiliate._id);",
+									"pm.globals.set(\"storeId\", res._id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "sessionId={{sessionId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/store/byname/{{storeName}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"store",
+								"byname",
+								"{{storeName}}"
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
 				},
 				{
 					"name": "Create Order",
@@ -1275,6 +1320,21 @@
 									"value": "tok_....",
 									"description": "required: ",
 									"type": "text"
+								},
+								{
+									"key": "customer.lastName",
+									"value": "somerandomname",
+									"type": "text"
+								},
+								{
+									"key": "customer.firstName",
+									"value": "somerandomfirstname",
+									"type": "text"
+								},
+								{
+									"key": "customer.email",
+									"value": "somerandomcustomeremail",
+									"type": "text"
 								}
 							]
 						},
@@ -1289,51 +1349,6 @@
 							]
 						},
 						"description": "Create order from checkout"
-					},
-					"response": []
-				},
-				{
-					"name": "Get store by store name",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
-								"exec": [
-									"const res = JSON.parse(responseBody);",
-									"pm.globals.set(\"affiliateId\", res.affiliate._id);",
-									"pm.globals.set(\"storeId\", res._id);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"value": "sessionId={{sessionId}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/store/byname/{{storeName}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"store",
-								"byname",
-								"{{storeName}}"
-							]
-						},
-						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
 					},
 					"response": []
 				},
@@ -1450,6 +1465,56 @@
 			"name": "Analytics",
 			"item": [
 				{
+					"name": "Seller report to get remaining inventory count and value",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/sellers/remainingInventory?userId={{sellerId}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"sellers",
+								"remainingInventory"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{sellerId}}",
+									"description": "sellerId"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
 					"name": "Seller report to get how many affiliates sold my items",
 					"event": [
 						{
@@ -1492,65 +1557,6 @@
 									"key": "userId",
 									"value": "{{sellerId}}",
 									"description": "SellerId"
-								}
-							]
-						},
-						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
-					},
-					"response": []
-				},
-				{
-					"name": "Get top selling items for date range",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"type": "text",
-								"value": "sessionId={{sessionId}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/analytics/topSellingAssets?fromDateMS=0&thruDateMS=999999999&limit=3",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"analytics",
-								"topSellingAssets"
-							],
-							"query": [
-								{
-									"key": "fromDateMS",
-									"value": "0",
-									"description": "from date in milliseconds"
-								},
-								{
-									"key": "thruDateMS",
-									"value": "999999999",
-									"description": "thru date in milliseconds"
-								},
-								{
-									"key": "limit",
-									"value": "3",
-									"description": "get  top x selling items"
 								}
 							]
 						},
@@ -1619,56 +1625,6 @@
 					"response": []
 				},
 				{
-					"name": "Seller report to get remaining inventory count and value",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"type": "text",
-								"value": "sessionId={{sessionId}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{local}}/api/analytics/sellers/remainingInventory?userId={{sellerId}}",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"api",
-								"analytics",
-								"sellers",
-								"remainingInventory"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "{{sellerId}}",
-									"description": "sellerId"
-								}
-							]
-						},
-						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
-					},
-					"response": []
-				},
-				{
 					"name": "Seller report to get gross sales by date range",
 					"event": [
 						{
@@ -1721,6 +1677,65 @@
 									"key": "userId",
 									"value": "{{sellerId}}",
 									"description": "sellerId"
+								}
+							]
+						},
+						"description": "Will fetch store from store's name, aka give you items in the latest hashtag prefilled in"
+					},
+					"response": []
+				},
+				{
+					"name": "Get top selling items for date range",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "230bf30c-a628-46f6-8848-a742581c9e59",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/analytics/topSellingAssets?fromDateMS=0&thruDateMS=999999999&limit=3",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"topSellingAssets"
+							],
+							"query": [
+								{
+									"key": "fromDateMS",
+									"value": "0",
+									"description": "from date in milliseconds"
+								},
+								{
+									"key": "thruDateMS",
+									"value": "999999999",
+									"description": "thru date in milliseconds"
+								},
+								{
+									"key": "limit",
+									"value": "3",
+									"description": "get  top x selling items"
 								}
 							]
 						},
