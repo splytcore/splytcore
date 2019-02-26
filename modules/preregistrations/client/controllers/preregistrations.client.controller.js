@@ -6,24 +6,16 @@
     .module('preregistrations')
     .controller('PreregistrationsController', PreregistrationsController);
 
-  PreregistrationsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'preregistrationResolve'];
+  PreregistrationsController.$inject = ['PreregistrationsService','$scope', '$state', '$window', 'Authentication', 'preregistrationResolve'];
 
-  function PreregistrationsController ($scope, $state, $window, Authentication, preregistration) {
+  function PreregistrationsController (PreregistrationsService, $scope, $state, $window, Authentication, preregistration) {
     var vm = this;
 
-    vm.authentication = Authentication;
-    vm.preregistration = preregistration;
-    vm.error = null;
-    vm.form = {};
-    vm.remove = remove;
-    vm.save = save;
-
-    // Remove existing Preregistration
-    function remove() {
-      if ($window.confirm('Are you sure you want to delete?')) {
-        vm.preregistration.$remove($state.go('preregistrations.list'));
-      }
-    }
+    vm.authentication = Authentication
+    vm.preregistration = preregistration
+    vm.error = null
+    vm.form = {}
+    vm.save = save
 
     // Save Preregistration
     function save(isValid) {
@@ -32,20 +24,27 @@
         return false;
       }
 
-      // TODO: move create/update logic to service
-      if (vm.preregistration._id) {
-        vm.preregistration.$update(successCallback, errorCallback);
-      } else {
-        vm.preregistration.$save(successCallback, errorCallback);
-      }
+      console.log(vm.signupTokens)
+      vm.tokens = vm.signupTokens.split(',')
 
-      function successCallback(res) {
-        $state.go('preregistrations.list')
-      }
+      //for testing
+      // let length = vm.tokens.length
+      // for (let i = 0; i < 100; i++) {
+      //   vm.tokens.push(i.toString())
+      // }
 
-      function errorCallback(res) {
-        vm.error = res.data.message;
-      }
+      vm.tokens.forEach((token) => {
+        vm.preregistration = new PreregistrationsService()
+        vm.preregistration.signupToken = token
+        vm.preregistration.$save()
+          .then((result) => {  
+            console.log('saved')
+          })
+          .catch((err) => {
+            console.log(err)
+          })          
+      })
+      $state.go('preregistrations.list')
     }
   }
-}());
+}())

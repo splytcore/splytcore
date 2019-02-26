@@ -9,6 +9,7 @@ const Preregistration = mongoose.model('Preregistration')
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const _ = require('lodash')
 
+const crypto = require('crypto')
 const async = require('async') 
 const config = require(path.resolve('./config/config'))
 const nodemailer = require('nodemailer')
@@ -20,8 +21,12 @@ const smtpTransport = nodemailer.createTransport(config.mailer.options)
 exports.create = function(req, res) {
   
   console.log('create a prerejecstration')
-  var preregistration = new Preregistration(req.body);
-  preregistration.user = req.user;
+
+  let preregistration = new Preregistration(req.body)
+  preregistration.user = req.user
+
+  //use from the body or do we generate?
+  // preregistration.signupToken = crypto.randomBytes(16).toString('base64')
 
   preregistration.save()
     .then(() => {
@@ -149,7 +154,7 @@ exports.delete = function(req, res) {
  * List of Preregistrations
  */
 exports.list = function(req, res) {
-  Preregistration.find().sort('-created').populate('user', 'displayName').exec(function(err, preregistrations) {
+  Preregistration.find().sort('-created').populate('user', 'displayName').populate('signupUser', 'email').exec(function(err, preregistrations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

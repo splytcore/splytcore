@@ -20,21 +20,28 @@ const validateLocalStrategyEmail = function (email) {
  * Preregistration Schema
  */
 let PreregistrationSchema = new Schema({
-  name: {
+  // name: {
+  //   type: String,
+  //   default: '',
+  //   required: 'Please fill name',
+  //   trim: true
+  // },
+  // email: {
+  //   type: String,
+  //   unique: true,
+  //   lowercase: true,
+  //   trim: true,
+  //   default: '',
+  //   validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
+  // },
+  signupToken: {
     type: String,
-    default: '',
-    required: 'Please fill name',
-    trim: true
-  },
-  email: {
-    type: String,
-    unique: true,
-    lowercase: true,
-    trim: true,
-    default: '',
-    validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
+    unique: true
   },
   inviteSentDate: {
+    type: Date
+  },  
+  signupDate: {
     type: Date
   },
   created: {
@@ -44,7 +51,23 @@ let PreregistrationSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  signupUser: {
+    type: Schema.ObjectId,
+    ref: 'User'
   }
-});
+})
+
+/**
+ * Hook a pre save method to hash the password
+ */
+// PreregistrationSchema.pre('save', function (next) {
+//   if (this.password && this.isModified('password')) {
+//     this.salt = crypto.randomBytes(16).toString('base64');    
+//     this.password = this.hashPassword(this.password);
+//   }
+
+//   next();
+// });
 
 mongoose.model('Preregistration', PreregistrationSchema);

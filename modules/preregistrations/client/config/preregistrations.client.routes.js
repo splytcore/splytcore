@@ -36,6 +36,19 @@
           pageTitle: 'Preregistrations Create'
         }
       })
+      .state('preregistrations.upload', {
+        url: '/upload',
+        templateUrl: 'modules/preregistrations/client/views/upload-preregistration.client.view.html',
+        controller: 'PreregistrationsController',
+        controllerAs: 'vm',
+        resolve: {
+          preregistrationResolve: newPreregistration
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle: 'Preregistrations Create'
+        }
+      })      
       .state('preregistrations.edit', {
         url: '/:preregistrationId/edit',
         templateUrl: 'modules/preregistrations/client/views/form-preregistration.client.view.html',

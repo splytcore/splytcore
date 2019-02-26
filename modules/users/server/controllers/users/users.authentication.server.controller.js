@@ -9,6 +9,8 @@ const EthService = require(path.resolve('./modules/eth/server/services/eth.serve
 const mongoose = require('mongoose')
 const passport = require('passport') 
 const User = mongoose.model('User')
+const Preregistration = mongoose.model('Preregistration')
+
 const config = require(path.resolve('./config/config'))
 const nodemailer = require('nodemailer')
 const smtpTransport = nodemailer.createTransport(config.mailer.options)
@@ -30,8 +32,9 @@ exports.signup = function (req, res) {
   // delete req.body.roles
 
   // Init Variables
-  var user = new User(req.body)
-  var message = null
+  let user = new User(req.body)
+  let message = null
+  let signupToken =req.body.signupToken
 
   // Add missing user fields
   user.provider = 'local';
@@ -46,7 +49,8 @@ exports.signup = function (req, res) {
       user.password = undefined
       user.salt = undefined
       
-      emailSignup(res, user)
+      // emailSignup(res, user)
+      setSignupTokenRedeemed(signupToken, user)
       
       req.login(user, function (err) {
         if (err) {
@@ -58,6 +62,50 @@ exports.signup = function (req, res) {
     }
   })
 
+}
+
+function setSignupTokenRedeemed(token, user) {
+
+  console.log('updating signup token: ' + token)
+
+  Preregistration.findOneAndUpdate({ signupToken: token }, { signupUser: user, signupDate: Date.now() }).exec()
+    .then((result) => {
+      console.log('signupToken updated')
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+}
+
+/**
+ * check if token is valid
+ */
+exports.verifySignupToken = function(req, res, next) {
+
+  let token = req.body.signupToken
+  
+  Preregistration.findOne({ signupToken: token }).exec()
+    .then((pre) => {
+      if (!pre) {
+        return res.status(400).send({
+          message: 'Sorry, that token is invalid.'
+        })        
+      }
+
+      if (pre.signupUser) {
+        return res.status(400).send({
+          message: 'Sorry, this token has been already been used'
+        })    
+      } 
+
+      next()
+    })
+    .catch((err) => {
+      return res.status(400).send({
+        message: err.toString()
+      })  
+    })      
 }
 
 function emailSignup(res, user) {

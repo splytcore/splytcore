@@ -1,87 +1,90 @@
 (function () {
-  'use strict';
+  'use strict'
 
   angular
     .module('preregistrations')
-    .controller('PreregistrationsListController', PreregistrationsListController);
+    .controller('PreregistrationsListController', PreregistrationsListController)
 
-  PreregistrationsListController.$inject = ['PreregistrationsService', '$http', '$window'];
+  PreregistrationsListController.$inject = ['PreregistrationsService', '$http', '$window', '$state']
 
-  function PreregistrationsListController(PreregistrationsService, $http, $window) {
-    
+  function PreregistrationsListController(PreregistrationsService, $http, $window, $state) {
+            
     var vm = this
-	vm.addRemoveSendList = addRemoveSendList
-	vm.selectAll = selectAll
-	vm.unselectAll = unselectAll
-	vm.sendInvites = sendInvites
+	  vm.addRemoveList = addRemoveList
+	  
+    vm.selectAll = selectAll
+	  vm.unselectAll = unselectAll
+	  vm.deleteList = deleteList
 
-    vm.preregistrations = PreregistrationsService.query();
-    vm.toSendList = []
+    vm.preregistrations = PreregistrationsService.query()
+    vm.toDeleteList = []
 
-    console.log(vm.toSendList)
+    console.log(vm.toDeleteList)
 
 
-    function addRemoveSendList(preId) {
+    function addRemoveList(preId) {
 
-    	let index = vm.toSendList.indexOf(preId)
+    	let index = vm.toDeleteList.indexOf(preId)
     	// console.log('index: ' + index )
     	if (index > -1) {
     		// console.log('remove')
-    		vm.toSendList.splice(index, 1) 
+    		vm.toDeleteList.splice(index, 1) 
     	} else {
     		// console.log('add')
-	    	vm.toSendList.push(preId)
+	    	vm.toDeleteList.push(preId)
     	}
     }
 
     function selectAll() {
 
-		let elements = document.getElementsByName("checkboxs[]");
+  		let elements = document.getElementsByName('checkboxs[]');
 
-		console.log(vm.preregistrations.length)
+  		console.log(vm.preregistrations.length)
 
-		elements.forEach((ele) => {
-			// console.log(ele)
-			ele.checked = true
-		})
+  		elements.forEach((ele) => {
+  			// console.log(ele)
+  			ele.checked = true
+  		})
 
-		vm.preregistrations.forEach((pre) => {
-			if (vm.toSendList.indexOf(pre._id) == -1) {
-				addRemoveSendList(pre._id)		
-			}
-		})
-	}
+  		vm.preregistrations.forEach((pre) => {
+  			if (vm.toDeleteList.indexOf(pre._id) === -1) {
+  				addRemoveList(pre._id)		
+  			}
+  		})
+	  }
 
     function unselectAll() {
-  		
-  		let elements = document.getElementsByName("checkboxs[]");
+        		
+  		let elements = document.getElementsByName('checkboxs[]')
 
-		elements.forEach((ele) => {
+		  elements.forEach((ele) => {
 			// console.log(ele)
-			ele.checked = false
-		})
+        ele.checked = false
+		  })
 
-		vm.preregistrations.forEach((pre) => {
-			if (vm.toSendList.indexOf(pre._id) > -1) {
-				addRemoveSendList(pre._id)
-			}
-		})
-	}
+  		vm.preregistrations.forEach((pre) => {
+  			if (vm.toDeleteList.indexOf(pre._id) > -1) {
+  				addRemoveList(pre._id)
+  			}
+  		})
+    }
 
-    function sendInvites() {
+    function deleteList() {
      	if ($window.confirm('confirm to send emails?')) {
-    		console.log(vm.toSendList)
-    		vm.toSendList.forEach((preId) => {
-    			$http.put('/api/preregistrations/' + preId + '/sendInvite')
+    		console.log(vm.toDeleteList)
+    		vm.toDeleteList.forEach((preId) => {
+    			$http.delete('/api/preregistrations/' + preId)
     				.then((result) => {
-    					console.log('email sent: ')
+    					console.log('deleted')
     				})
     				.catch((err) => {
     					console.log(err)
     				})
     		})
-		}
-	}
+
+		    $state.go('preregistrations.list', {}, { reload: true })
+      }
+	  }
   }
 
-}());
+}())

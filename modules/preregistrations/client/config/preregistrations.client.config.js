@@ -1,32 +1,32 @@
 (function () {
-  'use strict';
+  'use strict'
 
   angular
     .module('preregistrations')
-    .run(menuConfig);
+    .run(menuConfig)
 
-  menuConfig.$inject = ['Menus'];
+  menuConfig.$inject = ['Menus']
 
   function menuConfig(Menus) {
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
-      title: 'Preregistrations',
+      title: 'Signup Tokens',
       state: 'preregistrations',
       type: 'dropdown',
       roles: ['admin', 'user']
-    });
+    })
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'preregistrations', {
-      title: 'List Preregistrations',
+      title: 'List Signup Tokens',
       state: 'preregistrations.list'
-    });
+    })
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'preregistrations', {
-      title: 'Create Preregistration',
+      title: 'Create Signup Tokens',
       state: 'preregistrations.create',
       roles: ['user', 'admin']
-    });
+    })
   }
-}());
+}())
