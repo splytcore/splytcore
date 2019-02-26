@@ -512,33 +512,37 @@ exports.charge = (req, res, next) => {
 
   curl.setHeaders([
         'Authorization: Bearer ' + config.stripe.secretKey
-      ])
+  ])
 
-      curl.setBody({
-        'amount': req.order.totalCost * 100,
-        'currency':'USD',
-        'source': req.body.stripeToken,
-        'description': req.order._id
-        // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
-      }).post('https://api.stripe.com/v1/charges')
-      .then((error, response) => {
-        console.log(error)
-        if(error) {
-          return res.status(400).send({
-            message: error.body.error.code
+  console.log('about to charge customer')
+  console.log('amount: ', req.order.totalCost * 100)
+  console.log('strike token: ', req.body.stripeToken)
+  console.log('orderId: ', req.order._id)
 
-          })
-        }
-        req.order.status = 'settled'
-        req.order.save(err => {
-          next()
-        })
-      }).catch(err => {
-        console.log(err)
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })
+  curl.setBody({
+    'amount': req.order.totalCost * 100,
+    'currency':'USD',
+    'source': req.body.stripeToken,
+    'description': req.order._id
+    // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
+  }).post('https://api.stripe.com/v1/charges')
+  .then((error, response) => {
+    console.log(error)
+    if(error) {
+      return res.status(400).send({
+        message: 'Could not charge credit card'
       })
+    }
+    req.order.status = 'settled'
+    req.order.save(err => {
+      next()
+    })
+  }).catch(err => {
+    console.log(err)
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    })
+  })
 }
 
 
