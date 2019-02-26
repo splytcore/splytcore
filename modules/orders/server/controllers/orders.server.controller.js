@@ -533,8 +533,14 @@ exports.charge = (req, res, next) => {
         message: 'Could not charge credit card'
       })
     }
-    req.order.status = 'settled'
-    req.order.save(err => {
+    Order.findByIdAndUpdate(req.order._id, { status: 'settled' }, { }, function(err, order) {
+      if(err) {
+        console.log('orders server controller line 538')
+        console.log(err)
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        })
+      }
       next()
     })
   }).catch(err => {
