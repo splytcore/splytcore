@@ -513,7 +513,7 @@ exports.charge = (req, res, next) => {
   curl.setHeaders([
         'Authorization: Bearer ' + config.stripe.secretKey
       ])
-      // 499 = 49900
+
       curl.setBody({
         'amount': req.order.totalCost * 100,
         'currency':'USD',
@@ -521,10 +521,16 @@ exports.charge = (req, res, next) => {
         'description': req.order.customer.email,
         'invoice': req.order._id,
         'order': req.order._id,
-        'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
+        // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
       }).post('https://api.stripe.com/v1/charges')
       .then((error, response) => {
         console.log(error)
+        if(error) {
+          return res.status(400).send({
+            message: error.body.error.code
+
+          })
+        }
         req.order.status = 'settled'
         req.order.save(err => {
           next()
