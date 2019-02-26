@@ -55,14 +55,14 @@ exports.update = function(req, res) {
   var hashtag = req.hashtag;
   
   const regex = /^[a-zA-Z]*$/gm
-  if(!req.body.hashtag.name.match(regex)) {
+  if(!req.body.name.match(regex)) {
     return res.status(400).send({
       message: 'Hashtag must not include #, spaces or dots'
     })
   }
 
 
-  req.body.hashtag.name = req.body.hashtag.name.toLowerCase()
+  req.body.name = req.body.name.toLowerCase()
 
   hashtag = _.extend(hashtag, req.body);
 
