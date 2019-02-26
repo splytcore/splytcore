@@ -73,7 +73,6 @@ exports.create = function(req, res, next) {
         //update totals for header
         order.totalCost += (cartItem.quantity * cartItem.asset.price)
         order.totalQuantity += cartItem.quantity
-        req.order = order
         orderItem.save((err) => {
           if (err) {
             cb(err)
@@ -94,6 +93,7 @@ exports.create = function(req, res, next) {
     },
     function updateOrderTotals(order, callback) {
       order.save((err) => {
+        req.order = order
         callback(err, order)
       })
     },    
