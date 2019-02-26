@@ -34,7 +34,7 @@ exports.signup = function (req, res) {
   // Init Variables
   let user = new User(req.body)
   let message = null
-  let signupToken =req.body.signupToken
+  // let signupToken =req.body.signupToken
 
   // Add missing user fields
   user.provider = 'local';
@@ -50,7 +50,7 @@ exports.signup = function (req, res) {
       user.salt = undefined
       
       // emailSignup(res, user)
-      setSignupTokenRedeemed(signupToken, user)
+      // setSignupTokenRedeemed(signupToken, user)
       
       req.login(user, function (err) {
         if (err) {
