@@ -509,6 +509,10 @@ exports.ordersBySeller = function(req, res) {
 
 exports.charge = (req, res, next) => {
   console.log('Now charging customer card')
+  console.log('req.body coming in')
+  console.log(req.body)
+  console.log('req.order coming in')
+  if(req.order) console.log(req.order)
   if(!req.body.stripeToken) {
     next()
   }
