@@ -87,7 +87,21 @@ let OrderSchema = new Schema({
       type: String,
       required: 'Zip is required'
     } 
-  },   
+  },
+  customer: {
+    lastname: {
+      type: String,
+      required: 'last name is required'
+    },
+    firstname: {
+      type: String,
+      required: 'first name is required'
+    },
+    email: {
+      type: String,
+      required: 'email address is required'
+    }
+  }
   items: [{
     type: Schema.ObjectId,
     ref: 'OrderItem'
