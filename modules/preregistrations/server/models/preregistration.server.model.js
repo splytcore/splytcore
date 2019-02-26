@@ -36,6 +36,7 @@ let PreregistrationSchema = new Schema({
   // },
   signupToken: {
     type: String,
+    trim: true,
     unique: true
   },
   inviteSentDate: {
