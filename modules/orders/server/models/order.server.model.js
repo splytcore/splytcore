@@ -84,11 +84,11 @@ let OrderSchema = new Schema({
     } 
   },
   customer: {
-    lastname: {
+    lastName: {
       type: String,
       required: 'last name is required'
     },
-    firstname: {
+    firstName: {
       type: String,
       required: 'first name is required'
     },
