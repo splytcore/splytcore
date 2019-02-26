@@ -10,13 +10,14 @@
   function AuthenticateInstagramController(Authentication, $scope, $rootElement, Users, $http) {
     
     $scope.authentication = Authentication
-    let redirectUri = window.location.origin + '/settings/authenticateInstagram'
+    let redirectUri = encodeURI(window.location.origin + '/settings/authenticateInstagram')
     console.log(window.location)
 
     $scope.igLogin = () => {
       let clientId = '09156f2dbd264bdb8652cff79b354b36'
-      console.log(redirectUri)
-      window.location.replace('https://api.instagram.com/oauth/authorize/?client_id=' + clientId + '&redirect_uri=' + redirectUri + '&response_type=code')
+
+      let nextUrl = encodeURIComponent('/oauth/authorize/?response_type=code&client_id='+ clientId + '&redirect_uri='+ redirectUri)
+      window.location.replace('https://instagram.com/accounts/logoutin/?force_classic_login=&next=' + nextUrl)
     }
 
     $scope.igLogout = () => {

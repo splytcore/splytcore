@@ -8,9 +8,30 @@
 <body>
   <p>Hello Customer {{name}}!</p>
 
-  <p>Link is your order details {{url}}</p>
+  <p>
+    A customer just placed an order, here's their info
+  </p>
   
-  <p>The {{appName}} Support Team</p>
+  <h3>
+    Shipping address:
+  </h3>
+  <p>
+    {{order.shipping.address1}}</br>
+    {{order.shipping.address2}}</br>
+    {{order.shipping.city}}, {{order.shipping.state}}, {{order.shipping.zip}}
+  </p>
+  
+  <h3>
+    Product info:
+  </h3>
+  <p>
+    {{asset.title}}</br>
+    Quantity: {{orderItem.quantity}}
+  </p>
+
+
+    
+  <p>Thank you for your attention. </br>The pollenly Support Team</p>
   
 </body>
 

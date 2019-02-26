@@ -180,12 +180,14 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
       if (config.secure && config.secure.ssl === true) {
         httpTransport = 'https://'
       }
+    
       res.render(path.resolve('modules/orders/server/templates/seller-order-email'), {
         name: asset.user.displayName,
         appName: config.app.title,
         url: req.headers.origin + '/orders/' + orderItem.order.id,
         asset: asset,
-        orderId: orderItem.order.id,
+        orderItem: orderItem,
+        order: orderItem.order,
         totalQuantity: orderItem.quantity,
         totalCost: orderItem.totalCost
       }, function (err, emailHTML) {
