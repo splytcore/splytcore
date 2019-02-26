@@ -60,7 +60,10 @@ exports.create = function(req, res, next) {
     },
     function createOrderDetails(order, cartItems, callback) {
       async.each(cartItems, function(cartItem, cb) {
-        let orderItem = new OrderItem(cartItem)
+        let orderItem = new OrderItem()
+        orderItem.asset = cartItem.asset
+        orderItem.store = cartItem.store
+        orderItem.quantity = cartItem.quantity
         orderItem.order = order
         orderItem.seller = cartItem.asset.user
         orderItem.affiliate = cartItem.affiliate
