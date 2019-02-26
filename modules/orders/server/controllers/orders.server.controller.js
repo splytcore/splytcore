@@ -530,12 +530,14 @@ exports.charge = (req, res, next) => {
     // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
   }).post('https://api.stripe.com/v1/charges')
   .then(response => {
-    console.log(error)
+    console.log(response)
     if(response.statusCode !== 200) {
       return res.status(400).send({
         message: 'Could not charge credit card'
       })
     }
+
+    
     Order.findByIdAndUpdate(req.order._id, { status: 'settled' }, { }, function(err, order) {
       if(err) {
         console.log('orders server controller line 538')
