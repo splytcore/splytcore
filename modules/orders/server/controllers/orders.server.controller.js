@@ -76,7 +76,6 @@ exports.create = function(req, res, next) {
         //update totals for header
         order.totalCost += (cartItem.quantity * cartItem.asset.price)
         order.totalQuantity += cartItem.quantity
-        req.order = order
         orderItem.save((err) => {
           if (err) {
             cb(err)
@@ -97,6 +96,7 @@ exports.create = function(req, res, next) {
     },
     function updateOrderTotals(order, callback) {
       order.save((err) => {
+        req.order = order
         callback(err, order)
       })
     },    
@@ -515,29 +515,37 @@ exports.charge = (req, res, next) => {
 
   curl.setHeaders([
         'Authorization: Bearer ' + config.stripe.secretKey
-      ])
-      // 499 = 49900
-      curl.setBody({
-        'amount': req.order.totalCost * 100,
-        'currency':'USD',
-        'source': req.body.stripeToken,
-        'description': req.order.customer.email,
-        'invoice': req.order._id,
-        'order': req.order._id,
-        'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
-      }).post('https://api.stripe.com/v1/charges')
-      .then((error, response) => {
-        console.log(error)
-        req.order.status = 'settled'
-        req.order.save(err => {
-          next()
-        })
-      }).catch(err => {
-        console.log(err)
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        })
+  ])
+
+  console.log('about to charge customer')
+  console.log('amount: ', req.order.totalCost * 100)
+  console.log('strike token: ', req.body.stripeToken)
+  console.log('orderId: ', req.order._id)
+
+  curl.setBody({
+    'amount': req.order.totalCost * 100,
+    'currency':'USD',
+    'source': req.body.stripeToken,
+    'description': req.order._id
+    // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
+  }).post('https://api.stripe.com/v1/charges')
+  .then((error, response) => {
+    console.log(error)
+    if(error) {
+      return res.status(400).send({
+        message: 'Could not charge credit card'
       })
+    }
+    req.order.status = 'settled'
+    req.order.save(err => {
+      next()
+    })
+  }).catch(err => {
+    console.log(err)
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    })
+  })
 }
 
 

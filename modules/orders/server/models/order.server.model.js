@@ -86,15 +86,15 @@ let OrderSchema = new Schema({
   customer: {
     lastName: {
       type: String,
-      required: 'last name is required'
+      //required: 'last name is required'
     },
     firstName: {
       type: String,
-      required: 'first name is required'
+      //required: 'first name is required'
     },
     email: {
       type: String,
-      required: 'email address is required'
+      //required: 'email address is required'
     }
   },
   items: [{
