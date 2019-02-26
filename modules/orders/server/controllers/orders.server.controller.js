@@ -50,7 +50,6 @@ exports.create = function(req, res, next) {
 
       order.save((err) => {
         req.orderItems = []
-        req.order = order
         callback(err, order)
       })
     },
@@ -74,7 +73,7 @@ exports.create = function(req, res, next) {
         //update totals for header
         order.totalCost += (cartItem.quantity * cartItem.asset.price)
         order.totalQuantity += cartItem.quantity
-
+        req.order = order
         orderItem.save((err) => {
           if (err) {
             cb(err)
@@ -514,6 +513,7 @@ exports.charge = (req, res, next) => {
   curl.setHeaders([
         'Authorization: Bearer ' + config.stripe.secretKey
       ])
+      // 499 = 49900
       curl.setBody({
         'amount': req.order.totalCost * 100,
         'currency':'USD',
