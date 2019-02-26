@@ -529,9 +529,9 @@ exports.charge = (req, res, next) => {
     'description': req.order._id
     // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
   }).post('https://api.stripe.com/v1/charges')
-  .then((error, response) => {
+  .then(response => {
     console.log(error)
-    if(error) {
+    if(response.statusCode !== 200) {
       return res.status(400).send({
         message: 'Could not charge credit card'
       })
