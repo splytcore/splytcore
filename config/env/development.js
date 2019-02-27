@@ -76,6 +76,6 @@ module.exports = {
     secretKey: 'sk_test_W2U93hsqzkoPTsk6ZNyNkWza'
   },
   cors: {
-    allowedDomains: ['http://localhost:3001', 'http://localhost:3000']
+    allowedDomains: ['http://localhost:3001', 'http://localhost:3000', 'http://13.58.147.177']
   }
 };
