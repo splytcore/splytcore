@@ -7,7 +7,10 @@ const analyticsPolicy = require('../policies/analytics.server.policy')
 const analytics = require('../controllers/analytics.server.controller')
 
 module.exports = function(app) {
-  
+  //TODO: apply security policy
+  app.route('/api/analytics/affiliates')
+    .get(analytics.getUsersByRole)
+
   app.route('/api/analytics/affiliates/grossSales')
     .get(analytics.getAffiliateGrossSales)
 

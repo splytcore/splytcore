@@ -14,11 +14,18 @@
       state: 'analytics',
       type: 'dropdown',
       roles: ['user', 'admin']
-    });
+    })
+
+    Menus.addSubMenuItem('topbar', 'analytics', {
+      title: 'Affiliates Analytics',
+      state: 'analytics.affiliates'
+    }) 
 
     Menus.addSubMenuItem('topbar', 'analytics', {
       title: 'Summary Report',
       state: 'analytics.summary'
     })
+
+
   }
 }())
