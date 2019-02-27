@@ -88,7 +88,7 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
-  app.use(cors({credentials: true, origin: ['http://localhost:3001', 'https://pollenly.com', 'http://localhost:3000']}));  
+  app.use(cors({credentials: true, origin: config.cors.allowedDomains}));  
 };
 
 /**
