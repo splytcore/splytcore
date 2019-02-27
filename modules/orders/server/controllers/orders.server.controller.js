@@ -541,7 +541,7 @@ exports.charge = (req, res, next) => {
     }
 
     
-    Order.findByIdAndUpdate(req.order._id, { status: 'settled' }, { }, function(err, order) {
+    Order.findByIdAndUpdate(req.order._id, { status: 'settled', stripeChargeId: response.body.id }, { }, function(err, order) {
       if(err) {
         console.log('orders server controller line 538')
         console.log(err)
