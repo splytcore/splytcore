@@ -14,14 +14,16 @@
     vm.authentication = Authentication;
 
     vm.error = null;
-           
+   
     console.log($stateParams.affiliateId)      
     if ($stateParams.affiliateId) {
       $http.get('api/analytics/affiliates/grossSales?userId=' + $stateParams.affiliateId)
         .then((result) => {
           vm.result = result.data
         }, (error) => {
-          vm.error = error.toString()
+          console.log(error)
+          vm.error = error.data.message
+          alert(vm.error)
         })          
     } else {
       $http.get('api/analytics/affiliates?role=affiliate')
@@ -29,7 +31,8 @@
           vm.affiliates = result.data
           console.log(vm.affiliates)
         }, (error) => {
-          vm.error = error.toString()
+          vm.error = error.data.message
+          alert(vm.error)
         })    
     }      
   }
