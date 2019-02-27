@@ -11,12 +11,14 @@
   <p>
     A customer just placed an order, here's their info
   </p>
-  
+  <h3>
+    Order #: {{order._id}}
+  </h3>
   <h3>
     Shipping address:
   </h3>
   <p>
-    {{order.customer.firstName}} {{order.customer.lastName}}
+    {{order.customer.firstName}} {{order.customer.lastName}}</br>
     {{order.shipping.address1}}</br>
     {{order.shipping.address2}}</br>
     {{order.shipping.city}}, {{order.shipping.state}}, {{order.shipping.zip}}

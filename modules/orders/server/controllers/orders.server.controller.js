@@ -201,7 +201,7 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
       var mailOptions = {
         to: asset.user.email,
         from: config.mailer.from,
-        subject: 'New Order Fulfillment - Pollenly',
+        subject: 'New Order Placed - Pollenly - #' + orderItem.order._id,
         html: emailHTML
       }
       smtpTransport.sendMail(mailOptions, function (err) {
@@ -523,14 +523,17 @@ exports.charge = (req, res, next) => {
 
   console.log('about to charge customer')
   console.log('amount: ', req.order.totalCost * 100)
-  console.log('strike token: ', req.body.stripeToken)
-  console.log('orderId: ', req.order._id)
+  console.log('stripe token: ', req.body.stripeToken)
+  console.log('orderId: ', req.order)
 
   curl.setBody({
     'amount': req.order.totalCost * 100,
     'currency':'USD',
     'source': req.body.stripeToken,
-    'description': req.order._id
+    'description': req.order._id.toString(),
+    'invoice': req.order._id.toString(),
+    'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName,
+
     // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
   }).post('https://api.stripe.com/v1/charges')
   .then(response => {
