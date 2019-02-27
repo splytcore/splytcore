@@ -509,6 +509,10 @@ exports.ordersBySeller = function(req, res) {
 
 exports.charge = (req, res, next) => {
   console.log('Now charging customer card')
+  console.log('req.body coming in')
+  console.log(req.body)
+  console.log('req.order coming in')
+  if(req.order) console.log(req.order)
   if(!req.body.stripeToken) {
     next()
   }
@@ -529,13 +533,15 @@ exports.charge = (req, res, next) => {
     'description': req.order._id
     // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
   }).post('https://api.stripe.com/v1/charges')
-  .then((error, response) => {
-    console.log(error)
-    if(error) {
+  .then(response => {
+    console.log(response)
+    if(response.statusCode !== 200) {
       return res.status(400).send({
         message: 'Could not charge credit card'
       })
     }
+
+    
     Order.findByIdAndUpdate(req.order._id, { status: 'settled' }, { }, function(err, order) {
       if(err) {
         console.log('orders server controller line 538')
