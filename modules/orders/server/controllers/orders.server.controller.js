@@ -530,11 +530,7 @@ exports.charge = (req, res, next) => {
     'amount': req.order.totalCost * 100,
     'currency':'USD',
     'source': req.body.stripeToken,
-    'description': req.order._id.toString(),
-    'invoice': req.order._id.toString(),
-    'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName,
-
-    // 'customer': req.order.customer.lastName + ', ' + req.order.customer.firstName
+    'description': req.order._id.toString()
   }).post('https://api.stripe.com/v1/charges')
   .then(response => {
     console.log(response)
