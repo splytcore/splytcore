@@ -68,8 +68,7 @@ exports.read = function(req, res, next) {
     // console.log(assets)
     asset.hashtags = hashtags
     req.asset = asset
-    next()
-    // res.jsonp(asset)  
+    res.jsonp(asset)  
   })
 
 
