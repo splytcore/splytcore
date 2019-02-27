@@ -3,8 +3,39 @@
     <h1>Affiliates Analytics Detail</h1>
   </div>
 
-
-{{ vm.result }}
-
+  <div class="list-group">
+      
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Gross Sales</span>
+            <span class="col-sm-8"> {{vm.result.grossSales | currency}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+	
+      
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Quantity</span>
+            <span class="col-sm-8"> {{vm.result.totalQuantity}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+	
+      
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-4">Total Reward </span>
+            <span class="col-sm-8"> {{vm.result.totalReward | currency}}</span>
+          </div>
+        </h4>
+        <br/>
+      </div>
+	
 </section>
 
