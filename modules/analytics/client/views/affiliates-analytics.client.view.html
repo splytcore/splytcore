@@ -1,0 +1,19 @@
+<section>
+  <div class="page-header">
+    <h1>Affiliates Analytics </h1>
+  </div>
+
+
+  <div class="list-group">
+    <span class="list-group-item">
+      <label>Search: <input ng-model="vm.searchText"></label>
+    </span>
+    <a ng-repeat="affiliate in vm.affiliates | filter: vm.searchText"
+       ui-sref="analytics.affiliatesView({ affiliateId: affiliate._id })"
+       class="list-group-item">
+      <h4 class="list-group-item-heading" ng-bind="affiliate.displayName"></h4>
+      AffiliateId: <small ng-bind="affiliate._id" class="list-group-item-heading"> </small>
+    </a>
+  </div>
+
+</section>

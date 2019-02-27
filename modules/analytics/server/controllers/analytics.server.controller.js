@@ -23,6 +23,22 @@ const _ = require('lodash')
 
 mongoose.Promise = Promise
 
+
+exports.getUsersByRole = function(req, res) {
+
+  let role = req.query.role
+
+  User.find({ roles: role }).select('displayName email').exec()
+    .then((users) => {
+      res.jsonp(users)
+    })
+    .catch((err) => {
+      return res.status(400).send({
+        message: err.toString()
+      })      
+    })
+}
+
 /* 
 * Get Sales from date to thru day by milliseconds
 */
@@ -50,15 +66,13 @@ exports.getAffiliateGrossSales = function(req, res) {
 
   Store.findOne({ affiliate: userId }).exec()
     .then((store) => {
-      // console.log(store)
       if (!store) {
-        return Promise.resolve()
+        return Promise.reject(new Error('No store found for this affiliate Id ' + userId))
       } else {
         return OrderItem.find({ store: store._id, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec()
       }
     })
     .then((items) => {
-
       if (!items) {
         return
       } else {
@@ -69,7 +83,6 @@ exports.getAffiliateGrossSales = function(req, res) {
         })
         return
       }
-
     })
     .then(() => {
       totalReward = (totalReward * 20) / 100 

@@ -104,6 +104,9 @@ let OrderSchema = new Schema({
   stripeToken: {
     type: String,
     default: ''
+  },
+  stripeChargeId: {
+    type: String
   }
 })
 
