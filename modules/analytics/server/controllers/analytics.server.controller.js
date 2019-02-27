@@ -64,25 +64,39 @@ exports.getAffiliateGrossSales = function(req, res) {
   let totalReward = 0
 
 
-  Store.findOne({ affiliate: userId }).exec()
-    .then((store) => {
-      if (!store) {
-        return Promise.reject(new Error('No store found for this affiliate Id ' + userId))
-      } else {
-        return OrderItem.find({ store: store._id, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec()
-      }
+  Store.find({ affiliate: userId }).exec()
+    .then((stores) => {
+      if (!stores) {
+        return Promise.reject(new Error('No stores found for this affiliate Id ' + userId))
+      } 
+      return new Promise((resolve, reject) => {
+        let allItems = []
+        async.each(stores, (store, cb) => {
+          OrderItem.find({ store: store._id, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec((err, res_items) => {
+           allItems = allItems.concat(res_items)
+            cb(err)
+          })
+        }, (err) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(allItems)
+          }
+        })  
+      })
     })
     .then((items) => {
       if (!items) {
-        return
-      } else {
+        return Promise.resolve()
+      }
+      return new Promise((resolve, reject) => {
         items.forEach((i) => {
           grossSales += (i.soldPrice * i.quantity)
           totalQuantity += i.quantity
           totalReward += i.reward
         })
-        return
-      }
+        resolve()
+      })
     })
     .then(() => {
       totalReward = (totalReward * 20) / 100 
@@ -121,13 +135,17 @@ exports.getSellerGrossSales = function(req, res) {
 
   OrderItem.find({ seller: userId, created: { $gte: fromDateMS, $lte: thruDateMS } }).populate('asset').exec()
     .then((items) => {
-      if (items) {
-        items.forEach((i) => {
-          grossSales += i.soldPrice * i.quantity
-          totalQuantity += i.quantity
-        })
-      } 
-      return
+      return new Promise((resolve, reject) => {
+        if (items) {
+          items.forEach((i) => {
+            grossSales += i.soldPrice * i.quantity
+            totalQuantity += i.quantity
+          })
+          resolve()
+        } else {
+          resolve()
+        }
+      })
     })
     .then(() => {
       res.jsonp({ sellerId: userId, grossSales: grossSales, totalQuantity: totalQuantity })
@@ -288,17 +306,19 @@ exports.getSellerSalesSummary = function(req, res) {
     .then((orderItems) => {
       if (!orderItems) {
         return Promise.reject('No orders for seller found')
-      }
-      async.each(orderItems, (item, cb) => {
-        SellerSalesSummary.findOneAndUpdate({ reportId: reportId, asset: item.asset.id }, {$inc: { quantity: item.quantity, sales: item.quantity * item.price }, hashtag: item.hashtag }, { upsert: true }).exec((err, result) => {
-          cb(err)
-        })        
-      }, (err) => {
-        if (err) {
-          return Promise.reject(err)
-        } else {
-          return
-        }
+      } 
+      return new Promise((resolve, reject) => {
+        async.each(orderItems, (item, cb) => {
+          SellerSalesSummary.findOneAndUpdate({ reportId: reportId, asset: item.asset.id }, {$inc: { quantity: item.quantity, sales: item.quantity * item.price }, hashtag: item.hashtag }, { upsert: true }).exec((err, result) => {
+            cb(err)
+          })        
+        }, (err) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve()
+          }
+        })
       })
     })
     .then(() => { 
@@ -354,19 +374,21 @@ exports.getGeneralSalesSummary = function(req, res) {
       if (!orderItems) {
         return Promise.reject('No orders for seller found')
       }
-      async.each(orderItems, (item, cb) => {
-        totalGrossSales += item.soldPrice * item.quantity
-        totalQuantity += item.quantity
-        totalRewards += item.reward
-        // totalViews += item.asset.views
-        // totalBuys += item.asset.buys
-        cb()
-      }, (err) => {
-        if (err) {
-          return Promise.reject(err)
-        } else {
-          return
-        }
+      return new Promise((resolve, reject) => {
+        async.each(orderItems, (item, cb) => {
+          totalGrossSales += item.soldPrice * item.quantity
+          totalQuantity += item.quantity
+          totalRewards += item.reward
+          // totalViews += item.asset.views
+          // totalBuys += item.asset.buys
+          cb()
+        }, (err) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve()
+          }
+        })
       })
     })
     .then(() => { 
