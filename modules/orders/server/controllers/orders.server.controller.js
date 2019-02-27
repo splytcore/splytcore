@@ -45,7 +45,6 @@ exports.create = function(req, res, next) {
     function createOrder(cart, callback) {
       
       let order = new Order(req.body)
-      order.customer = req.user
       // order.store = cart.store
 
       order.save((err) => {
