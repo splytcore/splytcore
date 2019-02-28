@@ -127,7 +127,7 @@
       //save address in rootscope for now
       $rootScope.billing = vm.order.billing
       $rootScope.shipping = vm.order.shipping
-      // vm.order.customer = { lastName: 'kim', firstName: 'customer scott', email: 'scott@pollenly.com' }
+      vm.order.customer = { lastName: 'smith', firstName: 'john', email: 'scott@pollenly.com' }
 
       // //TESTING WITHOUT CC
       vm.order.$save(res => {

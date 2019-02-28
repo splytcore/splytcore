@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8d5c3b49-cf9e-4cbc-9d39-42c315bf05bb",
+		"_postman_id": "b91ab68f-0088-4e83-b4f1-35a8abceb46b",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -510,6 +510,35 @@
 					"response": []
 				},
 				{
+					"name": "Orders list for signed in as affiliate",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/orders",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Once you add items in your store, view it so you can remove the items if you wanted to in the future"
+					},
+					"response": []
+				},
+				{
 					"name": "Deauthorize instagram",
 					"request": {
 						"method": "PUT",
@@ -882,6 +911,35 @@
 							]
 						},
 						"description": "Create an asset as an seller"
+					},
+					"response": []
+				},
+				{
+					"name": "Orders list for signed in as seller",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{local}}/api/orders",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Once you add items in your store, view it so you can remove the items if you wanted to in the future"
 					},
 					"response": []
 				}
