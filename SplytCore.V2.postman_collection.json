@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b91ab68f-0088-4e83-b4f1-35a8abceb46b",
+		"_postman_id": "4925aaac-5a18-4a2f-ba5d-de7712dd01b2",
 		"name": "SplytCore.V2",
 		"description": "SplytcoreUI is the repo this collection will belong into. Its official branch is affiliate for now",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -908,6 +908,62 @@
 								"api",
 								"assets",
 								"{{assetId}}"
+							]
+						},
+						"description": "Create an asset as an seller"
+					},
+					"response": []
+				},
+				{
+					"name": "Set order Item as shipped signed in as seller",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "sessionId={{sessionId}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "company",
+									"value": "'FEDEX'",
+									"description": "Shipping company name",
+									"type": "text"
+								},
+								{
+									"key": "trackingId",
+									"value": "'trackingxy'",
+									"description": "Tracking Id from shipping company",
+									"type": "text"
+								},
+								{
+									"key": "shippedDateMS",
+									"value": "1551392619789",
+									"description": "Date it was shipped in Milliseconds",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/orderitems/{{orderItemId}}/shipped",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"orderitems",
+								"{{orderItemId}}",
+								"shipped"
 							]
 						},
 						"description": "Create an asset as an seller"
