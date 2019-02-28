@@ -315,6 +315,7 @@ exports.approveRefund = function(req, res) {
  * Show the current Order
  */
 exports.read = function(req, res) {
+
   // convert mongoose document to JSON
   let order = req.order ? req.order.toJSON() : {}
     
@@ -392,11 +393,40 @@ exports.list = function(req, res) {
     exports.ordersBySeller(req, res)
   }
 
+  if (roles.indexOf('user') > -1 || roles.indexOf('admin') > -1) {
+    exports.ordersAll(req, res)
+  }
+
   if (roles.indexOf('guest') > -1) {
       return res.status(400).send({
         message: 'Not authorized for guests roles'
       })
   }
+
+}
+
+/**
+ * List for
+ */
+
+exports.ordersAll = function(req, res) {
+
+  let q = req.query
+  let sort = q.sort
+  delete q.sort
+
+  console.log(q)
+
+  Order.find(q).sort(sort)
+    .populate('store')
+    .exec(function(err, orders) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } 
+    res.jsonp(orders)
+  })
 
 }
 
@@ -414,7 +444,6 @@ exports.ordersByCustomer = function(req, res) {
   console.log(q)
 
   Order.find(q).sort(sort)
-    .populate('customer', 'displayName')
     .exec(function(err, orders) {
     if (err) {
       return res.status(400).send({
@@ -450,7 +479,7 @@ exports.ordersByAffiliate = function(req, res) {
       let orderIds = orderItems.map((item) => item.order.id)
       let orderIdsUnique = orderIds.filter((id) => orderIds.indexOf(id) > -1)
       // console.log(orderIdsUnique)
-      return Order.find({ _id : { $in: orderIdsUnique }}).populate('customer', 'displayName').exec()
+      return Order.find({ _id : { $in: orderIdsUnique }}).exec()
     })    
     .then((orders) => {
       res.jsonp(orders)
@@ -483,7 +512,7 @@ exports.ordersBySeller = function(req, res) {
       let orderIds = orderItems.map((item) => item.order.id)
       let orderIdsUnique = orderIds.filter((id) => orderIds.indexOf(id) > -1)
       // console.log(orderIdsUnique)
-      return Order.find({ _id : { $in: orderIdsUnique }}).populate('customer', 'displayName').exec()
+      return Order.find({ _id : { $in: orderIdsUnique }}).exec()
     })
     .then((orders) => {
       res.jsonp(orders)
@@ -590,17 +619,16 @@ exports.orderByID = function(req, res, next, id) {
       message: 'Order is invalid'
     })
   }
- 
-  Order.findById(id).exec(function (err, order) {
-    if (err) {
-      return next(err)
-    } else if (!order) {
-      return res.status(404).send({
-        message: 'No Order with that identifier has been found'
-      })
-    }
 
-    req.order = order
-    next()
-  })
+  Order.findById(id).exec()
+    .then((order) => {
+      req.order = order
+      next()
+    })
+    .catch((err) => {
+      console.log(err)
+      return res.status(404).send({
+        message: err.toString()
+      })
+    })
 }
