@@ -6,9 +6,9 @@
     .module('orders')
     .controller('OrdersController', OrdersController);
 
-  OrdersController.$inject = ['$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', '$cookies'];
+  OrdersController.$inject = ['$http', '$scope', '$state', '$window', 'Authentication', 'orderResolve', '$stateParams', '$cookies'];
 
-  function OrdersController ($scope, $state, $window, Authentication, order, $stateParams, $cookies) {
+  function OrdersController ($http, $scope, $state, $window, Authentication, order, $stateParams, $cookies) {
     var vm = this
     // console.log($stateParams)
     vm.user = Authentication.user
@@ -18,8 +18,8 @@
     vm.remove = remove
     vm.save = save
     vm.updateTrxAmount = updateTrxAmount
-
-    vm.etherscanURL = $cookies.etherscanURL
+   
+    vm.shipped = shipped
     
     vm.requestRefund = requestRefund
     vm.approveRefund = approveRefund
@@ -60,6 +60,20 @@
       //   })
 
     }
+    // Save Order
+    function shipped(orderItemId) {
+
+      $http.put('api/orderitems/' + orderItemId + '/shipped', { shippedDateMS: 1551392619789, company: 'fedex', trackingId: 'xyjdajfa;dsfj' })
+        .then((response) => {
+          console.log(response.data)
+          alert('updated!')
+        })
+        .catch((err) => {
+          console.log(err)
+          alert(err.data.toString())
+        })
+    }
+
 
     // Remove existing Order
     function updateTrxAmount() {
