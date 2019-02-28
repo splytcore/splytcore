@@ -15,22 +15,25 @@ const async = require('async')
 
 
 /**
- * Create a Store
+ * Create/update a Store if it doesn't exist by affiliateId
  */
 exports.create = function(req, res) {
-  let store = new Store(req.body);
-  store.affiliate = req.user;
 
-  store.save(function(err) {
+  let affiliateId = req.user.id
+
+  Store.findOneAndUpdate({ affiliate: req.user.id }, req.body, { new: true, upsert:true }, (err, store) => {
     if (err) {
+      console.log(err)
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
-      res.jsonp(store);
+      // console.log(cartItem)
+      res.jsonp(store)
     }
-  });
-};
+  })
+
+}
 
 /**
  * Show the current Store
