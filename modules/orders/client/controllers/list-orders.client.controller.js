@@ -15,6 +15,5 @@
     vm.listType = $state.current.name
     vm.orders = OrdersService.query()
   
-    vm.etherscanURL = $cookies.etherscanURL
   }
 }())

@@ -312,6 +312,7 @@ exports.approveRefund = function(req, res) {
  * Show the current Order
  */
 exports.read = function(req, res) {
+
   // convert mongoose document to JSON
   let order = req.order ? req.order.toJSON() : {}
     
@@ -389,11 +390,40 @@ exports.list = function(req, res) {
     exports.ordersBySeller(req, res)
   }
 
+  if (roles.indexOf('user') > -1 || roles.indexOf('admin') > -1) {
+    exports.ordersAll(req, res)
+  }
+
   if (roles.indexOf('guest') > -1) {
       return res.status(400).send({
         message: 'Not authorized for guests roles'
       })
   }
+
+}
+
+/**
+ * List for
+ */
+
+exports.ordersAll = function(req, res) {
+
+  let q = req.query
+  let sort = q.sort
+  delete q.sort
+
+  console.log(q)
+
+  Order.find(q).sort(sort)
+    .populate('store')
+    .exec(function(err, orders) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } 
+    res.jsonp(orders)
+  })
 
 }
 
@@ -591,16 +621,15 @@ exports.orderByID = function(req, res, next, id) {
     })
   }
   
-  Order.findById(id).populate('customer', 'displayName').exec(function (err, order) {
-    if (err) {
-      return next(err)
-    } else if (!order) {
+  Order.findById(id).exec()
+    .then((order) => {
+      req.order = order
+      next()
+    })
+    .catch((err) => {
+      console.log(err)
       return res.status(404).send({
-        message: 'No Order with that identifier has been found'
+        message: err.toString()
       })
-    }
-
-    req.order = order
-    next()
-  })
+    })
 }
