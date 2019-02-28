@@ -72,7 +72,11 @@ var AssetSchema = new Schema({
   reward: {
     type: Number,
     required: 'Reward is required, in 2 decimal places',
-  }       
+  },
+  buys: {
+    type: Number,
+    default: 0
+  }    
 })
 
 // AssetSchema.post('init', function(asset, next) {

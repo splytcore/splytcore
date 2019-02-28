@@ -6,6 +6,7 @@
 const path = require('path')
 const mongoose = require('mongoose')
 const Store = mongoose.model('Store')
+const Hashtag = mongoose.model('Hashtag')
 const StoreAsset = mongoose.model('StoreAsset')
 
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
@@ -64,16 +65,25 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   var storeAsset = req.storeAsset;
 
-  storeAsset.remove(function(err) {
-    if (err) {
+  // Delete hashtag before deleting store asset
+  Hashtag.findOne({asset: storeAsset.asset, affiliate: req.user._id}).remove().exec( (err, result) => {
+    if(err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(storeAsset);
+      })
     }
-  });
-};
+    storeAsset.remove(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(storeAsset);
+      }
+
+    })
+  })
+}
 
 /**
  * List of Stores
