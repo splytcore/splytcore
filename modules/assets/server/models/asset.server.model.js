@@ -74,7 +74,8 @@ var AssetSchema = new Schema({
     required: 'Reward is required, in 2 decimal places',
   },
   buys: {
-    type: Number
+    type: Number,
+    default: 0
   }    
 })
 
