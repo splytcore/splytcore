@@ -942,14 +942,14 @@
 								},
 								{
 									"key": "trackingId",
-									"value": "'trackingxy'",
+									"value": "'trackingxyz'",
 									"description": "Tracking Id from shipping company",
 									"type": "text"
 								},
 								{
 									"key": "shippedDateMS",
 									"value": "1551392619789",
-									"description": "Date it was shipped in Milliseconds",
+									"description": "Date it was shipped in milliseconds",
 									"type": "text"
 								}
 							]
