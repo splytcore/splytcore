@@ -137,6 +137,7 @@ function emailOrderReceiptToCustomer(req, res, order) {
       var mailOptions = {
         to: customer.email,
         from: config.mailer.from,
+        bcc: 'orders@pollenly.com',
         subject: 'New Order - Pollenly',
         html: emailHTML
       };
@@ -188,6 +189,7 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
       var mailOptions = {
         to: asset.user.email,
         from: config.mailer.from,
+        bcc: 'orders@pollenly.com',
         subject: 'New Order Placed - Pollenly - #' + orderItem.order._id,
         html: emailHTML
       }
@@ -247,6 +249,7 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
       var mailOptions = {
         to: affiliate.email,
         from: config.mailer.from,
+        bcc: 'orders@pollenly.com',
         subject: 'Congratulations Affiliate! - Pollenly',
         html: emailHTML
       }
@@ -507,9 +510,7 @@ exports.charge = (req, res, next) => {
     next()
   }
 
-  curl.setHeaders([
-        'Authorization: Bearer ' + config.stripe.secretKey
-  ])
+  curl.setHeaders([ 'Authorization: Bearer ' + config.stripe.secretKey ])
 
   console.log('about to charge customer')
   console.log('amount: ', req.order.totalCost * 100)
@@ -521,9 +522,8 @@ exports.charge = (req, res, next) => {
     'currency':'USD',
     'source': req.body.stripeToken,
     'description': req.order._id.toString()
-  }).post('https://api.stripe.com/v1/charges')
-  .then(response => {
-    console.log(response)
+  })
+  .post('https://api.stripe.com/v1/charges').then(response => {
     if(response.statusCode !== 200) {
       return res.status(400).send({
         message: 'Could not charge credit card'
@@ -590,8 +590,8 @@ exports.orderByID = function(req, res, next, id) {
       message: 'Order is invalid'
     })
   }
-  
-  Order.findById(id).populate('customer', 'displayName').exec(function (err, order) {
+ 
+  Order.findById(id).exec(function (err, order) {
     if (err) {
       return next(err)
     } else if (!order) {
