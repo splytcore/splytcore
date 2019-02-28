@@ -441,7 +441,6 @@ exports.ordersByCustomer = function(req, res) {
   console.log(q)
 
   Order.find(q).sort(sort)
-    .populate('customer', 'displayName')
     .exec(function(err, orders) {
     if (err) {
       return res.status(400).send({
@@ -477,7 +476,7 @@ exports.ordersByAffiliate = function(req, res) {
       let orderIds = orderItems.map((item) => item.order.id)
       let orderIdsUnique = orderIds.filter((id) => orderIds.indexOf(id) > -1)
       // console.log(orderIdsUnique)
-      return Order.find({ _id : { $in: orderIdsUnique }}).populate('customer', 'displayName').exec()
+      return Order.find({ _id : { $in: orderIdsUnique }}).exec()
     })    
     .then((orders) => {
       res.jsonp(orders)
@@ -510,7 +509,7 @@ exports.ordersBySeller = function(req, res) {
       let orderIds = orderItems.map((item) => item.order.id)
       let orderIdsUnique = orderIds.filter((id) => orderIds.indexOf(id) > -1)
       // console.log(orderIdsUnique)
-      return Order.find({ _id : { $in: orderIdsUnique }}).populate('customer', 'displayName').exec()
+      return Order.find({ _id : { $in: orderIdsUnique }}).exec()
     })
     .then((orders) => {
       res.jsonp(orders)
