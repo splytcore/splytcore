@@ -67,7 +67,7 @@ exports.isAllowed = function (req, res, next) {
 */
 exports.onlySellerOrAdminOfOrderItem = function (req, res, next) {
 
-  let sellerId = req.orderItem ? req.orderItem.seller.id : null
+  let sellerId = req.orderItem.seller ? req.orderItem.seller.id : null
   let userId = req.user ? req.user.id : null
   let roles = req.user ? req.user.roles : 'guest'
 
