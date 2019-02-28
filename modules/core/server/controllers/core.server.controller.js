@@ -83,6 +83,12 @@ exports.paginate = function (req, res, next) {
 // pull all repos's github code and rebuild frontend, pm2 restart for backend
 
 exports.pullCodeAndBuild = function(req, res) {
+  if(process.env.NODE_ENV === 'production') {
+    console.log('Someone tried to run pullcodeandbuild endpoint in produciton')
+    return res.status(400).send({
+      message: 'Not authorized to run on production'
+    })
+  }
   const shell = require('shelljs')
   shell.exec('/home/ubuntu/updaterepos', function(code, stdout, stderr) {
     console.log('Exit code:', code)
