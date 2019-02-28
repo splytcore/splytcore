@@ -127,39 +127,40 @@
       //save address in rootscope for now
       $rootScope.billing = vm.order.billing
       $rootScope.shipping = vm.order.shipping
+      // vm.order.customer = { lastName: 'kim', firstName: 'customer scott', email: 'scott@pollenly.com' }
 
       // //TESTING WITHOUT CC
-      // vm.order.$save(res => {
-      //   alert('new order created successful!')   
-      //   $state.go('orders.view', { orderId: res._id })
-      // }, (error) => {
-      //   console.log('error')
-      //   console.log(error)
-      //   vm.error = error.toString()
-      // })
-
-
-
-      stripe.createToken(card)
-      .then(res => {
-        if (res.error) {
-          // Inform the user if there was an error.
-          var errorElement = document.getElementById('card-errors');
-          errorElement.textContent = res.error.message;
-        } else {
-          // Send the token to your server.
-          vm.order.stripeToken = res.token.id
-          console.log(vm.order)
-          // vm.order.$save(res => {
-          //   alert('new order created successful!')   
-          //   $state.go('orders.view', { orderId: res._id })
-          // }, (error) => {
-          //   console.log('error')
-          //   console.log(error)
-          //   vm.error = error.toString()
-          // })
-        }
+      vm.order.$save(res => {
+        alert('new order created successful!')   
+        $state.go('orders.view', { orderId: res._id })
+      }, (error) => {
+        console.log('error')
+        console.log(error)
+        vm.error = error.toString()
       })
+
+
+
+      // stripe.createToken(card)
+      // .then(res => {
+      //   if (res.error) {
+      //     // Inform the user if there was an error.
+      //     var errorElement = document.getElementById('card-errors');
+      //     errorElement.textContent = res.error.message;
+      //   } else {
+      //     // Send the token to your server.
+      //     vm.order.stripeToken = res.token.id
+      //     console.log(vm.order)
+      //     // vm.order.$save(res => {
+      //     //   alert('new order created successful!')   
+      //     //   $state.go('orders.view', { orderId: res._id })
+      //     // }, (error) => {
+      //     //   console.log('error')
+      //     //   console.log(error)
+      //     //   vm.error = error.toString()
+      //     // })
+      //   }
+      // })
 
     }
 

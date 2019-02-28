@@ -6,33 +6,17 @@
 </head>
 
 <body>
-  <p>Hello Customer {{name}}!</p>
-
-  <p>
-    A customer just placed an order, here's their info
-  </p>
-  
-  <h3>
-    Shipping address:
-  </h3>
-  <p>
-    {{order.shipping.address1}}</br>
-    {{order.shipping.address2}}</br>
-    {{order.shipping.city}}, {{order.shipping.state}}, {{order.shipping.zip}}
-  </p>
-  
-  <h3>
-    Product info:
-  </h3>
-  <p>
-    {{asset.title}}</br>
-    Quantity: {{orderItem.quantity}}
-  </p>
-
-
+  <p>Hello customer {{name}}!</p>
     
-  <p>Thank you for your attention. </br>The pollenly Support Team</p>
-  
+  <h4>Here is your order information: </h4>    
+
+  Order #: {{ order.id}} <br/>
+  Total Cost: ${{order.totalCost }} <br/>
+  Total Quantity: {{order.totalQuantity}} 
+    
+  <p>Thank you for your order! </br>The Pollenly Support Team</p>
+
+
 </body>
 
 </html>

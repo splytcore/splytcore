@@ -45,7 +45,6 @@ exports.create = function(req, res, next) {
     function createOrder(cart, callback) {
       
       let order = new Order(req.body)
-      order.customer = req.user
       // order.store = cart.store
 
       order.save((err) => {
@@ -81,12 +80,8 @@ exports.create = function(req, res, next) {
             cb(err)
           } else {
             //send fulfill email order to each seller
-            emailOrderReceiptToSeller(req, res, orderItem)
+            // emailOrderReceiptToSeller(req, res, orderItem)
             req.orderItems.push(orderItem)
-            if (orderItem.hashtag) {
-            //notifiy affiliate 
-              emailOrderNotificationToAffiliate(req, res, orderItem)              
-            }
             cb(null)
           }
         })
@@ -99,12 +94,7 @@ exports.create = function(req, res, next) {
         req.order = order
         callback(err, order)
       })
-    },    
-    function sendEmailReceiptCustomer(order, callback) {
-      //emailOrderReceiptToCustomer(req, res, order)   
-      callback(null, order)
     }
-
   ], function (err, order) {
     if (err) {
       console.log(err)
@@ -112,7 +102,6 @@ exports.create = function(req, res, next) {
         message: errorHandler.getErrorMessage(err)
       })
     } else {
-      res.clearCookie('cartId')
       next()      
     }
   })
@@ -127,6 +116,7 @@ function emailOrderReceiptToCustomer(req, res, order) {
 
   let customer = order.customer
 
+
   async.waterfall([
     function prepEmail(done) {
       var httpTransport = 'http://';
@@ -134,16 +124,16 @@ function emailOrderReceiptToCustomer(req, res, order) {
         httpTransport = 'https://';
       }
       res.render(path.resolve('modules/orders/server/templates/customer-order-email'), {
-        name: customer.displayName,
+        name: customer.firstName,
         appName: config.app.title,
-        orderId: order.id,
+        order: order,
         url: req.headers.origin + '/orders/' + order.id
       }, function (err, emailHTML) {
-        done(err, emailHTML, customer);
+        done(err, emailHTML);
       });
     },
     // If valid email, send reset email using service
-    function sendIt(emailHTML, user, done) {
+    function sendIt(emailHTML, done) {
       var mailOptions = {
         to: customer.email,
         from: config.mailer.from,
@@ -166,10 +156,7 @@ function emailOrderReceiptToCustomer(req, res, order) {
 }
 
 function emailOrderReceiptToSeller(req, res, orderItem) {
-  console.log('orderitem')
   
-  console.log(orderItem.asset.id)
-
   async.waterfall([
     function getSellerFromAsset(done) {
       let assetId = orderItem.asset.id
@@ -224,18 +211,19 @@ function emailOrderReceiptToSeller(req, res, orderItem) {
 function emailOrderNotificationToAffiliate(req, res, orderItem) {
 
   // console.log(orderItem.asset.toString())
-  console.log('affiliate')
-  console.log(orderItem.hashtag.affiliate)
+  console.log('storeid ' + orderItem.store.id)
 
   async.waterfall([   
-    function getAffiliateFromHashtag(done) {
-      let affiliateId = orderItem.hashtag.affiliate.toString()
-      User.findById(affiliateId).exec(function(err, affiliate) {
-        done(err, affiliate)
+    function getAffiliateFromStore(done) {
+      let storeId = orderItem.store.id
+      Store.findById(storeId).populate('affiliate').exec(function(err, store) {
+        done(err, store)
       })
     },        
-    function prepEmail(affiliate, done) {
+    function prepEmail(store, done) {
     
+      let affiliate = store.affiliate
+
       var httpTransport = 'http://'
       if (config.secure && config.secure.ssl === true) {
         httpTransport = 'https://'
@@ -243,7 +231,7 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
       res.render(path.resolve('modules/orders/server/templates/affiliate-order-email'), {
         name: affiliate.displayName,
         appName: config.app.title,
-        asset: orderItem.hashtag.asset,
+        asset: orderItem.asset,
         url: req.headers.origin + '/orders/' + orderItem.order.id,
         orderId: orderItem.order.id,
         totalQuantity: orderItem.quantity,
@@ -254,6 +242,8 @@ function emailOrderNotificationToAffiliate(req, res, orderItem) {
     },
     // If valid email, send reset email using service
     function sendIt(affiliate, emailHTML, done) {
+      console.log('affiliate email ')
+      console.log(affiliate)
       var mailOptions = {
         to: affiliate.email,
         from: config.mailer.from,
@@ -549,6 +539,7 @@ exports.charge = (req, res, next) => {
           message: errorHandler.getErrorMessage(err)
         })
       }
+      req.order = order
       next()
     })
   }).catch(err => {
@@ -559,6 +550,35 @@ exports.charge = (req, res, next) => {
   })
 }
 
+/**
+ * Send emails after successful charge
+ */
+exports.sendOrderNotificationsToParticipants = (req, res, next) => {
+
+  let order = req.order 
+  
+  emailOrderReceiptToCustomer(req, res, order)
+
+  OrderItem.find({ order: order.id }).populate('order').populate('store').populate('seller').populate('asset').exec()
+    .then((orderItems) => {
+      //TODO: group items that gets send to same affiliate or seller
+      orderItems.forEach((orderItem) => {
+        emailOrderNotificationToAffiliate(req, res, orderItem)            
+        emailOrderReceiptToSeller(req, res, orderItem)
+      })
+    })
+    .catch((err) => {
+      console.log('error sending out invoices')           
+      console.log(err)
+    })
+ 
+
+  // successful thus clear the cookie
+  res.clearCookie('cartId') //TODO: clear after successful order submission
+
+  next()
+
+}
 
 /**
  * Order middleware
