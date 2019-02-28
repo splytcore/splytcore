@@ -15,7 +15,7 @@ module.exports = function(app) {
     .get(orders.list)
 
     // comment out for dev
-    .post(orders.create, orders.charge, assets.incrementBuy);
+    .post(orders.create, orders.charge, orders.sendOrderNotificationsToParticipants, assets.incrementBuy);
 
   app.route('/api/orders/:orderId').all(ordersPolicy.isAllowed)
     .get(orders.read)
