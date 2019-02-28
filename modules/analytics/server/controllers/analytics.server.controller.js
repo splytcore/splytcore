@@ -12,6 +12,7 @@ const Asset = mongoose.model('Asset')
 const Order = mongoose.model('Order')
 const Store = mongoose.model('Store')
 const User = mongoose.model('User')
+const Hashtag = mongoose.model('Hashtag')
 const StoreAsset = mongoose.model('StoreAsset')
 const TopSellers = mongoose.model('TopSellers')
 const SellerSalesSummary = mongoose.model('SellerSalesSummary')
@@ -357,6 +358,7 @@ exports.getGeneralSalesSummary = function(req, res) {
   let totalQuantity = 0
   let totalAffiliates = 0
   let totalStoreViews = 0
+  let totalHashtags = 0
 
   let totalRewards = 0 //total commission  
   let totalAffiliatesCommission = 0 //total reward * .20
@@ -394,24 +396,28 @@ exports.getGeneralSalesSummary = function(req, res) {
     .then(() => { 
       return Order.count().exec()
     })
-    .then((ordersLength) => {
+    .then(ordersLength => {
       totalOrders = ordersLength 
       return Asset.count().exec()
     })
-    .then((assetsLength) => {
+    .then(assetsLength => {
       totalAssets = assetsLength
       return User.count({ roles: 'seller' }).exec()
     })
-    .then((sellersLength) => { 
+    .then(sellersLength => { 
       totalSellers = sellersLength
       return User.count({ roles: 'affiliate' }).exec()
     })
-    .then((affiliatesLength) => {
-      return findStoreViews(affiliatesLength)
+    .then(affiliatesLength => {
+      totalAffiliates = affiliatesLength
+      return findStoreViews()
     })
-    .then((resolveOfFindStoreView) => { 
-      totalAffiliates = resolveOfFindStoreView.affiliatesLength
-      totalStoreViews = resolveOfFindStoreView.totalViews
+    .then(storeViews => {
+      totalStoreViews = storeViews
+      return Hashtag.count().exec()
+    })
+    .then(totalHashtags => { 
+      totalHashtags = totalHashtags
       totalViewsBuysPercentage = (totalOrders / totalStoreViews) * 100
       res.jsonp({ 
         totalGrossSales: totalGrossSales, 
@@ -424,7 +430,8 @@ exports.getGeneralSalesSummary = function(req, res) {
         totalStoreViews: totalStoreViews,
         totalViewsBuysPercentage: totalViewsBuysPercentage,
         totalAffiliatesCommission: (totalRewards * 80) / 100 ,
-        totalPollenlyCommission: (totalRewards * 20) / 100
+        totalPollenlyCommission: (totalRewards * 20) / 100,
+        totalHashtags: totalHashtags
       })
     })
     .catch((err) => {
@@ -434,23 +441,19 @@ exports.getGeneralSalesSummary = function(req, res) {
       })
     })
 
-    function findStoreViews(affiliatesLength) {
+    function findStoreViews() {
       return new Promise(function (resolve, reject) {
         Store.find({ views: { $gt: 0 }}).exec((err, stores) => {
-          let totalViews = 0
+          let storeViews = 0
           async.each(stores, (store, cb) => {
-            totalViews += store.views
+            storeViews += store.views
             cb(err)
           }, err => {
             if(err) return reject(err)
-            resolve({ 
-              affiliatesLength: affiliatesLength, 
-              totalViews: totalViews 
-            })
+            resolve(storeViews)
           })
         })
-        
-      });
+      })
     }
 
   }
