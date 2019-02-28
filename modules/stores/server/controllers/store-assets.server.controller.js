@@ -71,18 +71,19 @@ exports.delete = function(req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
-      storeAsset.remove(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.jsonp(storeAsset);
-        }
-      });
     }
-  }
-};
+    storeAsset.remove(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(storeAsset);
+      }
+
+    })
+  })
+}
 
 /**
  * List of Stores
