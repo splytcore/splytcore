@@ -45,7 +45,28 @@ const OrderItemSchema = new Schema({
   reward: {
     type: Number,
     default: 0
-  }  
+  },
+  shipping: {
+    status: {
+      type: String,
+      enum: ['pending', 'shipped', 'delivered', 'lost'],
+      default: 'pending'
+    },    
+    shippedDate: {
+      type: Date
+    },    
+    trackingId: {
+      type: String,
+      trim: true,
+      default: ''
+    },
+    company: {
+      type: String,
+      trim: true,
+      default: ''
+    }          
+  }
+
 })
 
 mongoose.model('OrderItem', OrderItemSchema)

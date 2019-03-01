@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <p>Hello customer {{name}}!</p>
+    
+  <h4>Your item has been shipped! </h4>    
+
+
+  <h4>Shipping Information:</h4>    
+  Shipping Company: {{ orderItem.shipping.company }} <br/>
+  Tracking Id: ${{orderItem.shipping.trackingId }} <br/>
+  Shipped Date: {{ shippedDate }} 
+
+
+  <h4>Order Item:</h4>    
+  Order Id: {{ orderItem.order.id}} <br/>
+  Title: {{orderItem.asset.title }} <br/>
+  Quantity: {{orderItem.quantity}} 
+
+  <p>Thank you for your order! </br>The Pollenly Support Team</p>
+
+
+</body>
+
+</html>
