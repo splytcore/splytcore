@@ -6,7 +6,7 @@
   </div>
   <div class="col-md-12">
 
-    <form name="vm.form.orderForm" class="form-horizontal" ng-submit="vm.save(vm.form.orderForm.$valid)" novalidate>
+    <form name="vm.form.orderForm" class="form-horizontal" novalidate>
       <fieldset>
 
         <div class="form-group" show-errors>
@@ -36,29 +36,47 @@
           <h3>Items</h3>
           <ul class="list-group">
               <li class="list-group-item height">
-                <h4>
-                  <div class="col-sm-4">ID</div>
-                  <div class="col-sm-4">Title</div>
-                  <div class="col-sm-1">Price</div>
-                  <div class="col-sm-1">Quantity</div>
-                  <div class="col-sm-1">Total</div>
-                </h4>
+                <small>
+                  <span class="col-sm-2">ID</span>
+                  <span class="col-sm-2">Title</span>
+                  <span class="col-sm-1">Price</span>
+                  <span class="col-sm-1">Quantity</span>
+                  <span class="col-sm-1">Reward</span>
+
+                  <span class="col-sm-1">Shipping Status</span>
+                  <span class="col-sm-1">Tracking Id</span>
+                  <span class="col-sm-1">Shipped Date</span>      
+                  <span class="col-sm-1">Company</span>                                   
+                  <span class="col-sm-1">Actions</span>
+                </small>
               </li>  
+
               <li ng-repeat="i in vm.order.items" class="list-group-item height">
-                <span class="col-sm-4"> {{i._id }} </span>
-                <span class="col-sm-4"> {{ i.asset.title }} </span>
-                <span class="col-sm-1"> {{ i.asset.price | currency }} </span>
+                <small>
+                <span class="col-sm-2"> {{i._id }} </span>
+                <span class="col-sm-2"> {{ i.asset.title }} </span>
+                <span class="col-sm-1"> {{ i.soldPrice | currency }} </span>
                 <span class="col-sm-1"> {{ i.quantity }} </span>
-                <span class="col-sm-1"> {{ i.quantity * i.asset.price | currency }} </span> 
-                
-                <span ng-init="vm.totalQuantity = vm.totalQuantity + i.quantity"> </span> 
+                <span class="col-sm-1"> {{ i.reward }} </span>
+
+
+                <span class="col-sm-1"> {{ i.shipping.status }} </span> 
+                <span class="col-sm-1"> {{ i.shipping.trackingId }}  </span> 
+                <span class="col-sm-1"> {{ i.shipping.shippedDate }}  </span> 
+                <span class="col-sm-1"> {{ i.shipping.company }}  </span>                 
+                <span class="col-sm-1"> 
+                  <button ng-click="vm.shipped(i._id)">apply shipped</button>
+                </span>                 
+
+<!--                 <span ng-init="vm.totalQuantity = vm.totalQuantity + i.quantity"> </span> 
                 <span ng-init="vm.totalCost = vm.totalCost + (i.quantity * i.asset.price)"> </span>          
-              
+               -->
+             </small>
               </li>
               <li class="list-group-item height">
                 <span class="col-sm-9"> Summary </span>
-                <span class="col-sm-1"> {{ vm.totalQuantity }} </span>
-                <span class="col-sm-1"> {{ vm.totalCost | currency }} </span>                
+                <span class="col-sm-1"> {{ vm.order.totalQuantity }} </span>
+                <span class="col-sm-1"> {{ vm.order.totalCost | currency }} </span>                
               </li>  
           </ul>
 

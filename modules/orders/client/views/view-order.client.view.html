@@ -37,19 +37,25 @@
           <ul class="list-group">
               <li class="list-group-item height">
                 <h4>
-                  <div class="col-sm-4">ID</div>
-                  <div class="col-sm-4">Title</div>
+                  <div class="col-sm-1">ID</div>
+                  <div class="col-sm-2">Title</div>
                   <div class="col-sm-1">Price</div>
                   <div class="col-sm-1">Quantity</div>
                   <div class="col-sm-1">Total</div>
+                  <div class="col-sm-1">Shipping Status</div>   
+                  <div class="col-sm-1">TrackingId</div>     
+                   <div class="col-sm-1">Apply Status</div>                                         
                 </h4>
               </li>  
               <li ng-repeat="i in vm.order.items" class="list-group-item height">
-                <span class="col-sm-4"> {{i._id }} </span>
-                <span class="col-sm-4"> {{ i.asset.title }} </span>
+                <span class="col-sm-1"> {{i._id }} </span>
+                <span class="col-sm-2"> {{ i.asset.title }} </span>
                 <span class="col-sm-1"> {{ i.asset.price | currency }} </span>
                 <span class="col-sm-1"> {{ i.quantity }} </span>
-                <span class="col-sm-1"> {{ i.quantity * i.asset.price | currency }} </span>               
+                <span class="col-sm-1"> {{ i.quantity * i.asset.price | currency }} </span>    
+                <span class="col-sm-1"> {{ i.quantity.shippingStatus }} </span>       
+                <span class="col-sm-1"> {{ i.quantity.trackingId }} </span>     
+                <span class="col-sm-1"> {{ i.quantity.trackingId }} </span>                                                  
               </li>
               <li class="list-group-item height">
                 <span class="col-sm-9"> Summary </span>
