@@ -94,13 +94,13 @@ exports.getAffiliateGrossSales = function(req, res) {
         items.forEach((i) => {
           grossSales += (i.soldPrice * i.quantity)
           totalQuantity += i.quantity
-          totalReward += i.reward
+          totalReward += (i.reward * i.quantity)
         })
         resolve()
       })
     })
     .then(() => {
-      totalReward = (totalReward * 20) / 100 
+      totalReward = (totalReward * 80) / 100 
       res.jsonp({ affiliateId: userId, grossSales: grossSales, totalQuantity: totalQuantity, totalReward: totalReward })
     })
     .catch((err) => {
@@ -380,7 +380,7 @@ exports.getGeneralSalesSummary = function(req, res) {
         async.each(orderItems, (item, cb) => {
           totalGrossSales += item.soldPrice * item.quantity
           totalQuantity += item.quantity
-          totalRewards += item.reward
+          totalRewards += item.reward * item.quantity
           // totalViews += item.asset.views
           // totalBuys += item.asset.buys
           cb()
