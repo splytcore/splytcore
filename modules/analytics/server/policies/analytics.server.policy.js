@@ -24,7 +24,7 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['user', 'admin'],
     allows: [{
-      resources: ['/api/analytics', '/api/analytics/generalSalesSummary'],
+      resources: ['/api/analytics', '/api/analytics/generalSalesSummary', '/api/analytics/generalSalesSummary/hashtagsused'],
       permissions: ['get', 'post']
     }, {
       resources: '/api/analytics/:analyticId',

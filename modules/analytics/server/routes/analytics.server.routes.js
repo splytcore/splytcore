@@ -31,5 +31,11 @@ module.exports = function(app) {
 
   app.route('/api/analytics/generalSalesSummary').all(analyticsPolicy.isAllowed)
     .get(analytics.getGeneralSalesSummary)
+  
+  app.route('/api/analytics/generalSalesSummary/hashtagsused')
+    .get(analytics.getHashtagsUsedOnIG)
+
+  app.route('/api/analytics/generalSalesSummary/affiliatesfollowers')
+    .get(analytics.getTotalFollowersOfAffiliates)
 
 };
