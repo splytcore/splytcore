@@ -42,31 +42,40 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   let store = req.store ? req.store.toJSON() : {};
   
-  StoreAsset.find({ store: store._id }, {}, req.paginate).populate('asset').exec(function(err, storeAssets) {
+  console.log('store')
+  console.log(store.affiliate.id)
+
+  StoreAsset.find({ store: store._id }, {}, req.paginate).populate('asset').populate('affiliate').exec(function(err, storeAssets) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
       // console.log(storeAssets)
-      let response;
+      // console.log('length: ' + storeAssets.length)
+      let response
+
       async.each(storeAssets, (storeAsset, callback) => {
         let newStoreAsset
 
-        Hashtag.findOne({ asset: storeAsset.asset._id, affiliate: store.affiliate._id}).exec((err, hashtag) => {
-          console.log(hashtag)
-          if(hashtag) {
-            let asset = {}
-            asset = _.extend(asset, storeAsset.asset)
-            delete asset.hashtags
-            asset.hashtags = []
-            asset.hashtags.push(hashtag)
-            storeAsset.asset = asset
-            callback()
-          } else {
-            callback()
-          }
-        })
+        if (storeAsset.asset && store.affiliate) {
+          Hashtag.findOne({ asset: storeAsset.asset._id, affiliate: store.affiliate._id}).exec((err, hashtag) => {
+            // console.log(hashtag)
+            if(hashtag) {
+              let asset = {}
+              asset = _.extend(asset, storeAsset.asset)
+              delete asset.hashtags
+              asset.hashtags = []
+              asset.hashtags.push(hashtag)
+              storeAsset.asset = asset
+              callback()
+            } else {
+              callback()
+            }
+          })
+        } else {
+          callback()
+        } 
       }, err => {
         if(err) {
           return res.status(400).send({
@@ -124,8 +133,12 @@ exports.delete = function(req, res) {
  * List of Stores
  */
 exports.list = function(req, res) {
+  
+  let q = req.query
+  let sort = req.sort
+  delete q.sort
 
-  Store.find({}).sort('-created').populate('affiliate', 'displayName profileImageURL').exec(function(err, stores) {
+  Store.find(q).sort(sort).populate('affiliate', 'displayName profileImageURL').exec(function(err, stores) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

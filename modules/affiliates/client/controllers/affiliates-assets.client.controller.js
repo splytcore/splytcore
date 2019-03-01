@@ -23,9 +23,9 @@
     vm.assets = AssetsService.query()
 
     StoresService.get({ storeId: $stateParams.storeId }).$promise.then(function(data){
-      // console.log(data)
+      console.log(data)
       vm.store = data
-      vm.storeAssetIds = vm.store.storeAssets.map(s => s.asset._id)
+      vm.storeAssetIds = vm.store ? vm.store.storeAssets.map(s => s.asset._id) : []
      
     })
 
