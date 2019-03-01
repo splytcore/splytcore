@@ -41,6 +41,8 @@
                   <span class="col-sm-2">Title</span>
                   <span class="col-sm-1">Price</span>
                   <span class="col-sm-1">Quantity</span>
+                  <span class="col-sm-1">Reward</span>
+
                   <span class="col-sm-1">Shipping Status</span>
                   <span class="col-sm-1">Tracking Id</span>
                   <span class="col-sm-1">Shipped Date</span>      
@@ -55,6 +57,9 @@
                 <span class="col-sm-2"> {{ i.asset.title }} </span>
                 <span class="col-sm-1"> {{ i.soldPrice | currency }} </span>
                 <span class="col-sm-1"> {{ i.quantity }} </span>
+                <span class="col-sm-1"> {{ i.reward }} </span>
+
+
                 <span class="col-sm-1"> {{ i.shipping.status }} </span> 
                 <span class="col-sm-1"> {{ i.shipping.trackingId }}  </span> 
                 <span class="col-sm-1"> {{ i.shipping.shippedDate }}  </span> 

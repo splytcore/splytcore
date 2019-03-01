@@ -42,10 +42,10 @@
 
     //Get store information and assets by hashtag
     if (vm.storeName) {
-      StoresService.query({ storeName: vm.storeName }).$promise
-        .then((stores) => {
-          vm.store = stores[0]
-          console.log('stores length' + stores.length)
+      $http.get('api/store/byname/' + vm.storeName)
+        .then((result) => {
+          console.log(result)
+          vm.store = result.data
           console.log(vm.store)
           console.log('store name: ' + vm.store.name)
           createInstagramAssets(vm.store)

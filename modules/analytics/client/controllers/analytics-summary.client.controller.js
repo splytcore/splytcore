@@ -35,5 +35,6 @@
       console.log('hashtags used on IG', result.data)
       vm.summary.totalHashtagsOnIg = result.data
     })
+
   }
 }())
