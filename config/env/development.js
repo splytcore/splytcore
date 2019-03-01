@@ -4,7 +4,7 @@ var defaultEnvConfig = require('./default');
 
 module.exports = {  
   db: {
-    uri: 'mongodb://localhost/dev-splyt', // points to AWS DEV - MONGODB
+    uri: 'mongodb://13.58.147.177:27017/dev-splyt', // points to AWS DEV - MONGODB
     options: {
       user: '',
       pass: ''
