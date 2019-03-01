@@ -27,7 +27,7 @@
     $http.get('api/analytics/generalSalesSummary/affiliatesfollowers')
     .then(result => {
       console.log('totalFollowers from influencers', result)
-      vm.summary.totalInfluencerFollowers = result.data.totalFollowers
+      vm.summary.totalInfluencerFollowers = result.data
     })
 
     $http.get('api/analytics/generalSalesSummary/hashtagsused')
