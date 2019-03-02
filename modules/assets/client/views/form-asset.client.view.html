@@ -120,6 +120,20 @@
             placeholder="Reward" required>
         </div>
 
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="affiliateReward">Affiliate Reward</label>
+          <input name="affilaiteReward" type="text" ng-model="vm.asset.affiliateReward" id="reward" class="form-control"
+            placeholder="Reward" required>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="pollenlyReward">Pollenly Reward</label>
+          <input name="pollenlyReward" type="text" ng-model="vm.asset.pollenlyReward" id="pollenlyReward" class="form-control"
+            placeholder="Reward" required>
+        </div>
+
         <!-- TODO: only allow seller who created -->
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.asset._id ? 'Update' : 'Create'}}</button>

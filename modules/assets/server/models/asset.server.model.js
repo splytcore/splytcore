@@ -71,12 +71,35 @@ var AssetSchema = new Schema({
   },
   reward: {
     type: Number,
-    required: 'Reward is required, in 2 decimal places',
+    required: 'Total Reward is required, in 2 decimal places'        
   },
+  affiliateReward: {
+    type: Number,
+    default: 0
+  },    
+  pollenlyReward: {
+    type: Number,
+    default: 0
+  },  
   buys: {
     type: Number,
     default: 0
   }    
+})
+
+
+
+/**
+ * Hook a pre save method to update rewards
+ */
+AssetSchema.pre('save', function (next) {
+  
+  if (this.isModified('reward')) {
+    this.affiliateReward = this.reward * 80 / 100 
+    this.pollenlyReward =  this.reward * 20 / 100
+  }
+
+  next()
 })
 
 // AssetSchema.post('init', function(asset, next) {

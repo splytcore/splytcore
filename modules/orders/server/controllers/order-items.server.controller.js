@@ -90,7 +90,7 @@ function notifyCustomerShipped(req, res, orderItem) {
       var mailOptions = {
         to: customer.email,
         from: config.mailer.from,
-        subject: 'Item Shipped - Pollenly',
+        subject: 'Item Shipped! - Pollenly',
         html: emailHTML
       };
       smtpTransport.sendMail(mailOptions, function (err) {

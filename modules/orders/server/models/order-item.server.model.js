@@ -46,6 +46,14 @@ const OrderItemSchema = new Schema({
     type: Number,
     default: 0
   },
+  pollenlyReward: {
+    type: Number,
+    default: 0
+  },
+  affiliateReward: {
+    type: Number,
+    default: 0
+  },
   shipping: {
     status: {
       type: String,

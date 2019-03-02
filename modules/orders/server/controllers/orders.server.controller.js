@@ -68,6 +68,9 @@ exports.create = function(req, res, next) {
         orderItem.affiliate = cartItem.affiliate
         orderItem.soldPrice = cartItem.asset.price
         orderItem.reward = cartItem.asset.reward
+
+        orderItem.affiliateReward = cartItem.asset.affiliateReward
+        orderItem.pollenlyReward = cartItem.asset.pollenlyReward
     
         // console.log('qty:' + cartItem.quantity)
         // console.log('price: ' + cartItem.asset.price)
