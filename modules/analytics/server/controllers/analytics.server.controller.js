@@ -68,8 +68,9 @@ exports.getAffiliateGrossSales = function(req, res) {
   Store.find({ affiliate: userId }).exec()
     .then((stores) => {
       if (!stores) {
-        return Promise.reject(new Error('No stores found for this affiliate Id ' + userId))
+        return Promise.resolve()
       } 
+  
       return new Promise((resolve, reject) => {
         let allItems = []
         async.each(stores, (store, cb) => {
@@ -94,13 +95,12 @@ exports.getAffiliateGrossSales = function(req, res) {
         items.forEach((i) => {
           grossSales += (i.soldPrice * i.quantity)
           totalQuantity += i.quantity
-          totalReward += (i.reward * i.quantity)
+          totalReward += (i.affiliateReward * i.quantity)
         })
         resolve()
       })
     })
     .then(() => {
-      totalReward = (totalReward * 80) / 100 
       res.jsonp({ affiliateId: userId, grossSales: grossSales, totalQuantity: totalQuantity, totalReward: totalReward })
     })
     .catch((err) => {
@@ -456,7 +456,7 @@ exports.getGeneralSalesSummary = function(req, res) {
 
   let totalRewards = 0 //total commission  
   let totalAffiliatesCommission = 0 //total reward * .20
-  let totalPollenyCommission = 0 //total commssion for 
+  let totalPollenlyCommission = 0 //total commssion for 
 
   let totalOrders = 0
   let totalAssets = 0
@@ -475,6 +475,9 @@ exports.getGeneralSalesSummary = function(req, res) {
           totalGrossSales += item.soldPrice * item.quantity
           totalQuantity += item.quantity
           totalRewards += item.reward * item.quantity
+
+          totalAffiliatesCommission +=  item.affiliateReward * item.quantity
+          totalPollenlyCommission += item.pollenlyReward * item.quantity
           // totalViews += item.asset.views
           // totalBuys += item.asset.buys
           cb()
@@ -523,8 +526,8 @@ exports.getGeneralSalesSummary = function(req, res) {
         totalAssets: totalAssets,
         totalStoreViews: totalStoreViews,
         totalViewsBuysPercentage: totalViewsBuysPercentage,
-        totalAffiliatesCommission: (totalRewards * 80) / 100 ,
-        totalPollenlyCommission: (totalRewards * 20) / 100,
+        totalAffiliatesCommission: totalAffiliatesCommission,
+        totalPollenlyCommission: totalPollenlyCommission,
         totalHashtags: totalHashtags
       })
     })
