@@ -17,7 +17,6 @@ const Hashtag = mongoose.model('Hashtag')
 
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const  _ = require('lodash')
-const curl = new (require('curl-request'))()
 
 /**
  * Create a Shopping Cart if there's none assigned

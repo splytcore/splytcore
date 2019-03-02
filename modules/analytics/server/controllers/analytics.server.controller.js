@@ -7,7 +7,6 @@ const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
 const redis = require('redis').createClient()
-const curl = new (require('curl-request'))()
 const request = require('request')
 
 const Analytic = mongoose.model('Analytic')
