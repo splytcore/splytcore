@@ -27,13 +27,14 @@
     // $http.get('api/analytics/generalSalesSummary/affiliatesfollowers')
     // .then(result => {
     //   console.log('totalFollowers from influencers', result)
-    //   vm.summary.totalInfluencerFollowers = result.data.totalFollowers
+    //   vm.summary.totalInfluencerFollowers = result.data
     // })
 
     // $http.get('api/analytics/generalSalesSummary/hashtagsused')
     // .then(result => {
     //   console.log('hashtags used on IG', result.data)
     //   vm.summary.totalHashtagsOnIg = result.data
-    //})
+    // })
+
   }
 }())

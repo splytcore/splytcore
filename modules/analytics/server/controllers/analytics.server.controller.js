@@ -6,6 +6,7 @@
 const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
+const redis = require('redis').createClient()
 
 const Analytic = mongoose.model('Analytic')
 const Asset = mongoose.model('Asset')
@@ -16,6 +17,7 @@ const Hashtag = mongoose.model('Hashtag')
 const StoreAsset = mongoose.model('StoreAsset')
 const TopSellers = mongoose.model('TopSellers')
 const SellerSalesSummary = mongoose.model('SellerSalesSummary')
+
 
 const OrderItem = mongoose.model('OrderItem')
 
@@ -342,94 +344,107 @@ exports.getTotalFollowersOfAffiliates = function(req, res) {
   let igUsersAndFollowers = []
   let igUsersFollowersTotal = 0
 
-  User.find({roles: 'affiliate'}).exec((err, affiliates) => {
-    async.each(affiliates, (affiliate, cb) => {
-      if(!affiliate.igAccessToken) {
-        console.log('igAccessToken not found for user', affiliate.email)
-        cb()
-      }
-      let profileSummaryUrl = 'https://api.instagram.com/v1/users/self/?access_token=' + affiliate.igAccessToken
-      const curl = new (require('curl-request'))()
+  
+  redis.get('totalFollowers', (err, value) => {
+    if(value) return res.jsonp(parseInt(value))
+    else getIgFollowers()
+  })
+  
 
-      curl.get(profileSummaryUrl)
-      .then(({statusCode, body}) => {
-        let parsedBody = JSON.parse(body).data
-        if(statusCode === 200) {
-          igUsersAndFollowers.push({
-            username: parsedBody.username,
-            followers: parsedBody.counts.followed_by
-          })
-          igUsersFollowersTotal += parsedBody.counts.followed_by
+  function getIgFollowers() {
+    User.find({roles: 'affiliate'}).exec((err, affiliates) => {
+      async.each(affiliates, (affiliate, cb) => {
+        if(!affiliate.igAccessToken) {
+          console.log('igAccessToken not found for user', affiliate.email)
+          return cb()
         }
-        cb()
-      })
-    }, err => {
-      if(err) {
-        return res.status(400).send({
-          message: 'Could not find affiliate followers'
+        let profileSummaryUrl = 'https://api.instagram.com/v1/users/self/?access_token=' + affiliate.igAccessToken
+        const curl = new (require('curl-request'))()
+
+        curl.get(profileSummaryUrl)
+        .then(({statusCode, body}) => {
+          let parsedBody = JSON.parse(body).data
+          if(statusCode === 200) {
+            igUsersAndFollowers.push({
+              username: parsedBody.username,
+              followers: parsedBody.counts.followed_by
+            })
+            igUsersFollowersTotal += parsedBody.counts.followed_by
+          }
+          cb()
         })
-      }
-      res.jsonp({
-        affiliatesAndFollowers: igUsersAndFollowers,
-        totalFollowers: igUsersFollowersTotal
+      }, err => {
+        if(err) {
+          return res.status(400).send({
+            message: 'Could not find affiliate followers'
+          })
+        }
+        redis.set('totalFollowers', igUsersFollowersTotal, 'EX', 86400, (err, value) => {
+          res.jsonp(igUsersFollowersTotal)
+        })
       })
     })
-  })
+  }
 }
 
 exports.getHashtagsUsedOnIG = function(req, res) {
   let igAndPollenHashtagCount = 0
 
-  User.find({roles: 'affiliate'}).exec((err, affiliates) => {
+  redis.get('totalHashtags', (err, value) => {
+    if(value) return res.jsonp(parseInt(value)) 
+    else getIgHashtags()
+  })
 
-    async.each(affiliates, (affiliate, cb) => {
-      if(!affiliate.igAccessToken) {
-        console.log('igAccessToken not found')
-        cb()
-      }
-      let profileDetailUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
-      const curl = new (require('curl-request'))()
+  function getIgHashtags() {
+    User.find({ roles: 'affiliate' }).exec((err, affiliates) => {
 
-      curl.get(profileDetailUrl)
-      .then(({statusCode, body}) => {
-
-        console.log(statusCode)
-        console.log(body)
-        
-        if(statusCode === 200) {
-          let bodyJson = JSON.parse(body)
-          async.each(bodyJson.data, (post, callback) => {
-            
-              Hashtag.count({ name: { $in: post.tags }}).exec((err, count) => {
-                console.log('hashtags being used', count)
-                igAndPollenHashtagCount += count
-                callback()
-              })
-          }, err => {
-            if(err) {
-              console.log('Couldnt fetch all posts')
-              return res.status(400).send({
-                message: 'Couldnt fetch all posts'
-              })
-            }
-            cb()
-          })
-        } else {
+      async.each(affiliates, (affiliate, cb) => {
+        if(!affiliate.igAccessToken) {
+          console.log('igAccessToken not found for user: ', affiliate.email)
           cb()
         }
-      })
-      .catch(e => {
-        console.log(e)
-      })
-    }, err => {
-      if(err) {
-        return res.status(400).send({
-          message: 'Couldnt aggregate users followers'
+        let profileDetailUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
+        const curl = new (require('curl-request'))()
+
+        curl.get(profileDetailUrl)
+        .then(({statusCode, body}) => {
+          
+          if(statusCode === 200) {
+            let bodyJson = JSON.parse(body)
+            async.each(bodyJson.data, (post, callback) => {
+              
+                Hashtag.count({ name: { $in: post.tags }}).exec((err, count) => {
+                  igAndPollenHashtagCount += count
+                  callback()
+                })
+            }, err => {
+              if(err) {
+                console.log('Couldnt fetch all posts')
+                return res.status(400).send({
+                  message: 'Couldnt fetch all posts'
+                })
+              }
+              cb()
+            })
+          } else {
+            cb()
+          }
         })
-      }
-      res.jsonp(igAndPollenHashtagCount)
+        .catch(e => {
+          console.log(e)
+        })
+      }, err => {
+        if(err) {
+          return res.status(400).send({
+            message: 'Couldnt aggregate users followers'
+          })
+        }
+        redis.set('totalHashtags', igAndPollenHashtagCount, 'EX', 86400, (err, value) => {
+          res.jsonp(igAndPollenHashtagCount)
+        })
+      })
     })
-  })
+  }
 }
 
 /* 
