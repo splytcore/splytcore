@@ -7,6 +7,8 @@ const path = require('path')
 const mongoose = require('mongoose')
 const async = require('async')
 const redis = require('redis').createClient()
+const curl = new (require('curl-request'))()
+const request = require('request')
 
 const Analytic = mongoose.model('Analytic')
 const Asset = mongoose.model('Asset')
@@ -350,21 +352,17 @@ exports.getTotalFollowersOfAffiliates = function(req, res) {
     else getIgFollowers()
   })
   
-
   function getIgFollowers() {
     User.find({roles: 'affiliate'}).exec((err, affiliates) => {
       async.each(affiliates, (affiliate, cb) => {
-        if(!affiliate.igAccessToken) {
-          console.log('igAccessToken not found for user', affiliate.email)
-          return cb()
-        }
+        // if(!affiliate.igAccessToken) {
+        //   console.log('igAccessToken not found for user: ', affiliate.email)
+        //   return cb()
+        // }
         let profileSummaryUrl = 'https://api.instagram.com/v1/users/self/?access_token=' + affiliate.igAccessToken
-        const curl = new (require('curl-request'))()
-
-        curl.get(profileSummaryUrl)
-        .then(({statusCode, body}) => {
+        request(profileSummaryUrl, (err, response, body) => {
           let parsedBody = JSON.parse(body).data
-          if(statusCode === 200) {
+          if(response.statusCode === 200) {
             igUsersAndFollowers.push({
               username: parsedBody.username,
               followers: parsedBody.counts.followed_by
@@ -399,17 +397,14 @@ exports.getHashtagsUsedOnIG = function(req, res) {
     User.find({ roles: 'affiliate' }).exec((err, affiliates) => {
 
       async.each(affiliates, (affiliate, cb) => {
-        if(!affiliate.igAccessToken) {
-          console.log('igAccessToken not found for user: ', affiliate.email)
-          cb()
-        }
+        // if(!affiliate.igAccessToken) {
+        //   console.log('igAccessToken not found for user: ', affiliate.email)
+        //   cb()
+        // }
         let profileDetailUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=' + affiliate.igAccessToken
-        const curl = new (require('curl-request'))()
 
-        curl.get(profileDetailUrl)
-        .then(({statusCode, body}) => {
-          
-          if(statusCode === 200) {
+        request(profileDetailUrl, (err, response, body) => {
+          if(response.statusCode === 200) {
             let bodyJson = JSON.parse(body)
             async.each(bodyJson.data, (post, callback) => {
               
@@ -429,9 +424,6 @@ exports.getHashtagsUsedOnIG = function(req, res) {
           } else {
             cb()
           }
-        })
-        .catch(e => {
-          console.log(e)
         })
       }, err => {
         if(err) {
