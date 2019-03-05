@@ -37,5 +37,37 @@
         <br/>
       </div>
 	
+  </div>
+
+    <div class="list-group">
+      
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-3">OrderId</span>
+            <span class="col-sm-1">Qty</span>
+            <span class="col-sm-2">Affiliate Reward</span>
+            <span class="col-sm-2">Total Reward</span>
+            
+          </div>
+        </h4>
+        <br/>
+      </div>
+  
+      
+      <div class="list-group-item" ng-repeat="item in vm.result.items">
+        <h4 class="list-group-item-heading">
+          <div class-"row">
+            <span class="col-sm-3">{{item.order}}</span>
+            <span class="col-sm-1"> {{item.quantity}}</span>
+            <span class="col-sm-2"> {{item.affiliateReward | currency }}</span>
+            <span class="col-sm-2"> {{item.affiliateReward * item.quantity | currency}}</span>            
+          </div>
+        </h4>
+        <br/>
+      </div>
+  
+  </div>
+
 </section>
 

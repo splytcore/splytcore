@@ -100,11 +100,11 @@ exports.getAffiliateGrossSales = function(req, res) {
           totalQuantity += i.quantity
           totalReward += (i.affiliateReward * i.quantity)
         })
-        resolve()
+        resolve(items)
       })
     })
-    .then(() => {
-      res.jsonp({ affiliateId: userId, grossSales: grossSales, totalQuantity: totalQuantity, totalReward: totalReward })
+    .then((items) => {
+      res.jsonp({ affiliateId: userId, grossSales: grossSales, totalQuantity: totalQuantity, totalReward: totalReward, items: items })
     })
     .catch((err) => {
       console.log(err)
