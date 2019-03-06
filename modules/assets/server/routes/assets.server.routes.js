@@ -25,10 +25,9 @@ module.exports = function(app) {
 
   app.route('/api/assets/:assetId').all(assetsPolicy.isAllowed)
     .get(assets.read)
+    .delete(assetsPolicy.onlyAssetCreator, assets.delete)
+    .put(assetsPolicy.onlyAssetCreator, assets.update)
 
-  app.route('/api/assets/:assetId').all(assetsPolicy.onlyAssetCreator)
-    .put(assets.update)
-    .delete(assets.delete)
 
   // Finish by binding the asset middleware
   app.param('assetId', assets.assetByID)

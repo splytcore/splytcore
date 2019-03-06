@@ -19,7 +19,6 @@
     vm.user = Authentication.user
     vm.addToCart = addToCart
 
-
     console.log('storeid: ' +  $cookies.storeId)
 
     function addToCart(assetId) {
