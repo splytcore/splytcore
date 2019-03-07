@@ -15,6 +15,9 @@ const Order = mongoose.model('Order')
 const Store = mongoose.model('Store')
 const User = mongoose.model('User')
 const Hashtag = mongoose.model('Hashtag')
+const Cart = mongoose.model('Cart')
+const CartItem = mongoose.model('CartItem')
+
 const StoreAsset = mongoose.model('StoreAsset')
 const TopSellers = mongoose.model('TopSellers')
 const SellerSalesSummary = mongoose.model('SellerSalesSummary')
@@ -471,6 +474,9 @@ exports.getGeneralSalesSummary = function(req, res) {
   let totalBuys = 0
   let totalViewsBuysPercentage = 0
 
+  let totalCarts = 0
+  let totalCartItems = 0
+
   OrderItem.find().populate('order').populate('asset').exec()
     .then((orderItems) => {
       if (!orderItems) {
@@ -497,6 +503,14 @@ exports.getGeneralSalesSummary = function(req, res) {
       })
     })
     .then(() => { 
+      return Cart.count().exec()
+    })
+    .then((cartsLength) => {
+      totalCarts = cartsLength 
+      return CartItem.count().exec()
+    })
+    .then((cartItemsLength) => {
+      totalCartItems = cartItemsLength 
       return Order.count().exec()
     })
     .then(ordersLength => {
@@ -534,7 +548,9 @@ exports.getGeneralSalesSummary = function(req, res) {
         totalViewsBuysPercentage: totalViewsBuysPercentage,
         totalAffiliatesCommission: totalAffiliatesCommission,
         totalPollenlyCommission: totalPollenlyCommission,
-        totalHashtags: totalHashtags
+        totalHashtags: totalHashtags,
+        totalCarts: totalCarts,
+        totalCartItems: totalCartItems
       })
     })
     .catch((err) => {
