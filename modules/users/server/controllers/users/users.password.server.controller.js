@@ -74,7 +74,7 @@ exports.forgot = function (req, res, next) {
       var mailOptions = {
         to: user.email,
         from: config.mailer.from,
-        subject: 'Password Reset',
+        subject: 'Pollenly - Password Reset',
         html: emailHTML
       };
       smtpTransport.sendMail(mailOptions, function (err) {
@@ -109,10 +109,14 @@ exports.validateResetToken = function (req, res) {
     }
   }, function (err, user) {
     if (!user) {
-      return res.redirect('/password/reset/invalid');
+      return res.status(400).send({
+        message: 'Reset token has been used or its expired, please resubmit your request'
+      })
     }
 
-    res.redirect('/password/reset/' + req.params.token);
+    res.jsonp({
+      token: req.params.token
+    })
   });
 };
 
