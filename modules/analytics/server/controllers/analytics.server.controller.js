@@ -22,7 +22,6 @@ const StoreAsset = mongoose.model('StoreAsset')
 const TopSellers = mongoose.model('TopSellers')
 const SellerSalesSummary = mongoose.model('SellerSalesSummary')
 
-
 const OrderItem = mongoose.model('OrderItem')
 
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
@@ -454,6 +453,18 @@ exports.getHashtagsUsedOnIG = function(req, res) {
 */
 exports.getGeneralSalesSummary = function(req, res) {
 
+  let q = {}
+  // looking for a range of data
+  console.log(req.query)
+  if(req.query.startTimeMs && req.query.endTimeMs) {
+    q = {
+      created: {
+        $gte: req.query.startTimeMs, 
+        $lt: req.query.endTimeMs
+      }
+    }
+  }
+
   // let q = req.query
 
   let totalGrossSales = 0
@@ -477,7 +488,7 @@ exports.getGeneralSalesSummary = function(req, res) {
   let totalCarts = 0
   let totalCartItems = 0
 
-  OrderItem.find().populate('order').populate('asset').exec()
+  OrderItem.find(q).populate('order').populate('asset').exec()
     .then((orderItems) => {
       if (!orderItems) {
         return Promise.reject('No orders for seller found')
@@ -511,19 +522,21 @@ exports.getGeneralSalesSummary = function(req, res) {
     })
     .then((cartItemsLength) => {
       totalCartItems = cartItemsLength 
-      return Order.count().exec()
+      return Order.count(q).exec()
     })
     .then(ordersLength => {
       totalOrders = ordersLength 
-      return Asset.count().exec()
+      return Asset.count(q).exec()
     })
     .then(assetsLength => {
       totalAssets = assetsLength
-      return User.count({ roles: 'seller' }).exec()
+      q.roles = 'seller'
+      return User.count(q).exec()
     })
     .then(sellersLength => { 
       totalSellers = sellersLength
-      return User.count({ roles: 'affiliate' }).exec()
+      q.roles = 'affiliate'
+      return User.count(q).exec()
     })
     .then(affiliatesLength => {
       totalAffiliates = affiliatesLength
@@ -531,11 +544,20 @@ exports.getGeneralSalesSummary = function(req, res) {
     })
     .then(storeViews => {
       totalStoreViews = storeViews
-      return Hashtag.count().exec()
+      delete q.roles
+      return Hashtag.count(q).exec()
     })
-    .then(totalHashtags => { 
-      totalHashtags = totalHashtags
-      totalViewsBuysPercentage = (totalOrders / totalStoreViews) * 100
+    .then(hashtags => {
+      totalHashtags = hashtags
+      return Cart.count(q).exec()
+    })
+    .then(carts => {
+      totalCarts = carts
+      q.instagramId = { $gt: 0 }
+      return User.count(q).exec()
+    })
+    .then(totalIgAuth => { 
+      totalViewsBuysPercentage = ((totalOrders / totalStoreViews) * 100).toFixed(2)
       res.jsonp({ 
         totalGrossSales: totalGrossSales, 
         totalSellers: totalSellers, 
@@ -550,7 +572,8 @@ exports.getGeneralSalesSummary = function(req, res) {
         totalPollenlyCommission: totalPollenlyCommission,
         totalHashtags: totalHashtags,
         totalCarts: totalCarts,
-        totalCartItems: totalCartItems
+        totalCartItems: totalCartItems,
+        totalIgAuth: totalIgAuth
       })
     })
     .catch((err) => {
@@ -562,7 +585,7 @@ exports.getGeneralSalesSummary = function(req, res) {
 
     function findStoreViews() {
       return new Promise(function (resolve, reject) {
-        Store.find({ views: { $gt: 0 }}).exec((err, stores) => {
+        Store.find({views: { $gt: 0 }}).exec((err, stores) => {
           let storeViews = 0
           async.each(stores, (store, cb) => {
             storeViews += store.views
