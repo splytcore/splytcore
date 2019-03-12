@@ -52,7 +52,7 @@ exports.paginate = function (req, res, next) {
   // Handles pagination
   req.paginate = {
     skip: req.query.skip > 0 ? parseInt(req.query.skip) : 0,
-    limit: req.query.limit > 0 ? parseInt(req.query.limit) : 10
+    limit: req.query.limit > 0 ? parseInt(req.query.limit) : 50
   }
 
   // Handles sort key and order
