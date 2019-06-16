@@ -117,8 +117,20 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
-  }
+  },
+  shopify: ShopifySchema
 });
+
+var ShopifySchema = new Schema({
+  shopName: {
+    type: String,
+    default: ''
+  },
+  accessToken: {
+    type: String,
+    default: ''
+  }
+})
 
 /**
  * Hook a pre save method to hash the password
@@ -203,3 +215,5 @@ UserSchema.statics.generateRandomPassphrase = function () {
 };
 
 mongoose.model('User', UserSchema);
+mongoose.model('Shopify', ShopifySchema)
+

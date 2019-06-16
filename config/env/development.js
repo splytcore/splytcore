@@ -1,8 +1,8 @@
 'use strict';
 
-var defaultEnvConfig = require('./default');
+var defaultEnvConfig=require('./default');
 
-module.exports = {  
+module.exports={
   db: {
     // uri: 'mongodb://35.162.114.40/checkin-stage', // points to AWS DEV - MONGODB
     uri: 'mongodb://localhost/dev-splyt', // points to AWS DEV - MONGODB
@@ -11,7 +11,7 @@ module.exports = {
       pass: ''
     },
     // Enable mongoose debug mode
-    debug: process.env.MONGODB_DEBUG || false
+    debug: process.env.MONGODB_DEBUG||false
   },
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
@@ -33,7 +33,7 @@ module.exports = {
     }
   },
   app: {
-    title: defaultEnvConfig.app.title + ' - Development Environment'
+    title: defaultEnvConfig.app.title+' - Development Environment'
   },
   ethereum: {
     //Get this from testrpc for dev
@@ -45,26 +45,26 @@ module.exports = {
   },
   livereload: true,
   seedDB: {
-    seed: process.env.MONGO_SEED === 'true' ? true : false,
+    seed: process.env.MONGO_SEED==='true'? true:false,
     options: {
-      logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
+      logResults: process.env.MONGO_SEED_LOG_RESULTS==='false'? false:true,
       seedUser: {
-        username: process.env.MONGO_SEED_USER_USERNAME || 'user',
+        username: process.env.MONGO_SEED_USER_USERNAME||'user',
         provider: 'local',
-        email: process.env.MONGO_SEED_USER_EMAIL || 'user@localhost.com',
+        email: process.env.MONGO_SEED_USER_EMAIL||'user@localhost.com',
         firstName: 'User',
         lastName: 'Local',
         displayName: 'User Local',
         roles: ['user']
       },
       seedAdmin: {
-        username: process.env.MONGO_SEED_ADMIN_USERNAME || 'admin',
+        username: process.env.MONGO_SEED_ADMIN_USERNAME||'admin',
         provider: 'local',
-        email: process.env.MONGO_SEED_ADMIN_EMAIL || 'admin@localhost.com',
+        email: process.env.MONGO_SEED_ADMIN_EMAIL||'admin@localhost.com',
         firstName: 'Admin',
         lastName: 'Local',
         displayName: 'Admin Local',
-        roles: ['user', 'admin']
+        roles: ['user','admin']
       }
     }
   }
