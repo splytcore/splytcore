@@ -22,7 +22,7 @@ module.exports={
     secure: false
   },
   // sessionSecret should be changed for security measures and concerns
-  sessionSecret: process.env.SESSION_SECRET||'youknowwhatimsaying',
+  sessionSecret: process.env.sessionSecret,
   // sessionKey is set to the generic sessionId key used by PHP applications
   // for obsecurity reasons
   sessionKey: 'sessionId',
@@ -35,18 +35,7 @@ module.exports={
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
-    },
-    resumeUpload: {
-      dest: './modules/candidates/client/resumes/', // resume upload destination path
-      limits: {
-        fileSize: 10*1024*1024 // Max file size in bytes (5 MB)
-      }
     }
-  },
-  twilio: {
-    SID: 'sid_here',
-    authToken: 'auth_token_here',
-    from: 'phone_number_here'
   },
   mailer: {
     service: 'Gmail',
@@ -62,15 +51,9 @@ module.exports={
   },
   /* jshint ignore:end */
   /*eslint-enable */
-  S3: {
-    user: 'user_here',
-    region: 'region_here',
-    accessKeyId: 'access_key_id_here',
-    secretAccessKey: 'secret_access_key_here'
-  },
   actions: ['CHANGED_DEPT','CHANGED_STAGE','CHANGED_STATUS','CHANGED_POSITION','CHANGED_APPOINTMENT','OTHER'],
   shopify: {
-    apiKey: 'api_key_here',
-    apiKeySecret: 'api_key_secret_here'
+    apiKey: process.env.shopifyKey,
+    apiKeySecret: process.env.shopifyKeySecret
   }
 }

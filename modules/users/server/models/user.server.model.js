@@ -27,6 +27,17 @@ var validateLocalStrategyEmail = function (email) {
   return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email));
 };
 
+var ShopifySchema = new Schema({
+  shopName: {
+    type: String,
+    default: ''
+  },
+  accessToken: {
+    type: String,
+    default: ''
+  }
+})
+
 /**
  * User Schema
  */
@@ -120,17 +131,6 @@ var UserSchema = new Schema({
   },
   shopify: ShopifySchema
 });
-
-var ShopifySchema = new Schema({
-  shopName: {
-    type: String,
-    default: ''
-  },
-  accessToken: {
-    type: String,
-    default: ''
-  }
-})
 
 /**
  * Hook a pre save method to hash the password

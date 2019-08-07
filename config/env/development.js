@@ -4,10 +4,10 @@ var defaultEnvConfig=require('./default');
 
 module.exports={
   db: {
-    uri: 'mongodb://localhost/dev-splyt', // points to AWS DEV - MONGODB
+    uri: process.env.mongoUrl, // points to AWS DEV - MONGODB
     options: {
-      user: '',
-      pass: ''
+      user: process.env.mongoUser,
+      pass: process.env.mongoPassword
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG||false
@@ -36,10 +36,10 @@ module.exports={
   },
   ethereum: {
     //Get this from testrpc for dev
-    url: 'http://13.58.147.177:8555',
+    url: process.env.ethereumUrl,
     //this has to be updated everytime you run truffle migrate
-    splytManagerAddress: '0xc53b41e624a17fb1f19f621db231a538043e2a11',
-    masterWallet: '0xf606a61e2fbc2db9b0b74f26c45469509dfb33ac',
+    splytManagerAddress: process.env.ethereumManagerContractAddress,
+    masterWallet: process.env.ethereumMasterWallet,
     etherscanURL: 'https://ropsten.etherscan.io/tx/'
   },
   livereload: true,

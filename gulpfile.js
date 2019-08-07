@@ -18,6 +18,7 @@ const plugins = gulpLoadPlugins({
 const path = require('path')
 const endOfLine = require('os').EOL
 const uglify = require('gulp-uglify-es').default
+require('dotenv').config()
 
 // Set NODE_ENV to 'test'
 gulp.task('env:test', function () {

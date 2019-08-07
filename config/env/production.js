@@ -8,16 +8,11 @@ module.exports={
   },
   port: 3000,
   db: {
-    uri: 'mongodb_url_here', // points to AWS DEV - MONGODB
+    uri: process.env.mongoUrl, // points to AWS DEV - MONGODB
     options: {
-      user: 'username_here',
-      pass: 'password_here'
+      user: process.env.mongoUser,
+      pass: process.env.mongoPassword
     },
-    // uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
-    // options: {
-    //   user: '',
-    //   pass: ''
-    // },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG||false
   },
