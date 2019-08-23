@@ -1,0 +1,26 @@
+<section>
+  <div class="page-header">
+    <h1 ng-bind="vm.shopify.name"></h1>
+  </div>
+  <div class="pull-right"
+       ng-show="vm.shopify.isCurrentUserOwner">
+    <a class="btn btn-primary"
+       ui-sref="shopifies.edit({ shopifyId: vm.shopify._id })">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="vm.shopify.created | date:'mediumDate'"></span>
+      by
+      <span ng-if="vm.shopify.user"
+            ng-bind="vm.shopify.user.displayName"></span>
+      <span ng-if="!vm.shopify.user">Deleted User</span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="vm.shopify.content"></p>
+</section>
