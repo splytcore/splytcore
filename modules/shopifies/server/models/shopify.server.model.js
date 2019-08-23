@@ -10,11 +10,13 @@ var mongoose = require('mongoose'),
  * Shopify Schema
  */
 var ShopifySchema = new Schema({
-  name: {
+  shopName: {
     type: String,
-    default: '',
-    required: 'Please fill Shopify name',
-    trim: true
+    default: ''
+  },
+  accessToken: {
+    type: String,
+    default: ''
   },
   created: {
     type: Date,
