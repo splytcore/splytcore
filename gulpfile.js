@@ -18,7 +18,6 @@ const plugins = gulpLoadPlugins({
 const path = require('path')
 const endOfLine = require('os').EOL
 const uglify = require('gulp-uglify-es').default
-require('dotenv').config()
 
 // Set NODE_ENV to 'test'
 gulp.task('env:test', function () {
@@ -28,6 +27,14 @@ gulp.task('env:test', function () {
 // Set NODE_ENV to 'development'
 gulp.task('env:dev', function () {
   process.env.NODE_ENV = 'development'
+  console.log('dev development selected')
+  require('dotenv').config({ path: path.resolve('./.env.staging') })
+})
+
+// Set NODE_ENV to 'development'
+gulp.task('env:stage', function () {
+  process.env.NODE_ENV = 'development'
+  require('dotenv').config({ path: path.resolve('./.env.staging') })
 })
 
 // Set NODE_ENV to 'production'

@@ -4,7 +4,7 @@ var defaultEnvConfig=require('./default');
 
 module.exports={
   db: {
-    uri: process.env.mongoUrl, // points to AWS DEV - MONGODB
+    uri: process.env.mongoIpAddress + ':' + process.env.mongoPort + '/' + process.env.mongoDbName,
     options: {
       user: process.env.mongoUser,
       pass: process.env.mongoPassword
@@ -36,7 +36,7 @@ module.exports={
   },
   ethereum: {
     //Get this from testrpc for dev
-    url: process.env.ethereumUrl,
+    url: 'http://' + process.env.ethereumIpAddress + ':' + process.env.ethereumPort,
     //this has to be updated everytime you run truffle migrate
     splytManagerAddress: process.env.ethereumManagerContractAddress,
     masterWallet: process.env.ethereumMasterWallet,

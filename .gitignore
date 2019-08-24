@@ -43,7 +43,7 @@ _site/
 *.swp
 logs/
 build/
-.env
+.env*
 
 # Sublime editor
 # ==============
