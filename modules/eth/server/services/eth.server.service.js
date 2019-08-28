@@ -3,6 +3,7 @@
 const Web3 = require('web3')
 const path = require('path')
 const async = require('async')
+const chalk=require('chalk')
 const config = require(path.resolve('./config/config'))
 const host = config.ethereum.url
 const web3 = new Web3(new Web3.providers.HttpProvider(host))
@@ -61,21 +62,23 @@ const defaultGas = {
 }
 
 //check if connect to geth node
-console.log('trying to connect to ' + config.ethereum.url)
+console.log(chalk.green('Ethereum'))
+console.log(chalk.yellow('Attempting to connect...'))
 web3.eth.net.isListening()
 .then((result) => {
-  console.log('connecting to geth host node...' + host)  
+  console.log(chalk.green('Ethereum'))
+  console.log(chalk.green('URI: ' + host)) 
   return web3.eth.getBlockNumber()
 })
 .then((blockNumber) => {  
-    console.log('version: ' + web3.version)
-    console.log('current block: ' + blockNumber)   
+    console.log(chalk.green('Version: ' + web3.version))
+    console.log(chalk.green('Current Block: ' + blockNumber))   
     setGasPrice(blockNumber)
     return web3.eth.getAccounts()
 })
 .then((res_accounts) => {
   accounts = res_accounts
-  console.log(accounts)
+  console.log(chalk.green('Geth accounts found: ', accounts.length))
 
   splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
   return 
@@ -83,42 +86,42 @@ web3.eth.net.isListening()
   
  splytManager.methods.assetManager().call()
   .then((address) => {
-    console.log('assetManager address: ' + address)  
+    console.log(chalk.green('Asset Manager address: ' + address))  
     assetManagerAddress = address  
     assetManager = new web3.eth.Contract(AssetManager.abi, address)    
   })
  
   splytManager.methods.orderManager().call()
   .then((address) => {
-    console.log('orderManager address: ' + address)
+    console.log(chalk.green('Order Manager address: ' + address))
     orderManagerAddress = address
     orderManager = new web3.eth.Contract(OrderManager.abi, address)    
   })
 
  splytManager.methods.arbitrationManager().call()
   .then((address) => {
-    console.log('arbitrationManager address: ' + address) 
+    console.log(chalk.green('Arbitration Manager address: ' + address))
     arbitrationManagerAddress = address    
     arbitrationManager = new web3.eth.Contract(ArbitrationManager.abi, address)    
   })
   
   splytManager.methods.reputationManager().call()
   .then((address) => {
-    console.log('reputationManager address: ' + address) 
+    console.log(chalk.green('Reputation Manager address: ' + address)) 
     reputationManagerAddress = address   
     reputationManager = new web3.eth.Contract(ReputationManager.abi, address)   
   })  
 
   splytManager.methods.stake().call()
   .then((address) => {
-    console.log('stake address: ' + address) 
+    console.log(chalk.green('Stake address: ' + address)) 
     stakeAddress = address
   })  
 
 
   splytManager.methods.satToken().call()
   .then((address) => {
-    console.log('satToken address: ' + address)
+    console.log(chalk.green('Sat Token address: ' + address))
     satTokenAddress = address   
     satToken = new web3.eth.Contract(SatToken.abi, address)  
   })  
@@ -126,12 +129,12 @@ web3.eth.net.isListening()
   // get master token balance
   splytManager.methods.getBalance(masterWallet).call()  
   .then((balance) => {
-    console.log('master wallet SatToken balance: ' + balance)  
+    console.log(chalk.green('Master Wallet Sat balance: ' + balance))  
     if (balance < 1) {
       exports.initUser(masterWallet)
     }
   }).catch((err) => {
-    console.log('error connecting to web3')
+    console.log(chalk.red('Error connecting to ethereum on: ', host ))
     console.log(err)
   })  
 
@@ -713,7 +716,7 @@ exports.getSplytServiceInfo = function() {
 //TODO: call this interval to update gas price
 function setGasPrice(blockNumber) {
   
-  console.log('setting gas price from block number: ' + blockNumber)
+  console.log(chalk.green('Analyzing gas price from block number: ' + blockNumber))
   let gasPrices = 0
   let lastBlockAvg
 
@@ -732,26 +735,23 @@ function setGasPrice(blockNumber) {
       let length = parseInt(block.transactions.length)
 
       async.times(length, (index, callback) => {    
-        console.log('index:' + index)
         web3.eth.getTransaction(block.transactions[index], function(err, transaction) {
-          console.log(transaction.gasPrice)
           gasPrices += parseInt(transaction.gasPrice)
           callback(err)
         })
       }, (err) => {
         if (err) {
-          console.log('error calculte gasPrice ')
+          console.log(chalk.red('Error calculating gas price'))
           console.log(err)
         } else {
           lastBlockAvg = parseInt(gasPrices / length)
           defaultGas.gasPrice = lastBlockAvg < 20000000000 ? 20000000000 : lastBlockAvg   
-          console.log('finished calculate gasPrice: ' + defaultGas.gasPrice)     
-          console.log(defaultGas)
+          console.log('finished calculating gasPrice: ' + defaultGas.gasPrice)     
         }      
       })    
     })
     .catch((err) => {
-       console.log('error calculte gasPrice 2')
+       console.log(chalk.red('Error calculating gasPrice'))
     })
 
 }

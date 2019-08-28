@@ -1,19 +1,18 @@
 <section>
   <div class="page-header">
-    <h1>Shopifies</h1>
+    <h1>Authorized Shops</h1>
   </div>
   <div class="list-group">
     <a ng-repeat="shopify in vm.shopifies"
        ui-sref="shopifies.view({ shopifyId: shopify._id })"
        class="list-group-item">
       <small class="list-group-item-text">
-        Posted on
+        Authorized on
         <span ng-bind="shopify.created | date:'mediumDate'"></span>
-        by
         <span ng-if="shopify.user" ng-bind="shopify.user.displayName"></span>
         <span ng-if="!shopify.user">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="shopify.name"></h4>
+      <h4 class="list-group-item-heading" ng-bind="shopify.shopName"></h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="vm.shopifies.$resolved && !vm.shopifies.length">

@@ -22,13 +22,19 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user'],
+    roles: ['seller', 'admin'],
     allows: [{
       resources: '/api/shopifies',
-      permissions: ['get', 'post']
+      permissions: ['post']
     }, {
-      resources: '/api/shopifies/:shopifyId',
+      resources: ['/api/shopifies/:shopifyId', '/api/shopifies'],
       permissions: ['get']
+    }]
+  },{
+    roles: ['seller', 'admin'],
+    allows: [{
+      resources: '/api/shopifies',
+      permissions: ['put']
     }]
   }, {
     roles: ['guest'],

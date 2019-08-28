@@ -7,14 +7,18 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Shopify = mongoose.model('Shopify'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+  _ = require('lodash'),
+  axios = require('axios');
 
 /**
  * Create a Shopify
  */
 exports.create = function(req, res) {
-  var shopify = new Shopify(req.body);
-  shopify.user = req.user;
+
+  var shopify = new Shopify({
+    shopName: req.body.name,
+    user: req.user
+  })
 
   shopify.save(function(err) {
     if (err) {
@@ -45,17 +49,23 @@ exports.read = function(req, res) {
  * Update a Shopify
  */
 exports.update = function(req, res) {
-  var shopify = req.shopify;
-
-  shopify = _.extend(shopify, req.body);
-
-  shopify.save(function(err) {
+  
+  Shopify.findOne((err, shopify) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(shopify);
+      shopify = _.extend(shopify, req.body);
+      shopify.save((err, shopify) => {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.jsonp(shopify);
+        }
+      })
     }
   });
 };
@@ -81,7 +91,7 @@ exports.delete = function(req, res) {
  * List of Shopifies
  */
 exports.list = function(req, res) {
-  Shopify.find().sort('-created').populate('user', 'displayName').exec(function(err, shopifies) {
+  Shopify.find({ user: req.user.id }).sort('-created').populate('user', 'displayName').exec(function(err, shopifies) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

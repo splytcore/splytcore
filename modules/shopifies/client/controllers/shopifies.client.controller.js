@@ -32,7 +32,9 @@
         return false;
       }
 
-      // TODO: move create/update logic to service
+      
+
+      //TODO: move create/update logic to service
       if (vm.shopify._id) {
         vm.shopify.$update(successCallback, errorCallback);
       } else {
@@ -40,9 +42,11 @@
       }
 
       function successCallback(res) {
-        $state.go('shopifies.view', {
-          shopifyId: res._id
-        });
+        console.log(res)
+        const nounce = Math.floor(Math.random() * (10000000000 - 1)) + 1
+        var authUrl = 'https://' + res.shopName + '.myshopify.com/admin/oauth/authorize?client_id=2220c6c1c526573175d54b9bd4f18a6d&redirect_uri=http://localhost:3000/shopifies&scope=write_inventory&state=' + nounce
+        console.log(authUrl)
+        $window.location = authUrl
       }
 
       function errorCallback(res) {

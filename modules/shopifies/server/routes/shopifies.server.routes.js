@@ -10,11 +10,14 @@ module.exports = function(app) {
   // Shopifies Routes
   app.route('/api/shopifies').all(shopifiesPolicy.isAllowed)
     .get(shopifies.list)
-    .post(shopifies.create);
+    .post(shopifies.create)
+    .put(shopifies.update)
+
+  // app.route('/api/shopifies/redirect')
+  //   .get(shopifies.update);
 
   app.route('/api/shopifies/:shopifyId').all(shopifiesPolicy.isAllowed)
     .get(shopifies.read)
-    .put(shopifies.update)
     .delete(shopifies.delete);
 
   // Finish by binding the Shopify middleware

@@ -10,23 +10,23 @@
   function menuConfig(menuService) {
     // Set top bar menu items
     menuService.addMenuItem('topbar', {
-      title: 'Shopifies',
+      title: 'Shopify',
       state: 'shopifies',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['seller', 'admin']
     });
 
     // Add the dropdown list item
     menuService.addSubMenuItem('topbar', 'shopifies', {
-      title: 'List Shopifies',
+      title: 'Show status',
       state: 'shopifies.list'
     });
 
     // Add the dropdown create item
     menuService.addSubMenuItem('topbar', 'shopifies', {
-      title: 'Create Shopify',
+      title: 'Authorize',
       state: 'shopifies.create',
-      roles: ['user']
+      roles: ['seller', 'admin']
     });
   }
 }());

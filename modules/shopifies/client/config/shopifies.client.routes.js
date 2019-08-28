@@ -19,6 +19,9 @@
         templateUrl: 'modules/shopifies/client/views/list-shopifies.client.view.html',
         controller: 'ShopifiesListController',
         controllerAs: 'vm',
+        resolve: {
+          shopifyResolve: newShopify
+        },
         data: {
           pageTitle: 'Shopifies List'
         }
@@ -32,7 +35,7 @@
           shopifyResolve: newShopify
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['seller', 'admin'],
           pageTitle: 'Shopifies Create'
         }
       })
@@ -45,7 +48,7 @@
           shopifyResolve: getShopify
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['seller', 'admin'],
           pageTitle: 'Edit Shopify {{ shopifyResolve.name }}'
         }
       })
