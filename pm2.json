@@ -1,13 +1,10 @@
 {
   "apps" : [{
     "name"        : "SPLYT",
-    "script"      : "gulp",
-    "watch"       : false,
-    // "env": {
-    //   "NODE_ENV": "dev"
-    // },
-    "args": [
-      "prod"
-    ]
+    "script"      : "npm start",
+    "watch"       : true,
+    "env": {
+       "NODE_ENV": "dev"
+     }
   }]
 }
