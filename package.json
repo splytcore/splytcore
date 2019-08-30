@@ -43,7 +43,7 @@
     "forever": "^0.15.3",
     "generate-password": "^1.1.1",
     "glob": "^5.0.13",
-    "helmet": "~0.9.1",
+    "helmet": "^0.9.1",
     "jasmine-core": "^2.3.4",
     "lodash": "^3.10.1",
     "lodash.isstring": "^4.0.1",
