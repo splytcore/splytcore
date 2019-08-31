@@ -8,7 +8,8 @@ var path = require('path'),
   Shopify = mongoose.model('Shopify'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
-  axios = require('axios');
+  axios = require('axios'),
+  chalk = require('chalk');
 
 /**
  * Create a Shopify
@@ -49,22 +50,35 @@ exports.read = function(req, res) {
  * Update a Shopify
  */
 exports.update = function(req, res) {
-  
+
   Shopify.findOne((err, shopify) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      shopify = _.extend(shopify, req.body);
-      shopify.save((err, shopify) => {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.jsonp(shopify);
-        }
+      var getTokenUrl = 'https://' + shopify.shopName + '.myshopify.com/admin/oauth/access_token'
+      var body = {
+        client_id: process.env.shopifyAppApiKey,
+        client_secret: process.env.shopifyAppSecretKey,
+        code: req.body.accessToken
+      }
+      axios.post(getTokenUrl, body).then(response => {
+        shopify = _.extend(shopify, {accessToken: response.data.access_token});
+        shopify.save((err, shopify) => {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.jsonp(shopify);
+          }
+        })
+
+      })
+      .catch(err => {
+        console.log(chalk.red('Errored out calling', getTokenUrl))
+        console.log(err)
       })
     }
   });
@@ -101,6 +115,21 @@ exports.list = function(req, res) {
     }
   });
 };
+
+/**
+ * List inventory from Shopify store
+ */
+exports.pullShopify = function(req, res) {
+  var url = 'https://' + process.env.shopifyAppApiKey + ':' + process.env.shopifyAppSecretKey + '.myshopify.com/admin/api/2019-07/shop.json'
+  axios.get(url)
+  .then(res => {
+    console.log(res)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  console.log('pull shopify hit!!!');
+}
 
 /**
  * Shopify middleware

@@ -6,9 +6,9 @@
     .module('shopifies')
     .controller('ShopifiesController', ShopifiesController);
 
-  ShopifiesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'shopifyResolve'];
+  ShopifiesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'shopifyResolve', 'ShopifiesManagerService'];
 
-  function ShopifiesController ($scope, $state, $window, Authentication, shopify) {
+  function ShopifiesController ($scope, $state, $window, Authentication, shopify, ShopifiesManagerService) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -17,6 +17,18 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.pullInventory = pullInventory;
+
+    function pullInventory() {
+      ShopifiesManagerService.pullInventory(vm.shopify._id)
+      .success((result) => {
+        alert(result)
+        console.log('success update')
+      })
+      .error((err) => {
+        vm.error = err.message
+      })
+    }
 
     // Remove existing Shopify
     function remove() {

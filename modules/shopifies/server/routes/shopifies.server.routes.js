@@ -13,12 +13,12 @@ module.exports = function(app) {
     .post(shopifies.create)
     .put(shopifies.update)
 
-  // app.route('/api/shopifies/redirect')
-  //   .get(shopifies.update);
-
   app.route('/api/shopifies/:shopifyId').all(shopifiesPolicy.isAllowed)
     .get(shopifies.read)
     .delete(shopifies.delete);
+
+  app.route('/api/shopifies/:shopifyId/pull').all(shopifiesPolicy.isAllowed)
+    .get(shopifies.pullShopify);
 
   // Finish by binding the Shopify middleware
   app.param('shopifyId', shopifies.shopifyByID);

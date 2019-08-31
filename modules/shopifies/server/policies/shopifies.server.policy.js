@@ -27,7 +27,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/shopifies',
       permissions: ['post']
     }, {
-      resources: ['/api/shopifies/:shopifyId', '/api/shopifies'],
+      resources: ['/api/shopifies/:shopifyId', '/api/shopifies', '/api/shopifies/:shopifyId/pull'],
       permissions: ['get']
     }]
   },{
