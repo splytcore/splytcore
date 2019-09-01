@@ -35,15 +35,19 @@
   </a>
   <div class="list-group">
     <a ng-repeat="product in vm.products"
-      ui-sref="shopifies.view({ shopifyId: shopify._id })"
        class="list-group-item">
-      <small class="list-group-item-text">
+      <img ng-src="{{product.image.src}}" style="display:inline;width:150px; border-radius:50%; max-height: 150px;">
+      <!-- <small class="list-group-item-text">
         Price: $
         <span ng-bind="product.variants[0].price"></span>
         Inventory: 
         <span ng-bind="product.variants[0].inventory_quantity"></span>
-      </small>
+      </small> -->
       <h4 class="list-group-item-heading" ng-bind="product.title"></h4>
+
+      <h3 style="display:inline">Price: <h3 style="display:inline" ng-bind="product.variants[0].price"></h3></h3>
+      <h3 style="display:inline">Items left: <h3 style="display:inline" ng-bind="product.variants[0].inventory_quantity"></h3></h3>
+
     </a>
   </div>  
   <p class="lead" ng-bind="vm.shopify.content"></p>

@@ -120,32 +120,24 @@ exports.list = function(req, res) {
  * List inventory from Shopify store
  */
 exports.pullShopify = function(req, res) {
+  var products = []
   var axiosConfig = {
     headers: {
       'X-Shopify-Access-Token' : req.shopify.accessToken
     }
   }
-  var getCollectsUrl = 'https://' + req.shopify.shopName + '.myshopify.com/admin/api/2019-07/collects.json'
-  axios.get(getCollectsUrl, axiosConfig)
-  .then(getCollectsRes => {
-    console.log(getCollectsRes.data)
-    var getProductsPerCollect = 'https://' + req.shopify.shopName + '.myshopify.com/admin/api/2019-07/products.json?collection_id=' + getCollectsRes.data.collects[0].collection_id
-    axios.get(getProductsPerCollect, axiosConfig)
-    .then(getProductsResponse => {
-      console.log(getProductsResponse.data)
-      res.json(getProductsResponse.data)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+  var getProductsUrl = 'https://' + req.shopify.shopName + '.myshopify.com/admin/api/2019-07/products.json'
+  axios.get(getProductsUrl, axiosConfig)
+  .then(resp => {
+    res.json(resp.data.products)
   })
   .catch(err => {
     console.log(err)
   })
 }
 
-var distinctCollects = (value, index, self) => {
-  return self.indexOf(value) === index;
+exports.pushBlockchain = function(req, res) {
+  res.jsonp({message: 'success'})
 }
 
 /**

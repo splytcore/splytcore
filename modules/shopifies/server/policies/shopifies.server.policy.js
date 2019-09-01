@@ -24,7 +24,7 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['seller', 'admin'],
     allows: [{
-      resources: '/api/shopifies',
+      resources: ['/api/shopifies', '/api/shopifies/:shopifyId/push'],
       permissions: ['post']
     }, {
       resources: ['/api/shopifies/:shopifyId', '/api/shopifies', '/api/shopifies/:shopifyId/pull'],

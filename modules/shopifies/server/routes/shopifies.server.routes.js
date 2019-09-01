@@ -20,6 +20,9 @@ module.exports = function(app) {
   app.route('/api/shopifies/:shopifyId/pull').all(shopifiesPolicy.isAllowed)
     .get(shopifies.pullShopify);
 
+  app.route('/api/shopifies/:shopifyId/push').all(shopifiesPolicy.isAllowed)
+    .post(shopifies.pushBlockchain);
+
   // Finish by binding the Shopify middleware
   app.param('shopifyId', shopifies.shopifyByID);
 };

@@ -17,10 +17,12 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
-    vm.pullInventory = pullInventory;
     vm.products = null;
 
-    function pullInventory() {
+    vm.pushBlockchain = () => {
+      
+    }
+    vm.pullInventory = () => {
       ShopifiesManagerService.pullInventory(vm.shopify._id)
       .success(products => {
         console.log(products)
