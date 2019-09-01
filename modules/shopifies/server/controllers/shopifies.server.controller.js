@@ -120,15 +120,32 @@ exports.list = function(req, res) {
  * List inventory from Shopify store
  */
 exports.pullShopify = function(req, res) {
-  var url = 'https://' + process.env.shopifyAppApiKey + ':' + process.env.shopifyAppSecretKey + '.myshopify.com/admin/api/2019-07/shop.json'
-  axios.get(url)
-  .then(res => {
-    console.log(res)
+  var axiosConfig = {
+    headers: {
+      'X-Shopify-Access-Token' : req.shopify.accessToken
+    }
+  }
+  var getCollectsUrl = 'https://' + req.shopify.shopName + '.myshopify.com/admin/api/2019-07/collects.json'
+  axios.get(getCollectsUrl, axiosConfig)
+  .then(getCollectsRes => {
+    console.log(getCollectsRes.data)
+    var getProductsPerCollect = 'https://' + req.shopify.shopName + '.myshopify.com/admin/api/2019-07/products.json?collection_id=' + getCollectsRes.data.collects[0].collection_id
+    axios.get(getProductsPerCollect, axiosConfig)
+    .then(getProductsResponse => {
+      console.log(getProductsResponse.data)
+      res.json(getProductsResponse.data)
+    })
+    .catch(err => {
+      console.log(err)
+    })
   })
   .catch(err => {
     console.log(err)
   })
-  console.log('pull shopify hit!!!');
+}
+
+var distinctCollects = (value, index, self) => {
+  return self.indexOf(value) === index;
 }
 
 /**

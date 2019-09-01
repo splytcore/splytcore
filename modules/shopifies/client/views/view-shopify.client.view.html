@@ -33,6 +33,18 @@
     <i class="glyphicon glyphicon-menu-right"></i></br>Update Sellers</br>
     <small>Blockchain to all shopify</small>
   </a>
-  
+  <div class="list-group">
+    <a ng-repeat="product in vm.products"
+      ui-sref="shopifies.view({ shopifyId: shopify._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Price: $
+        <span ng-bind="product.variants[0].price"></span>
+        Inventory: 
+        <span ng-bind="product.variants[0].inventory_quantity"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="product.title"></h4>
+    </a>
+  </div>  
   <p class="lead" ng-bind="vm.shopify.content"></p>
 </section>
