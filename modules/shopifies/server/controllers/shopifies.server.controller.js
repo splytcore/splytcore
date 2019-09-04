@@ -9,7 +9,9 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
   axios = require('axios'),
-  chalk = require('chalk');
+  chalk = require('chalk'),
+  shopifyService = require(path.resolve('../services/shopify.server.service.js'))
+
 
 /**
  * Create a Shopify
@@ -137,6 +139,11 @@ exports.pullShopify = function(req, res) {
 }
 
 exports.pushBlockchain = function(req, res) {
+  req.body.forEach(product => {
+    var asset = shopifyService.convertToAsset(product)
+    
+  })
+
   res.jsonp({message: 'success'})
 }
 

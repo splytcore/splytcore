@@ -25,7 +25,7 @@
     <i class="glyphicon glyphicon-menu-down"></i></br>Pull Inventory</br>
     <small>Shopify to Splyt</small>
   </a>
-  <a class="btn btn-warning" ng-click="vm.pushInventory()">
+  <a class="btn btn-warning" ng-click="vm.pushBlockchain()">
     <i class="glyphicon glyphicon-menu-up"></i></br>Push Inventory</br>
     <small>Splyt to blockchain</small>
   </a>
@@ -34,21 +34,17 @@
     <small>Blockchain to all shopify</small>
   </a>
   <div class="list-group">
-    <a ng-repeat="product in vm.products"
-       class="list-group-item">
-      <img ng-src="{{product.image.src}}" style="display:inline;width:150px; border-radius:50%; max-height: 150px;">
-      <!-- <small class="list-group-item-text">
-        Price: $
-        <span ng-bind="product.variants[0].price"></span>
-        Inventory: 
-        <span ng-bind="product.variants[0].inventory_quantity"></span>
-      </small> -->
+    <button ng-repeat="product in vm.products"
+       class="list-group-item list-group-item-action">      
+      <img ng-src="{{product.image.src}}" style="border-radius:50%; max-height: 150px;">
+      <input type="checkbox" class="form-check-input" ng-click="vm.selectProduct(this)">
+      <label class="form-check-label" for="exampleCheck1">Select for blockchain</label>
       <h4 class="list-group-item-heading" ng-bind="product.title"></h4>
 
       <h3 style="display:inline">Price: <h3 style="display:inline" ng-bind="product.variants[0].price"></h3></h3>
       <h3 style="display:inline">Items left: <h3 style="display:inline" ng-bind="product.variants[0].inventory_quantity"></h3></h3>
 
-    </a>
+  </button>
   </div>  
   <p class="lead" ng-bind="vm.shopify.content"></p>
 </section>

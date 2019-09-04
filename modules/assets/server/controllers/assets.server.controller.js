@@ -15,41 +15,13 @@ const  _ = require('lodash')
  * Create a asset
  */
 exports.create = function(req, res) {
-
-  let asset = new Asset(req.body)
-  console.log('assetId: ' + asset._id)
-  EthService.createAsset(asset)
-    .on('transactionHash', function(hash){
-      console.log('transactionHash: ' + hash)
-      asset.transactionHash = hash
-      asset.user = req.user
-      asset.save(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.jsonp(asset);
-        }
-      })
-    })    
-    // .on('confirmation', function(confirmationNumber, receipt){
-    //   console.log('confirmation: ' + confirmationNumber)
-    //   console.log('receipt: ' + receipt)
-    // })
-    .on('receipt', function(receipt) {
-      //after it's mined
-      console.log('only receipt: ')
-      console.log(receipt)
+  createAsset(new Asset(req.body), (err, result) => {
+    if(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    res.jsonp(result)
     })
-    .on('error', function (err) {
-      console.log('error creating asset contract')
-      console.log(err.toString())
-      return res.status(400).send({ message : err.toString() });
-    }
-  )
-
-
 }
 
 
@@ -428,4 +400,37 @@ exports.getAssetByAddress = function(req, res, next, address) {
       return next(err)  
     })
 
+}
+
+const createAsset = (asset, callback) => {
+  
+  console.log('assetId: ' + asset._id)
+  EthService.createAsset(asset)
+    .on('transactionHash', function(hash){
+      console.log('transactionHash: ' + hash)
+      asset.transactionHash = hash
+      asset.user = req.user
+      asset.save( err => {
+        if (err) {
+          callback(err)
+        } else {
+          callback(null, asset)
+        }
+      })
+    })
+    // .on('confirmation', function(confirmationNumber, receipt){
+    //   console.log('confirmation: ' + confirmationNumber)
+    //   console.log('receipt: ' + receipt)
+    // })
+    .on('receipt', function(receipt) {
+      //after it's mined
+      console.log('only receipt: ')
+      console.log(receipt)
+    })
+    .on('error', function (err) {
+      console.log('error creating asset contract')
+      console.log(err.toString())
+      callback({ message : err.toString() })
+    }
+  )
 }

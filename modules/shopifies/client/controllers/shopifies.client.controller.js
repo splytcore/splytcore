@@ -20,16 +20,27 @@
     vm.products = null;
 
     vm.pushBlockchain = () => {
-      
+      console.log('pushing to blockchain')
+      ShopifiesManagerService.pushBlockchain(vm.shopify._id, vm.products.filter( product => {
+        return product.selected 
+      }))
+      .success()
+      .error((err) => {
+        vm.error = err.data.message
+      })
     }
+
+    vm.selectProduct = (element) => {
+      var productIndex = element.$index
+      if(productIndex > -1)
+        vm.products[productIndex].selected = true
+      console.log(vm.products[productIndex])
+    }
+
     vm.pullInventory = () => {
       ShopifiesManagerService.pullInventory(vm.shopify._id)
       .success(products => {
-        console.log(products)
         vm.products = products
-        for(var i = 0; i < products.length - 1; i++) {
-          console.log(products[i])
-        }
       })
       .error((err) => {
         vm.error = err.data.message
