@@ -10,12 +10,14 @@ const Asset = mongoose.model('Asset')
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
 const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
 const  _ = require('lodash')
+const assetService = require(path.resolve('./modules/assets/server/services/assets.server.service.js'))
 
 /**
  * Create a asset
  */
 exports.create = function(req, res) {
-  createAsset(new Asset(req.body), (err, result) => {
+  req.body.user = req.user
+  assetService.createAsset(new Asset(req.body), (err, result) => {
     if(err)
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -400,37 +402,4 @@ exports.getAssetByAddress = function(req, res, next, address) {
       return next(err)  
     })
 
-}
-
-const createAsset = (asset, callback) => {
-  
-  console.log('assetId: ' + asset._id)
-  EthService.createAsset(asset)
-    .on('transactionHash', function(hash){
-      console.log('transactionHash: ' + hash)
-      asset.transactionHash = hash
-      asset.user = req.user
-      asset.save( err => {
-        if (err) {
-          callback(err)
-        } else {
-          callback(null, asset)
-        }
-      })
-    })
-    // .on('confirmation', function(confirmationNumber, receipt){
-    //   console.log('confirmation: ' + confirmationNumber)
-    //   console.log('receipt: ' + receipt)
-    // })
-    .on('receipt', function(receipt) {
-      //after it's mined
-      console.log('only receipt: ')
-      console.log(receipt)
-    })
-    .on('error', function (err) {
-      console.log('error creating asset contract')
-      console.log(err.toString())
-      callback({ message : err.toString() })
-    }
-  )
 }

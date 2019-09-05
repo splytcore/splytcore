@@ -10,8 +10,8 @@ var path = require('path'),
   _ = require('lodash'),
   axios = require('axios'),
   chalk = require('chalk'),
-  shopifyService = require(path.resolve('../services/shopify.server.service.js'))
-
+  shopifyService = require(path.resolve('./modules/shopifies/server/services/shopify.server.service.js')),
+  assetService = require(path.resolve('./modules/assets/server/services/assets.server.service.js'))
 
 /**
  * Create a Shopify
@@ -140,8 +140,16 @@ exports.pullShopify = function(req, res) {
 
 exports.pushBlockchain = function(req, res) {
   req.body.forEach(product => {
-    var asset = shopifyService.convertToAsset(product)
-    
+    shopifyService.convertToAsset(product, asset => {
+      asset.user = req.user
+      asset.marketPlaces.push("0x427A21A69C3D7949b4ECEd0437Df91ee01c255d6")
+      asset.marketPlacesAmount.push(2)
+      asset.seller = req.user.publicKey
+      assetService.createAsset(asset, (err, result) => {
+        if(err)
+          console.log(err)
+      })
+    })
   })
 
   res.jsonp({message: 'success'})
