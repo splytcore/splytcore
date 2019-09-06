@@ -9,6 +9,7 @@
       <small class="list-group-item-text">
         Authorized on
         <span ng-bind="shopify.created | date:'mediumDate'"></span>
+        By 
         <span ng-if="shopify.user" ng-bind="shopify.user.displayName"></span>
         <span ng-if="!shopify.user">Deleted User</span>
       </small>

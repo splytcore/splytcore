@@ -3,8 +3,12 @@
 /**
  * Module dependencies
  */
-var shopifiesPolicy = require('../policies/shopifies.server.policy'),
-  shopifies = require('../controllers/shopifies.server.controller');
+const path = require('path')
+const shopifiesPolicy = require('../policies/shopifies.server.policy')
+const shopifies = require('../controllers/shopifies.server.controller')
+const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))
+const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/users/users.authorization.server.controller.js'))
+
 
 module.exports = function(app) {
   // Shopifies Routes
@@ -21,7 +25,7 @@ module.exports = function(app) {
     .get(shopifies.pullShopify);
 
   app.route('/api/shopifies/:shopifyId/push').all(shopifiesPolicy.isAllowed)
-    .post(shopifies.pushBlockchain);
+    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, shopifies.pushBlockchain);
 
   // Finish by binding the Shopify middleware
   app.param('shopifyId', shopifies.shopifyByID);

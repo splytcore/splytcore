@@ -51,17 +51,20 @@ exports.unlockAccount = function(req, res, next) {
   console.log(config.env)
 
   //no need to unlock if using local test rpc
-  if (config.env) {
-    return next()
-  }
+  // if (config.env) {
+  //   return next()
+  // }
 
-  let user = req.user
+  let user = req.fullUser
+  console.log('user wallet addr: ', user.publicKey)
+  console.log('user wallet pass: ', user.walletPassword)
   EthService.unlockAccount(user.publicKey, user.walletPassword)
     .then(() => {
       console.log('successful unlocking of account')
       next()       
     })
     .catch((err) => {
+      console.log()
       return res.status(400).send({
         message: err.toString()
       })      

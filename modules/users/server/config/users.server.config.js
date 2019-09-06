@@ -19,7 +19,7 @@ module.exports = function (app, db) {
 
   // Deserialize sessions
   passport.deserializeUser(function (id, done) {
-    User.findOne({ _id: id }, '-salt -password -walletPassword -privateKey').populate('department').exec((err, user) => {      
+    User.findOne({ _id: id }, '-salt -password -walletPassword -privateKey').exec((err, user) => {      
       done(err, user);
     });
   });

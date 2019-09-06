@@ -225,6 +225,7 @@ exports.createAsset = function(asset) {
   // asset.marketPlaces.push(defaultMarketPlace) //hard code for now
   asset.marketPlacesAmount.push(2) //hard code for now
 
+  
   // console.log(asset)  
 
   let trx = {

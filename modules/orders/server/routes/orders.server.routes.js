@@ -7,12 +7,14 @@ const path = require('path')
 const ordersPolicy = require('../policies/orders.server.policy')
 const orders = require('../controllers/orders.server.controller')
 const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))  
+const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/users/users.authorization.server.controller.js'))
+
 
 module.exports = function(app) {
   // Orders Routes
   app.route('/api/orders').all(ordersPolicy.isAllowed)
     .get(orders.list)
-    .post(Eth.unlockAccount, orders.create);
+    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, orders.create);
 
   app.route('/api/orders/:orderId/requestRefund').all(ordersPolicy.isAllowed)
     .post(orders.requestRefund)

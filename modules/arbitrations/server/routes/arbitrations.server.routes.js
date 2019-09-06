@@ -6,25 +6,27 @@
 const path = require('path')
 const arbitrationsPolicy = require('../policies/arbitrations.server.policy')
 const arbitrations = require('../controllers/arbitrations.server.controller')
-const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))  
+const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))
+const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/users/users.authorization.server.controller.js'))
+
 
 module.exports = function(app) {
   // Arbitrations Routes
   app.route('/api/arbitrations').all(arbitrationsPolicy.isAllowed)
     .get(arbitrations.list)
-    .post(Eth.unlockAccount, arbitrations.create);
+    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, arbitrations.create);
 
   app.route('/api/arbitrations/:arbitrationId/setArbitrator').all(arbitrationsPolicy.isAllowed)
-    .post(Eth.unlockAccount, arbitrations.setArbitrator)
+    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, arbitrations.setArbitrator)
 
   app.route('/api/arbitrations/:arbitrationId/set2xStakeByReporter').all(arbitrationsPolicy.isAllowed)
-    .post(Eth.unlockAccount, arbitrations.set2xStakeByReporter)
+    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, arbitrations.set2xStakeByReporter)
 
   app.route('/api/arbitrations/:arbitrationId/set2xStakeBySeller').all(arbitrationsPolicy.isAllowed)
-    .post(Eth.unlockAccount, arbitrations.set2xStakeBySeller)
+    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, arbitrations.set2xStakeBySeller)
 
   app.route('/api/arbitrations/:arbitrationId/setWinner').all(arbitrationsPolicy.isAllowed)
-    .post(Eth.unlockAccount, arbitrations.setWinner)
+    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, arbitrations.setWinner)
 
   app.route('/api/arbitrations/:arbitrationId').all(arbitrationsPolicy.isAllowed)
     .get(arbitrations.read)
