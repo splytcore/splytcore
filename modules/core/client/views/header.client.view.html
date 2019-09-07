@@ -7,8 +7,8 @@
       <span class="icon-bar"></span>
     </button>
     <a ui-sref="home" class="navbar-brand">
-     <span>
-      Powered by <img class="headerLogo" src="/modules/core/client/img/brand/logo.png" alt="Logo">  Spl.yt
+      <span>
+        <img class="headerLogo" src="/modules/core/client/img/brand/logo.png" alt="Logo">
       </span>
     </a>
   </div>
@@ -37,7 +37,7 @@
       <li class="dropdown" dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
           <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
-          <span ng-bind="authentication.user.displayName"></span><span> ({{ authentication.user.etherBalance | number: '8' }}  /  {{ authentication.user.tokenBalance }})</span><b class="caret"></b>
+          <span ng-bind="authentication.user.displayName"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
           <li ui-sref-active="active">
@@ -52,6 +52,12 @@
           <li class="divider"></li>
           <li>
             <a href="/api/auth/signout" target="_self">Signout</a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a>{{ authentication.user.etherBalance | number: '8' }} eth</a>
+          <li>
+            <a>{{ authentication.user.tokenBalance }}</a>
           </li>
         </ul>
       </li>

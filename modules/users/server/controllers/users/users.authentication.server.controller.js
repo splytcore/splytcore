@@ -3,12 +3,14 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),  
-  mongoose = require('mongoose'),
-  passport = require('passport'),  
-  User = mongoose.model('User')
+const path = require('path')
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'))
+const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
+const mongoose = require('mongoose')
+const passport = require('passport')
+const User = mongoose.model('User')
+const jdenticon = require('jdenticon')
+const fs = require('fs')
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -33,18 +35,20 @@ exports.signup = function (req, res) {
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName
   EthService.createAccount2(user.password)
-    .then((wallet) => {
+  .then((wallet) => {
     console.log('account')
     console.log(wallet)
     EthService.initUser(wallet) //give default number of tokens for DEV ONLY
-      .on('transactionHash', (hash) => {
-        console.log('trx for giving tokens: ' + hash)
-      }) 
-      .on('error', (err) => {
-        console.log('error giving tokens')
-        console.log(err)
-      }
-    )  
+    .on('transactionHash', (hash) => {
+      console.log('trx for giving tokens: ' + hash)
+    }) 
+    .on('error', (err) => {
+      console.log('error giving tokens')
+      console.log(err)
+    })  
+
+    user.profileImageURL = './modules/users/client/img/profile/' + user.id + '.png'
+    fs.writeFileSync(user.profileImageURL, jdenticon.toPng(user.wallet, 200))
 
     user.publicKey = wallet
     user.walletPassword = user.password
@@ -67,12 +71,10 @@ exports.signup = function (req, res) {
         })
       }
     })
-
   })
   .catch((err) => {
     res.status(400).send(err)
   })
-
 
 }
 

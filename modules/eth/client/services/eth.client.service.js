@@ -12,22 +12,12 @@
     let vm = this
   
     vm.getSplytServiceInfo = getSplytServiceInfo;
-
-    vm.createAsset = createAsset;
-    vm.purchase = purchase;
     
     vm.getDefaultWallets = getDefaultWallets;
 
-    vm.getAllABI = getAllABI;
-    vm.getAssetInfo = getAssetInfo;
-    
-    vm.getAssetStatus = getAssetStatus;
-
-    vm.getAssetsLength = getAssetsLength;
-    vm.getAddressByAssetId = getAddressByAssetId;
- 
-    vm.getTokenBalance = getTokenBalance;
- 
+    vm.getAllABI = getAllABI;    
+    vm.getAssetsLength = getAssetsLength; 
+     
     vm.getUserBalances = getUserBalances;
     vm.addMarketPlace = addMarketPlace;
     vm.createNewWallet = createNewWallet;
@@ -37,7 +27,7 @@
     
     vm.updateUserBalances = updateUserBalances
 
-    vm.web3 = new Web3($window.web3.currentProvider);
+    //vm.web3 = new Web3($window.web3.currentProvider);
     
     // console.log('is connected: ' + vm.web3.isConnected())
     // console.log('web3 accounts: ' + vm.web3.eth.accounts)
@@ -91,24 +81,24 @@
       //   console.log(err)
       // })
 
-    vm.gas = {
-      // from: vm.publicKey,
-      gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
-      gas: vm.web3.toHex(4600000) //max number of gas to be used  
-    }
+    // vm.gas = {
+    //   // from: vm.publicKey,
+    //   gasPrice: vm.web3.toHex(3000000),   //maximum price per gas
+    //   gas: vm.web3.toHex(4600000) //max number of gas to be used  
+    // }
 
     function createNewWallet(walletPassword) {    
       return $http.post('/api/eth/createNewAccount', { walletPassword: walletPassword })
     }
 
-    function getAddressByAssetId(assetId, done) {
-      console.log('assetId: ' + assetId)
-      let assetIdHex = vm.web3.toHex(assetId)
-      vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
-        done(err, address)
-      })
+    // function getAddressByAssetId(assetId, done) {
+    //   console.log('assetId: ' + assetId)
+    //   let assetIdHex = vm.web3.toHex(assetId)
+    //   vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
+    //     done(err, address)
+    //   })
           
-    }
+    // }
 
 
     function getAssetsLength() {
@@ -130,36 +120,36 @@
       return $http.get('/api/eth/getDefaultWallets');
     }
 
-    function getTokenBalance() {
-      vm.splytManagerContract.getBalance(vm.web3.eth.accounts, (err, balance) => {
-        console.log(vm.web3.eth.accounts + ' tokens balance: ' + balance)
-        return balance
-      })
+    // function getTokenBalance() {
+    //   vm.splytManagerContract.getBalance(vm.web3.eth.accounts, (err, balance) => {
+    //     console.log(vm.web3.eth.accounts + ' tokens balance: ' + balance)
+    //     return balance
+    //   })
 
-    }
+    // }
 
-    function getAssetInfo(assetId) {
-      console.log('assetId: ' + assetId)
-      let assetIdHex = vm.web3.toHex(assetId)
-      $q((resolve, reject) => {        
-        vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
-          resolve(address)
-        })                
-      })
-      .then((address) => {
-        console.log(address)
-        let deferred = $q.defer()
-        vm.assetManagerContract.getAssetInfo(address, (err, fields) => {
-          console.log(fields)
-          deferred.resolve('step 2')
-        })
-        return deferred.promise
-      })
-      .catch((err) => {
-        console.log('error')
-        console.log(err)
-      })
-    }
+    // function getAssetInfo(assetId) {
+    //   console.log('assetId: ' + assetId)
+    //   let assetIdHex = vm.web3.toHex(assetId)
+    //   $q((resolve, reject) => {        
+    //     vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
+    //       resolve(address)
+    //     })                
+    //   })
+    //   .then((address) => {
+    //     console.log(address)
+    //     let deferred = $q.defer()
+    //     vm.assetManagerContract.getAssetInfo(address, (err, fields) => {
+    //       console.log(fields)
+    //       deferred.resolve('step 2')
+    //     })
+    //     return deferred.promise
+    //   })
+    //   .catch((err) => {
+    //     console.log('error')
+    //     console.log(err)
+    //   })
+    // }
 
     // Set fullfilled by promisee
     function setFulfilled() {
@@ -240,31 +230,31 @@
     }
 
 
-    function getAssetStatus(assetId) {
-      let assetIdHex = vm.web3.toHex(assetId)
-      //anyone can call this function to pay promisee
-      // vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {     
-      vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
-        vm.assetManagerContract.getStatus(address, (err, status) => {
-          console.log('status: ' + status)
-          return status;
-        })        
-      })
+    // function getAssetStatus(assetId) {
+    //   let assetIdHex = vm.web3.toHex(assetId)
+    //   //anyone can call this function to pay promisee
+    //   // vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {     
+    //   vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
+    //     vm.assetManagerContract.getStatus(address, (err, status) => {
+    //       console.log('status: ' + status)
+    //       return status;
+    //     })        
+    //   })
 
-    }
+    // }
 
-    function purchase(orderId, assetId) {
-      let assetIdHex = vm.web3.toHex(assetId)
-      let orderIdHex = vm.web3.toHex(orderId)
-      //anyone can call this function to pay promisee
-      // vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {     
-      vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
-        vm.orderManagerContract.purchase.sendTransaction(orderIdHex, address, 1, 10000, vm.gas, (err, trxid) => {
-          console.log('trxid: ' + trxid)
-        })        
-      })
+    // function purchase(orderId, assetId) {
+    //   let assetIdHex = vm.web3.toHex(assetId)
+    //   let orderIdHex = vm.web3.toHex(orderId)
+    //   //anyone can call this function to pay promisee
+    //   // vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, vm.gas, (err, trxid) => {     
+    //   vm.assetManagerContract.getAddressById(assetIdHex, (err, address) => {
+    //     vm.orderManagerContract.purchase.sendTransaction(orderIdHex, address, 1, 10000, vm.gas, (err, trxid) => {
+    //       console.log('trxid: ' + trxid)
+    //     })        
+    //   })
 
-    }
+    // }
 
 
     function createRate(wallet, rating) { 
@@ -275,27 +265,27 @@
     }
 
 
-    function createAsset(asset) {
-      console.log(asset)
-      console.log('toHex: ' + vm.web3.toHex(asset._id))
-      let assetIdHex = vm.web3.toHex(asset._id)
-      $q((resolve, reject) => {                  
-        vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, 0, asset.sellerWallet, asset.title, 10000, 0xD1A421A5F199cd16Ca49778841CB88053768d5f1, 0, 10, 1, vm.gas, (err, trxid) => {
-          console.log('trxid: ' + trxid)
-          if (err) {
-            reject(err)
-          } else {
-            resolve(trxid)
-          }
-        })          
-      })
-      .then((trxid) => {
-        // $state.go('assets.view', {
-        //   assetId: res._id
-        // });          
-      })
+    // function createAsset(asset) {
+    //   console.log(asset)
+    //   console.log('toHex: ' + vm.web3.toHex(asset._id))
+    //   let assetIdHex = vm.web3.toHex(asset._id)
+    //   $q((resolve, reject) => {                  
+    //     vm.assetManagerContract.createAsset.sendTransaction(assetIdHex, 0, asset.sellerWallet, asset.title, 10000, 0xD1A421A5F199cd16Ca49778841CB88053768d5f1, 0, 10, 1, vm.gas, (err, trxid) => {
+    //       console.log('trxid: ' + trxid)
+    //       if (err) {
+    //         reject(err)
+    //       } else {
+    //         resolve(trxid)
+    //       }
+    //     })          
+    //   })
+    //   .then((trxid) => {
+    //     // $state.go('assets.view', {
+    //     //   assetId: res._id
+    //     // });          
+    //   })
 
-    }
+    //}
 
   }
 

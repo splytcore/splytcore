@@ -1,6 +1,5 @@
 .headerLogo {
-	width: 25px;
-	height: 25px;
-	background-color: #ffff;
-	border-radius: 50%;
+	width: 100px;
+	height: auto;
+	margin-top: -5px;
 }
