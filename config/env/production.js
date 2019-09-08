@@ -8,13 +8,21 @@ module.exports={
   },
   port: 3000,
   db: {
-    uri: process.env.mongoUrl, // points to AWS DEV - MONGODB
+    uri: process.env.mongoIpAddress + ':' + process.env.mongoPort + '/' + process.env.mongoDbName,
     options: {
       user: process.env.mongoUser,
       pass: process.env.mongoPassword
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG||false
+  },
+  ethereum: {
+    //Get this from testrpc for dev
+    url: 'http://' + process.env.ethereumIpAddress + ':' + process.env.ethereumPort,
+    //this has to be updated everytime you run truffle migrate
+    splytManagerAddress: process.env.ethereumManagerContractAddress,
+    masterWallet: process.env.ethereumMasterWallet,
+    etherscanURL: 'https://ropsten.etherscan.io/tx/'
   },
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
