@@ -3,11 +3,36 @@
     <h1>Seller Dashboard</h1>
   </div>
 
+  <!-- list all assets from this seller -->
   <div class="panel panel-primary">
+      <div class="panel-heading"><h4>Assets</h4></div>
+      <div class="panel-body">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Address</th>
+            </tr>
+          </thead>
+          <tbody ng-repeat="asset in vm.assets">
+            <tr>
+              <td><a ui-sref="assets.edit({ assetId: asset._id })">{{ asset._id }}</a></td>
+              <td>{{ asset.title }}</td>
+              <td>{{ asset.address }}</td>
+              <td><a ui-sref="assets.edit({ assetId: asset._id })">View Orders</a></td>            
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+  <!-- <div class="panel panel-primary">
     <div class="panel-heading"><h4>Summary</h4></div>
     <div class="panel-body">Body Panel</div>
     <div class="panel panel-footer">Panel Footer</div>
-  </div>
+  </div> -->
 
   <!-- Create new asset form -->
   <div class="panel panel-primary">
@@ -46,32 +71,8 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
     </div>
-    <div class="panel panel-footer">Panel Footer</div>
   </div>
   
-  <!-- list all assets from this seller -->
-  <div class="panel panel-primary">
-    <div class="panel-heading"><h4>Assets</h4></div>
-    <div class="panel-body">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Address</th>
-          </tr>
-        </thead>
-        <tbody ng-repeat="asset in vm.assets">
-          <tr>
-            <td><a ui-sref="assets.edit({ assetId: asset._id })">{{ asset._id }}</a></td>
-            <td>{{ asset.title }}</td>
-            <td>{{ asset.address }}</td>
-            <td><a ui-sref="assets.edit({ assetId: asset._id })">View Orders</a></td>            
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="panel panel-footer">Panel Footer</div>
-  </div>
+  
 
 </section>

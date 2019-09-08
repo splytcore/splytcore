@@ -42,13 +42,73 @@ a:hover .header-profile-image {
 }
 
 .footer {
-    background: #317194;
-    position: fixed;
+    background: #f8f9fa;
+    position: absolute;
     padding-top: 2px;
     padding-bottom: 2px;
     left: 0;
     bottom: 0;
     width: 100%;
-    color: white;
+    color: #fcfcfc;
     text-align: center;
+    border-top: 1px solid gray;
+}
+
+.navbar-inverse {
+  background-image: none;
+  background-color: #58aed4;
+  border-color: gray;
+  color:#fcfcfc;
+  opacity: 1;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color: #fcfcfc;
+  opacity: 1;
+}
+
+.navbar-inverse .navbar-nav > .open > a {
+  background-color: #58aed4;
+  background-image: none;
+}
+.navbar-inverse .navbar-nav > .active > a {
+  background-color: #58aed4;
+  background-image: none;
+}
+.navbar-inverse .navbar-nav > .open > a {
+  background-color: #3d8fb3;
+  background-image: none;
+}
+.navbar-inverse .navbar-nav > .open > a:hover {
+  background-color: #3d8fb3;
+  background-image: none;
+}
+
+.navbar-inverse .navbar-nav > .active > a:hover {
+  background-color: #58aed4;
+  background-image: none;
+}
+.navbar-inverse .navbar-nav > .active > a:hover {
+  background-color: #3d8fb3;
+  background-image: none;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+  background-color: #3d8fb3;
+  background-image: none;
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+  color: black;
+}
+
+
+.main-body {
+  min-height: 100vh; /* will cover the 100% of viewport */
+  overflow: hidden;
+  display: block;
+  position: relative;
+  padding-bottom: 100px; /* height of your footer */
+  padding-top: 50px;
+  background-color: #fcfcfc;
 }

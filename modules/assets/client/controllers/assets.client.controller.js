@@ -12,7 +12,6 @@
     var vm = this
     vm.save = save   
     vm.asset = asset
-
     vm.remove = remove
     vm.user = Authentication.user
 
@@ -31,12 +30,45 @@
       { id: 4,name: 'Rate Buyer'},
       { id: 5,name: 'Rate Seller'}
     ]
-    
+
+   
+    switch(vm.asset.status) {
+      case "0": 
+        vm.asset.statusName = 'Not Mined'
+        break
+      case "1": 
+        vm.asset.statusName = 'Active'
+        break
+      case "2": 
+        vm.asset.statusName = 'In Arbitration'
+        break
+      case "3": 
+        vm.asset.statusName =  'Expired'
+        break
+      case "4": 
+        vm.asset.statusName =  'Sold Out'
+        break
+      case "5": 
+        vm.asset.statusName =  'Closed'
+        break
+      case "6": 
+        vm.asset.statusName =  'Other'
+        break
+    }
+    switch(vm.asset.type) {
+      case "0": 
+        vm.asset.typeName = 'Single'
+        break
+      case "1": 
+        vm.asset.typeName = 'Fractional'
+        break
+    }
+
     vm.selectedAction = 1
 
     MarketsService.query((result) => {
       vm.marketPlaces = result
-      vm.selectedMarketPlace = vm.asset._id && result.length > 0 ? '' : vm.marketPlaces[0].wallet
+      vm.selectedMarketPlace = vm.asset._id && result.length > 0 ? '' : vm.asset.marketPlaces[0].wallet
     })
 
     if (!vm.asset._id) {

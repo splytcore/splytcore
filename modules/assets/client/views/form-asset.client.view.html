@@ -2,30 +2,34 @@
   <div class="page-header">
     <h1>{{vm.asset._id ? vm.asset.title : 'New Asset'}}</h1>
   </div>
-  {{ vm.asset }}
+  <div class="container">
+    <div class="col-sm-3">
+      <div class="row">
+        <img ng-src="modules/assets/client/img/asset.jpeg" class="img-thumbnail asset-picture-detail">
+      </div>
+      <div class="row">
+          <div class="col-sm-6">
+            $ {{vm.asset.totalCost | number: '2'}}
+          </div>
+          <div class="col-sm-6">
+            {{ vm.asset.inventoryCount }} left
+          </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+      <div class="row" style="font-weight: bold">{{ vm.asset.title }}</div>
+      <div class="row">NFT Status:  {{vm.asset.statusName}} </div>
+      <div class="row">NFT Type:  {{vm.asset.typeName}} </div>
+      <div class="row" style="align-content: center">NFT Address: <a class="trim-text" target="_blank" href="{{vm.etherscanURL + vm.asset.address}}"> {{vm.asset.address}}</a></div>
+      <div class="row">Creation Hash: <a class="trim-text" style="text-decoration: none" target="_blank" href="{{vm.etherscanURL + vm.asset.transactionHash}}"> {{vm.asset.transactionHash}}</a></div>
+      <div class="row">Seller Wallet: <a class="trim-text" style="text-decoration: none" target="_blank" href="{{vm.etherscanURL + vm.asset.seller}}"> {{vm.asset.seller}}</a></div>
+
+    </div>
+  </div>
 
   <div class="col-md-12">
     <form name="vm.form.assetForm" class="form-horizontal" ng-submit="vm.save(vm.form.assetForm.$valid)" novalidate>
       <fieldset>
-
-        <div class="form-group">
-          <img ng-src="modules/assets/client/img/asset.jpeg" class="img-thumbnail asset-picture-detail">
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="id">ID</label>
-          <input name="id" type="text" ng-model="vm.asset._id" id="title" class="form-control" placeholder="ID" disabled>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="title">Title</label>
-          <input name="title" type="text" ng-model="vm.asset.title" id="title" class="form-control" placeholder="Title" required ng-disabled="vm.asset._id">
-          <div ng-messages="vm.form.assetForm.title.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Asset title is required.</p>
-          </div>
-        </div>
-
-
         <div class="form-group" show-errors>
           <label class="control-label" for="description">Description</label>
           <input name="description" type="text" ng-model="vm.asset.description" id="description" class="form-control" placeholder="Description" ng-disabled="vm.asset._id" required>
@@ -40,12 +44,6 @@
           <div ng-messages="vm.form.assetForm.term.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Asset term is required.</p>
           </div>
-        </div>
-
-
-       <div class="form-group" ng-show="vm.asset._id">
-          <label class="control-label" for="assetType">Asset Type(0=SINGLE, 1=FRACTIONAL)</label>
-          <input name="assetType" type="text" ng-model="vm.asset.type" id="assetType" class="form-control" placeholder="AssetType" disabled="">
         </div>
 
         <div class="form-group" ng-show="!vm.asset._id" show-errors>        
@@ -82,49 +80,7 @@
             <button type="button" ng-click="vm.addMarketPlace()" class="btn btn-default">Add</button>   
           </div>
         </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="seller">Seller Wallet</label>
-          <span name="seller" id="seller" class="form-control" disabled>
-            {{ vm.asset.seller }}
-          </span>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="ether">Status(0:NOT_MINED, 1:ACTIVE, 2:IN_ARBITRATION, 3:EXPIRED, 4:SOLD_OUT, 5:CLOSED, 6:OTHER)</label>
-
-          <span name="status" id="status" class="form-control" disabled>
-            {{ vm.asset.status }}
-          </span>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="ether">Total Cost</label>
-          <input name="totalCost" type="text" ng-model="vm.asset.totalCost" id="totalCost" class="form-control" placeholder="total cost in tokens" required ng-disabled="vm.asset._id">
-          <div ng-messages="vm.form.assetForm.totalCost.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Total cost is required.</p>
-          </div>       
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="asset">Contract Address</label>       
-          <span name="address" id="address" class="form-control" disabled>
-            {{ vm.asset.address }}
-          </span>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label class="control-label" for="asset">Inventory</label>       
-          <input name="inventoryCount" type="text" ng-model="vm.asset.inventoryCount" id="inventoryCount" class="form-control" placeholder="Inventory" required ng-disabled="vm.asset._id">
-        </div>
-
-
-        <div class="form-group" ng-show="vm.asset._id">
-          <label class="control-label" for="asset">Transaction Hash</label> 
-          <a target="_blank" href="{{vm.etherscanURL + vm.asset.transactionHash}}"> {{vm.asset.transactionHash}} </a>
-        </div>
-
-
+    
         <div class="form-group" ng-show="vm.asset._id">
           {{vm.selectedAction}}
           <label class="control-label" for="action">Choose Action</label>          
