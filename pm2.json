@@ -1,7 +1,7 @@
 {
   "apps" : [{
     "name"        : "SPLYT",
-    "script"      : "npm start prod",
+    "script"      : "npm start --env:prod",
     "watch"       : true,
     "env": {
        "NODE_ENV": "dev"

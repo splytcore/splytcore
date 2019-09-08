@@ -33,7 +33,7 @@ gulp.task('env:dev', function () {
 
 // Set NODE_ENV to 'development'
 gulp.task('env:stage', function () {
-  process.env.NODE_ENV = 'production'
+  process.env.NODE_ENV = 'development'
   require('dotenv').config({ path: path.resolve('./.env.staging') })
 })
 
