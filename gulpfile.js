@@ -33,7 +33,7 @@ gulp.task('env:dev', function () {
 
 // Set NODE_ENV to 'development'
 gulp.task('env:stage', function () {
-  process.env.NODE_ENV = 'development'
+  process.env.NODE_ENV = 'staging'
   require('dotenv').config({ path: path.resolve('./.env.staging') })
 })
 
@@ -299,6 +299,10 @@ gulp.task('test', function (done) {
 // Run the project in development mode
 gulp.task('default', function (done) {
   runSequence('env:dev', ['nodemon', 'watch'], done)
+})
+
+gulp.task('stage', function (done) {
+  runSequence('env:stage', ['nodemon', 'watch'], done)
 })
 
 // Run the project in debug mode
