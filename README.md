@@ -22,6 +22,7 @@ Bower: ~1.8.3
 `$` npm install pm2 -g
 
 ---
+
 ### Running
 ##### Development
 `** Add dev machine's IP Address to parity server's firewall`
@@ -39,7 +40,9 @@ or
 `$` npm start prod
 or
 `$` pm2 start pm2.json `(daemon service)`
+
 ---
+
 ## Api Documentation:
 ##### Public api:
 ***GET @ /api/assets?listType=ASSETS.LISTNORMAL***
