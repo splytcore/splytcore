@@ -108,7 +108,7 @@ a:hover .header-profile-image {
   overflow: hidden;
   display: block;
   position: relative;
-  padding-bottom: 100px; /* height of your footer */
+  padding-bottom: 150px; /* height of your footer */
   padding-top: 50px;
   background-color: #fcfcfc;
 }

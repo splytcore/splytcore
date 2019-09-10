@@ -52,10 +52,10 @@ exports.read = function(req, res) {
  * Update a Shopify
  */
 exports.update = function(req, res) {
-
-  Shopify.findOne((err, shopify) => {
+  var shopName = req.body.shopName.split('.myshopify.com')[0]
+  Shopify.findOne({ shopName: shopName}, (err, shopify) => {
     if (err) {
-      return res.status(400).send({
+    return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {

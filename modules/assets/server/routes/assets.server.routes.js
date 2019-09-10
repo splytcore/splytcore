@@ -12,9 +12,10 @@ const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/u
 
 module.exports = function(app) {
   // assets Routes
+  app.route('/api/assets').get(assets.getAllAssetsFromContract, assets.bindTitleAndDescription, assets.list)
+
   app.route('/api/assets').all(assetsPolicy.isAllowed)
-    .get(assets.getAllAssetsFromContract, assets.bindTitleAndDescription, assets.list)
-    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, assets.create)
+    .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, assets.create)
 
   app.route('/api/assetByAddress/:assetAddress').all(assetsPolicy.isAllowed)
     .get(assets.returnAsset)

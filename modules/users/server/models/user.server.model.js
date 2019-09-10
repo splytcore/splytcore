@@ -3,14 +3,14 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema,
-  crypto = require('crypto'),
-  validator = require('validator'),
-  generatePassword = require('generate-password'),
-  owasp = require('owasp-password-strength-test'),
-  path = require('path'),
-  config = require(path.resolve('./config/config'));
+const mongoose = require('mongoose')
+const crypto = require('crypto')
+const validator = require('validator')
+const generatePassword = require('generate-password')
+const owasp = require('owasp-password-strength-test')
+const path = require('path')
+const config = require(path.resolve('./config/config'))
+const cryptojs = require('crypto-js')
 
 
 /**
@@ -30,7 +30,7 @@ var validateLocalStrategyEmail = function (email) {
 /**
  * User Schema
  */
-var UserSchema = new Schema({
+var UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
     trim: true,
@@ -124,11 +124,15 @@ var UserSchema = new Schema({
  * Hook a pre save method to hash the password
  */
 UserSchema.pre('save', function (next) {
+  console.log(this)
   if (this.password && this.isModified('password')) {
     this.salt = crypto.randomBytes(16).toString('base64');    
     this.password = this.hashPassword(this.password);
   }
-
+  if (this.walletPassword && this.isModified('walletPassword')) {
+    this.walletPassword = cryptojs.AES.encrypt(this.walletPassword, process.env.sessionSecret);    
+  }
+  console.log(this)
   next();
 });
 

@@ -60,3 +60,9 @@ sudo bower install -g
 bower install --allow-root
 
 npm start
+
+
+Api Documentation:
+Public api:
+GET @ /api/assets?listType=ASSETS.LISTNORMAL
+  - Will list all normal listings from blockchain, populate extra metadata from database.

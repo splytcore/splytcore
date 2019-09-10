@@ -14,7 +14,7 @@ module.exports = function(app) {
   // Orders Routes
   app.route('/api/orders').all(ordersPolicy.isAllowed)
     .get(orders.list)
-    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, orders.create);
+    .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, orders.create);
 
   app.route('/api/orders/:orderId/requestRefund').all(ordersPolicy.isAllowed)
     .post(orders.requestRefund)

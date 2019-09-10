@@ -55,10 +55,10 @@ exports.unlockAccount = function(req, res, next) {
   //   return next()
   // }
 
-  let user = req.fullUser
+  let user = req.user
   console.log('user wallet addr: ', user.publicKey)
-  console.log('user wallet pass: ', user.walletPassword)
-  EthService.unlockAccount(user.publicKey, user.walletPassword)
+  console.log('user wallet pass: ', req.walletPassword)
+  EthService.unlockAccount(user.publicKey, req.walletPassword)
     .then(() => {
       console.log('successful unlocking of account')
       next()       

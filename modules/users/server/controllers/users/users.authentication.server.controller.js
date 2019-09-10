@@ -11,6 +11,8 @@ const passport = require('passport')
 const User = mongoose.model('User')
 const jdenticon = require('jdenticon')
 const fs = require('fs')
+const crypto = require('crypto-js')
+const axios = require('axios')
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -26,7 +28,6 @@ exports.signup = function (req, res) {
   // For security measurement we remove the roles from the req.body object  
   // IMPORTANT! Commented out for DEV.
   // delete req.body.roles
-
   // Init Variables
   var user = new User(req.body)
   var message = null
@@ -45,9 +46,12 @@ exports.signup = function (req, res) {
     .on('error', (err) => {
       console.log('error giving tokens')
       console.log(err)
-    })  
-
+    })
+    // Get 1 test ether
+    axios.get('https://faucet.ropsten.be/donate/' + wallet)
+    
     user.profileImageURL = './modules/users/client/img/profile/' + user.id + '.png'
+    // Generate avatar based on wallet address
     fs.writeFileSync(user.profileImageURL, jdenticon.toPng(user.wallet, 200))
 
     user.publicKey = wallet

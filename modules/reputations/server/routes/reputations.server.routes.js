@@ -14,7 +14,7 @@ module.exports = function(app) {
   // Reputations Routes
   app.route('/api/reputations').all(reputationsPolicy.isAllowed)
     .get(reputations.list)
-    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, reputations.create);
+    .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, reputations.create);
 
   app.route('/api/reputations/:reputationId').all(reputationsPolicy.isAllowed)
     .get(reputations.read, reputations.bindRateDetail)

@@ -19,13 +19,13 @@ module.exports = function(app) {
 
   app.route('/api/shopifies/:shopifyId').all(shopifiesPolicy.isAllowed)
     .get(shopifies.read)
-    .delete(shopifies.delete);
+    .delete(shopifies.delete)
 
   app.route('/api/shopifies/:shopifyId/pull').all(shopifiesPolicy.isAllowed)
     .get(shopifies.pullShopify);
 
   app.route('/api/shopifies/:shopifyId/push').all(shopifiesPolicy.isAllowed)
-    .post(UsersAuthCont.getFullUser, Eth.unlockAccount, shopifies.pushBlockchain);
+    .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, shopifies.pushBlockchain);
 
   // Finish by binding the Shopify middleware
   app.param('shopifyId', shopifies.shopifyByID);

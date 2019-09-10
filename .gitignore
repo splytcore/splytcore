@@ -23,7 +23,7 @@ package-lock.json
 # ======================
 public/dist/
 uploads
-modules/users/client/img/profile/uploads
+modules/users/client/img/profile/
 config/env/local.js
 *.pem
 

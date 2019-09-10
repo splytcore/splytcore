@@ -24,39 +24,7 @@
             <p class="help-block error-text" ng-message="required">Role is required.</p>
           </div>
         </div>
-
-        <div class="form-group" show-errors>
-          <label for="publicKey">Public Key(wallet we generated ONLY!)</label>
-          <input type="text" id="publicKey" name="publicKey" class="form-control" ng-model="user.publicKey" placeholder="Public Key" required>
-          <div ng-messages="userForm.publicKey.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Public Key is required.</p>
-          </div>
-        </div>
-        
-        <div class="form-group" show-errors>
-          <label for="publicKey">Wallet Password(DEV PURPOSES)</label> </br>
-          *Does not update wallet password! Only update if you change wallets
-          <input type="text" id="walletPassword" name="walletPassword" class="form-control" ng-model="user.walletPassword" placeholder="walletPassword" dsiable>
-          <button type="button" ng-click="createNewWallet()" class="btn btn-default">Create New Wallet</button>
-          <div ng-messages="userForm.walletPassword.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Wallet Password is required.</p>
-          </div>
-        </div>
-
-        <div class="form-group" show-errors>
-          <label for="ethers">Ether Balance</label>
-          <input type="text" id="ethers" name="ethers" class="form-control" ng-model="user.etherBalance" placeholder="ethers" disabled>
-           <a type="button" href="https://faucet.ropsten.be/" target="_blank" class="btn btn-default">Get Ether</a>
-        </div>
-        
-        ether balance: {{ etherBalance }}
-        <div class="form-group" show-errors>
-          <label for="token">SAT Balance</label>
-          <input type="text" id="tokens" name="tokens" class="form-control" ng-model="user.tokenBalance" placeholder="tokens" disabled>
-          <button type="button" ng-click="initUser()" class="btn btn-default">Init Tokens</button>
-        </div>
-                        
-
+                      
         <div class="form-group" show-errors>
           <label for="email">Email</label>
           <input type="email" id="email" name="email" class="form-control" ng-model="user.email" placeholder="Email" lowercase required>
