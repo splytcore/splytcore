@@ -1,68 +1,46 @@
-# splytcoreui
-UI to demonstrate contract's functionality
+# Splyt Core UI
+SplytCore Server side UI for managing assets
 
+### Software
+NPM  : ~6.9.0
+Node : ~10.16.0
+Gulp : ~3.9.1   
+Bower: ~1.8.3   
 
-Tools required  
-NPM 6.4.1  
-Node version 8.12.0
-Gulp  3.9.1   
-Bower 1.8.3   
+----
 
+### Installation
+##### All environment
+`$` git clone `https://github.com/splytcore/SplytCore`
+`$` cd SplytCore
+`$` nvm use stable `** if using nvm`
+`$` npm install
+`$` sudo bower install --allow-root
+`$` npm install gulp -g
 
-git clone https://github.com/splytcore/splytcoreui.git
-cd splytcoreui. 
-npm install    
-sudo bower install --allow-root  
-gulp  
+##### Staging & Production
+`$` npm install pm2 -g
 
-DATABASE SETUP  
+---
+### Running
+##### Development
+`** Add dev machine's IP Address to parity server's firewall`
 
-Local.     
-use local-splytcore  
-if you want to use credentails 
-  db.createUser({ user: "user", pwd: "splyt2016!", roles: [{ role: "readWrite", db: "splytcore-stageClippers7!
-   }] })  
+`$` npm start
+or
+`$` gulp start
 
+##### Staging
+`$` npm start stage
+or
+`$` pm2 start pm2.json  `(daemon service)`
 
-Dev.     
-use dev-splytcore  
-if you want to use credentails   
-	db.createUser({ user: "user", pwd: "splyt2016!", roles: [{ role: "readWrite", db: "splytcore-stage" }] })  
-
-Test  
-use test-splytcore   
-if you want to use credentails 
-  db.createUser({ user: "user", pwd: "splyt2016!", roles: [{ role: "readWrite", db: "splytcore-test" }] })  
-
-
-ENVIRONMENTS STARTUP  
-
-Development  
-gulp  
-
-Production  
-Start    
-sudo pm2 start pm2.json  
-
-Stop     
-sudo pm2 stop SPLYT
-
-
-## Initlization of this repo (for new devs)
-git clone this repo
-
-cd splytcoreui
-
-npm install
-
-sudo bower install -g
-
-bower install --allow-root
-
-npm start
-
-
-Api Documentation:
-Public api:
-GET @ /api/assets?listType=ASSETS.LISTNORMAL
-  - Will list all normal listings from blockchain, populate extra metadata from database.
+##### Production
+`$` npm start prod
+or
+`$` pm2 start pm2.json `(daemon service)`
+---
+## Api Documentation:
+##### Public api:
+***GET @ /api/assets?listType=ASSETS.LISTNORMAL***
+  * Will list all normal(non-fractional) assets from blockchain, populate extra metadata from database and serve.
