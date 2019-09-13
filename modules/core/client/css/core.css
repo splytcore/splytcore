@@ -70,18 +70,22 @@ a:hover .header-profile-image {
 .navbar-inverse .navbar-nav > .open > a {
   background-color: #58aed4;
   background-image: none;
+  transition: 0.2s;
 }
 .navbar-inverse .navbar-nav > .active > a {
   background-color: #58aed4;
   background-image: none;
+  transition: 0.2s;
 }
 .navbar-inverse .navbar-nav > .open > a {
   background-color: #3d8fb3;
   background-image: none;
+  transition: 0.2s;
 }
 .navbar-inverse .navbar-nav > .open > a:hover {
   background-color: #3d8fb3;
   background-image: none;
+  transition: 0.2s;
 }
 
 .navbar-inverse .navbar-nav > .active > a:hover {
@@ -99,7 +103,7 @@ a:hover .header-profile-image {
 }
 
 .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-  color: black;
+  color: #37393A;
 }
 
 
@@ -108,7 +112,21 @@ a:hover .header-profile-image {
   overflow: hidden;
   display: block;
   position: relative;
-  padding-bottom: 150px; /* height of your footer */
+  padding-bottom: 220px; /* height of your footer */
   padding-top: 50px;
   background-color: #fcfcfc;
+}
+
+.btn-primary {
+  background-color: #58aed4;
+  background-image: none;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #001435;
+}
+
+.dropdown-toggle {
+  transition: 0.2s;
 }

@@ -6,6 +6,9 @@
     <a ng-repeat="shopify in vm.shopifies"
        ui-sref="shopifies.view({ shopifyId: shopify._id })"
        class="list-group-item">
+      <h4>
+        <h4 class="list-group-item-heading" ng-bind="shopify.shopName"></h4>
+      </h4>
       <small class="list-group-item-text">
         Authorized on
         <span ng-bind="shopify.created | date:'mediumDate'"></span>
@@ -13,7 +16,6 @@
         <span ng-if="shopify.user" ng-bind="shopify.user.displayName"></span>
         <span ng-if="!shopify.user">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="shopify.shopName"></h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="vm.shopifies.$resolved && !vm.shopifies.length">
