@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader',
-  function ($scope, $timeout, $window, Authentication, FileUploader) {
+angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader', '$http',
+  function ($scope, $timeout, $window, Authentication, FileUploader, $http) {
     $scope.user = Authentication.user;
     $scope.imageURL = $scope.user.profileImageURL;
 
@@ -67,7 +67,18 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
     // Cancel the upload process
     $scope.cancelUpload = function () {
       $scope.uploader.clearQueue();
-      $scope.imageURL = $scope.user.profileImageURL;
+      $scope.imageURL = $scope.user.profileImageURL
     };
+
+    $scope.resetProfilePicture = function () {
+      $http.post('/api/users/picture/reset', {})
+      .then(user => {
+        console.log(user)
+        $scope.authentication.user = user
+      })
+      .error(err => {
+        $scope.error = err.message
+      })
+    }
   }
 ]);

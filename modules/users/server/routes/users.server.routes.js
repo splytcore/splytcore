@@ -9,6 +9,7 @@ module.exports = function (app) {
   app.route('/api/users').put(users.update)
   app.route('/api/users/password').post(users.changePassword)
   app.route('/api/users/picture').post(users.changeProfilePicture)
+  app.route('/api/users/picture/reset').post(users.resetProfilePicture)
   
   app.route('/api/users/balances').get(users.getBalances)
 

@@ -10,6 +10,9 @@
               Select Image <input type="file" nv-file-select uploader="uploader">
           </span>
         </div>
+        <div class="text-center form-group" ng-hide="uploader.queue.length">
+          <button type="button" class="btn btn-primary" ng-click="resetProfilePicture()">Reset</button>
+        </div>
         <div class="text-center form-group" ng-show="uploader.queue.length">
           <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload</button>
           <button class="btn btn-default" ng-click="cancelUpload();">Cancel</button>

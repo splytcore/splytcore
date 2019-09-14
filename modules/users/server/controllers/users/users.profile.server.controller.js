@@ -12,6 +12,7 @@ var _ = require('lodash'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
   User = mongoose.model('User');
+const jdenticon = require('jdenticon')
 
 /**
  * Update user details
@@ -139,6 +140,21 @@ exports.changeProfilePicture = function (req, res) {
     });
   }
 };
+
+exports.resetProfilePicture = function (req, res) {
+  var profileImageURL = './modules/users/client/img/profile/' + req.user.id + '.png'
+  // Generate avatar based on wallet address
+  fs.writeFileSync(req.user.profileImageURL, jdenticon.toPng(req.user.wallet, 200))
+
+  User.findOneAndUpdate(
+    { _id: req.user.id }, 
+    { $set:{ profileImageURL: profileImageURL }}, 
+    { new: true }, (err, user) => {
+      if(err)
+        return res.status(400).send(err)
+      res.json(user)
+    })
+}
 
 /**
  * Send User
