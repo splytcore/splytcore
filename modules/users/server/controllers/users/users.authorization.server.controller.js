@@ -42,6 +42,7 @@ exports.getWalletPassword = function(req, res, next) {
         message: 'User is invalid'
       })
     }
+    
     var bytePassword =  cryptojs.AES.decrypt(user.walletPassword, process.env.sessionSecret)
     req.walletPassword = bytePassword.toString(cryptojs.enc.Utf8)
     next()

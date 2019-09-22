@@ -124,15 +124,15 @@ var UserSchema = new mongoose.Schema({
  * Hook a pre save method to hash the password
  */
 UserSchema.pre('save', function (next) {
-  console.log(this)
+
   if (this.password && this.isModified('password')) {
     this.salt = crypto.randomBytes(16).toString('base64');    
     this.password = this.hashPassword(this.password);
   }
+
   if (this.walletPassword && this.isModified('walletPassword')) {
     this.walletPassword = cryptojs.AES.encrypt(this.walletPassword, process.env.sessionSecret);    
   }
-  console.log(this)
   next();
 });
 
