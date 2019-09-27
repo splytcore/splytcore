@@ -245,7 +245,7 @@ exports.createAsset = function(asset) {
     asset.totalCost * 100,
     Math.floor(asset.expDate.getTime()/1000),  //convert to seconds
     asset.marketPlaces[0].toString(),
-    asset.marketPlacesAmount[0],
+    asset.marketPlacesAmount[0] * 100,
     asset.inventoryCount
     ).send(trx)
     // .then((result) => {
