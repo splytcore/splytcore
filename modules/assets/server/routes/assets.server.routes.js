@@ -17,6 +17,9 @@ module.exports = function(app) {
   app.route('/api/assets').all(assetsPolicy.isAllowed)
     .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, assets.create)
 
+  app.route('/api/assets/non-user')
+    .post(assets.buildNonUser, UsersAuthCont.getWalletPassword, Eth.unlockAccount, assets.create)
+
   app.route('/api/assetByAddress/:assetAddress').all(assetsPolicy.isAllowed)
     .get(assets.returnAsset)
 

@@ -402,5 +402,22 @@ exports.getAssetByAddress = function(req, res, next, address) {
     .catch((err) => {
       return next(err)  
     })
+}
 
+exports.buildNonUser = function(req, res, next) {
+    const User = mongoose.model('User')
+
+    User.findOne({publicKey: req.body.user.publicKey}, (err, user) =>{
+      if(err)
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      if(!user)
+        return res.status(400).send({
+          message: "User not found"
+        })
+      req.user = user
+      req.body = req.body.asset
+      next()
+    })
 }

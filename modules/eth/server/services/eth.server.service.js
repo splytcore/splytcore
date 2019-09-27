@@ -242,7 +242,7 @@ exports.createAsset = function(asset) {
     asset.term, 
     asset.seller, 
     web3.utils.toHex(asset.title),
-    asset.totalCost,
+    asset.totalCost * 100,
     Math.floor(asset.expDate.getTime()/1000),  //convert to seconds
     asset.marketPlaces[0].toString(),
     asset.marketPlacesAmount[0],
