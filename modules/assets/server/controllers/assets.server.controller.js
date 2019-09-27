@@ -407,21 +407,21 @@ exports.getAssetByAddress = function(req, res, next, address) {
 exports.buildNonUser = function(req, res, next) {
     const User = mongoose.model('User')
     console.log(req.body)
-    if(!req.user)
+    if(!req.body.user)
       return res.status(400).send({
         message: "user is missing in body",
         request: req.body
       });
-    if(!req.user.publicKey)
+    if(!req.body.user.publicKey)
       return res.status(400).send({
         message: "publicKey is missing in body",
         request: req.body
       });
-    if(!req.user.walletPassword)
-    return res.status(400).send({
-      message: "walletPassword is missing in body",
-      request: req.body
-    });
+    if(!req.body.user.walletPassword)
+      return res.status(400).send({
+        message: "walletPassword is missing in body",
+        request: req.body
+      });
     User.findOne({publicKey: req.body.user.publicKey}, (err, user) =>{
       if(err)
         return res.status(400).send({
