@@ -19,19 +19,13 @@ exports.createAsset = (asset, callback) => {
           }
         })
       })
-      // .on('confirmation', function(confirmationNumber, receipt){
-      //   console.log('confirmation: ' + confirmationNumber)
-      //   console.log('receipt: ' + receipt)
-      // })
       .on('receipt', function(receipt) {
-        //after it's mined
-        console.log('only receipt: ')
-        console.log(receipt)
+        // On mined
+        console.log('only receipt: ', receipt)
       })
       .on('error', function (err) {
-        console.log('error creating asset contract')
-        console.log(err.toString())
-        callback({ message : err.toString() })
+        //On error
+        console.log('error creating asset contract', err.toString())
       }
     )
   }
