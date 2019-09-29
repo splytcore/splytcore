@@ -73,7 +73,10 @@
       function successCallback(res) {
         console.log(res)
         const nounce = Math.floor(Math.random() * (10000000000 - 1)) + 1
-        var authUrl = 'https://' + res.shopName + '.myshopify.com/admin/oauth/authorize?client_id=2220c6c1c526573175d54b9bd4f18a6d&redirect_uri=http://localhost:3000/shopifies&scope=write_inventory,read_products&state=' + nounce
+        const permissions = 'write_inventory,read_products,write_products'
+        const currentDomain = $window.location.protocol + $window.location.host
+        const clientId = '2220c6c1c526573175d54b9bd4f18a6d'
+        var authUrl = 'https://'+res.shopName+'.myshopify.com/admin/oauth/authorize?client_id='+clientId+'&redirect_uri='+currentDomain +'/shopifies&scope='+permissions+'&state='+nounce
         console.log(authUrl)
         $window.location = authUrl
       }
@@ -81,6 +84,7 @@
       function errorCallback(res) {
         vm.error = res.data.message;
       }
+
     }
   }
 }());

@@ -305,7 +305,9 @@ exports.bindTitleAndDescription = function(req, res, next) {
       .exec(function (err,  a) {
         asset.title =  a ? a.title : 'NOT_FOUND_IN_DB'
         asset.description = a ? a.description : 'NOT_FOUND_IN_DB'
-        if(!a) 
+        asset.imageURL = a ? a.imageURL : 'https://banana.spl.yt/modules/assets/client/img/asset.jpeg'
+        asset.transactionHash = a ? a.transactionHash : '0x9ECf2EC68b477594670EA9fb93E7bBAaE1cF0BdE'
+        if(!a)
           assets.splice(assets.indexOf(asset), 1)
         callback(err)
       })
