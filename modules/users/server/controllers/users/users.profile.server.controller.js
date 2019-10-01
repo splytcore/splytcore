@@ -71,13 +71,34 @@ exports.getBalances = function (req, res) {
       res.json({ etherBalance: etherBalance, tokenBalance: tokenBalance })
     })
     .catch((err) => {
-      res.json(err)
+      console.log(err)
+      return res.status(400).send({
+        message: 'Error getting token balance',
+        requestUrl: req.url
+      })
     })
   })
   .catch((err) => {
-    res.json(err)
+    console.log(err)
+    return res.status(400).send({
+      message: 'Error getting ether balance',
+      requestUrl: req.url
+    })
   })    
 
+}
+
+exports.getBalanceNonUser = function(req, res, next) {
+  if(!req.query.publicKey)
+
+    return res.status(400).send({
+      message: 'publicKey not valid',
+      requestUrl: req.url
+    })
+
+    req.user = new User();
+    req.user.publicKey = req.query.publicKey
+    next()
 }
 
 exports.createAccount = function (req, res) {

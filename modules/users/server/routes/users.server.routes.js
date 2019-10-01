@@ -12,6 +12,7 @@ module.exports = function (app) {
   app.route('/api/users/picture/reset').post(users.resetProfilePicture)
   
   app.route('/api/users/balances').get(users.getBalances)
+  app.route('/api/users/balances/non-user').get(users.getBalanceNonUser, users.getBalances)
 
   app.route('/api/users/newAccount').get(users.createAccount)
 
