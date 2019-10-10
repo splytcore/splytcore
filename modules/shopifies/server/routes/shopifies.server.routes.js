@@ -17,6 +17,8 @@ module.exports = function(app) {
     .post(shopifies.create)
     .put(shopifies.update)
 
+  app.route('/api/shopifies/item-bought').post(shopifies.itemBought);
+
   app.route('/api/shopifies/:shopifyId').all(shopifiesPolicy.isAllowed)
     .get(shopifies.read)
     .delete(shopifies.delete)
@@ -27,6 +29,8 @@ module.exports = function(app) {
   app.route('/api/shopifies/:shopifyId/push').all(shopifiesPolicy.isAllowed)
     .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, shopifies.pushBlockchain);
 
+
+  
   // Finish by binding the Shopify middleware
   app.param('shopifyId', shopifies.shopifyByID);
 };

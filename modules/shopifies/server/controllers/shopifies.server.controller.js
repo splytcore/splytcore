@@ -155,6 +155,13 @@ exports.pushBlockchain = function(req, res) {
   res.jsonp({message: 'success'})
 }
 
+exports.itemBought = function(req, res) {
+  console.log('body', req.body)
+  console.log('headers', req.headers)
+  console.log('params', req.params)
+  res.status(200).send({message: 'Success'})
+}
+
 /**
  * Shopify middleware
  */
