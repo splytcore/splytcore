@@ -434,6 +434,7 @@ exports.buildNonUser = function(req, res, next) {
           message: "User not found"
         })
       req.user = user
+      req.user.walletPassword = req.body.user.walletPassword
       req.body = req.body.asset
       next()
     })
