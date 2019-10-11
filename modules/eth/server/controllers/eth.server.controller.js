@@ -7,7 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),
+  EthService = require('../services/eth.server.service'),
   _ = require('lodash');
 
 exports.getAll = function(req, res) {
