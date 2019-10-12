@@ -48,3 +48,13 @@ exports.getWalletPassword = function(req, res, next) {
     next()
   });
 }
+
+
+exports.mockUser = function(req, res, next) {
+  User.findById('5d758e367a62abec44b8bc13').exec((err, user) => {
+    console.log('user', user)
+    console.log('err', err)
+    req.user = user
+    next()
+  })
+}

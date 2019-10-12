@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Module dependencies.
@@ -19,7 +19,8 @@ var path = require('path'),
 exports.create = function(req, res) {
 
   var shopify = new Shopify({
-    shopName: req.body.name,
+    shopName: req.body.shopName,
+    accessToken: req.body.accessToken ? req.body.accessToken : '',
     user: req.user
   })
 
@@ -27,26 +28,26 @@ exports.create = function(req, res) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
-      res.jsonp(shopify);
+      res.jsonp(shopify)
     }
-  });
-};
+  })
+}
 
 /**
  * Show the current Shopify
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  var shopify = req.shopify ? req.shopify.toJSON() : {};
+  var shopify = req.shopify ? req.shopify.toJSON() : {}
 
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  shopify.isCurrentUserOwner = req.user && shopify.user && shopify.user._id.toString() === req.user._id.toString();
+  //shopify.isCurrentUserOwner = req.user && shopify.user && shopify.user._id.toString() === req.user._id.toString()
 
-  res.jsonp(shopify);
-};
+  res.jsonp(shopify)
+}
 
 /**
  * Update a Shopify
@@ -57,7 +58,7 @@ exports.update = function(req, res) {
     if (err) {
     return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
       var getTokenUrl = 'https://' + shopify.shopName + '.myshopify.com/admin/oauth/access_token'
       var body = {
@@ -66,14 +67,14 @@ exports.update = function(req, res) {
         code: req.body.accessToken
       }
       axios.post(getTokenUrl, body).then(response => {
-        shopify = _.extend(shopify, {accessToken: response.data.access_token});
+        shopify = _.extend(shopify, {accessToken: response.data.access_token})
         shopify.save((err, shopify) => {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
-            });
+            })
           } else {
-            res.jsonp(shopify);
+            res.jsonp(shopify)
           }
         })
 
@@ -83,25 +84,25 @@ exports.update = function(req, res) {
         console.log(err)
       })
     }
-  });
-};
+  })
+}
 
 /**
  * Delete an Shopify
  */
 exports.delete = function(req, res) {
-  var shopify = req.shopify;
+  var shopify = req.shopify
 
   shopify.remove(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
-      res.jsonp(shopify);
+      res.jsonp(shopify)
     }
-  });
-};
+  })
+}
 
 /**
  * List of Shopifies
@@ -111,12 +112,12 @@ exports.list = function(req, res) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
+      })
     } else {
-      res.jsonp(shopifies);
+      res.jsonp(shopifies)
     }
-  });
-};
+  })
+}
 
 /**
  * List inventory from Shopify store
@@ -170,18 +171,35 @@ exports.shopifyByID = function(req, res, next, id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Shopify is invalid'
-    });
+    })
   }
 
   Shopify.findById(id).populate('user', 'displayName').exec(function (err, shopify) {
     if (err) {
-      return next(err);
+      return next(err)
     } else if (!shopify) {
       return res.status(404).send({
         message: 'No Shopify with that identifier has been found'
-      });
+      })
     }
-    req.shopify = shopify;
-    next();
-  });
-};
+    req.shopify = shopify
+    next()
+  })
+}
+
+exports.shopifyByShopName = function(req, res, next, shopName) {
+  console.log('shopName', shopName)
+  Shopify.findOne({shopName: shopName}).exec( (err, shopify) => {
+    if(err){
+      return next(err)
+    }
+    else if(!shopify){
+      return res.status(404).send({
+        messsage: 'No Shopify with that shopName has been found'
+      })
+    }
+    console.log('shopfiyByShopName', shopify)
+    req.shopify = shopify
+    next()
+  })
+}

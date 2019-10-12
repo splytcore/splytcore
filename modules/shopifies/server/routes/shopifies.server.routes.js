@@ -12,9 +12,10 @@ const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/u
 
 module.exports = function(app) {
   // Shopifies Routes
+  app.route('/api/shopifies').post(UsersAuthCont.mockUser, shopifies.create)
+  app.route('/api/shopifies/:shopName').get(shopifies.read)
   app.route('/api/shopifies').all(shopifiesPolicy.isAllowed)
     .get(shopifies.list)
-    .post(shopifies.create)
     .put(shopifies.update)
 
   app.route('/api/shopifies/item-bought').post(shopifies.itemBought);
@@ -32,5 +33,6 @@ module.exports = function(app) {
 
   
   // Finish by binding the Shopify middleware
-  app.param('shopifyId', shopifies.shopifyByID);
+  app.param('shopifyId', shopifies.shopifyByID)
+  app.param('shopName', shopifies.shopifyByShopName)
 };
