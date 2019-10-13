@@ -150,9 +150,7 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
 
-
   let listType = req.query.listType ? req.query.listType.toUpperCase() : null
-  console.log(listType)
 
   switch(listType) {
       case 'ASSETS.LISTPENDING':
@@ -243,6 +241,8 @@ exports.listByType = function(type, req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      assets = _.sortBy(assets, x => x.created)
+      assets.reverse()
       res.jsonp(assets);
     }      
   })
@@ -303,13 +303,17 @@ exports.bindTitleAndDescription = function(req, res, next) {
   async.each(assets, (asset, callback) => {
     Asset.findById(asset._id)
       .exec(function (err,  a) {
-        asset.title =  a ? a.title : 'NOT_FOUND_IN_DB'
-        asset.description = a ? a.description : 'NOT_FOUND_IN_DB'
-        asset.imageURL = a ? a.imageURL : 'https://banana.spl.yt/modules/assets/client/img/asset.jpeg'
-        asset.transactionHash = a ? a.transactionHash : '0x9ECf2EC68b477594670EA9fb93E7bBAaE1cF0BdE'
-        if(!a)
+        if(!a) {
           assets.splice(assets.indexOf(asset), 1)
-        callback(err)
+          callback(err)
+        } else {
+          asset.title =  a ? a.title : 'NOT_FOUND_IN_DB'
+          asset.description = a ? a.description : 'NOT_FOUND_IN_DB'
+          asset.imageURL = a ? a.imageURL : 'https://banana.spl.yt/modules/assets/client/img/asset.jpeg'
+          asset.transactionHash = a ? a.transactionHash : '0x9ECf2EC68b477594670EA9fb93E7bBAaE1cF0BdE'
+          asset.created = a.created          
+          callback(err)
+        }
       })
 
   }, (err) => {
