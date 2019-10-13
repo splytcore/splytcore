@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Module dependencies.
@@ -16,21 +16,21 @@ const cryptojs = require('crypto-js')
 /**
  * A Validation function for local strategy properties
  */
-var validateLocalStrategyProperty = function (property) {
+const validateLocalStrategyProperty = property => {
   return ((this.provider !== 'local' && !this.updated) || property.length);
-};
+}
 
 /**
  * A Validation function for local strategy email
  */
-var validateLocalStrategyEmail = function (email) {
+const validateLocalStrategyEmail = (email) => {
   return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email));
-};
+}
 
 /**
  * User Schema
  */
-var UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
     trim: true,
@@ -118,55 +118,56 @@ var UserSchema = new mongoose.Schema({
   resetPasswordExpires: {
     type: Date
   }
-});
+})
 
 /**
  * Hook a pre save method to hash the password
  */
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', next => {
 
   if (this.password && this.isModified('password')) {
-    this.salt = crypto.randomBytes(16).toString('base64');    
-    this.password = this.hashPassword(this.password);
+    this.salt = crypto.randomBytes(16).toString('base64')   
+    this.password = this.hashPassword(this.password)
   }
 
-  if (this.walletPassword && this.isModified('walletPassword')) {
+  if (this.walletPassword && this.isModified('walletPassword'))
     this.walletPassword = cryptojs.AES.encrypt(this.walletPassword, process.env.sessionSecret);    
-  }
-  next();
-});
+
+  next()
+
+})
 
 /**
  * Hook a pre validate method to test the local password
  */
-UserSchema.pre('validate', function (next) {
+UserSchema.pre('validate', next => {
   if (this.provider === 'local' && this.password && this.isModified('password')) {
     console.log('enable in production')
-    var result = owasp.test(this.password);
+    var result = owasp.test(this.password)
     if (result.errors.length) {
-      // var error = result.errors.join(' ');
-      // this.invalidate('password', error);
+      // var error = result.errors.join(' ')
+      // this.invalidate('password', error)
     }
   }
 
-  next();
-});
+  next()
+
+})
 
 /**
  * Create instance method for hashing a password
  */
-UserSchema.methods.hashPassword = function (password) {  
-  if (this.salt && password) {    
-    return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64, 'sha1').toString('base64');
-  } else {
-    return password;
-  }
-};
+UserSchema.methods.hashPassword = password => {  
+  if (this.salt && password)   
+    return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64, 'sha1').toString('base64')
+  else
+    return password
+}
 
 /**
  * Create instance method for authenticating user
  */
-UserSchema.methods.authenticate = function (password) {
+UserSchema.methods.authenticate = password => {
   return this.password === this.hashPassword(password);
 };
 
@@ -176,9 +177,9 @@ UserSchema.methods.authenticate = function (password) {
 * NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
 */
 UserSchema.statics.generateRandomPassphrase = function () {
-  return new Promise(function (resolve, reject) {
-    var password = '';
-    var repeatingCharacters = new RegExp('(.)\\1{2,}', 'g');
+  return new Promise((resolve, reject) => {
+    var password = ''
+    var repeatingCharacters = new RegExp('(.)\\1{2,}', 'g')
 
     // iterate until the we have a valid passphrase. 
     // NOTE: Should rarely iterate more than once, but we need this to ensure no repeating characters are present.
@@ -190,20 +191,20 @@ UserSchema.statics.generateRandomPassphrase = function () {
         symbols: false,
         uppercase: true,
         excludeSimilarCharacters: true,
-      });
+      })
 
       // check if we need to remove any repeating characters.
-      password = password.replace(repeatingCharacters, '');
+      password = password.replace(repeatingCharacters, '')
     }
 
     // Send the rejection back if the passphrase fails to pass the strength test
-    if (owasp.test(password).errors.length) {
-      reject(new Error('An unexpected problem occured while generating the random passphrase'));
-    } else {
+    if (owasp.test(password).errors.length)
+      reject(new Error('An unexpected problem occured while generating the random passphrase'))
+    else
       // resolve with the validated passphrase
-      resolve(password);
-    }
-  });
-};
+      resolve(password)
+  })
+
+}
 
 mongoose.model('User', UserSchema);

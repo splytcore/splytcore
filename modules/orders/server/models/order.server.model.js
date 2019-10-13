@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 /**
  * Order Schema
  */
-var OrderSchema = new Schema({
+const OrderSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
@@ -68,6 +68,6 @@ var OrderSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   }
-});
+})
 
-mongoose.model('Order', OrderSchema);
+mongoose.model('Order', OrderSchema)
