@@ -273,7 +273,12 @@ exports.purchase = function(order) {
 
   let orderIdHex = prepend0x(order._id.toString())
   console.log('orderIdHex: ' + orderIdHex)
-
+  console.log('purchase:')
+  console.log('order id: ', orderIdHex)
+  console.log('asset address: ', order.assetAddress)
+  console.log('quantity: ', order.quantity)
+  console.log('tokenAmount: ', order.trxAmount)
+  console.log('marketPlace: ', order.marketPlace)
   return orderManager.methods.purchase(
     orderIdHex, 
     order.assetAddress, 

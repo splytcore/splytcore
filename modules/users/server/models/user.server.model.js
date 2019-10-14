@@ -157,7 +157,7 @@ UserSchema.pre('validate', next => {
 /**
  * Create instance method for hashing a password
  */
-UserSchema.methods.hashPassword = password => {  
+UserSchema.methods.hashPassword = function(password) {  
   if (this.salt && password)   
     return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64, 'sha1').toString('base64')
   else
@@ -167,7 +167,7 @@ UserSchema.methods.hashPassword = password => {
 /**
  * Create instance method for authenticating user
  */
-UserSchema.methods.authenticate = password => {
+UserSchema.methods.authenticate = function(password) {
   return this.password === this.hashPassword(password);
 };
 

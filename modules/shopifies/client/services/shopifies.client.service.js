@@ -9,7 +9,7 @@
   ShopifiesService.$inject = ['$resource'];
 
   function ShopifiesService($resource) {
-    return $resource('api/shopifies/:shopifyId', {
+    return $resource('api/shopifies.angjs/:shopifyId', {
       shopifyId: '@_id'
     }, {
       update: {

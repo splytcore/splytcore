@@ -15,34 +15,34 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/shopifies',
+      resources: '/api/shopifies.angjs',
       permissions: '*'
     }, {
-      resources: '/api/shopifies/:shopifyId',
+      resources: '/api/shopifies.angjs/:shopifyId',
       permissions: '*'
     }]
   }, {
     roles: ['seller', 'admin'],
     allows: [{
-      resources: ['/api/shopifies', '/api/shopifies/:shopifyId/push'],
+      resources: ['/api/shopifies.angjs', '/api/shopifies/:shopifyId/push'],
       permissions: ['post']
     }, {
-      resources: ['/api/shopifies/:shopifyId', '/api/shopifies', '/api/shopifies/:shopifyId/pull'],
+      resources: ['/api/shopifies.angjs/:shopifyId', '/api/shopifies.angjs', '/api/shopifies/:shopifyId/pull'],
       permissions: ['get']
     }]
   },{
     roles: ['seller', 'admin'],
     allows: [{
-      resources: '/api/shopifies',
+      resources: '/api/shopifies.angjs',
       permissions: ['put']
     }]
   }, {
     roles: ['guest'],
     allows: [{
-      resources: '/api/shopifies',
+      resources: '/api/shopifies.angjs',
       permissions: ['get']
     }, {
-      resources: '/api/shopifies/:shopifyId',
+      resources: '/api/shopifies.angjs/:shopifyId',
       permissions: ['get']
     }]
   }]);
