@@ -44,8 +44,8 @@ module.exports={
       secure: true,
       port: 465,
       auth: {
-        user: 'email@gmail.com',
-        pass: '*' //google signin password  using less secure
+        user: process.env.supportEmail,
+        pass: process.env.supportEmailPassword //google signin password  using less secure
       }
     }
   },

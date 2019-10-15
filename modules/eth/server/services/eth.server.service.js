@@ -492,7 +492,7 @@ exports.getAssetContractById = function(assetId) {
   console.log('assetId: ' + assetId)
   let assetIdHex = prepend0x(assetId)
   console.log('assetId in Hex: ' + assetIdHex)
-  return assetManager.methods.getassetById(assetIdHex).call()
+  return assetManager.methods.getAssetById(assetIdHex).call()
 }
 
 exports.getAssetContractByIndex = function(index) {

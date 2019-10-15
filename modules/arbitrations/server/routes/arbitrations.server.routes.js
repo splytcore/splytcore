@@ -12,9 +12,14 @@ const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/u
 
 module.exports = function(app) {
   // Arbitrations Routes
-  app.route('/api/arbitrations').all(arbitrationsPolicy.isAllowed)
+
+  // app.route('/api/arbitrations').all(arbitrationsPolicy.isAllowed)
+  //   .get(arbitrations.list)
+  //   .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, arbitrations.create);
+
+  app.route('/api/arbitrations')
     .get(arbitrations.list)
-    .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, arbitrations.create);
+    .post(UsersAuthCont.mockUser, arbitrations.mockArbitration,  UsersAuthCont.getWalletPassword, Eth.unlockAccount, arbitrations.create, arbitrations.sendDisputeEmail);
 
   app.route('/api/arbitrations/:arbitrationId/setArbitrator').all(arbitrationsPolicy.isAllowed)
     .post(UsersAuthCont.getWalletPassword, Eth.unlockAccount, arbitrations.setArbitrator)

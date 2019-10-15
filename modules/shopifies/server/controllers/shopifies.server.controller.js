@@ -53,14 +53,14 @@ exports.read = function(req, res) {
  * Update a Shopify
  */
 exports.update = function(req, res) {
-  var shopName = req.body.shopName.split('.myshopify.com')[0]
+  var shopName = req.body.shopName
   Shopify.findOne({ shopName: shopName}, (err, shopify) => {
     if (err) {
     return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       })
     } else {
-      var getTokenUrl = 'https://' + shopify.shopName + '.myshopify.com/admin/oauth/access_token'
+      var getTokenUrl = 'https://' + shopify.shopName + '/admin/oauth/access_token'
       var body = {
         client_id: process.env.shopifyAppApiKey,
         client_secret: process.env.shopifyAppSecretKey,
@@ -129,7 +129,8 @@ exports.pullShopify = function(req, res) {
       'X-Shopify-Access-Token' : req.shopify.accessToken
     }
   }
-  var getProductsUrl = 'https://' + req.shopify.shopName + '.myshopify.com/admin/api/2019-07/products.json'
+  var getProductsUrl = 'https://' + req.shopify.shopName + '/admin/api/2019-07/products.json'
+  console.log(getProductsUrl)
   axios.get(getProductsUrl, axiosConfig)
   .then(resp => {
     res.json(resp.data.products)

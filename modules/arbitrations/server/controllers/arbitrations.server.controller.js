@@ -9,14 +9,20 @@ var path = require('path'),
   Arbitration = mongoose.model('Arbitration'),
   EthService = require(path.resolve('./modules/eth/server/services/eth.server.service')),    
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+  _ = require('lodash')
+
+const Asset = mongoose.model('Asset')
+const config = require('../../../../config/config')
+const nodemailer = require('nodemailer')
+const smtpTransport = nodemailer.createTransport(config.mailer.options)
+
 
 /**
  * Create a Arbitration
  */
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
   
-  var arbitration = new Arbitration(req.body);
+  var arbitration = new Arbitration(req.body)
   arbitration.user = req.user;
 
   EthService.createArbitration(arbitration)
@@ -29,7 +35,8 @@ exports.create = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          res.jsonp(arbitration);
+          req.arbitration = arbitration
+          next()
         }
       })
     }) 
@@ -40,6 +47,60 @@ exports.create = function(req, res) {
     }
   )
 
+}
+
+exports.mockArbitration = function(req, res, next) {
+  var assetId = req.body.assetId
+  Asset.findById(assetId).exec( (err, asset) => {
+    if(err)
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err)})
+
+    req.body.reporterWallet = req.user.publicKey
+    req.body.reason = 1
+    req.asset = asset
+    EthService.getAssetInfoByAssetId(asset._id)
+    .then(info => {
+      console.log('Info from asset manager', info)
+      req.body.assetAddress = info[0]
+      next()
+    })
+    .catch(err => {
+      console.log('Err: ', err)
+    })
+  })
+}
+
+exports.sendDisputeEmail = function(req, res) {
+
+  console.log('mailer options: ', config.mailer)
+  var httpTransport = 'http://';
+  if (config.secure && config.secure.ssl === true) {
+    httpTransport = 'https://';
+  }
+  res.render(path.resolve('modules/users/server/templates/disputed-item-email'), {
+    shopName: 'Seller(' + req.asset.seller + ')',
+    assetName: req.asset.title,
+    url: httpTransport + req.headers.host + '/arbitrations/' + req.arbitration._id + '/set2xStakeBySeller'
+  }, (err, emailHTML) => {
+    if(err)
+      console.log(err)
+    var mailOptions = {
+      to: 'josh@spl.yt',
+      from: config.mailer.from,
+      subject: 'Splyt Support Team - Disputed Item',
+      html: emailHTML
+    }
+    smtpTransport.sendMail(mailOptions, err => {
+      if (err) {
+        console.log(err)
+        return res.status(400).send({
+          message: 'Failure sending email',
+          err: err
+        }); 
+      }
+      res.json(req.arbitration)
+    })
+  })
 }
 
 /**
