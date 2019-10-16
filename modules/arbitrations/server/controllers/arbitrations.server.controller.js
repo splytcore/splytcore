@@ -62,10 +62,21 @@ exports.mockArbitration = function(req, res, next) {
     .then(info => {
       console.log('Info from asset manager', info)
       req.body.assetAddress = info[0]
-      next()
+      EthService.getStakeAmount(info[7])
+      .then(stakeAmount => {
+        console.log(stakeAmount)
+        req.stakeAmount = stakeAmount
+        next()
+      })
+      .catch(err => {
+        console.log(err)
+        req.stakeAmount = 120
+        next()
+      })
     })
     .catch(err => {
       console.log('Err: ', err)
+      next()
     })
   })
 }
@@ -78,7 +89,10 @@ exports.sendDisputeEmail = function(req, res) {
     httpTransport = 'https://';
   }
   res.render(path.resolve('modules/users/server/templates/disputed-item-email'), {
-    shopName: 'Seller(' + req.asset.seller + ')',
+    userName: 'Cyrus',
+    tokenBalance: req.tokenBalance,
+    stakeAmount: req.stakeAmount,
+    arbitrationId: '5da4c3902ea4ca4e799fa054',
     assetName: req.asset.title,
     url: httpTransport + req.headers.host + '/arbitrations/' + req.arbitration._id + '/set2xStakeBySeller'
   }, (err, emailHTML) => {

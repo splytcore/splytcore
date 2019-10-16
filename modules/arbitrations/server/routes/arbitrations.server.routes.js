@@ -7,7 +7,7 @@ const path = require('path')
 const arbitrationsPolicy = require('../policies/arbitrations.server.policy')
 const arbitrations = require('../controllers/arbitrations.server.controller')
 const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))
-const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/users/users.authorization.server.controller.js'))
+const UsersAuthCont = require('../../../users/server/controllers/users/users.authorization.server.controller.js')
 
 
 module.exports = function(app) {

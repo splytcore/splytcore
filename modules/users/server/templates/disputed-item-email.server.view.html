@@ -1,36 +1,26 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-  <title></title>
-</head>
-
-<body>
-  <p>Dear {{shopName}},</p>
-  <br />
-  <p>
-    A seller has disputed a product you have listed on splyt: <strong>{{assetName}}</strong>
-  </p>
-  <p>Please visit this url to 'de-dispute' your product by staking tokens.</p>
-  <table width="100%" cellspacing="0" cellpadding="0">
+<p>&nbsp;</p>
+<p>Dear Cyrus,</p>
+<p>&nbsp;</p>
+<p>There is a claim that your item might be against the best interest of the community. In a way to keep things fair, we have asked Splyt users to self-arbitrate. We do this by staking tokens. Don't worry, though tokens or blockchain can be scary, Splyt is here to help. Simply by pushing one of the buttons below, Splyt will handle everything for you on your behalf.</p>
+<p>&nbsp;</p>
+<p><strong>Product: {{assetName}}</strong></p>
+<p><strong>Claim#: {{arbitrationId}}</strong></p>
+<p>&nbsp;</p>
+<p>The amount of dispute is <strong>{{stakeAmount}}</strong>SAT tokens. Your token balance is <strong>{{tokenBalance}}</strong>SAT tokens.. If setup, Splyt will purchase more tokens for you so do not have to worry if you do not have enough tokens. Please proceed with your best intentions. We will follow up with another email notifying you of the progress of this claim.</p>
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tbody>
     <tr>
-        <td>
-            <table cellspacing="0" cellpadding="0">
-                <tr>
-                    <td style="border-radius: 2px;" bgcolor="#ED2939">
-                        <a href={{url}} target="_blank" style="padding: 8px 12px; border: 1px solid #ED2939;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;display: inline-block;">
-                            Click to stake tokens           
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </td>
+      <td>
+        <table style="width: 100%;" cellspacing="0" cellpadding="0">
+          <tbody>
+            <tr style="padding: 10px;">
+              <td style="text-align: center; border-radius: 2px; width: 50%; padding: 5px;" bgcolor="#016FB9"><a style="padding: 8px 12px; border: 1px solid #016FB9; border-radius: 2px; font-family: Helvetica, Arial, sans-serif; font-size: 14px; color: #ffffff; text-decoration: none; font-weight: bold; display: inline-block;" href="{{url}}" target="_blank" rel="noopener"> Yes, please stake tokens on my behalf.<br /><em><span style="text-decoration: underline;"><small>-or basically-</small></span> </em><br />I'm innocent! </a></td>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td style="text-align: center; border-radius: 2px; width: 50%;" bgcolor="#ED2939"><a style="padding: 8px 12px; border: 1px solid #ED2939; border-radius: 2px; font-family: Helvetica, Arial, sans-serif; font-size: 14px; color: #ffffff; text-decoration: none; font-weight: bold; display: inline-block;" href="{{url}}" target="_blank" rel="noopener"> No, I wish to concede my tokens. <br /><em><span style="text-decoration: underline;"><small>-or basically-</small></span></em><br /> Ok ok, you caught me. </a></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
     </tr>
-  </table>
-  <strong>If you do not 'de-dispute' this product, It will be removed from splyt automatically</strong>
-  <br />
-  <br />
-  <p>The Splyt Support Team</p>
-</body>
-
-</html>
+  </tbody>
+</table>

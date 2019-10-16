@@ -8,13 +8,13 @@ const config = require(path.resolve('./config/config'))
 const host = config.ethereum.url
 const web3 = new Web3(new Web3.providers.HttpProvider(host))
 
-const SplytManager = require(path.resolve('./config/abi/SplytManager.json'))
-const AssetManager = require(path.resolve('./config/abi/AssetManager.json'))
-const OrderManager = require(path.resolve('./config/abi/OrderManager.json'))
-const ArbitrationManager = require(path.resolve('./config/abi/ArbitrationManager.json'))
-const ReputationManager = require(path.resolve('./config/abi/ReputationManager.json'))
-
-const SatToken = require(path.resolve('./config/abi/SatToken.json')) //used to set tokens for accounts
+const SplytManagerJson = require('../../../../config/abi/SplytManager.json')
+const AssetManagerJson = require('../../../../config/abi/AssetManager.json')
+const OrderManagerJson = require('../../../../config/abi/OrderManager.json')
+const ArbitrationManagerJson = require('../../../../config/abi/ArbitrationManager.json')
+const ReputationManagerJson = require('../../../../config/abi/ReputationManager.json')
+const StakeJson = require('../../../../config/abi/Stake.json')
+const SatTokenJson = require('../../../../config/abi/SatToken.json')
 
 console.log('initiate web3')
 
@@ -24,7 +24,7 @@ console.log('initiate web3')
 
 let masterWallet  = config.ethereum.masterWallet
 
-// const assetManagerABI = AssetManager.abi;
+// const assetManagerABI = assetManagerJson.abi;
 // const splytManagerABI = SplytManager.abi;
 // const orderManagerABI = OrderManager.abi;
 // const arbitrationManagerABI = ArbitrationManager.abi;
@@ -36,20 +36,21 @@ console.log('splytManagerAddress: ' + splytManagerAddress)
 
 let accounts //all accounts in this geth/parity client
 
-let assetManagerAddress;
-let orderManagerAddress;
-let reputationManagerAddress;
-let arbitrationManagerAddress;
-let satTokenAddress;
-let stakeAddress;
+let assetManagerAddress
+let orderManagerAddress
+let reputationManagerAddress
+let arbitrationManagerAddress
+let satTokenAddress
+let stakeAddress
 
 
-let splytManager;
-let assetManager;
-let orderManager;
-let reputationManager;
-let arbitrationManager;
-let satToken
+let splytManagerContract
+let assetManagerContract
+let orderManagerContract
+let reputationManagerContract
+let arbitrationManagerContract
+let satTokenContract
+let stakeContract
 
 
 const wallet = config.ethereum.wallet
@@ -80,54 +81,55 @@ web3.eth.net.isListening()
   accounts = res_accounts
   console.log(chalk.green('Geth accounts found: ', accounts.length))
 
-  splytManager = new web3.eth.Contract(SplytManager.abi, splytManagerAddress)      
+  splytManagerContract = new web3.eth.Contract(SplytManagerJson.abi, splytManagerAddress)      
   return 
 }).then(() => {
   
- splytManager.methods.assetManager().call()
+ splytManagerContract.methods.assetManager().call()
   .then((address) => {
     console.log(chalk.green('Asset Manager address: ' + address))  
     assetManagerAddress = address  
-    assetManager = new web3.eth.Contract(AssetManager.abi, address)    
+    assetManagerContract = new web3.eth.Contract(AssetManagerJson.abi, address)    
   })
  
-  splytManager.methods.orderManager().call()
+  splytManagerContract.methods.orderManager().call()
   .then((address) => {
     console.log(chalk.green('Order Manager address: ' + address))
     orderManagerAddress = address
-    orderManager = new web3.eth.Contract(OrderManager.abi, address)    
+    orderManagerContract = new web3.eth.Contract(OrderManagerJson.abi, address)    
   })
 
- splytManager.methods.arbitrationManager().call()
+ splytManagerContract.methods.arbitrationManager().call()
   .then((address) => {
     console.log(chalk.green('Arbitration Manager address: ' + address))
     arbitrationManagerAddress = address    
-    arbitrationManager = new web3.eth.Contract(ArbitrationManager.abi, address)    
+    arbitrationManagerContract = new web3.eth.Contract(ArbitrationManagerJson.abi, address)    
   })
   
-  splytManager.methods.reputationManager().call()
+  splytManagerContract.methods.reputationManager().call()
   .then((address) => {
     console.log(chalk.green('Reputation Manager address: ' + address)) 
     reputationManagerAddress = address   
-    reputationManager = new web3.eth.Contract(ReputationManager.abi, address)   
+    reputationManagerContract = new web3.eth.Contract(ReputationManagerJson.abi, address)   
   })  
-
-  splytManager.methods.stake().call()
+ 
+  splytManagerContract.methods.stake().call()
   .then((address) => {
     console.log(chalk.green('Stake address: ' + address)) 
     stakeAddress = address
+    stakeContract = new web3.eth.Contract(StakeJson, address)
   })  
 
 
-  splytManager.methods.satToken().call()
+  splytManagerContract.methods.satToken().call()
   .then((address) => {
     console.log(chalk.green('Sat Token address: ' + address))
     satTokenAddress = address   
-    satToken = new web3.eth.Contract(SatToken.abi, address)  
+    satTokenContract = new web3.eth.Contract(SatTokenJson.abi, address)  
   })  
 
   // get master token balance
-  splytManager.methods.getBalance(masterWallet).call()  
+  splytManagerContract.methods.getBalance(masterWallet).call()  
   .then((balance) => {
     console.log(chalk.green('Master Wallet Sat balance: ' + balance))  
     if (balance < 1) {
@@ -191,28 +193,28 @@ exports.signTrx = function(to, from, privateKey, encodedABI) {
 
 
 exports.getSplytManagerABI = function() {
-  // return assetManager.methods.getassetsLength().call({ from: gas.from })
-  return SplytManager.abi;
+  // return assetManagerJson.methods.getassetsLength().call({ from: gas.from })
+  return SplytManagerJson.abi;
 }
 
 exports.getAssetManagerABI = function() {
-  // return assetManager.methods.getassetsLength().call({ from: gas.from })
-  return AssetManager.abi;
+  // return assetManagerJson.methods.getassetsLength().call({ from: gas.from })
+  return AssetManagerJson.abi;
 }
 
 exports.getOrderManagerABI = function() {
-  // return assetManager.methods.getassetsLength().call({ from: gas.from })
-  return OrderManager.abi;
+  // return assetManagerJson.methods.getassetsLength().call({ from: gas.from })
+  return OrderManagerJson.abi;
 }
 
 exports.getArbitrationManagerABI = function() {
-  // return assetManager.methods.getassetsLength().call({ from: gas.from })
-  return ArbitrationManager.abi;
+  // return assetManagerJson.methods.getassetsLength().call({ from: gas.from })
+  return ArbitrationManagerJson.abi;
 }
 
 exports.getReputationManagerABI = function() {
-  // return assetManager.methods.getassetsLength().call({ from: gas.from })
-  return ReputationManager.abi;
+  // return assetManagerJson.methods.getassetsLength().call({ from: gas.from })
+  return ReputationManagerJson.abi;
 }
 
 function prepend0x(value) {
@@ -237,7 +239,7 @@ exports.createAsset = function(asset) {
   console.log('trx for gas')
   console.log(trx)
 
-  return assetManager.methods.createAsset(
+  return assetManagerContract.methods.createAsset(
     prepend0x(asset._id), 
     asset.term, 
     asset.seller, 
@@ -279,7 +281,7 @@ exports.purchase = function(order) {
   console.log('quantity: ', order.quantity)
   console.log('tokenAmount: ', order.trxAmount)
   console.log('marketPlace: ', order.marketPlace)
-  return orderManager.methods.purchase(
+  return orderManagerContract.methods.purchase(
     orderIdHex, 
     order.assetAddress, 
     parseInt(order.quantity), 
@@ -309,7 +311,7 @@ exports.createArbitration = function(arbitration) {
   console.log(arbitration.reason)
 
 
-  return arbitrationManager.methods.createArbitration(
+  return arbitrationManagerContract.methods.createArbitration(
     idHex, 
     arbitration.assetAddress, 
     arbitration.reason
@@ -329,7 +331,7 @@ exports.setArbitrator = function(arbitrationId, arbitrator) {
   
   console.log('arbitrationIdHex: ' + idHex)
 
-  return arbitrationManager.methods.setArbitrator(
+  return arbitrationManagerContract.methods.setArbitrator(
     idHex, 
     arbitrator
     ).send(trx)
@@ -349,7 +351,7 @@ exports.set2xStakeByReporter = function(arbitrationId, reporter) {
   
   console.log('arbitrationIdHex: ' + idHex)
 
-  return arbitrationManager.methods.set2xStakeByReporter(
+  return arbitrationManagerContract.methods.set2xStakeByReporter(
     idHex
     ).send(trx)
   
@@ -368,7 +370,7 @@ exports.set2xStakeBySeller = function(arbitrationId, seller) {
   
   console.log('arbitrationIdHex: ' + idHex)
 
-  return arbitrationManager.methods.set2xStakeBySeller(
+  return arbitrationManagerContract.methods.set2xStakeBySeller(
     idHex
     ).send(trx)
   
@@ -386,7 +388,7 @@ exports.setWinner = function(arbitrationId, arbitrator, winner) {
   
   console.log('arbitrationIdHex: ' + idHex)
 
-  return arbitrationManager.methods.setWinner(
+  return arbitrationManagerContract.methods.setWinner(
     idHex,
     web3.utils.toHex(winner)
     ).send(trx)
@@ -405,7 +407,7 @@ exports.createReputation = function(reputation) {
   }
 
 
-  return reputationManager.methods.createRate(
+  return reputationManagerContract.methods.createRate(
     reputation.wallet, 
     reputation.rating 
     ).send(trx)
@@ -422,7 +424,7 @@ exports.requestRefund = function(orderId, buyer) {
   }
 
 
-  return orderManager.methods.requestRefund(
+  return orderManagerContract.methods.requestRefund(
     prepend0x(orderId) 
     ).send(trx)
   
@@ -438,7 +440,7 @@ exports.approveRefund = function(orderId, seller) {
   }
 
 
-  return orderManager.methods.approveRefund(
+  return orderManagerContract.methods.approveRefund(
     prepend0x(orderId) 
     ).send(trx)
   
@@ -456,7 +458,7 @@ exports.addMarketPlace = function(assetId, marketPlace, wallet) {
   }
 
 
-  return assetManager.methods.addMarketPlaceByAssetId(
+  return assetManagerContract.methods.addMarketPlaceByAssetId(
     prepend0x(assetId, marketPlace)
     ).send(trx)
   
@@ -464,39 +466,39 @@ exports.addMarketPlace = function(assetId, marketPlace, wallet) {
 
 
 exports.getAssetsLength = function() {
-  return assetManager.methods.getAssetsLength().call()
+  return assetManagerContract.methods.getAssetsLength().call()
 }
 
 exports.getOrdersLength = function() {
-  return orderManager.methods.getOrdersLength().call()
+  return orderManagerContract.methods.getOrdersLength().call()
 }
 
 exports.getArbitrationsLength = function() {
-  return arbitrationManager.methods.getArbitrationsLength().call()
+  return arbitrationManagerContract.methods.getArbitrationsLength().call()
 }
 exports.getReputationsLength = function() {
-  return reputationManager.methods.getReputationsLength().call()
+  return reputationManagerContract.methods.getReputationsLength().call()
 }
 
 exports.getContributionsLength = function(orderId) {
   let orderIdHex = prepend0x(orderId)
-  return orderManager.methods.getContributionsLength(orderIdHex).call()
+  return orderManagerContract.methods.getContributionsLength(orderIdHex).call()
 }
 
 exports.getContributionByOrderIdAndIndex = function(orderId, index) {
   let orderIdHex = prepend0x(orderId)
-  return orderManager.methods.getContributionByOrderIdAndIndex(orderIdHex, index).call()
+  return orderManagerContract.methods.getContributionByOrderIdAndIndex(orderIdHex, index).call()
 }
 
 exports.getAssetContractById = function(assetId) {
   console.log('assetId: ' + assetId)
   let assetIdHex = prepend0x(assetId)
   console.log('assetId in Hex: ' + assetIdHex)
-  return assetManager.methods.getAssetById(assetIdHex).call()
+  return assetManagerContract.methods.getAssetById(assetIdHex).call()
 }
 
 exports.getAssetContractByIndex = function(index) {
-  return assetManager.methods.getAssetByIndex(index).call()
+  return assetManagerContract.methods.getAssetByIndex(index).call()
 }
 
 exports.initUser = function(account) {
@@ -507,29 +509,29 @@ exports.initUser = function(account) {
       gas: defaultGas.gas //max number of gas to be used      
   }
 
-  return satToken.methods.initUser(account).send(trx)
+  return satTokenContract.methods.initUser(account).send(trx)
 
 }
 
 exports.getAssetInfoByAssetId = function(assetId) {
   console.log('get asset info from contracts...')  
   let assetIdHex = prepend0x(assetId)
-  return assetManager.methods.getAssetInfoByAssetId(assetIdHex).call()         
+  return assetManagerContract.methods.getAssetInfoByAssetId(assetIdHex).call()         
 }
 
 exports.getAssetInfoByAddress = function(address) {
   console.log('get asset info from contracts...')  
-  return assetManager.methods.getAssetInfoByAddress(address).call()         
+  return assetManagerContract.methods.getAssetInfoByAddress(address).call()         
 }
 
 exports.isFractionalOrderExists = function(assetAddress) {
   console.log('asset address: ' + assetAddress)  
-  return orderManager.methods.isFractionalOrderExists(assetAddress).call()         
+  return orderManagerContract.methods.isFractionalOrderExists(assetAddress).call()         
 }
 
 
 exports.getAssetInfoByIndex = function(index) {
-  return assetManager.methods.getAssetInfoByIndex(index).call()         
+  return assetManagerContract.methods.getAssetInfoByIndex(index).call()         
 }
 
 exports.getTransaction = function(trxHash) {
@@ -539,65 +541,65 @@ exports.getTransaction = function(trxHash) {
 exports.getOrderInfoByOrderId = function(orderId) {
   console.log('get order info from contracts...')  
   let orderIdHex = prepend0x(orderId)            
-  return orderManager.methods.getOrderInfoByOrderId(orderIdHex).call()          
+  return orderManagerContract.methods.getOrderInfoByOrderId(orderIdHex).call()          
 }
 
 exports.getMarketPlaceByOrderId = function(orderId) {
   console.log('get order market place from contract...')  
   let orderIdHex = prepend0x(orderId)            
-  return orderManager.methods.getMarketPlaceByOrderId(orderIdHex).call()          
+  return orderManagerContract.methods.getMarketPlaceByOrderId(orderIdHex).call()          
 }
 
 exports.getOrderInfoByIndex = function(index) {
   console.log('getting order for index ' + index)
-  return orderManager.methods.getOrderInfoByIndex(parseInt(index)).call()         
+  return orderManagerContract.methods.getOrderInfoByIndex(parseInt(index)).call()         
 }
 exports.getMarketPlaceByIndex = function(index) {
   console.log('getting order for index ' + index)
-  return orderManager.methods.getMarketPlaaceByIndex(parseInt(index)).call()         
+  return orderManagerContract.methods.getMarketPlaaceByIndex(parseInt(index)).call()         
 }
 
 
 exports.getArbitrationInfoByArbitrationId = function(arbitrationId) {
   console.log('getting arbitration for id ' + arbitrationId)
-  return arbitrationManager.methods.getArbitrationInfoByArbitrationId(prepend0x(arbitrationId)).call()         
+  return arbitrationManagerContract.methods.getArbitrationInfoByArbitrationId(prepend0x(arbitrationId)).call()         
 }
 
 
 exports.getMarketPlacesLengthByAssetId = function(assetId) {
   console.log('getting marketplaces for id ' + assetId) 
-  return assetManager.methods.getMarketPlacesLengthByAssetId(prepend0x(assetId)).call()         
+  return assetManagerContract.methods.getMarketPlacesLengthByAssetId(prepend0x(assetId)).call()         
 }
 
 exports.getMarketPlaceByAssetIdAndIndex = function(assetId, index) {
   console.log('getting marketplaces for id ' + assetId) 
-  return assetManager.methods.getMarketPlaceByAssetIdAndIndex(prepend0x(assetId), index).call()         
+  return assetManagerContract.methods.getMarketPlaceByAssetIdAndIndex(prepend0x(assetId), index).call()         
 }
 
 
 exports.getArbitrationInfoByIndex = function(index) {
   console.log('getting arbitration for index ' + index)
   
-  return arbitrationManager.methods.getArbitrationInfoByIndex(parseInt(index)).call()         
+  return arbitrationManagerContract.methods.getArbitrationInfoByIndex(parseInt(index)).call()         
 }
 
 exports.getReputationInfoByIndex = function(index) {
   console.log('getting reputation for index ' + index)
   
-  return reputationManager.methods.getReputationInfoByIndex(parseInt(index)).call()         
+  return reputationManagerContract.methods.getReputationInfoByIndex(parseInt(index)).call()         
 }
 // Returns just the summary of the reputation.
 exports.getReputationInfoByWallet = function(wallet) {
   console.log('getting reputation for wallet ' + wallet)
   
-  return reputationManager.methods.getReputationInfoByWallet(wallet).call()         
+  return reputationManagerContract.methods.getReputationInfoByWallet(wallet).call()         
 }
 
 //Returns the detail of each rating
 exports.getRateInfoByWalletAndIndex = function(wallet, index) {
   console.log('getting reputation for index ' + index)
   console.log('wallet: ' + index)
-  return reputationManager.methods.getRateInfoByWalletAndIndex(wallet, parseInt(index)).call()         
+  return reputationManagerContract.methods.getRateInfoByWalletAndIndex(wallet, parseInt(index)).call()         
 }
 
 
@@ -618,7 +620,7 @@ exports.createAccount2 = function(pw) {
 }
 
 exports.getTokenBalance = function(wallet) { 
-  return splytManager.methods.getBalance(wallet).call()  
+  return splytManagerContract.methods.getBalance(wallet).call()  
 }
 
 exports.getEtherBalance = function(wallet) { 
@@ -645,7 +647,7 @@ exports.getEtherAndTokenBalance = function(wallet) {
         console.log(wei)
         let ether  = web3.utils.fromWei(wei)
         balances.etherBalance = ether
-        splytManager.methods.getBalance(wallet).call()
+        splytManagerContract.methods.getBalance(wallet).call()
           .then((tokenBalance) => {
             console.log(2)
             balances.tokenBalance = tokenBalance
@@ -717,6 +719,10 @@ exports.getSplytServiceInfo = function() {
     reputationManagerAddress: reputationManagerAddress,
     etherscanURL: config.ethereum.etherscanURL    
   })
+}
+
+exports.getStakeAmount = function(assetCost) {
+  return stakeContract.methods.calculateStakeTokens(assetCost).call()
 }
 
 //TODO: call this interval to update gas price

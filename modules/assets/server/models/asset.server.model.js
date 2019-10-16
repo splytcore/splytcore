@@ -57,7 +57,7 @@ var AssetSchema = new Schema({
   },
   imageURL: {
     type: String,
-    default: 'modules/assets/client/img/asset.jpeg'
+    default: 'https://banana.spl.yt/modules/assets/client/img/asset.jpeg'
   },  
   //contract address
   address: {

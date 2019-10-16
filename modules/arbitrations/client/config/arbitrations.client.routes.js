@@ -81,7 +81,16 @@
         data: {
           pageTitle: 'Arbitration {{ arbitrationResolve.name }}'
         }
-      });
+      })
+      .state('arbitrations.setStake', {
+        url: '/set2xStakeBySeller',
+        templateUrl: 'modules/arbitrations/client/views/set-stake.client.view.html',
+        controller: 'ArbitrationsController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Thank you for your stake, you will be notified if further action is needed.'
+        }
+      })
   }
 
   getArbitration.$inject = ['$stateParams', 'ArbitrationsService'];

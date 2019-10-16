@@ -7,6 +7,10 @@ const _ = require('lodash')
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const cryptojs = require('crypto-js')
+const EthService = require('../../../../eth/server/services/eth.server.service')
+const AssetService = require('../../../../assets/server/services/assets.server.service')
+
+
 
 /**
  * User middleware
@@ -55,6 +59,15 @@ exports.mockUser = function(req, res, next) {
     console.log('user', user)
     console.log('err', err)
     req.user = user
-    next()
+    EthService.getTokenBalance(user.publicKey)
+    .then(tokenBalance => {
+      req.tokenBalance = AssetService.decorateTokenBalance(tokenBalance)
+      next()
+    })
+    .catch(err => {
+      console.log(err)
+      next()
+    })
+    
   })
 }
