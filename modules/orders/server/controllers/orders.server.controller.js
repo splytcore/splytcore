@@ -15,7 +15,7 @@ const _ = require('lodash')
  */
 exports.create = function(req, res) {
 
-  console.log('creating order')
+  console.log('creating order req.body: ', req.body)
   var order = new Order(req.body)
   order.user = req.user
   console.log(order.assetAddress)

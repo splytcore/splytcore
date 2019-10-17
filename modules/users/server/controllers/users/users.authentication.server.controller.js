@@ -103,6 +103,8 @@ exports.signin = function (req, res, next) {
         }
       })
     }
+    //EthService.initUser(user.publicKey) //give default number of tokens for DEV ONLY
+
   })(req, res, next)
 }
 

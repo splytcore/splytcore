@@ -8,7 +8,7 @@ const shopifiesPolicy = require('../policies/shopifies.server.policy')
 const shopifies = require('../controllers/shopifies.server.controller')
 const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))
 const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/users/users.authorization.server.controller.js'))
-
+const OrdersCont = require('../../../orders/server/controllers/orders.server.controller.js')
 
 module.exports = function(app) {
   // Shopifies Routes
@@ -20,7 +20,7 @@ module.exports = function(app) {
     .get(shopifies.list)
     .put(shopifies.update)
 
-  app.route('/api/shopifies/item-bought').post(shopifies.itemBought);
+  app.route('/api/shopifies/item-bought').post(UsersAuthCont.mockUser, shopifies.itemBought, UsersAuthCont.getWalletPassword, Eth.unlockAccount, OrdersCont.create);
 
   app.route('/api/shopifies.angjs/:shopifyId').all(shopifiesPolicy.isAllowed)
     .get(shopifies.read)

@@ -157,11 +157,27 @@ exports.pushBlockchain = function(req, res) {
   res.jsonp({message: 'success'})
 }
 
-exports.itemBought = function(req, res) {
+exports.itemBought = function(req, res, next) {
   console.log('body', req.body)
   console.log('headers', req.headers)
   console.log('params', req.params)
-  res.status(200).send({message: 'Success'})
+  assetService.findByTitle(req.body.line_items[0].title, assetAddress => {
+    console.log('asset address:', assetAddress)
+    if(!assetAddress)
+      return res.status(400).send({message: 'Asset not found'})
+
+    var newBody = {
+      marketPlace: '0x92389eB6c277B71CDe8bd633F8fd00f924e0f771',
+      amount: Math.floor(req.body.line_items[0].price * 100),
+      quantity: req.body.line_items[0].quantity,
+      status: 0,
+      buyerWallet: '0x92389eB6c277B71CDe8bd633F8fd00f924e0f771',
+      assetAddress: assetAddress
+    }
+    req.body = newBody
+    next()
+  })
+
 }
 
 /**

@@ -2,7 +2,8 @@
 
 const path = require('path')
 const EthService = require(path.resolve('./modules/eth/server/services/eth.server.service'))
-
+const mongoose = require('mongoose')
+const Asset = mongoose.model('Asset')
 
 exports.createAsset = (asset, callback) => {
   
@@ -44,4 +45,17 @@ exports.decorateTokenBalance = function(tokenBalanceDecimal) {
     return '0.' + decimal
   }
 
+}
+
+exports.findByTitle = function(title, cb) {
+  console.log('find by title: ', title)
+  Asset.findOne({ title: title }).exec((err, asset) => {
+    if(err) {
+      console.log(err)
+      cb(null)
+    } else {
+      console.log('Find asset by title: ', asset.address)
+      cb(asset.address)
+    }
+  })
 }
