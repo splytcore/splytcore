@@ -49,13 +49,19 @@ exports.decorateTokenBalance = function(tokenBalanceDecimal) {
 
 exports.findByTitle = function(title, cb) {
   console.log('find by title: ', title)
-  Asset.findOne({ title: title }).exec((err, asset) => {
+  Asset.find({ title: title }).sort({ created: -1}).limit(1).exec((err, asset) => {
     if(err) {
       console.log(err)
       cb(null)
     } else {
-      console.log('Find asset by title: ', asset.address)
-      cb(asset.address)
+      console.log('Find asset by title: ', asset)
+      if(asset.length > 0)
+        EthService.getAssetInfoByAssetId(asset[0]._id)
+        .then(info => {
+          cb(info[0])
+        })
+      else
+        cb(null)
     }
   })
 }
