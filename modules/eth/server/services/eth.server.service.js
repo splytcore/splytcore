@@ -126,19 +126,19 @@ web3.eth.net.isListening()
     console.log(chalk.green('Sat Token address: ' + address))
     satTokenAddress = address   
     satTokenContract = new web3.eth.Contract(SatTokenJson.abi, address)  
-  })  
-
-  // get master token balance
-  splytManagerContract.methods.getBalance(masterWallet).call()  
-  .then((balance) => {
-    console.log(chalk.green('Master Wallet Sat balance: ' + balance))  
-    if (balance < 1) {
-      exports.initUser(masterWallet)
-    }
-  }).catch((err) => {
-    console.log(chalk.red('Error connecting to ethereum on: ', host ))
-    console.log(err)
-  })  
+  }).then( () => {
+    // get master token balance
+    splytManagerContract.methods.getBalance(masterWallet).call()  
+    .then((balance) => {
+      console.log(chalk.green('Master Wallet Sat balance: ' + balance))  
+      if (balance < 1) {
+        exports.initUser(masterWallet)
+      }
+    }).catch((err) => {
+      console.log(chalk.red('Error connecting to ethereum on: ', host ))
+      console.log(err)
+    })  
+  })
 
   return
 }).then(() => {   
