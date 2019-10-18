@@ -279,7 +279,7 @@ exports.purchase = function(order) {
   console.log('order id: ', orderIdHex)
   console.log('asset address: ', order.assetAddress)
   console.log('quantity: ', order.quantity)
-  console.log('tokenAmount: ', order.trxAmount)
+  console.log('trxAmount: ', order.trxAmount)
   console.log('marketPlace: ', order.marketPlace)
   return orderManagerContract.methods.purchase(
     orderIdHex, 

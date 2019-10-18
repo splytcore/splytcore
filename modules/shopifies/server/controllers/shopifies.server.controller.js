@@ -168,7 +168,7 @@ exports.itemBought = function(req, res, next) {
 
     var newBody = {
       marketPlace: '0x92389eB6c277B71CDe8bd633F8fd00f924e0f771',
-      amount: Math.floor(req.body.line_items[0].price * 100),
+      trxAmount: Math.floor(req.body.line_items[0].price * 100),
       quantity: req.body.line_items[0].quantity,
       status: 0,
       buyerWallet: '0x92389eB6c277B71CDe8bd633F8fd00f924e0f771',

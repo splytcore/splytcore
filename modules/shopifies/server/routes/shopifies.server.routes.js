@@ -20,7 +20,8 @@ module.exports = function(app) {
     .get(shopifies.list)
     .put(shopifies.update)
 
-  app.route('/api/shopifies/item-bought').post(UsersAuthCont.mockUser, shopifies.itemBought, UsersAuthCont.getWalletPassword, Eth.unlockAccount, OrdersCont.create);
+  app.route('/api/shopifies/item-bought')
+  .post(UsersAuthCont.mockUser, shopifies.itemBought, UsersAuthCont.getWalletPassword, Eth.unlockAccount, OrdersCont.create);
 
   app.route('/api/shopifies.angjs/:shopifyId').all(shopifiesPolicy.isAllowed)
     .get(shopifies.read)
