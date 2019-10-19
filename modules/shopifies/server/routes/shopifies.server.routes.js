@@ -7,12 +7,12 @@ const path = require('path')
 const shopifiesPolicy = require('../policies/shopifies.server.policy')
 const shopifies = require('../controllers/shopifies.server.controller')
 const Eth = require(path.resolve('./modules/eth/server/controllers/eth.server.controller'))
-const UsersAuthCont = require(path.resolve('./modules/users/server/controllers/users/users.authorization.server.controller.js'))
+const UsersAuthCont = require('../../../users/server/controllers/users/users.authorization.server.controller.js')
 const OrdersCont = require('../../../orders/server/controllers/orders.server.controller.js')
 
 module.exports = function(app) {
   // Shopifies Routes
-  app.route('/api/shopifies').post(UsersAuthCont.mockUser, shopifies.create)
+  app.route('/api/shopifies').post(UsersAuthCont.mockUser, shopifies.upsert)
 
   app.route('/api/shopifies/:shopName').get(shopifies.read)
 

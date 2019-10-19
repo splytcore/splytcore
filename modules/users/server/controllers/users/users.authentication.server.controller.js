@@ -103,6 +103,7 @@ exports.signin = function (req, res, next) {
         }
       })
     }
+    //Enable this to give user who signs in some tokens, if new contracts && old user. enable this
     //EthService.initUser(user.publicKey) //give default number of tokens for DEV ONLY
 
   })(req, res, next)

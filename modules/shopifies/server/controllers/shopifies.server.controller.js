@@ -35,6 +35,26 @@ exports.create = function(req, res) {
   })
 }
 
+exports.upsert = function(req, res) {
+  var shopify = {
+    shopName: req.body.shopName,
+    accessToken: req.body.accessToken ? req.body.accessToken : '',
+    user: req.user
+  }
+  console.log('creating shopify store:', req.body)
+  var query = { shopName:shopify.shopName }
+  Shopify.findOneAndUpdate(query, shopify, { upsert:true }, (err, shopify) => {
+    if (err) {
+      console.log(err)
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
+    } else {
+      res.jsonp(shopify)
+    }
+  })
+}
+
 /**
  * Show the current Shopify
  */
