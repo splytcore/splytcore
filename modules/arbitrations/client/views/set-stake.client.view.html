@@ -1,22 +1,17 @@
 <section>
     <div class="page-header">
-      <h1> ARBITRATIONS </h1>
+      <h2> ARBITRATIONS</h2>
     </div>
-  
-    <div class="list-group">
-      <a ng-repeat="arbitration in vm.arbitrations"
-         ui-sref="arbitrations.edit({ arbitrationId: arbitration._id })"
-         class="list-group-item">
-  
-  
-          <h4>Arbitration Address: {{arbitration.contractAddress}}</h4>       
-          <strong>Asset Address: {{ arbitration.assetAddress }}</strong> <br/>
-          <span>Reporter: {{ arbitration.reporter }} </span>
-          <span>Status: {{ arbitration.reporter }} </span>
-      
-  
-      <h4 class="list-group-item-heading"> {{arbitration}}</h4>       
-      </a>
+    <h3>Thank you for your submission, we will notify the reporter of further action...</h3>
+    <p>If any action is needed by you, we'll notify you via email
+    </p>
+    <br/>
+    <strong>Team Splyt</strong>
+
+    <div style="margin-top:10px; padding:20px; background-color:bisque; border-radius: 5px;">
+      <h3><i class="glyphicon glyphicon-info-sign"></i> What happens now?</h3>
+      <p>If you <strong>staked</strong> tokens, then the reporter will get another chance to stake one more time. If they do stake, this product will go into arbitration, where you and the reporter will be assigned <strong>Arbitrator</strong>. Randomly picked bt splyt's ecosystem.</p>
+      <p>If you <strong>forfeited</strong>, you will not have to stake tokens and your product will be automatically removed by splyt's ecosystem. </p>
     </div>
   </section>
   

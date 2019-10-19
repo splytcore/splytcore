@@ -83,7 +83,7 @@
         }
       })
       .state('arbitrations.setStake', {
-        url: '/set2xStakeBySeller',
+        url: '/:arbitrationId/set2xStakeBySeller',
         templateUrl: 'modules/arbitrations/client/views/set-stake.client.view.html',
         controller: 'ArbitrationsController',
         controllerAs: 'vm',
