@@ -22,6 +22,8 @@ module.exports = function(app) {
     .post(orders.approveRefund)
 
 
+  app.route('/api/orders/fuckOff').post(orders.postOrderProcess)
+
   app.route('/api/orders/:orderId').all(ordersPolicy.isAllowed)
     .get(orders.read)
     .put(orders.update)

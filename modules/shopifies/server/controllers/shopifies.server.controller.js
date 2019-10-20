@@ -10,7 +10,7 @@ var path = require('path'),
   _ = require('lodash'),
   axios = require('axios'),
   chalk = require('chalk'),
-  shopifyService = require(path.resolve('./modules/shopifies/server/services/shopify.server.service.js')),
+  ShopifyService = require(path.resolve('./modules/shopifies/server/services/shopify.server.service.js')),
   assetService = require(path.resolve('./modules/assets/server/services/assets.server.service.js'))
 
 /**
@@ -43,7 +43,7 @@ exports.upsert = function(req, res) {
   }
   console.log('creating shopify store:', req.body)
   var query = { shopName:shopify.shopName }
-  Shopify.findOneAndUpdate(query, shopify, { upsert:true }, (err, shopify) => {
+  Shopify.findOneAndUpdate(query, shopify, { upsert:true, setDefaultsOnInsert: true }, (err, shopify) => {
     if (err) {
       console.log(err)
       return res.status(400).send({
@@ -128,14 +128,17 @@ exports.delete = function(req, res) {
  * List of Shopifies
  */
 exports.list = function(req, res) {
-  Shopify.find({ user: req.user.id }).sort('-created').populate('user', 'displayName').exec(function(err, shopifies) {
-    if (err) {
+  ShopifyService.list( (err, shopifies) => {
+    if(err) {
+      console.log(chalk.red(err))
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorHandler.getErrorMessage(err),
+        requestUrl: req.url,
+        requestBody: req.body
       })
     } else {
       res.jsonp(shopifies)
-    }
+    } 
   })
 }
 
@@ -162,7 +165,7 @@ exports.pullShopify = function(req, res) {
 
 exports.pushBlockchain = function(req, res) {
   req.body.forEach(product => {
-    shopifyService.convertToAsset(product, asset => {
+    ShopifyService.convertToAsset(product, asset => {
       asset.user = req.user
       asset.marketPlaces.push("0x427A21A69C3D7949b4ECEd0437Df91ee01c255d6")
       asset.marketPlacesAmount.push(2)

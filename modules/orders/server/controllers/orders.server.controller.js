@@ -9,6 +9,10 @@ const async = require('async')
 const errorHandler = require('../../../core/server/controllers/errors.server.controller')
 const EthService = require('../../../eth/server/services/eth.server.service')
 const _ = require('lodash')
+const chalk = require('chalk')
+const AssetService = require('../../../assets/server/services/assets.server.service')
+const ShopifyService = require('../../../shopifies/server/services/shopify.server.service')
+const axios = require('axios')
 
 /**
  * Create a Order
@@ -33,7 +37,7 @@ exports.create = function(req, res) {
               callback(null, order, true)
           })
           .catch((err) => {
-            callback(err)
+            callback(chalk.red(err))
           })    
       },      
       function purchase(order, fractionalOrderExists, callback) {
@@ -46,7 +50,7 @@ exports.create = function(req, res) {
           callback(null, order, fractionalOrderExists)
         }) 
         .on('error', err => {
-          console.log('err creating order: ', err)
+          console.log(chalk.red('err creating order: ' + err))
           callback(err)
         })        
       },      
@@ -61,17 +65,112 @@ exports.create = function(req, res) {
       }
   ], function (err, order) {
     if (err) {
-      console.log(err)
+      console.log(chalk.red(err))
       return res.status(400).send({
         message: err.toString(),
         requestUrl: req.url
       })
     } else {
-      console.log(order)
+      console.log(chalk.green(order))
+      //postOrderProcess(order)
       res.jsonp(order)
     }         
   })
 
+}
+
+exports.postOrderProcess = function(req, res) {
+  let order = req.body
+  console.log(order)
+  let dbAsset
+  
+  // let getAllShopifyProducts = (orderQty, assetTitle, shopify, cb) => {
+  //   console.log('getallshopifyproducts started')
+  //   //get a list of products from shopify for a specific shop
+  // }
+  // let getShopifyProduct = () => {
+  //   console.log('getshopifyproduct started')
+  //   //get a single shopify product for a specific shop
+  // }
+  // let updateShopifyProductInventory = () => {
+  //   console.log('updateshopifyproductinventory started')
+  //   //update shopify inventory count
+  // }
+  
+  async.waterfall([
+    function getAssetDetails(cb) {
+
+      console.log('getassetdetails started')
+      EthService.getAssetInfoByAddress(order.assetAddress)
+      .then(assetInfo => {
+        AssetService.findById(assetInfo[1].split('0x')[1], (err, asset) => {
+          cb(err, asset)
+        })
+      })
+      .catch(err => {
+        cb(err, null)
+      })
+    },
+    function getAllShopifyShops(asset, cb) {
+      dbAsset = asset
+      console.log('getallshopifyshops started')
+      ShopifyService.list( (err, shopifies) => {
+        if(shopifies.length <= 0)
+          cb(null, null)
+
+        shopifies.forEach((shopify, i) => {
+          cb(err, shopify)
+        })
+      })
+    },
+    function getAllShopifyProducts(shopify, cb) {
+      console.log('getallshopifyproducts started')
+
+      var axiosConfig = { headers: { 'X-Shopify-Access-Token' : shopify.accessToken } }
+      var getProductsUrl = 'https://' + shopify.shopName + '/admin/api/2019-07/products.json'
+      axios.get(getProductsUrl, axiosConfig)
+      .then(resp => {
+        if(resp.status !== 200)
+          cb(resp, null)
+        else
+          cb(null, resp.data.products, shopify)
+      })
+      .catch(err => {
+        console.log(err)
+        cb(err, null)
+      })
+    },
+    function getShopifyProduct(shopifyProducts, shopify, cb) {
+      console.log('getshopifyproduct started')
+      var boughtProduct = _.find(shopifyProducts, function(o) { return o.title === dbAsset.title });
+      console.log(boughtProduct.variants[0].inventory_item_id)
+      var getProductInventoryUrl = 'https://' + shopify.shopName + '/admin/api/2019-07/inventory_levels.json?inventory_item_ids=' + boughtProduct.variants[0].inventory_item_id
+      var axiosConfig = { headers: { 'X-Shopify-Access-Token' : shopify.accessToken } }
+
+      axios.get(getProductInventoryUrl, axiosConfig)
+      .then(resp => {
+        console.log(chalk.yellow('---------------------------------------------------'))
+        console.log(getProductInventoryUrl)
+        console.log(resp.data)
+        if(resp.status !== 200)
+          cb(resp, null)
+        else
+          cb(null, resp)
+      })
+      .catch(err => {
+        //console.log(err)
+        cb(err, null)
+      })
+    }
+  ], function (err, result) {
+    if (err) {
+      //console.log(chalk.red('Error: Order Post Processor: ', err))
+      return res.status(400).send({message: err})
+    } else {
+      //console.log(chalk.green('Order Post Processor Success: ' + result))
+      res.jsonp(result)
+    }         
+  })
 }
 
 

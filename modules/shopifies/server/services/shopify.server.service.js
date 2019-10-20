@@ -1,7 +1,8 @@
 'use strict';
 
-const mongoose = require('mongoose'),
-      Asset = mongoose.model('Asset')
+const mongoose = require('mongoose')
+const Asset = mongoose.model('Asset')
+const Shopify = mongoose.model('Shopify')
 
 exports.convertToAsset = (shopifyProduct, callback) => {
   console.log(shopifyProduct)
@@ -13,4 +14,10 @@ exports.convertToAsset = (shopifyProduct, callback) => {
   asset.description = shopifyProduct.body_html
   console.log(asset)
   callback(asset)
+}
+
+exports.list = cb => {
+  Shopify.find().sort('-created').populate('user', 'displayName').exec(function(err, shopifies) {
+    cb(err, shopifies)
+  })
 }

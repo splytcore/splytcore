@@ -65,3 +65,10 @@ exports.findByTitle = function(title, cb) {
     }
   })
 }
+
+exports.findById = function(id, cb) {
+  console.log('Asset find by id', id)
+  Asset.findById(id).exec( (err, asset) => {
+    cb(err, asset)
+  })
+}

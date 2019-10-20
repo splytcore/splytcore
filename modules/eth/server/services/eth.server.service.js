@@ -520,7 +520,7 @@ exports.getAssetInfoByAssetId = function(assetId) {
 }
 
 exports.getAssetInfoByAddress = function(address) {
-  console.log('get asset info from contracts...')  
+  console.log('EthService.getAssetInfoByAddress started')  
   return assetManagerContract.methods.getAssetInfoByAddress(address).call()         
 }
 
