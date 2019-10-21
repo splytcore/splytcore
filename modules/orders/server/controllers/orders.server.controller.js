@@ -71,14 +71,12 @@ function postOrderProcess(order) {
 
       axios.get(getProductInventoryUrl, axiosConfig)
       .then(resp => {
-        console.log(resp)
         if(resp.status !== 200)
           cb(resp, null, shopify)
         else
           cb(null, resp.data.inventory_levels[0], shopify)
       })
       .catch(err => {
-        console.log(err)
         cb(err, null, shopify)
       })
 
@@ -94,14 +92,12 @@ function postOrderProcess(order) {
       }
       axios.post(updateInventoryUrl, body)
       .then(resp => {
-        console.log(resp)
         if(resp.status !== 200)
           cb(resp, null)
         else
           cb(null, resp.data)
       })
       .catch(err => {
-        console.log(err)
         cb(err, null)
       })
     }
@@ -110,7 +106,8 @@ function postOrderProcess(order) {
       console.log(chalk.red('Error: Order Post Processor:'))
       console.log(err)
     } else {
-      console.log(chalk.green('Order Post Processor Success: ' + result))
+      console.log(chalk.green('Order Post Processor Success:'))
+      console.log(result)
     }         
   })
 }
