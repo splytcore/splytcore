@@ -15,6 +15,9 @@ const ShopifyService = require('../../../shopifies/server/services/shopify.serve
 const axios = require('axios')
 
 function postOrderProcess(order) {
+  // let order = req.body
+  // order.quantity = 1
+  console.log(chalk.green('Order after successful order placement, post order processing'))
   console.log(order)
   let dbAsset
   
@@ -66,11 +69,14 @@ function postOrderProcess(order) {
       console.log('getshopifyproduct started')
 
       var boughtProduct = _.find(shopifyProducts, function(o) { return o.title === dbAsset.title });
+      if(!boughtProduct) cb('No Products found for this store', shopify, null)
       var getProductInventoryUrl = 'https://' + shopify.shopName + '/admin/api/2019-07/inventory_levels.json?inventory_item_ids=' + boughtProduct.variants[0].inventory_item_id
       var axiosConfig = { headers: { 'X-Shopify-Access-Token' : shopify.accessToken } }
 
       axios.get(getProductInventoryUrl, axiosConfig)
       .then(resp => {
+        console.log(chalk.yellow('-------------------------------'))
+        console.log(resp.data.inventory_levels[0])
         if(resp.status !== 200)
           cb(resp, null, shopify)
         else
@@ -85,10 +91,11 @@ function postOrderProcess(order) {
       console.log('updateshopifyproductinventory started')
       var updateInventoryUrl = 'https://' + process.env.shopifyAppApiKey + ':' + shopify.accessToken + '@' + shopify.shopName + '/admin/api/2019-07/inventory_levels/adjust.json'
 
+      var substractInventory = order.quantity - order.quantity * 2
       var body = {
         inventory_item_id: shopifyInventory.inventory_item_id,
         location_id: shopifyInventory.location_id,
-        available_adjustment: -Math.abs(order.quantity)
+        available_adjustment: substractInventory
       }
       axios.post(updateInventoryUrl, body)
       .then(resp => {
@@ -105,9 +112,11 @@ function postOrderProcess(order) {
     if (err) {
       console.log(chalk.red('Error: Order Post Processor:'))
       console.log(err)
+      //res.jsonp(err)
     } else {
       console.log(chalk.green('Order Post Processor Success:'))
       console.log(result)
+      //res.jsonp(result)
     }         
   })
 }
@@ -163,13 +172,15 @@ exports.create = function(req, res) {
       }
   ], function (err, order) {
     if (err) {
-      console.log(chalk.red(err))
+      console.log(chalk.red('Error buying product'))
+      console.log(err)
       return res.status(400).send({
         message: err.toString(),
         requestUrl: req.url
       })
     } else {
-      console.log(chalk.green(order))
+      console.log(chalk.green('Success buying product'))
+      console.log(order)
       postOrderProcess(order)
       res.jsonp(order)
     }         

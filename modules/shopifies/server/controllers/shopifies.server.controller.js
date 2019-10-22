@@ -182,8 +182,6 @@ exports.pushBlockchain = function(req, res) {
 
 exports.itemBought = function(req, res, next) {
   console.log('body', req.body)
-  console.log('headers', req.headers)
-  console.log('params', req.params)
   assetService.findByTitle(req.body.line_items[0].title, assetAddress => {
     console.log('asset address:', assetAddress)
     if(!assetAddress)
