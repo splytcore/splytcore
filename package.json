@@ -52,7 +52,7 @@
     "method-override": "^2.3.3",
     "mocha": "~1.20.0",
     "moment-timezone": "^0.5.16",
-    "mongoose": "^4.2.3",
+    "mongoose": "^5.7.10",
     "morgan": "^1.6.1",
     "morgan-body": "^2.4.8",
     "multer": "^1.0.6",
