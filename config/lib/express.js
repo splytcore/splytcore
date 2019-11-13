@@ -68,8 +68,9 @@ module.exports.initMiddleware = function (app) {
   // Initialize favicon middleware
   app.use(favicon(app.locals.favicon));
 
-  // Enable logger (morgan)
-  app.use(morgan(logger.getFormat(), logger.getOptions()));
+  // Enable logger only if morgan-body is disabled (morgan)
+  if(!config.log.body)
+    app.use(morgan(logger.getFormat(), logger.getOptions()));
 
   // Environment dependent middleware
   if (process.env.NODE_ENV === 'development') {
@@ -90,8 +91,8 @@ module.exports.initMiddleware = function (app) {
   app.use(cookieParser());
   app.use(flash());
   app.use(cors({credentials: true, origin: ['*']}));  
-
-  morganBody(app);
+  if(config.log.body)
+    morganBody(app);
 };
 
 /**
