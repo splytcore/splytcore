@@ -28,6 +28,7 @@ module.exports={
     // logging with Morgan - https://github.com/expressjs/morgan
     // Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
     format: process.env.LOG_FORMAT||'combined',
+    body: true,
     options: {
       // Stream defaults to process.stdout
       // Uncomment/comment to toggle the logging to a log on the file system

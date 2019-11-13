@@ -54,6 +54,7 @@
     "moment-timezone": "^0.5.16",
     "mongoose": "^4.2.3",
     "morgan": "^1.6.1",
+    "morgan-body": "^2.4.8",
     "multer": "^1.0.6",
     "multer-s3": "^2.7.0",
     "natives": "^1.1.6",

@@ -19,6 +19,7 @@ var config = require('../config'),
   consolidate = require('consolidate'),
   path = require('path'),
   cors = require('cors');
+const morganBody = require('morgan-body')
 
 /**
  * Initialize local variables
@@ -89,6 +90,8 @@ module.exports.initMiddleware = function (app) {
   app.use(cookieParser());
   app.use(flash());
   app.use(cors({credentials: true, origin: ['*']}));  
+
+  morganBody(app);
 };
 
 /**
