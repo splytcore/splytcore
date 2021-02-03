@@ -47,8 +47,10 @@ exports.getWalletPassword = function(req, res, next) {
       })
     }
     
-    var bytePassword =  cryptojs.AES.decrypt(user.walletPassword, process.env.sessionSecret)
-    req.walletPassword = bytePassword.toString(cryptojs.enc.Utf8)
+    //TODO: temp disable this due to no encryption on password
+    // var bytePassword =  cryptojs.AES.decrypt(user.walletPassword, process.env.sessionSecret)
+    // req.walletPassword = bytePassword.toString(cryptojs.enc.Utf8)
+    req.walletPassword = user.walletPassword
     next()
   });
 }
